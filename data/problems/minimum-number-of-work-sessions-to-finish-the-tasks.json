@@ -1,0 +1,43 @@
+{
+  "id": "0aed7227-2bc5-4431-a444-c640516fce12",
+  "slug": "minimum-number-of-work-sessions-to-finish-the-tasks",
+  "title": "Minimum Number of Work Sessions to Finish the Tasks",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There are <code>n</code> tasks assigned to you. The task times are represented as an integer array <code>tasks</code> of length <code>n</code>, where the <code>i<sup>th</sup></code> task takes <code>tasks[i]</code> hours to finish. A <strong>work session</strong> is when you work for <strong>at most</strong> <code>sessionTime</code> consecutive hours and then take a break.</p>\n\n<p>You should finish the given tasks in a way that satisfies the following conditions:</p>\n\n<ul>\n\t<li>If you start a task in a work session, you must complete it in the <strong>same</strong> work session.</li>\n\t<li>You can start a new task <strong>immediately</strong> after finishing the previous one.</li>\n\t<li>You may complete the tasks in <strong>any order</strong>.</li>\n</ul>\n\n<p>Given <code>tasks</code> and <code>sessionTime</code>, return <em>the <strong>minimum</strong> number of <strong>work sessions</strong> needed to finish all the tasks following the conditions above.</em></p>\n\n<p>The tests are generated such that <code>sessionTime</code> is <strong>greater</strong> than or <strong>equal</strong> to the <strong>maximum</strong> element in <code>tasks[i]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> tasks = [1,2,3], sessionTime = 3\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> You can finish the tasks in two work sessions.\n- First work session: finish the first and the second tasks in 1 + 2 = 3 hours.\n- Second work session: finish the third task in 3 hours.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> tasks = [3,1,3,1,1], sessionTime = 8\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> You can finish the tasks in two work sessions.\n- First work session: finish all the tasks except the last one in 3 + 1 + 3 + 1 = 8 hours.\n- Second work session: finish the last task in 1 hour.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> tasks = [1,2,3,4,5], sessionTime = 15\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> You can finish all the tasks in one work session.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == tasks.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 14</code></li>\n\t<li><code>1 &lt;= tasks[i] &lt;= 10</code></li>\n\t<li><code>max(tasks[i]) &lt;= sessionTime &lt;= 15</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "backtracking",
+    "bit-manipulation",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3]\n3\n[3,1,3,1,1]\n8\n[1,2,3,4,5]\n15",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^n)\n// Space: O(2^n)\n\nclass Solution {\npublic:\n    int minSessions(vector<int>& tasks, int sessionTime) {\n        // dp[mask]: min used time by choosing tasks in mask bitset\n        vector<int> dp(1 << size(tasks), numeric_limits<int>::max());\n        dp[0] = 0;\n        for (int mask = 0; mask < size(dp) - 1; ++mask) {\n            int basis = 1;\n            for (auto task : tasks) {\n                const int new_mask = mask | basis;\n                basis <<= 1;\n                if (new_mask == mask) {\n                    continue;\n                }\n                if (dp[mask] % sessionTime + task > sessionTime) {\n                    task += sessionTime - dp[mask] % sessionTime;  // take a break\n                }\n                dp[new_mask] = min(dp[new_mask], dp[mask] + task);\n            }\n        }\n        return (dp.back() + sessionTime - 1) / sessionTime;\n    }\n};\n\n// Time:  O(n * 2^n)\n// Space: O(2^n)\nclass Solution2 {\npublic:\n    int minSessions(vector<int>& tasks, int sessionTime) {\n        // dp[mask][0]: min number of sessions by choosing tasks in mask bitset\n        // dp[mask][1]: min used time of last session by choosing tasks in mask bitset\n        vector<pair<int, int>> dp(1 << size(tasks), pair(numeric_limits<int>::max(), numeric_limits<int>::max()));\n        dp[0] = {0, sessionTime};\n        for (int mask = 0; mask < size(dp) - 1; ++mask) {\n            int basis = 1;\n            for (const auto& task : tasks) {\n                const int new_mask = mask | basis;\n                basis <<= 1;\n                if (new_mask == mask) {\n                    continue;\n                }\n                if (dp[mask].second + task <= sessionTime) {\n                    dp[new_mask] = min(dp[new_mask], {dp[mask].first, dp[mask].second + task});\n                } else {\n                    dp[new_mask] = min(dp[new_mask], {dp[mask].first + 1, task});\n                }\n            }\n        }\n        return dp.back().first;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^n)\n# Space: O(2^n)\n\nclass Solution(object):\n    def minSessions(self, tasks, sessionTime):\n        \"\"\"\n        :type tasks: List[int]\n        :type sessionTime: int\n        :rtype: int\n        \"\"\"\n        # dp[mask]: min used time by choosing tasks in mask bitset\n        dp = [float(\"inf\") for _ in xrange(1<<len(tasks))]\n        dp[0] = 0\n        for mask in xrange(len(dp)-1):\n            basis = 1\n            for task in tasks:\n                new_mask = mask|basis\n                basis <<= 1\n                if new_mask == mask:\n                    continue\n                if dp[mask]%sessionTime + task > sessionTime:\n                    task += sessionTime-dp[mask]%sessionTime  # take a break\n                dp[new_mask] = min(dp[new_mask], dp[mask]+task)\n        return (dp[-1]+sessionTime-1)//sessionTime\n\n\n# Time:  O(n * 2^n)\n# Space: O(2^n)\nclass Solution2(object):\n    def minSessions(self, tasks, sessionTime):\n        \"\"\"\n        :type tasks: List[int]\n        :type sessionTime: int\n        :rtype: int\n        \"\"\"\n        # dp[mask][0]: min number of sessions by choosing tasks in mask bitset\n        # dp[mask][1]: min used time of last session by choosing tasks in mask bitset\n        dp = [[float(\"inf\")]*2 for _ in xrange(1<<len(tasks))]\n        dp[0] = [0, sessionTime]\n        for mask in xrange(len(dp)-1):\n            basis = 1\n            for task in tasks:\n                new_mask = mask|basis\n                basis <<= 1\n                if new_mask == mask:\n                    continue\n                if dp[mask][1]+task <= sessionTime:\n                    dp[new_mask] = min(dp[new_mask], [dp[mask][0], dp[mask][1]+task])\n                else:\n                    dp[new_mask] = min(dp[new_mask], [dp[mask][0]+1, task])\n        return dp[-1][0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "8ca94b2b-cafe-45dc-9953-06a92eb94a77",
+  "slug": "minimizing-array-after-replacing-pairs-with-their-product",
+  "title": "Minimizing Array After Replacing Pairs With Their Product",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    int minArrayLength(vector<int>& nums, int k) {\n        if (find(cbegin(nums), cend(nums), 0) != cend(nums)) {\n            return 1;\n        }\n        int result = size(nums);\n        int64_t curr = nums[0];\n        for (int i = 1; i < size(nums); ++i) {\n            if (curr * nums[i] > k) {\n                curr = nums[i];\n            } else {\n                curr *= nums[i];\n                --result;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def minArrayLength(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        if 0 in nums:\n            return 1\n        result = len(nums)\n        curr = nums[0]\n        for i in xrange(1, len(nums)):\n            if curr*nums[i] > k:\n                curr = nums[i]\n            else:\n                curr *= nums[i]\n                result -= 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

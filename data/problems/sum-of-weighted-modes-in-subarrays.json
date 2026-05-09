@@ -1,0 +1,43 @@
+{
+  "id": "d2a07ee8-22bb-4083-8514-ca4b1020d802",
+  "slug": "sum-of-weighted-modes-in-subarrays",
+  "title": "Sum of Weighted Modes in Subarrays",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sliding-window",
+    "counting",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,2,3]\n3\n[1,2,1,2]\n2\n[4,3,4,3]\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogk)\n// Space: O(k)\n\n// bst, two pointers, sliding window\nclass Solution {\npublic:\n    long long modeWeight(vector<int>& nums, int k) {\n        unordered_map<int, int> cnt;\n        set<pair<int, int>> bst;\n        const auto& add = [&](int x, int diff) {\n            if (cnt[x]) {\n                bst.erase(pair(-cnt[x], x));\n            }\n            cnt[x] += diff;\n            if (cnt[x]) {\n                bst.emplace(-cnt[x], x);\n            } else {\n                cnt.erase(x);\n            }\n        };\n\n        int64_t result = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            add(nums[i], +1);\n            if (i >= k - 1) {\n                result += static_cast<int64_t>(-cbegin(bst)->first) * cbegin(bst)->second;\n                add(nums[i - k + 1], -1);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// bst, two pointers, sliding window\nclass Solution2 {\npublic:\n    long long modeWeight(vector<int>& nums, int k) {\n        unordered_map<int, int> cnt;\n        priority_queue<pair<int, int>> max_heap;\n        int64_t result = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            ++cnt[nums[i]];\n            max_heap.emplace(cnt[nums[i]], -nums[i]);\n            if (i >= k - 1) {\n                while (max_heap.top().first != cnt[-max_heap.top().second]) {\n                    max_heap.pop();\n                }\n                result += static_cast<int64_t>(max_heap.top().first) * -max_heap.top().second;\n                --cnt[nums[i - k + 1]];\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogk)\n# Space: O(k)\n\nimport collections\nfrom sortedcontainers import SortedList\n\n\n# sorted list, two pointers, sliding window\nclass Solution(object):\n    def modeWeight(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def add(x, diff):\n            if cnt[x]:\n                sl.remove((-cnt[x], x))\n            cnt[x] += diff\n            if cnt[x]:\n                sl.add((-cnt[x], x))\n            else:\n                del cnt[x]\n    \n        cnt = collections.defaultdict(int)\n        sl = SortedList()\n        result = 0\n        for i in xrange(len(nums)):\n            add(nums[i], +1)\n            if i >= k-1:\n                result += -sl[0][0]*sl[0][1]\n                add(nums[i-k+1], -1)\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nimport collections\nimport heapq\n\n\n# heap, two pointers, sliding window\nclass Solution2(object):\n    def modeWeight(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        cnt = collections.defaultdict(int)\n        max_heap = []\n        result = 0\n        for i in xrange(len(nums)):\n            cnt[nums[i]] += 1\n            heapq.heappush(max_heap, (-cnt[nums[i]], nums[i]))\n            if i >= k-1:\n                while -max_heap[0][0] != cnt[max_heap[0][1]]:\n                    heapq.heappop(max_heap)\n                result += -max_heap[0][0]*max_heap[0][1]\n                cnt[nums[i-k+1]] -= 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

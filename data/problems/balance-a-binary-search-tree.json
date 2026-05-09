@@ -1,0 +1,38 @@
+{
+  "id": "7240dedc-9d6b-42d1-b202-887eea0c29d7",
+  "slug": "balance-a-binary-search-tree",
+  "title": "Balance a Binary Search Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary search tree, return <em>a <strong>balanced</strong> binary search tree with the same node values</em>. If there is more than one answer, return <strong>any of them</strong>.</p>\n\n<p>A binary search tree is <strong>balanced</strong> if the depth of the two subtrees of every node never differs by more than <code>1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/08/10/balance1-tree.jpg\" style=\"width: 500px; height: 319px;\" />\n<pre>\n<strong>Input:</strong> root = [1,null,2,null,3,null,4,null,null]\n<strong>Output:</strong> [2,1,3,null,null,null,4]\n<b>Explanation:</b> This is not the only correct answer, [3,1,4,null,2] is also correct.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/08/10/balanced2-tree.jpg\" style=\"width: 224px; height: 145px;\" />\n<pre>\n<strong>Input:</strong> root = [2,1,3]\n<strong>Output:</strong> [2,1,3]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>\n\t<li><code>1 &lt;= Node.val &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "divide-and-conquer",
+    "greedy",
+    "tree",
+    "depth-first-search",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\n\n// dfs solution with stack\nclass Solution {\npublic:\n    TreeNode* balanceBST(TreeNode* root) {\n        return sortedArrayToBst(inorderTraversal(root));\n    }\n\nprivate:\n    TreeNode *sortedArrayToBst(const vector<int>& arr) {\n        TreeNode *result = nullptr;\n        vector<tuple<int, int, TreeNode**>> stk = {{0, arr.size(), &result}};\n        while (!stk.empty()) {\n            const auto [i, j, ret] = stk.back(); stk.pop_back();\n            if (i >= j) {\n                continue;\n            }\n            const auto& mid = i + (j - i) / 2;\n            *ret = new TreeNode(arr[mid]);\n            stk.emplace_back(mid + 1, j, &((*ret)->right));\n            stk.emplace_back(i, mid, &((*ret)->left));\n        }\n        return result;\n    }\n    \n    vector<int> inorderTraversal(TreeNode* root) {\n        vector<int> result;\n        vector<pair<TreeNode *, bool>> stk;\n        stk.emplace_back(root, false);\n        while (!stk.empty()) {\n            const auto [node, visited] = stk.back(); stk.pop_back();\n            if (!node) {\n                continue;\n            }\n            if (visited) {\n                result.emplace_back(node->val);\n            } else {\n                stk.emplace_back(node->right, false);\n                stk.emplace_back(node, true);\n                stk.emplace_back(node->left, false);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\n// dfs solution with recursion\nclass Solution2 {\npublic:\n    TreeNode* balanceBST(TreeNode* root) {\n        vector<int> arr;\n        inorderTraversalHelper(root, &arr);\n        return sortedArrayToBstHelper(arr, 0, arr.size());\n    }\n\nprivate:\n    TreeNode *sortedArrayToBstHelper(const vector<int>& arr, int i, int j) {\n        if (i >= j) {\n            return nullptr;\n        }\n        const auto& mid = i + (j - i) / 2;\n        auto result = new TreeNode(arr[mid]);\n        result->left = sortedArrayToBstHelper(arr, i, mid);\n        result->right = sortedArrayToBstHelper(arr, mid + 1, j);\n        return result;\n    }\n    \n    void inorderTraversalHelper(TreeNode* root, vector<int> *arr) {\n        if (!root) {\n            return;\n        }\n        inorderTraversalHelper(root->left, arr);\n        arr->emplace_back(root->val);\n        inorderTraversalHelper(root->right, arr);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\n# dfs solution with stack\nclass Solution(object):\n    def balanceBST(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: TreeNode\n        \"\"\"\n        def inorderTraversal(root):\n            result, stk = [], [(root, False)]\n            while stk:\n                node, is_visited = stk.pop()\n                if node is None:\n                    continue\n                if is_visited:\n                    result.append(node.val)\n                else:\n                    stk.append((node.right, False))\n                    stk.append((node, True))\n                    stk.append((node.left, False))\n            return result\n    \n        def sortedArrayToBst(arr):\n            ROOT, LEFT, RIGHT = range(3)\n            result = [None]\n            stk = [(0, len(arr), ROOT, result)]\n            while stk:\n                i, j, update, ret = stk.pop()\n                if i >= j:\n                    continue\n                mid = i + (j-i)//2\n                node = TreeNode(arr[mid])\n                if update == ROOT:\n                    ret[0] = node\n                elif update == LEFT:\n                    ret[0].left = node\n                else:\n                    ret[0].right = node\n                stk.append((mid+1, j, RIGHT, [node]))\n                stk.append((i, mid, LEFT, [node]))\n            return result[0]\n        \n        return sortedArrayToBst(inorderTraversal(root))\n\n\n# Time:  O(n)\n# Space: O(h)\n# dfs solution with recursion\nclass Solution2(object):\n    def balanceBST(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: TreeNode\n        \"\"\"\n        def inorderTraversalHelper(node, arr):\n            if not node:\n                return\n            inorderTraversalHelper(node.left, arr)\n            arr.append(node.val)\n            inorderTraversalHelper(node.right, arr)\n        \n        def sortedArrayToBstHelper(arr, i, j):\n            if i >= j:\n                return None\n            mid = i + (j-i)//2\n            node = TreeNode(arr[mid])\n            node.left = sortedArrayToBstHelper(arr, i, mid)\n            node.right = sortedArrayToBstHelper(arr, mid+1, j)\n            return node\n        \n        arr = []\n        inorderTraversalHelper(root, arr)\n        return sortedArrayToBstHelper(arr, 0, len(arr))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

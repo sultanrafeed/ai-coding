@@ -1,0 +1,41 @@
+{
+  "id": "2a8e248f-a1a0-4f93-9288-2dbeb8eda855",
+  "slug": "maximum-square-area-by-removing-fences-from-a-field",
+  "title": "Maximum Square Area by Removing Fences From a Field",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There is a large <code>(m - 1) x (n - 1)</code> rectangular field with corners at <code>(1, 1)</code> and <code>(m, n)</code> containing some horizontal and vertical fences given in arrays <code>hFences</code> and <code>vFences</code> respectively.</p>\n\n<p>Horizontal fences are from the coordinates <code>(hFences[i], 1)</code> to <code>(hFences[i], n)</code> and vertical fences are from the coordinates <code>(1, vFences[i])</code> to <code>(m, vFences[i])</code>.</p>\n\n<p>Return <em>the <strong>maximum</strong> area of a <strong>square</strong> field that can be formed by <strong>removing</strong> some fences (<strong>possibly none</strong>) or </em><code>-1</code> <em>if it is impossible to make a square field</em>.</p>\n\n<p>Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9 </sup>+ 7</code>.</p>\n\n<p><strong>Note: </strong>The field is surrounded by two horizontal fences from the coordinates <code>(1, 1)</code> to <code>(1, n)</code> and <code>(m, 1)</code> to <code>(m, n)</code> and two vertical fences from the coordinates <code>(1, 1)</code> to <code>(m, 1)</code> and <code>(1, n)</code> to <code>(m, n)</code>. These fences <strong>cannot</strong> be removed.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/11/05/screenshot-from-2023-11-05-22-40-25.png\" /></p>\n\n<pre>\n<strong>Input:</strong> m = 4, n = 3, hFences = [2,3], vFences = [2]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> Removing the horizontal fence at 2 and the vertical fence at 2 will give a square field of area 4.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/11/22/maxsquareareaexample1.png\" style=\"width: 285px; height: 242px;\" /></p>\n\n<pre>\n<strong>Input:</strong> m = 6, n = 7, hFences = [2], vFences = [4]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> It can be proved that there is no way to create a square field by removing fences.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= m, n &lt;= 10<sup>9</sup></code></li>\n\t<li><code><font face=\"monospace\">1 &lt;= hF</font>ences<font face=\"monospace\">.length, vFences.length &lt;= 600</font></code></li>\n\t<li><code><font face=\"monospace\">1 &lt; hFences[i] &lt; m</font></code></li>\n\t<li><code><font face=\"monospace\">1 &lt; vFences[i] &lt; n</font></code></li>\n\t<li><code><font face=\"monospace\">hFences</font></code><font face=\"monospace\"> and </font><code><font face=\"monospace\">vFences</font></code><font face=\"monospace\"> are unique.</font></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "4\n3\n[2,3]\n[2]\n6\n7\n[2]\n[4]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(h^2 + v^2)\n// Space: O(min(h, v)^2)\n\n// hash table\nclass Solution {\npublic:\n    int maximizeSquareArea(int m, int n, vector<int>& hFences, vector<int>& vFences) {\n        static const int MOD = 1e9 + 7;\n\n        int64_t result = -1;\n        unordered_set<int64_t> lookup;\n        const auto& diff = [&](auto& arr, int x, bool check) {\n            arr.emplace_back(1);\n            arr.emplace_back(x);\n            for (int i = 0; i < size(arr); ++i) {\n                for (int j = i + 1; j < size(arr); ++j) {\n                    if (!check) {\n                        lookup.insert(abs(arr[i] - arr[j]));  // use insert rather than emplace to speed up\n                        continue;\n                    }\n                    if (lookup.count(abs(arr[i] - arr[j]))) {\n                        result = max(result, static_cast<int64_t>(arr[i] - arr[j]) * (arr[i] - arr[j]));\n                    }\n                }\n            }\n        };\n\n        if (size(hFences) > size(vFences)) {\n            swap(hFences, vFences);\n            swap(m, n);\n        }\n        diff(hFences, m, false);\n        diff(vFences, n, true);\n        return result % MOD;\n    }\n};\n\n// Time:  O(h^2 + v^2)\n// Space: O(h^2 + v^2)\n// hash table\nclass Solution2 {\npublic:\n    int maximizeSquareArea(int m, int n, vector<int>& hFences, vector<int>& vFences) {\n        static const int MOD = 1e9 + 7;\n\n        const auto& diff = [](auto& arr, int x) {\n            unordered_set<int64_t> lookup;\n            arr.emplace_back(1);\n            arr.emplace_back(x);\n            for (int i = 0; i < size(arr); ++i) {\n                for (int j = i + 1; j < size(arr); ++j) {\n                    lookup.insert(abs(arr[i] - arr[j]));  // use insert rather than emplace to speed up\n                }\n            }\n            return lookup;\n        };\n\n        const auto& lookup = diff(hFences, m);\n        int64_t result = -1;\n        for (const auto& x : diff(vFences, n)) {\n            if (lookup.count(x)) {\n                result = max(result, x * x);\n            }\n        }\n        return result % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(h^2 + v^2)\n# Space: O(h^2 + v^2)\n\n# hash table\nclass Solution(object):\n    def maximizeSquareArea(self, m, n, hFences, vFences):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :type hFences: List[int]\n        :type vFences: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def diff(arr, x):\n            arr.append(1)\n            arr.append(x)\n            return {abs(arr[i]-arr[j]) for i in xrange(len(arr)) for j in xrange(i+1, len(arr))}\n\n        lookup = diff(hFences, m)\n        result = -1\n        for x in diff(vFences, n):\n            if x in lookup:\n                result = max(result, x**2)\n        return result%MOD if result != -1 else -1\n\n\n# Time:  O(h^2 + v^2)\n# Space: O(min(h, v)^2)\n# hash table\nclass Solution2(object):\n    def maximizeSquareArea(self, m, n, hFences, vFences):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :type hFences: List[int]\n        :type vFences: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def diff(arr, x, check):\n            arr.append(1)\n            arr.append(x)\n            for i in xrange(len(arr)):\n                for j in xrange(i+1, len(arr)):\n                    if not check:\n                        lookup.add(abs(arr[i]-arr[j]))\n                        continue\n                    if abs(arr[i]-arr[j]) in lookup:\n                        result[0] = max(result[0], (arr[i]-arr[j])**2)\n\n        if len(hFences) > len(vFences):\n            hFences, vFences = vFences, hFences\n            m, n = n, m\n        result = [-1]\n        lookup = set()\n        diff(hFences, m, False)\n        diff(vFences, n, True)\n        return result[0]%MOD if result[0] != -1 else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

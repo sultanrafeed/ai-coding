@@ -1,0 +1,42 @@
+{
+  "id": "81892434-29e1-438d-a10a-35dfda67483f",
+  "slug": "design-compressed-string-iterator",
+  "title": "Design Compressed String Iterator",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "design",
+    "iterator"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"StringIterator\",\"next\",\"next\",\"next\",\"next\",\"next\",\"next\",\"hasNext\",\"next\",\"hasNext\"]\n[[\"L1e2t1C1o1d1e1\"],[],[],[],[],[],[],[],[],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass StringIterator {\npublic:\n    StringIterator(string compresult_sedString)\n        : result_(compresult_sedString),\n          num_(0),\n          ch_(' ') {\n        \n    }\n    \n    char next() {\n        if (!hasNext()) {\n            return ' ';\n        }\n        if (num_ == 0) {\n            result_ >> ch_ >> num_;\n        }\n        --num_;\n        return ch_;\n    }\n    \n    bool hasNext() {\n        return !result_.eof() || num_ != 0;\n    }\n\nprivate:\n    istringstream result_;\n    int num_;\n    char ch_;\n};\n\n/**\n * Your StringIterator object will be instantiated and called as such_:\n * StringIterator obj = new StringIterator(compresult_sedString);\n * ch_ar param_1 = obj.next();\n * bool param_2 = obj.hasNext();\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nimport re\n\n\nclass StringIterator(object):\n\n    def __init__(self, compressedString):\n        \"\"\"\n        :type compressedString: str\n        \"\"\"\n        self.__result = re.findall(r\"([a-zA-Z])(\\d+)\", compressedString)\n        self.__index, self.__num, self.__ch = 0, 0, ' '\n\n    def next(self):\n        \"\"\"\n        :rtype: str\n        \"\"\"\n        if not self.hasNext():\n            return ' '\n        if self.__num == 0:\n            self.__ch = self.__result[self.__index][0]\n            self.__num = int(self.__result[self.__index][1])\n            self.__index += 1\n        self.__num -= 1\n        return self.__ch\n\n\n    def hasNext(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return self.__index != len(self.__result) or self.__num != 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

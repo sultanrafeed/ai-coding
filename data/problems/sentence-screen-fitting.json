@@ -1,0 +1,35 @@
+{
+  "id": "bd51597d-93e2-417a-95c6-5fd2fc22ca10",
+  "slug": "sentence-screen-fitting",
+  "title": "Sentence Screen Fitting",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(r + n * c)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int wordsTyping(vector<string>& sentence, int rows, int cols) {\n        vector<int> wc(sentence.size());\n        for (int i = 0; i < sentence.size(); ++i) {\n            wc[i] = wordsFit(sentence, i, cols);\n        }\n\n        int words = 0, start = 0;\n        for (int i = 0; i < rows; ++i) {\n            words += wc[start];\n            start = (start + wc[start]) % sentence.size();\n        }\n        return words / sentence.size();\n    }\n\nprivate:\n    int wordsFit(const vector<string>& sentence, int start, int cols) {\n        if (sentence[start].length() > cols) {\n            return 0;\n        }\n\n        int sum = sentence[start].length(), count = 1;\n        for (int i = (start + 1) % sentence.size();\n             sum + 1 + sentence[i].length() <= cols;\n             i = (i + 1) % sentence.size()) {\n            sum += 1 + sentence[i].length();\n            ++count;\n        }\n        return count;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(r + n * c)\n# Space: O(n)\n\nclass Solution(object):\n    def wordsTyping(self, sentence, rows, cols):\n        \"\"\"\n        :type sentence: List[str]\n        :type rows: int\n        :type cols: int\n        :rtype: int\n        \"\"\"\n        def words_fit(sentence, start, cols):\n            if len(sentence[start]) > cols:\n                return 0\n\n            s, count = len(sentence[start]), 1\n            i = (start + 1) % len(sentence)\n            while s + 1 + len(sentence[i]) <= cols:\n                s += 1 + len(sentence[i])\n                count += 1\n                i = (i + 1) % len(sentence)\n            return count\n\n        wc = [0] * len(sentence)\n        for i in xrange(len(sentence)):\n            wc[i] = words_fit(sentence, i, cols)\n\n        words, start = 0, 0\n        for i in xrange(rows):\n            words += wc[start]\n            start = (start + wc[start]) % len(sentence)\n        return words / len(sentence)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "bbf45fa1-2617-4890-aae1-81a14838b4a1",
+  "slug": "minimum-deletions-to-make-character-frequencies-unique",
+  "title": "Minimum Deletions to Make Character Frequencies Unique",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A string <code>s</code> is called <strong>good</strong> if there are no two different characters in <code>s</code> that have the same <strong>frequency</strong>.</p>\n\n<p>Given a string <code>s</code>, return<em> the <strong>minimum</strong> number of characters you need to delete to make </em><code>s</code><em> <strong>good</strong>.</em></p>\n\n<p>The <strong>frequency</strong> of a character in a string is the number of times it appears in the string. For example, in the string <code>&quot;aab&quot;</code>, the <strong>frequency</strong> of <code>&#39;a&#39;</code> is <code>2</code>, while the <strong>frequency</strong> of <code>&#39;b&#39;</code> is <code>1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aab&quot;\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> <code>s</code> is already good.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aaabbbcc&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> You can delete two &#39;b&#39;s resulting in the good string &quot;aaabcc&quot;.\nAnother way it to delete one &#39;b&#39; and one &#39;c&#39; resulting in the good string &quot;aaabbc&quot;.</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;ceabaacb&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> You can delete both &#39;c&#39;s resulting in the good string &quot;eabaab&quot;.\nNote that we only care about characters that are still in the string at the end (i.e. frequency of 0 is ignored).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code>&nbsp;contains only lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"aab\"\n\"aaabbbcc\"\n\"ceabaacb\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minDeletions(string s) {\n        vector<int> count(26);\n        for (const auto& c : s) {\n            ++count[c - 'a'];\n        }\n        int result = 0;\n        unordered_set<int> lookup;\n        for (int i = 0; i < 26; ++i) {\n            for (int c = count[i]; c > 0; --c, ++result) {\n                if (!lookup.count(c)) {\n                    lookup.emplace(c);\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\nimport string\n\nclass Solution(object):\n    def minDeletions(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        count = collections.Counter(s)\n        result = 0\n        lookup = set()\n        for c in string.ascii_lowercase:\n            for i in reversed(xrange(1, count[c]+1)):\n                if i not in lookup:\n                    lookup.add(i)\n                    break\n                result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

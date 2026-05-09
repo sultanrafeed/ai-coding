@@ -1,0 +1,41 @@
+{
+  "id": "d86909f2-017f-49ef-b8a6-a2f169269e81",
+  "slug": "maximum-number-of-upgradable-servers",
+  "title": "Maximum Number of Upgradable Servers",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,3]\n[3,5]\n[4,2]\n[8,9]\n[1]\n[2]\n[1]\n[1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    vector<int> maxUpgrades(vector<int>& count, vector<int>& upgrade, vector<int>& sell, vector<int>& money) {\n        const auto& ceil_divide = [](const auto& a, const auto& b) {\n            return (a + b - 1) / b ;\n        };\n\n        // let x be the number of sold servers\n        // (c-x)*u <= m+(x*s)\n        // x >= (c*u-m)//(u+s) <= 0\n        // c-x <= c-(c*u-m)//(u+s) <= c\n        vector<int> result(size(count));\n        for (int i = 0; i < size(count); ++i) {\n            result[i] = min(count[i] - ceil_divide(static_cast<int64_t>(count[i]) * upgrade[i] - money[i], upgrade[i] + sell[i]), static_cast<int64_t>(count[i]));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport itertools\n\n\n# math\nclass Solution(object):\n    def maxUpgrades(self, count, upgrade, sell, money):\n        \"\"\"\n        :type count: List[int]\n        :type upgrade: List[int]\n        :type sell: List[int]\n        :type money: List[int]\n        :rtype: List[int]\n        \"\"\"\n        # let x be the number of sold servers\n        # (c-x)*u <= m+(x*s)\n        # -x <= (m-c*u)//(u+s) <= 0\n        # c-x <= c+(m-c*u)//(u+s) <= c\n        return [min(c+(m-c*u)//(u+s), c) for c, u, s, m in itertools.izip(count, upgrade, sell, money)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

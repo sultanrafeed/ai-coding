@@ -1,0 +1,33 @@
+{
+  "id": "e8de36bf-7d59-4aad-b486-7c255f5bc22a",
+  "slug": "number-of-days-in-a-month",
+  "title": "Number of Days in a Month",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int numberOfDays(int Y, int M) {\n        const auto& leap = (((Y % 4 == 0) && (Y % 100 != 0)) || (Y % 400 == 0)) ? 1 : 0;\n        return (M == 2) ? 28 + leap : 31 - (M - 1) % 7 % 2;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def numberOfDays(self, Y, M):\n        \"\"\"\n        :type Y: int\n        :type M: int\n        :rtype: int\n        \"\"\"\n        leap = 1 if ((Y % 4 == 0) and (Y % 100 != 0)) or (Y % 400 == 0) else 0\n        return (28+leap if (M == 2) else 31-(M-1)%7%2)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

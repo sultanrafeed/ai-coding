@@ -1,0 +1,42 @@
+{
+  "id": "502c5a27-298d-4e66-a69d-184d630bad79",
+  "slug": "phone-number-prefix",
+  "title": "Phone Number Prefix",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "trie",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"1\",\"2\",\"4\",\"3\"]\n[\"001\",\"007\",\"15\",\"00153\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(l * nlogn)\n// Space: O(1)\n\n// sort\nclass Solution {\npublic:\n    bool phonePrefix(vector<string>& numbers) {\n        sort(begin(numbers), end(numbers));\n        for (int i = 0; i + 1 < size(numbers); ++i) {\n            if (numbers[i + 1].starts_with(numbers[i])) {\n                return false;\n            }\n        }\n        return true;\n    }\n};\n\n// Time:  O(n * l)\n// Space: O(t)\n// trie\nclass Solution2 {\nprivate:\n    class Trie {\n    public:\n        Trie() {\n             new_node();\n         }\n\n        bool add(const string& s) {\n            bool made = false;\n            int curr = 0;\n            for (int i = 0; i < size(s); ++i) {\n                const int x = s[i] - '0';\n                if (nodes_[curr][x] == -1) {\n                    nodes_[curr][x] = new_node();\n                    made = true;\n                } else if (nodes_[nodes_[curr][x]].back() == 1) {\n                    return false;\n                }\n                curr = nodes_[curr][x];\n            }\n            nodes_[curr].back() = 1;\n            return made;\n        }\n\n    private:\n        int new_node() {\n            nodes_.emplace_back(11, -1);\n            return size(nodes_) - 1;\n        }\n\n        vector<vector<int>> nodes_;\n        vector<int> cnts_;\n    };\n\npublic:\n    bool phonePrefix(vector<string>& numbers) {\n        Trie trie;\n        for (const auto& x : numbers) {\n            if (!trie.add(x)) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(l * nlogn)\n# Space: O(1)\n\n# sort\nclass Solution(object):\n    def phonePrefix(self, numbers):\n        \"\"\"\n        :type numbers: List[str]\n        :rtype: bool\n        \"\"\"\n        numbers.sort()\n        return all(not numbers[i+1].startswith(numbers[i]) for i in xrange(len(numbers)-1))\n\n\n# Time:  O(n * l)\n# Space: O(t)\n# trie\nclass Solution2(object):\n    def phonePrefix(self, numbers):\n        \"\"\"\n        :type numbers: List[str]\n        :rtype: bool\n        \"\"\"\n        class Trie(object):\n            def __init__(self):\n                self.__nodes = []\n                self.__new_node()\n            \n            def __new_node(self):\n                self.__nodes.append([-1]*(10+1))\n                return len(self.__nodes)-1\n\n            def add(self, s):\n                made = False\n                curr = 0\n                for i in xrange(len(s)):\n                    x = ord(s[i])-ord('0')\n                    if self.__nodes[curr][x] == -1:\n                        self.__nodes[curr][x] = self.__new_node()\n                        made = True\n                    elif self.__nodes[self.__nodes[curr][x]][-1] == True:\n                        return False\n                    curr = self.__nodes[curr][x]\n                self.__nodes[curr][-1] = True\n                return made\n    \n        trie = Trie()\n        return all(trie.add(x) for x in numbers)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

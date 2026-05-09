@@ -1,0 +1,35 @@
+{
+  "id": "07831463-fd7e-45f6-b6de-3b60de6e3a0b",
+  "slug": "implement-queue-using-stacks",
+  "title": "Implement Queue using Stacks",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Implement a first in first out (FIFO) queue using only two stacks. The implemented queue should support all the functions of a normal queue (<code>push</code>, <code>peek</code>, <code>pop</code>, and <code>empty</code>).</p>\n\n<p>Implement the <code>MyQueue</code> class:</p>\n\n<ul>\n\t<li><code>void push(int x)</code> Pushes element x to the back of the queue.</li>\n\t<li><code>int pop()</code> Removes the element from the front of the queue and returns it.</li>\n\t<li><code>int peek()</code> Returns the element at the front of the queue.</li>\n\t<li><code>boolean empty()</code> Returns <code>true</code> if the queue is empty, <code>false</code> otherwise.</li>\n</ul>\n\n<p><strong>Notes:</strong></p>\n\n<ul>\n\t<li>You must use <strong>only</strong> standard operations of a stack, which means only <code>push to top</code>, <code>peek/pop from top</code>, <code>size</code>, and <code>is empty</code> operations are valid.</li>\n\t<li>Depending on your language, the stack may not be supported natively. You may simulate a stack using a list or deque (double-ended queue) as long as you use only a stack&#39;s standard operations.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;MyQueue&quot;, &quot;push&quot;, &quot;push&quot;, &quot;peek&quot;, &quot;pop&quot;, &quot;empty&quot;]\n[[], [1], [2], [], [], []]\n<strong>Output</strong>\n[null, null, null, 1, 1, false]\n\n<strong>Explanation</strong>\nMyQueue myQueue = new MyQueue();\nmyQueue.push(1); // queue is: [1]\nmyQueue.push(2); // queue is: [1, 2] (leftmost is front of the queue)\nmyQueue.peek(); // return 1\nmyQueue.pop(); // return 1, queue is [2]\nmyQueue.empty(); // return false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= x &lt;= 9</code></li>\n\t<li>At most <code>100</code>&nbsp;calls will be made to <code>push</code>, <code>pop</code>, <code>peek</code>, and <code>empty</code>.</li>\n\t<li>All the calls to <code>pop</code> and <code>peek</code> are valid.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow-up:</strong> Can you implement the queue such that each operation is <strong><a href=\"https://en.wikipedia.org/wiki/Amortized_analysis\" target=\"_blank\">amortized</a></strong> <code>O(1)</code> time complexity? In other words, performing <code>n</code> operations will take overall <code>O(n)</code> time even if one of those operations may take longer.</p>\n",
+  "patterns": [
+    "stack",
+    "design",
+    "queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1), amortized\n// Space: O(n)\n\nclass MyQueue {\npublic:\n    MyQueue() {\n        \n    }\n    \n    void push(int x) {\n        A_.emplace(x);\n    }\n\n    int pop(void) {\n        peek();\n        int result = B_.top();\n        B_.pop();\n        return result;\n    }\n\n    int peek(void) {\n        if (B_.empty()) {\n          // Transfers the elements in A_ to B_.\n          while (!A_.empty()) {\n            B_.emplace(A_.top());\n            A_.pop();\n          }\n        }\n        if (B_.empty()) {  // B_ is still empty!\n          throw length_error(\"empty queue\");\n        }\n        return B_.top();\n    }\n\n    bool empty(void) {\n        return A_.empty() && B_.empty();\n    }\n\n private:\n    stack<int> A_, B_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1), amortized\n# Space: O(n)\n\nclass MyQueue(object):\n\n    def __init__(self):\n        self.A, self.B = [], []\n\n    def push(self, x):\n        \"\"\"\n        :type x: int\n        :rtype: None\n        \"\"\"\n        self.A.append(x)\n\n    def pop(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        self.peek()\n        return self.B.pop()\n\n    def peek(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        if not self.B:\n            while self.A:\n                self.B.append(self.A.pop())\n        return self.B[-1]\n\n    def empty(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return not self.A and not self.B",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

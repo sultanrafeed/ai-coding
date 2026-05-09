@@ -1,0 +1,25 @@
+{
+  "id": "352a6a56-860a-45a6-ad21-0d815927a618",
+  "slug": "surroundedRegions",
+  "title": "Surroundedregions",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// LeetCode, Surrounded Regions\n// BFS method\n// Complexity:\n//     O(n) time, O(n) space\n\nclass Solution {\npublic:\n    void solve(vector<vector<char>> &board) {\n        if (board.empty()) return;\n        const int m = board.size();\n        const int n = board[0].size();\n\n        // do BFS from up and down boundary\n        for (int i = 0; i < n; i++) {\n            bfs(board, 0, i);\n            bfs(board, m - 1, i);\n        }\n\n        // do BFS from left and right boundary\n        for (int j = 1; j < m - 1; j++) {\n            bfs(board, j, 0);\n            bfs(board, j, n - 1);\n        }\n\n        for (int i = 0; i < m; i++)\n        \tfor (int j = 0; j < n; j++)\n        \t\t// mark the BFS-unvisited node with 'X'\n\t\t\t    if (board[i][j] == 'O')\n\t\t\t        board[i][j] = 'X';\n\t\t\t    // mark the BFS-visited node with 'O' \n\t\t\t    else if (board[i][j] == '+')\n\t\t\t        board[i][j] = 'O';\n\t} \n\nprivate:\n\tvoid bfs(vector<vector<char>> &board, int i, int j) {\n\t    typedef pair<int, int> state_t;\n\t    queue<state_t> q;\n\t    const int m = board.size();\n\t    const int n = board[0].size();\n\n\t    auto is_valid = [&](const state_t &s) {\n\t        const int x = s.first;\n\t        const int y = s.second;\n\t        if (x < 0 || x >= m || y < 0 || y >= n || board[x][y] != 'O')\n\t            return false;\n\t        return true;\n\t    };\n\n\t    auto state_extend = [&](const state_t &s) {\n\t        vector<state_t> result;\n\t        const int x = s.first;\n\t        const int y = s.second;\n\t        const state_t new_states[4] = {{x-1,y}, {x+1,y},{x,y-1}, {x,y+1}};\n\t        for(int k=0;k<4; ++k){\n\t        \tif (is_valid(new_states[k])) {\n\t        \t\t// mark\n\t        \t\tboard[new_states[k].first][new_states[k].second] = '+';\n\t        \t\tresult.push_back(new_states[k]);\n\t        \t} \n\t        }\n\t        return result;\n\t    };\n        \n        state_t start = { i, j };\n        if (is_valid(start)) {\n            board[i][j] = '+';\n            q.push(start);\n        }\n        \n        while (!q.empty()) {\n            auto cur = q.front();\n            q.pop();\n            auto new_states = state_extend(cur);\n            for (auto s : new_states) q.push(s);\n        } \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

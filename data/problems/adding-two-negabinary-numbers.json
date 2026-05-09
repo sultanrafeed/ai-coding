@@ -1,0 +1,34 @@
+{
+  "id": "780add07-3e60-45a4-80c6-9d8377a382f7",
+  "slug": "adding-two-negabinary-numbers",
+  "title": "Adding Two Negabinary Numbers",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two numbers <code>arr1</code> and <code>arr2</code> in base <strong>-2</strong>, return the result of adding them together.</p>\n\n<p>Each number is given in <em>array format</em>:&nbsp; as an array of 0s and 1s, from most significant bit to least significant bit.&nbsp; For example, <code>arr = [1,1,0,1]</code> represents the number <code>(-2)^3&nbsp;+ (-2)^2 + (-2)^0 = -3</code>.&nbsp; A number <code>arr</code> in <em>array, format</em> is also guaranteed to have no leading zeros: either&nbsp;<code>arr == [0]</code> or <code>arr[0] == 1</code>.</p>\n\n<p>Return the result of adding <code>arr1</code> and <code>arr2</code> in the same format: as an array of 0s and 1s with no leading zeros.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr1 = [1,1,1,1,1], arr2 = [1,0,1]\n<strong>Output:</strong> [1,0,0,0,0]\n<strong>Explanation: </strong>arr1 represents 11, arr2 represents 5, the output represents 16.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr1 = [0], arr2 = [0]\n<strong>Output:</strong> [0]\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr1 = [0], arr2 = [1]\n<strong>Output:</strong> [1]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr1.length,&nbsp;arr2.length &lt;= 1000</code></li>\n\t<li><code>arr1[i]</code>&nbsp;and <code>arr2[i]</code> are&nbsp;<code>0</code> or <code>1</code></li>\n\t<li><code>arr1</code> and <code>arr2</code> have no leading zeros</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> addNegabinary(vector<int>& arr1, vector<int>& arr2) {\n        vector<int> result;\n        int carry = 0, i = arr1.size() - 1, j = arr2.size() - 1;\n        while (i >= 0 || j >= 0 || carry) {\n            if (i >= 0) {\n                carry += arr1[i--];\n            }\n            if (j >= 0) {\n                carry += arr2[j--];\n            }\n            result.emplace_back(carry & 1);\n            carry = -(carry >> 1);\n        }\n        while (result.size() > 1 && result.back() == 0) {\n            result.pop_back();\n        }\n        reverse(result.begin(), result.end());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def addNegabinary(self, arr1, arr2):\n        \"\"\"\n        :type arr1: List[int]\n        :type arr2: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        carry = 0\n        while arr1 or arr2 or carry:\n            if arr1:\n                carry += arr1.pop()\n            if arr2:\n                carry += arr2.pop()\n            result.append(carry & 1)\n            carry = -(carry >> 1)\n        while len(result) > 1 and result[-1] == 0:\n            result.pop()\n        result.reverse()\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

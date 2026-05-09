@@ -1,0 +1,36 @@
+{
+  "id": "8fcf27c2-ea7e-4c60-bec3-a5a204f68930",
+  "slug": "group-anagrams",
+  "title": "Group Anagrams",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of strings <code>strs</code>, group the <span data-keyword=\"anagram\">anagrams</span> together. You can return the answer in <strong>any order</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">strs = [&quot;eat&quot;,&quot;tea&quot;,&quot;tan&quot;,&quot;ate&quot;,&quot;nat&quot;,&quot;bat&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[[&quot;bat&quot;],[&quot;nat&quot;,&quot;tan&quot;],[&quot;ate&quot;,&quot;eat&quot;,&quot;tea&quot;]]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>There is no string in strs that can be rearranged to form <code>&quot;bat&quot;</code>.</li>\n\t<li>The strings <code>&quot;nat&quot;</code> and <code>&quot;tan&quot;</code> are anagrams as they can be rearranged to form each other.</li>\n\t<li>The strings <code>&quot;ate&quot;</code>, <code>&quot;eat&quot;</code>, and <code>&quot;tea&quot;</code> are anagrams as they can be rearranged to form each other.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">strs = [&quot;&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[[&quot;&quot;]]</span></p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">strs = [&quot;a&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[[&quot;a&quot;]]</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= strs.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= strs[i].length &lt;= 100</code></li>\n\t<li><code>strs[i]</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * glogg), g is the max size of groups.\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<vector<string>> groupAnagrams(vector<string>& strs) {\n        unordered_map<string, vector<string>> groups;\n        for (const auto& str : strs) {\n            string tmp{str};\n            sort(tmp.begin(), tmp.end());\n            groups[tmp].emplace_back(str);\n        }\n\n        vector<vector<string>> anagrams;\n        for (const auto& kvp : groups) {\n            vector<string> group;\n            for (const auto& str : kvp.second) {\n                group.emplace_back(str);\n            }\n            sort(group.begin(), group.end());\n            anagrams.emplace_back(move(group));\n        }\n\n        return anagrams;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * glogg), g is the max size of groups.\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def groupAnagrams(self, strs):\n        \"\"\"\n        :type strs: List[str]\n        :rtype: List[List[str]]\n        \"\"\"\n        anagrams_map, result = collections.defaultdict(list), []\n        for s in strs:\n            sorted_str = (\"\").join(sorted(s))\n            anagrams_map[sorted_str].append(s)\n        for anagram in anagrams_map.values():\n            anagram.sort()\n            result.append(anagram)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "1d59f5e2-7572-44f7-b71e-8e21220ccd29",
+  "slug": "split-concatenated-strings",
+  "title": "Split Concatenated Strings",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"abc\",\"xyz\"]\n[\"abc\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    string splitLoopedString(vector<string>& strs) {\n        string s;\n        for (const auto& str : strs) {\n            auto rev{str};\n            reverse(rev.begin(), rev.end());\n            s += max(str, rev);\n        }\n        string result{\"a\"};\n        for (auto i = 0, st = 0; i < strs.size(); st += strs[i++].size()) {\n            auto rev{strs[i]}, body{s.substr(st + strs[i].length())};\n            body += s.substr(0, st);\n            reverse(rev.begin(), rev.end());\n            for (const auto& p : {strs[i], rev}) {\n                for (auto j = 0; j < strs[i].size(); ++j) {\n                    if (p[j] >= result[0]) {\n                        string tmp{p.substr(j)};\n                        tmp += body;\n                        tmp += p.substr(0, j);\n                        result = max(result, tmp);\n                    }\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def splitLoopedString(self, strs):\n        \"\"\"\n        :type strs: List[str]\n        :rtype: str\n        \"\"\"\n        tmp = []\n        for s in strs:\n            tmp += max(s, s[::-1])\n        s = \"\".join(tmp)\n\n        result, st = \"a\", 0\n        for i in xrange(len(strs)):\n            body = \"\".join([s[st + len(strs[i]):], s[0:st]])\n            for p in strs[i], strs[i][::-1]:\n                for j in xrange(len(strs[i])):\n                    if p[j] >= result[0]:\n                        result = max(result, \"\".join([p[j:], body, p[:j]]))\n            st += len(strs[i])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

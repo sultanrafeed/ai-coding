@@ -1,0 +1,34 @@
+{
+  "id": "cde8602d-8dfc-40db-b566-ddd478dc4756",
+  "slug": "increasing-triplet-subsequence",
+  "title": "Increasing Triplet Subsequence",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, return <code>true</code><em> if there exists a triple of indices </em><code>(i, j, k)</code><em> such that </em><code>i &lt; j &lt; k</code><em> and </em><code>nums[i] &lt; nums[j] &lt; nums[k]</code>. If no such indices exists, return <code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4,5]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Any triplet where i &lt; j &lt; k is valid.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,4,3,2,1]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> No triplet exists.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,5,0,4,6]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> One of the valid triplet is (1, 4, 5), because nums[1] == 1 &lt; nums[4] == 4 &lt; nums[5] == 6.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 5 * 10<sup>5</sup></code></li>\n\t<li><code>-2<sup>31</sup> &lt;= nums[i] &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Could you implement a solution that runs in <code>O(n)</code> time complexity and <code>O(1)</code> space complexity?",
+  "patterns": [
+    "array",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool increasingTriplet(vector<int>& nums) {\n        int min = numeric_limits<int>::max(), a = numeric_limits<int>::max(), b = numeric_limits<int>::max();\n        for (const auto& c : nums) {\n            if (min >= c) {\n                min = c;\n            } else if (b >= c) {\n                a = min, b = c;\n            } else {  // a < b < c\n                return true;\n            }\n        }\n        return false;\n    }\n};\n\n// Time:  O(n * logk)\n// Space: O(k)\n// Generalization of k-uplet.\nclass Solution_Generalization {\npublic:\n    bool increasingTriplet(vector<int>& nums) {\n        return increasingKUplet(nums, 3);\n    }\n\nprivate:\n    bool increasingKUplet(const vector<int>& nums, const size_t k) {\n        vector<int> inc(k - 1, numeric_limits<int>::max());\n        for (const auto& num : nums) {\n            auto it = lower_bound(inc.begin(), inc.end(), num);\n            if (distance(inc.begin(), it) >= k - 1) {\n                return true;\n            }\n            *it = num;\n        }\n        return k == 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport bisect\n\n\nclass Solution(object):\n    def increasingTriplet(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: bool\n        \"\"\"\n        min_num, a, b = float(\"inf\"), float(\"inf\"), float(\"inf\")\n        for c in nums:\n            if min_num >= c:\n                min_num = c\n            elif b >= c:\n                a, b = min_num, c\n            else:  # a < b < c\n                return True\n        return False\n\n# Time:  O(n * logk)\n# Space: O(k)\n# Generalization of k-uplet.\nclass Solution_Generalization(object):\n    def increasingTriplet(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: bool\n        \"\"\"\n        def increasingKUplet(nums, k):\n            inc = [float('inf')] * (k - 1)\n            for num in nums:\n                i = bisect.bisect_left(inc, num)\n                if i >= k - 1:\n                    return True\n                inc[i] = num\n            return k == 0\n\n        return increasingKUplet(nums, 3)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

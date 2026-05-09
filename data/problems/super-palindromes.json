@@ -1,0 +1,35 @@
+{
+  "id": "20bdde40-9f88-464e-ac28-0abcf1d7395a",
+  "slug": "super-palindromes",
+  "title": "Super Palindromes",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Let&#39;s say a positive integer is a <strong>super-palindrome</strong> if it is a palindrome, and it is also the square of a palindrome.</p>\n\n<p>Given two positive integers <code>left</code> and <code>right</code> represented as strings, return <em>the number of <strong>super-palindromes</strong> integers in the inclusive range</em> <code>[left, right]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> left = &quot;4&quot;, right = &quot;1000&quot;\n<strong>Output:</strong> 4\n<strong>Explanation</strong>: 4, 9, 121, and 484 are superpalindromes.\nNote that 676 is not a superpalindrome: 26 * 26 = 676, but 26 is not a palindrome.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> left = &quot;1&quot;, right = &quot;2&quot;\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= left.length, right.length &lt;= 18</code></li>\n\t<li><code>left</code> and <code>right</code> consist of only digits.</li>\n\t<li><code>left</code> and <code>right</code> cannot have leading zeros.</li>\n\t<li><code>left</code> and <code>right</code> represent integers in the range <code>[1, 10<sup>18</sup> - 1]</code>.</li>\n\t<li><code>left</code> is less than or equal to <code>right</code>.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^0.25 * logn)\n// Space: O(logn)\n\nclass Solution {\npublic:\n    int superpalindromesInRange(string L, string R) {\n        const auto K = static_cast<int>(pow(10, (R.length() + 1) * 0.25));\n        const int64_t l = stol(L), r = stol(R);\n        int result = 0;\n\n        // count odd length\n        for (int k = 0; k < K; ++k) {\n            const string s = to_string(k), rev_s(s.rbegin(), s.rend());\n            int64_t v = stol(s + rev_s.substr(1));\n            v *= v;\n            if (v > r) {\n                break;\n            }\n            if (v >= l && is_palindrome(v)) {\n                ++result;\n            }\n        }\n\n        // count even length\n        for (int k = 0; k < K; ++k) {\n            const string s = to_string(k), rev_s(s.rbegin(), s.rend());\n            int64_t v = stol(s + rev_s);\n            v *= v;\n            if (v > r) {\n                break;\n            }\n            if (v >= l && is_palindrome(v)) {\n                ++result;\n            }\n        }\n\n        return result;\n    }\n\nprivate:\n    bool is_palindrome(int64_t k) {\n        const string s = to_string(k), rev_s(s.rbegin(), s.rend());\n        return s == rev_s;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^0.25 * logn)\n# Space: O(logn)\n\nclass Solution(object):\n    def superpalindromesInRange(self, L, R):\n        \"\"\"\n        :type L: str\n        :type R: str\n        :rtype: int\n        \"\"\"\n        def is_palindrome(k):\n            return str(k) == str(k)[::-1]\n\n        K = int((10**((len(R)+1)*0.25)))\n        l, r = int(L), int(R)\n\n        result = 0\n\n        # count odd length\n        for k in xrange(K):\n            s = str(k)\n            t = s + s[-2::-1]\n            v = int(t)**2\n            if v > r:\n                break\n            if v >= l and is_palindrome(v):\n                result += 1\n\n        # count even length\n        for k in xrange(K):\n            s = str(k)\n            t = s + s[::-1]\n            v = int(t)**2\n            if v > r:\n                break\n            if v >= l and is_palindrome(v):\n                result += 1\n\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

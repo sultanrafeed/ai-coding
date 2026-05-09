@@ -1,0 +1,35 @@
+{
+  "id": "14f28faf-8c40-4a10-943c-292ccbcb2bf9",
+  "slug": "3sum-closest",
+  "title": "3Sum Closest",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> of length <code>n</code> and an integer <code>target</code>, find three integers at <strong>distinct indices</strong> in <code>nums</code> such that the sum is closest to <code>target</code>.</p>\n\n<p>Return <em>the sum of the three integers</em>.</p>\n\n<p>You may assume that each input would have exactly one solution.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [-1,2,1,-4], target = 1\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The sum that is closest to the target is 2. (-1 + 2 + 1 = 2).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,0,0], target = 1\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The sum that is closest to the target is 0. (0 + 0 + 0 = 0).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= nums.length &lt;= 500</code></li>\n\t<li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li>\n\t<li><code>-10<sup>4</sup> &lt;= target &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int threeSumClosest(vector<int>& nums, int target) {\n        sort(begin(nums), end(nums));\n        int result = 0, min_diff = numeric_limits<int>::max();\n        for (int i = size(nums) - 1; i >= 2; --i) {\n            if (i + 1 < size(nums) && nums[i] == nums[i + 1]) {\n                continue;\n            }\n            int left = 0, right = i - 1;\n            while (left < right) {\n                const auto& total = nums[left] + nums[right] + nums[i];\n                if (total < target) {\n                    ++left;\n                } else if (total > target) {\n                    --right;\n                } else {\n                    return target;\n                }\n                if (abs(total - target) < min_diff) {\n                    min_diff = abs(total - target);\n                    result = total;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(1)\n\nclass Solution(object):\n    def threeSumClosest(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        result, min_diff = 0, float(\"inf\")\n        nums.sort()\n        for i in reversed(xrange(2, len(nums))):\n            if i+1 < len(nums) and nums[i] == nums[i+1]:\n                continue\n            left, right = 0, i-1\n            while left < right:\n                total = nums[left]+nums[right]+nums[i]\n                if total < target:\n                    left += 1\n                elif total > target:\n                    right -= 1\n                else:\n                    return target\n                if abs(total-target) < min_diff:\n                    min_diff = abs(total-target)\n                    result = total\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

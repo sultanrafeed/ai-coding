@@ -1,0 +1,25 @@
+{
+  "id": "3be84f31-1140-4efb-9088-deaec1d01f4e",
+  "slug": "query-batching",
+  "title": "Query Batching",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass QueryBatcher {\n    #queryMultiple : (keys: string[]) => Promise<string[]>\n    #t : number\n    #last : number\n    #pending : any[]\n\n    constructor(queryMultiple: (keys: string[]) => Promise<string[]>, t: number) {\n        this.#queryMultiple = queryMultiple;\n        this.#t = t;\n        this.#last = 0;\n        this.#pending = [];\n    }\n\n    async getValue(key: string): Promise<string> {\n        return new Promise((resolve) => {\n            const curr = Date.now();\n            const remain = Math.max((this.#t + this.#last) - curr, 0);\n            this.#last = curr + remain;\n            this.#pending.push({key, resolve});\n            if (this.#pending.length === 1) {\n                setTimeout(() => this.#processPending(), remain);\n            }\n        });\n    }\n\n    async #processPending() {\n        this.#last = Date.now();\n        const pending = this.#pending;\n        this.#pending = [];\n\n        const result = await this.#queryMultiple(pending.map((obj) => obj.key));\n        pending.map((obj, i) => obj.resolve(result[i]));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

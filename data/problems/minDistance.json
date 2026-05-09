@@ -1,0 +1,25 @@
+{
+  "id": "72c10fb4-f689-4b6a-91ae-a50c6b4d8a08",
+  "slug": "minDistance",
+  "title": "Mindistance",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(m * n)\n// Space Complexity: O(m + n)\n\nclass Solution {\n    public:\n        int minDistance(string word1, string word2) {\n            const size_t m = word1.size();\n            const size_t n = word2.size();\n\n            if(m < n)\n                return minDistance(word2, word1);\n\n            vector<size_t> f(n + 1, 0);\n            size_t upper_left;\n\n            for(size_t i = 0; i < n + 1; ++i)\n                f[i] = i;\n\n            for(size_t i = 1; i < m + 1; ++i) {\n                upper_left = f[0];\n                f[0] = i;\n                for(size_t j = 1; j < n + 1; ++j) {\n                    size_t upper = f[j];\n                    if(word1[i - 1] == word2[j - 1])\n                        f[j] = upper_left;\n                    else {\n                        f[j] = 1 + min(upper_left, min(f[j - 1], f[j]));\n                    }\n                    upper_left = upper;\n                }\n            }\n\n            return f[n];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

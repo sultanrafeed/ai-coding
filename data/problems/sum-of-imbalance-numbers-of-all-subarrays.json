@@ -1,0 +1,35 @@
+{
+  "id": "78832c3c-5f57-4344-9a55-f0d28d9f3b83",
+  "slug": "sum-of-imbalance-numbers-of-all-subarrays",
+  "title": "Sum of Imbalance Numbers of All Subarrays",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>The <strong>imbalance number</strong> of a <strong>0-indexed</strong> integer array <code>arr</code> of length <code>n</code> is defined as the number of indices in <code>sarr = sorted(arr)</code> such that:</p>\n\n<ul>\n\t<li><code>0 &lt;= i &lt; n - 1</code>, and</li>\n\t<li><code>sarr[i+1] - sarr[i] &gt; 1</code></li>\n</ul>\n\n<p>Here, <code>sorted(arr)</code> is the function that returns the sorted version of <code>arr</code>.</p>\n\n<p>Given a <strong>0-indexed</strong> integer array <code>nums</code>, return <em>the <strong>sum of imbalance numbers</strong> of all its <strong>subarrays</strong></em>.</p>\n\n<p>A <strong>subarray</strong> is a contiguous <strong>non-empty</strong> sequence of elements within an array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,3,1,4]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> There are 3 subarrays with non-zero<strong> </strong>imbalance numbers:\n- Subarray [3, 1] with an imbalance number of 1.\n- Subarray [3, 1, 4] with an imbalance number of 1.\n- Subarray [1, 4] with an imbalance number of 1.\nThe imbalance number of all other subarrays is 0. Hence, the sum of imbalance numbers of all the subarrays of nums is 3. \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,3,3,3,5]\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> There are 7 subarrays with non-zero imbalance numbers:\n- Subarray [1, 3] with an imbalance number of 1.\n- Subarray [1, 3, 3] with an imbalance number of 1.\n- Subarray [1, 3, 3, 3] with an imbalance number of 1.\n- Subarray [1, 3, 3, 3, 5] with an imbalance number of 2. \n- Subarray [3, 3, 3, 5] with an imbalance number of 1. \n- Subarray [3, 3, 5] with an imbalance number of 1.\n- Subarray [3, 5] with an imbalance number of 1.\nThe imbalance number of all other subarrays is 0. Hence, the sum of imbalance numbers of all the subarrays of nums is 8. </pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= nums.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// hash table, combinatorics\nclass Solution {\npublic:\n    int sumImbalanceNumbers(vector<int>& nums) {\n        vector<int> right(size(nums), size(nums));\n        vector<int> lookup((size(nums) + 1) + 1, size(nums));\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            right[i] = min(lookup[nums[i]], lookup[nums[i] + 1]);  // to avoid duplicated count\n            lookup[nums[i]] = i;\n        }\n        int result = 0, left = 0;\n        lookup.assign((size(nums) + 1) + 1, -1);\n        for (int i = 0; i < size(nums); ++i) {\n            left = lookup[nums[i] + 1];\n            lookup[nums[i]] = i;\n            result += (i - left) * (right[i] - i);\n        }\n        return result - (size(nums) + 1) * size(nums) / 2;  // since we overcount 1 in each subarray, we have to subtract all of them\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n)\n// hash table, two pointers\nclass Solution2 {\npublic:\n    int sumImbalanceNumbers(vector<int>& nums) {\n        int result = 0;\n        for (int right = 0; right < size(nums); ++right) {\n            unordered_set<int> lookup = {nums[right]};\n            int curr = 0;\n            for (int left = right - 1; left >= 0; --left) {\n                if (!lookup.count(nums[left])) {\n                    lookup.emplace(nums[left]);\n                    curr += 1 - lookup.count(nums[left] - 1) - lookup.count(nums[left] + 1);\n                }\n                result += curr;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# hash table, combinatorics\nclass Solution(object):\n    def sumImbalanceNumbers(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        right = [len(nums)]*len(nums)\n        lookup = [len(nums)]*((len(nums)+1)+1)\n        for i in reversed(xrange(len(nums))):\n            right[i] = min(lookup[nums[i]], lookup[nums[i]+1])  # to avoid duplicated count\n            lookup[nums[i]] = i\n        result = left = 0\n        lookup = [-1]*((len(nums)+1)+1)\n        for i in xrange(len(nums)):\n            left = lookup[nums[i]+1]\n            lookup[nums[i]] = i\n            result += (i-left)*(right[i]-i)\n        return result - (len(nums)+1)*len(nums)//2  # since we overcount 1 in each subarray, we have to subtract all of them\n\n\n# Time:  O(n^2)\n# Space: O(n)\n# hash table, two pointers\nclass Solution2(object):\n    def sumImbalanceNumbers(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = 0\n        for right in xrange(len(nums)):\n            lookup = {nums[right]}\n            curr = 0\n            for left in reversed(xrange(right)):\n                if nums[left] not in lookup:\n                    lookup.add(nums[left])\n                    curr += 1-(nums[left]-1 in lookup)-(nums[left]+1 in lookup)\n                result += curr\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "bd912e8e-9c1b-4813-909f-d671443a473c",
+  "slug": "minimum-number-of-keypresses",
+  "title": "Minimum Number of Keypresses",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "greedy",
+    "sorting",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// greedy, sort\nclass Solution {\npublic:\n    int minimumKeypresses(string s) {\n        vector<int> cnt(26);\n        for (const auto& c : s) {\n            ++cnt[c - 'a'];\n        }\n        sort(rbegin(cnt), rend(cnt));\n        int result = 0;\n        for (int i = 0; i < size(cnt); ++i) {\n            result += cnt[i] * (i / 9 + 1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\n# greedy, sort\nclass Solution(object):\n    def minimumKeypresses(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        return sum(cnt*(i//9+1) for i, cnt in enumerate(sorted(collections.Counter(s).itervalues(), reverse=True)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

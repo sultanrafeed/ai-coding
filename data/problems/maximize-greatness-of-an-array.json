@@ -1,0 +1,36 @@
+{
+  "id": "6c1e6c26-08b5-4eac-8eaa-1ea2dc869f2a",
+  "slug": "maximize-greatness-of-an-array",
+  "title": "Maximize Greatness of an Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a 0-indexed integer array <code>nums</code>. You are allowed to permute <code>nums</code> into a new array <code>perm</code> of your choosing.</p>\n\n<p>We define the <strong>greatness</strong> of <code>nums</code> be the number of indices <code>0 &lt;= i &lt; nums.length</code> for which <code>perm[i] &gt; nums[i]</code>.</p>\n\n<p>Return <em>the <strong>maximum</strong> possible greatness you can achieve after permuting</em> <code>nums</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,3,5,2,1,3,1]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> One of the optimal rearrangements is perm = [2,5,1,3,3,1,1].\nAt indices = 0, 1, 3, and 4, perm[i] &gt; nums[i]. Hence, we return 4.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We can prove the optimal perm is [2,3,4,1].\nAt indices = 0, 1, and 2, perm[i] &gt; nums[i]. Hence, we return 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table, contructive algorithms\nclass Solution {\npublic:\n    int maximizeGreatness(vector<int>& nums) {\n        unordered_map<int, int> cnt;\n        for (const auto& x : nums) {\n            ++cnt[x];\n        }\n        return size(nums) - max_element(cbegin(cnt), cend(cnt), [](const auto& x, const auto& y) {\n            return x.second < y.second;\n        })->second;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// sort, greedy, two pointers\nclass Solution2 {\npublic:\n    int maximizeGreatness(vector<int>& nums) {\n        sort(begin(nums), end(nums));\n        int left = 0;\n        for (int right = 0; right < size(nums); ++right) {\n            if (nums[right] > nums[left]) {\n                ++left;\n            }\n        }\n        return left;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# freq table, contructive algorithms\nclass Solution(object):\n    def maximizeGreatness(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return len(nums)-max(collections.Counter(nums).itervalues())\n  \n\n# Time:  O(nlogn)\n# Space: O(1)\n# sort, greedy, two pointers\nclass Solution2(object):\n    def maximizeGreatness(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        nums.sort()\n        left = 0\n        for right in xrange(len(nums)):\n            if nums[right] > nums[left]:\n                left += 1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

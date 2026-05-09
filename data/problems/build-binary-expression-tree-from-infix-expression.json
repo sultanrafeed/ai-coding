@@ -1,0 +1,42 @@
+{
+  "id": "8ad38402-e88f-4c2b-9c4a-6d02557d2be3",
+  "slug": "build-binary-expression-tree-from-infix-expression",
+  "title": "Build Binary Expression Tree From Infix Expression",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "stack",
+    "tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"3*4-2*5\"\n\"2-3/(5*2)+1\"\n\"1+2+3+4+5\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// Support +, -, *, /.\nclass Solution {\npublic:\n    Node* expTree(string s) {\n        static const unordered_map<char, int> precedence = {{'+', 0}, {'-', 0}, {'*', 1}, {'/', 1}};\n\n        stack<Node *> operands;\n        stack<char> operators;\n        int64_t operand = 0;\n        for (int i = 0; i < size(s); ++i) {\n            if (isdigit(s[i])) {\n                operand = operand * 10 + s[i] - '0';\n                if (i + 1 == size(s) || !isdigit(s[i + 1])) {\n                    operands.emplace(new Node(operand + '0'));\n                    operand = 0;\n                }\n            } else if (s[i] == '(') {\n                operators.emplace(s[i]);\n            } else if (s[i] == ')') {\n                while (!empty(operators) && operators.top() != '(') {\n                    compute(&operands, &operators);\n                }\n                operators.pop();\n            } else if (precedence.count(s[i])) {\n                while (!empty(operators) && precedence.count(operators.top()) && \n                       precedence.at(operators.top()) >= precedence.at(s[i])) {\n                     compute(&operands, &operators);\n                }\n                operators.emplace(s[i]);\n            }\n        }\n        while (!empty(operators)) {\n            compute(&operands, &operators);\n        }\n        return operands.top();\n    }\n\nprivate:\n    template<typename T>\n    void compute(stack<T> *operands, stack<char> *operators) {\n        const auto right = operands->top(); operands->pop();\n        const auto left = operands->top(); operands->pop();\n        const char op = operators->top(); operators->pop();\n        operands->emplace(new Node(op, left, right));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# Definition for a binary tree node.\nclass Node(object):\n    def __init__(self, val=\" \", left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\nclass Solution(object):\n    def expTree(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: Node\n        \"\"\"\n        def compute(operands, operators):\n            right, left = operands.pop(), operands.pop()\n            operands.append(Node(val=operators.pop(), left=left, right=right))\n\n        precedence = {'+':0, '-':0, '*':1, '/':1}\n        operands, operators, operand = [], [], 0\n        for i in xrange(len(s)):\n            if s[i].isdigit():\n                operand = operand*10 + int(s[i])\n                if i == len(s)-1 or not s[i+1].isdigit():\n                    operands.append(Node(val=str(operand)))\n                    operand = 0\n            elif s[i] == '(':\n                operators.append(s[i])\n            elif s[i] == ')':\n                while operators[-1] != '(':\n                    compute(operands, operators)\n                operators.pop()\n            elif s[i] in precedence:\n                while operators and operators[-1] in precedence and \\\n                      precedence[operators[-1]] >= precedence[s[i]]:\n                    compute(operands, operators)\n                operators.append(s[i])\n        while operators:\n            compute(operands, operators)\n        return operands[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

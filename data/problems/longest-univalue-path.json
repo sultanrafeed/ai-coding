@@ -1,0 +1,41 @@
+{
+  "id": "00f16a65-48f4-4592-817e-a0feb3b30711",
+  "slug": "longest-univalue-path",
+  "title": "Longest Univalue Path",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree, return <em>the length of the longest path, where each node in the path has the same value</em>. This path may or may not pass through the root.</p>\n\n<p><strong>The length of the path</strong> between two nodes is represented by the number of edges between them.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/13/ex1.jpg\" style=\"width: 450px; height: 238px;\" />\n<pre>\n<strong>Input:</strong> root = [5,4,5,1,1,null,5]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The shown image shows that the longest path of the same value (i.e. 5).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/13/ex2.jpg\" style=\"width: 450px; height: 238px;\" />\n<pre>\n<strong>Input:</strong> root = [1,4,5,4,4,null,5]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The shown image shows that the longest path of the same value (i.e. 4).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[0, 10<sup>4</sup>]</code>.</li>\n\t<li><code>-1000 &lt;= Node.val &lt;= 1000</code></li>\n\t<li>The depth of the tree will not exceed <code>1000</code>.</li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,4,5,1,1,null,5]\n[1,4,5,4,4,null,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    int longestUnivaluePath(TreeNode* root) {\n        auto result = 0;\n        dfs(root, &result);\n        return result;\n    }\n\nprivate:\n    int dfs(TreeNode *node, int *result) {\n        if (!node) {\n            return 0;\n        }\n        auto left = dfs(node->left, result);\n        auto right = dfs(node->right, result);\n        left = node->left && node->val == node->left->val ? left + 1 : 0;\n        right = node->right && node->val == node->right->val ? right + 1 : 0;\n        *result = max(*result, left + right);\n        return max(left, right);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def longestUnivaluePath(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        result = [0]\n        def dfs(node):\n            if not node:\n                return 0\n            left, right = dfs(node.left), dfs(node.right)\n            left = (left+1) if node.left and node.left.val == node.val else 0\n            right = (right+1) if node.right and node.right.val == node.val else 0\n            result[0] = max(result[0], left+right)\n            return max(left, right)\n\n        dfs(root)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

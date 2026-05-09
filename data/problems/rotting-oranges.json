@@ -1,0 +1,41 @@
+{
+  "id": "7d0e01cc-4330-4dea-b710-edab8457cdfb",
+  "slug": "rotting-oranges",
+  "title": "Rotting Oranges",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an <code>m x n</code> <code>grid</code> where each cell can have one of three values:</p>\n\n<ul>\n\t<li><code>0</code> representing an empty cell,</li>\n\t<li><code>1</code> representing a fresh orange, or</li>\n\t<li><code>2</code> representing a rotten orange.</li>\n</ul>\n\n<p>Every minute, any fresh orange that is <strong>4-directionally adjacent</strong> to a rotten orange becomes rotten.</p>\n\n<p>Return <em>the minimum number of minutes that must elapse until no cell has a fresh orange</em>. If <em>this is impossible, return</em> <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/02/16/oranges.png\" style=\"width: 650px; height: 137px;\" />\n<pre>\n<strong>Input:</strong> grid = [[2,1,1],[1,1,0],[0,1,1]]\n<strong>Output:</strong> 4\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[2,1,1],[0,1,1],[1,0,1]]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> The orange in the bottom left corner (row 2, column 0) is never rotten, because rotting only happens 4-directionally.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[0,2]]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Since there are already no fresh oranges at minute 0, the answer is just 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 10</code></li>\n\t<li><code>grid[i][j]</code> is <code>0</code>, <code>1</code>, or <code>2</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[2,1,1],[1,1,0],[0,1,1]]\n[[2,1,1],[0,1,1],[1,0,1]]\n[[0,2]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    int orangesRotting(vector<vector<int>>& grid) {\n        static const vector<pair<int, int>> directions{{0, 1}, {1, 0},\n                                                       {0, -1}, {-1, 0}};\n\n        int count = 0;\n        queue<tuple<int, int, int>> q;\n        for (int r = 0; r < grid.size(); ++r) {\n            for (int c = 0; c < grid[r].size(); ++c) {\n                if (grid[r][c] == 2) {\n                    q.emplace(r, c, 0);\n                } else if (grid[r][c]  == 1) {\n                    ++count;\n                }\n            }\n        }\n\n        int result = 0;\n        while (!q.empty()) {\n            int r, c;\n            tie(r, c, result) = q.front(); q.pop();\n            for (const auto& d : directions) {\n                int nr = r + d.first, nc = c + d.second;\n                if  (!(0 <= nr && nr < grid.size() &&\n                       0 <= nc && nc < grid[r].size())) {\n                    continue;\n                }\n                if (grid[nr][nc] == 1) {\n                    --count;\n                    grid[nr][nc] = 2;\n                    q.emplace(nr, nc, result + 1);\n                }\n            }\n        }\n        return (count == 0) ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\nimport collections\n\n\nclass Solution(object):\n    def orangesRotting(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n\n        count = 0\n        q = collections.deque()\n        for r, row in enumerate(grid):\n            for c, val in enumerate(row):\n                if val == 2:\n                    q.append((r, c, 0))\n                elif val == 1:\n                    count += 1\n\n        result = 0\n        while q:\n            r, c, result = q.popleft()\n            for d in directions:\n                nr, nc = r+d[0], c+d[1]\n                if not (0 <= nr < len(grid) and \\\n                        0 <= nc < len(grid[r])):\n                    continue\n                if grid[nr][nc] == 1:\n                    count -= 1\n                    grid[nr][nc] = 2\n                    q.append((nr, nc, result+1))\n        return result if count == 0 else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

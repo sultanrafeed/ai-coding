@@ -1,0 +1,41 @@
+{
+  "id": "ad6b81ab-e94a-44f9-99a6-b29e268d7da6",
+  "slug": "shortest-impossible-sequence-of-rolls",
+  "title": "Shortest Impossible Sequence of Rolls",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer array <code>rolls</code> of length <code>n</code> and an integer <code>k</code>. You roll a <code>k</code> sided dice numbered from <code>1</code> to <code>k</code>, <code>n</code> times, where the result of the <code>i<sup>th</sup></code> roll is <code>rolls[i]</code>.</p>\n\n<p>Return<em> the length of the <strong>shortest</strong> sequence of rolls so that there&#39;s no such <span data-keyword=\"subsequence-array\">subsequence</span> in </em><code>rolls</code>.</p>\n\n<p>A <strong>sequence of rolls</strong> of length <code>len</code> is the result of rolling a <code>k</code> sided dice <code>len</code> times.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> rolls = [4,2,1,2,3,3,2,4,1], k = 4\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> Every sequence of rolls of length 1, [1], [2], [3], [4], can be taken from rolls.\nEvery sequence of rolls of length 2, [1, 1], [1, 2], ..., [4, 4], can be taken from rolls.\nThe sequence [1, 4, 2] cannot be taken from rolls, so we return 3.\nNote that there are other sequences that cannot be taken from rolls.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> rolls = [1,1,2,2], k = 2\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> Every sequence of rolls of length 1, [1], [2], can be taken from rolls.\nThe sequence [2, 1] cannot be taken from rolls, so we return 2.\nNote that there are other sequences that cannot be taken from rolls but [2, 1] is the shortest.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> rolls = [1,1,3,2,2,2,3,3], k = 4\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The sequence [4] cannot be taken from rolls, so we return 1.\nNote that there are other sequences that cannot be taken from rolls but [4] is the shortest.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == rolls.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= rolls[i] &lt;= k &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,2,1,2,3,3,2,4,1]\n4\n[1,1,2,2]\n2\n[1,1,3,2,2,2,3,3]\n4",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(k)\n\n// constructive algorithms\nclass Solution {\npublic:\n    int shortestSequence(vector<int>& rolls, int k) {\n        int l = 0;\n        unordered_set<int> lookup;\n        for (const auto& x : rolls) {\n            lookup.emplace(x);\n            if (size(lookup) != k) {\n                continue;\n            }\n            lookup.clear();\n            ++l;\n        }\n        return l + 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(k)\n\n# constructive algorithms\nclass Solution(object):\n    def shortestSequence(self, rolls, k):\n        \"\"\"\n        :type rolls: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        l = 0\n        lookup = set()\n        for x in rolls:\n            lookup.add(x)\n            if len(lookup) != k:\n                continue\n            lookup.clear()\n            l += 1\n        return l+1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

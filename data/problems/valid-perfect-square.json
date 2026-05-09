@@ -1,0 +1,40 @@
+{
+  "id": "9734f19a-b079-4436-9d89-ab9d412df52a",
+  "slug": "valid-perfect-square",
+  "title": "Valid Perfect Square",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a positive integer num, return <code>true</code> <em>if</em> <code>num</code> <em>is a perfect square or</em> <code>false</code> <em>otherwise</em>.</p>\n\n<p>A <strong>perfect square</strong> is an integer that is the square of an integer. In other words, it is the product of some integer with itself.</p>\n\n<p>You must not use any built-in library function, such as <code>sqrt</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 16\n<strong>Output:</strong> true\n<strong>Explanation:</strong> We return true because 4 * 4 = 16 and 4 is an integer.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 14\n<strong>Output:</strong> false\n<strong>Explanation:</strong> We return false because 3.742 * 3.742 = 14 and 3.742 is not an integer.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "16\n14",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isPerfectSquare(int num) {\n        int left = 1, right = num;\n        while (left <= right) {\n            const int mid = left + (right - left) / 2;\n            if (mid >= num / mid) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left == num / left && num % left == 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def isPerfectSquare(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: bool\n        \"\"\"\n        left, right = 1, num\n        while left <= right:\n            mid = left + (right - left) // 2\n            if mid >= num / mid:\n                right = mid - 1\n            else:\n                left = mid + 1\n        return left == num / left and num % left == 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

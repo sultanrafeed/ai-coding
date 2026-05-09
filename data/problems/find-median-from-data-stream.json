@@ -1,0 +1,37 @@
+{
+  "id": "3d7736e7-5518-4fc1-b371-215a9194c0d2",
+  "slug": "find-median-from-data-stream",
+  "title": "Find Median from Data Stream",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>The <strong>median</strong> is the middle value in an ordered integer list. If the size of the list is even, there is no middle value, and the median is the mean of the two middle values.</p>\n\n<ul>\n\t<li>For example, for <code>arr = [2,3,4]</code>, the median is <code>3</code>.</li>\n\t<li>For example, for <code>arr = [2,3]</code>, the median is <code>(2 + 3) / 2 = 2.5</code>.</li>\n</ul>\n\n<p>Implement the MedianFinder class:</p>\n\n<ul>\n\t<li><code>MedianFinder()</code> initializes the <code>MedianFinder</code> object.</li>\n\t<li><code>void addNum(int num)</code> adds the integer <code>num</code> from the data stream to the data structure.</li>\n\t<li><code>double findMedian()</code> returns the median of all elements so far. Answers within <code>10<sup>-5</sup></code> of the actual answer will be accepted.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;MedianFinder&quot;, &quot;addNum&quot;, &quot;addNum&quot;, &quot;findMedian&quot;, &quot;addNum&quot;, &quot;findMedian&quot;]\n[[], [1], [2], [], [3], []]\n<strong>Output</strong>\n[null, null, null, 1.5, null, 2.0]\n\n<strong>Explanation</strong>\nMedianFinder medianFinder = new MedianFinder();\nmedianFinder.addNum(1);    // arr = [1]\nmedianFinder.addNum(2);    // arr = [1, 2]\nmedianFinder.findMedian(); // return 1.5 (i.e., (1 + 2) / 2)\nmedianFinder.addNum(3);    // arr[1, 2, 3]\nmedianFinder.findMedian(); // return 2.0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-10<sup>5</sup> &lt;= num &lt;= 10<sup>5</sup></code></li>\n\t<li>There will be at least one element in the data structure before calling <code>findMedian</code>.</li>\n\t<li>At most <code>5 * 10<sup>4</sup></code> calls will be made to <code>addNum</code> and <code>findMedian</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong></p>\n\n<ul>\n\t<li>If all integer numbers from the stream are in the range <code>[0, 100]</code>, how would you optimize your solution?</li>\n\t<li>If <code>99%</code> of all integer numbers from the stream are in the range <code>[0, 100]</code>, how would you optimize your solution?</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "design",
+    "sorting",
+    "heap-priority-queue",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn) for total n addNums, O(logn) per addNum, O(1) per findMedian.\n// Space: O(n), total space\n\n// Heap solution.\nclass MedianFinder {\npublic:\n\n    // Adds a number into the data structure.\n    void addNum(int num) {\n        // Balance smaller half and larger half.\n        if (max_heap_.empty() || num > max_heap_.top()) {\n            min_heap_.emplace(num);\n            if (min_heap_.size() > max_heap_.size() + 1) {\n                max_heap_.emplace(min_heap_.top());\n                min_heap_.pop();\n            }\n        } else {\n            max_heap_.emplace(num);\n            if (max_heap_.size() > min_heap_.size()) {\n                min_heap_.emplace(max_heap_.top());\n                max_heap_.pop();\n            }\n        }\n    }\n\n    // Returns the median of current data stream\n    double findMedian() {\n        return min_heap_.size() == max_heap_.size() ?\n                   (max_heap_.top() + min_heap_.top()) / 2.0 :\n                   min_heap_.top();\n\n    }\n\nprivate:\n    // min_heap_ stores the larger half seen so far.\n    priority_queue<int, vector<int>, greater<int>> min_heap_;\n    // max_heap_ stores the smaller half seen so far.\n    priority_queue<int, vector<int>, less<int>> max_heap_;\n};\n\n// BST solution.\nclass MedianFinder2 {\npublic:\n\n    // Adds a number into the data structure.\n    void addNum(int num) {\n        // Balance smaller half and larger half.\n        if (max_bst_.empty() || num > *max_bst_.cbegin()) {\n            min_bst_.emplace(num);\n            if (min_bst_.size() > max_bst_.size() + 1) {\n                max_bst_.emplace(*min_bst_.cbegin());\n                min_bst_.erase(min_bst_.cbegin());\n            }\n        } else {\n            max_bst_.emplace(num);\n            if (max_bst_.size() > min_bst_.size()) {\n                min_bst_.emplace(*max_bst_.cbegin());\n                max_bst_.erase(max_bst_.cbegin());\n            }\n        }\n    }\n\n    // Returns the median of current data stream\n    double findMedian() {\n        return min_bst_.size() == max_bst_.size() ?\n                   (*max_bst_.cbegin() + *min_bst_.cbegin()) / 2.0 :\n                   *min_bst_.cbegin();\n\n    }\n\nprivate:\n   // min_bst_ stores the larger half seen so far.\n    multiset<int, less<int>> min_bst_;\n    // max_bst_ stores the smaller half seen so far.\n    multiset<int, greater<int>> max_bst_;\n};\n\n// Your MedianFinder object will be instantiated and called as such:\n// MedianFinder mf;\n// mf.addNum(1);\n// mf.findMedian();",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn) for total n addNums, O(logn) per addNum, O(1) per findMedian.\n# Space: O(n), total space\n\nfrom heapq import heappush, heappop\n\nclass MedianFinder(object):\n    def __init__(self):\n        \"\"\"\n        Initialize your data structure here.\n        \"\"\"\n        self.__max_heap = []\n        self.__min_heap = []\n\n    def addNum(self, num):\n        \"\"\"\n        Adds a num into the data structure.\n        :type num: int\n        :rtype: void\n        \"\"\"\n        # Balance smaller half and larger half.\n        if not self.__max_heap or num > -self.__max_heap[0]:\n            heappush(self.__min_heap, num)\n            if len(self.__min_heap) > len(self.__max_heap) + 1:\n                heappush(self.__max_heap, -heappop(self.__min_heap))\n        else:\n            heappush(self.__max_heap, -num)\n            if len(self.__max_heap) > len(self.__min_heap):\n                heappush(self.__min_heap, -heappop(self.__max_heap))\n\n    def findMedian(self):\n        \"\"\"\n        Returns the median of current data stream\n        :rtype: float\n        \"\"\"\n        return (-self.__max_heap[0] + self.__min_heap[0]) / 2.0 \\\n               if len(self.__min_heap) == len(self.__max_heap) \\\n               else self.__min_heap[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

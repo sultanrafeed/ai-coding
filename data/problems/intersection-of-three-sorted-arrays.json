@@ -1,0 +1,42 @@
+{
+  "id": "da9e0020-54aa-495d-94a4-78d7e2717402",
+  "slug": "intersection-of-three-sorted-arrays",
+  "title": "Intersection of Three Sorted Arrays",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "binary-search",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5]\n[1,2,5,7,9]\n[1,3,4,5,8]\n[197,418,523,876,1356]\n[501,880,1593,1710,1870]\n[521,682,1337,1395,1764]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> arraysIntersection(vector<int>& arr1, vector<int>& arr2, vector<int>& arr3) {\n        vector<int> result;\n        int i = 0, j = 0, k = 0;\n        while (i != arr1.size() && j != arr2.size() && k != arr3.size()) {\n            if (arr1[i] == arr2[j] && arr2[j] == arr3[k]) {\n                result.emplace_back(arr1[i]);\n                ++i, ++j, ++k;\n            } else {\n                int curr = max(max(arr1[i], arr2[j]), arr3[k]);\n                for (; i != arr1.size() && arr1[i] < curr; ++i);\n                for (; j != arr2.size() && arr2[j] < curr; ++j);\n                for (; k != arr3.size() && arr3[k] < curr; ++k);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def arraysIntersection(self, arr1, arr2, arr3):\n        \"\"\"\n        :type arr1: List[int]\n        :type arr2: List[int]\n        :type arr3: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        i, j, k = 0, 0, 0\n        while i != len(arr1) and j != len(arr2) and k != len(arr3):\n            if arr1[i] == arr2[j] == arr3[k]:\n                result.append(arr1[i])\n                i += 1\n                j += 1\n                k += 1\n            else:\n                curr = max(arr1[i], arr2[j], arr3[k])\n                while i != len(arr1) and arr1[i] < curr:\n                    i += 1\n                while j != len(arr2) and arr2[j] < curr:\n                    j += 1\n                while k != len(arr3) and arr3[k] < curr:\n                    k += 1\n        return result\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    def arraysIntersection(self, arr1, arr2, arr3):\n        \"\"\"\n        :type arr1: List[int]\n        :type arr2: List[int]\n        :type arr3: List[int]\n        :rtype: List[int]\n        \"\"\"\n        intersect = reduce(set.intersection, map(set, [arr2, arr3]))\n        return [x for x in arr1 if x in intersect]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

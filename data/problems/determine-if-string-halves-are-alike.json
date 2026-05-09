@@ -1,0 +1,34 @@
+{
+  "id": "d588f275-64b2-474f-856e-56d10c4ff548",
+  "slug": "determine-if-string-halves-are-alike",
+  "title": "Determine if String Halves Are Alike",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a string <code>s</code> of even length. Split this string into two halves of equal lengths, and let <code>a</code> be the first half and <code>b</code> be the second half.</p>\n\n<p>Two strings are <strong>alike</strong> if they have the same number of vowels (<code>&#39;a&#39;</code>, <code>&#39;e&#39;</code>, <code>&#39;i&#39;</code>, <code>&#39;o&#39;</code>, <code>&#39;u&#39;</code>, <code>&#39;A&#39;</code>, <code>&#39;E&#39;</code>, <code>&#39;I&#39;</code>, <code>&#39;O&#39;</code>, <code>&#39;U&#39;</code>). Notice that <code>s</code> contains uppercase and lowercase letters.</p>\n\n<p>Return <code>true</code><em> if </em><code>a</code><em> and </em><code>b</code><em> are <strong>alike</strong></em>. Otherwise, return <code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;book&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> a = &quot;b<u>o</u>&quot; and b = &quot;<u>o</u>k&quot;. a has 1 vowel and b has 1 vowel. Therefore, they are alike.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;textbook&quot;\n<strong>Output:</strong> false\n<strong>Explanation:</strong> a = &quot;t<u>e</u>xt&quot; and b = &quot;b<u>oo</u>k&quot;. a has 1 vowel whereas b has 2. Therefore, they are not alike.\nNotice that the vowel o is counted twice.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= s.length &lt;= 1000</code></li>\n\t<li><code>s.length</code> is even.</li>\n\t<li><code>s</code> consists of <strong>uppercase and lowercase</strong> letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool halvesAreAlike(string s) {\n        static const unordered_set<char> vowels = {'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'};\n        int cnt1 = 0, cnt2 = 0;\n        int left = 0, right = size(s) - 1;\n        while (left < right) {\n            cnt1 += vowels.count(s[left]);\n            cnt2 += vowels.count(s[right]);\n            ++left;\n            --right;\n        }\n        return cnt1 == cnt2;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def halvesAreAlike(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        vowels = set(\"aeiouAEIOU\")\n        cnt1 = cnt2 = 0\n        left, right = 0, len(s)-1\n        while left < right:\n            cnt1 += s[left] in vowels\n            cnt2 += s[right] in vowels\n            left += 1\n            right -= 1\n        return cnt1 == cnt2",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

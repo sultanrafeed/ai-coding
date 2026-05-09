@@ -1,0 +1,40 @@
+{
+  "id": "7fb1b4c6-d8cf-425c-be35-bcb85012ef87",
+  "slug": "partition-array-for-maximum-sum",
+  "title": "Partition Array for Maximum Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>arr</code>, partition the array into (contiguous) subarrays of length <strong>at most</strong> <code>k</code>. After partitioning, each subarray has their values changed to become the maximum value of that subarray.</p>\n\n<p>Return <em>the largest sum of the given array after partitioning. Test cases are generated so that the answer fits in a <strong>32-bit</strong> integer.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,15,7,9,2,5,10], k = 3\n<strong>Output:</strong> 84\n<strong>Explanation:</strong> arr becomes [15,15,15,9,10,10,10]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,4,1,5,7,3,6,1,9,9,3], k = 4\n<strong>Output:</strong> 83\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1], k = 1\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 500</code></li>\n\t<li><code>0 &lt;= arr[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= arr.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,15,7,9,2,5,10]\n3\n[1,4,1,5,7,3,6,1,9,9,3]\n4\n[1]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k)\n// Space: O(k)\n\nclass Solution {\npublic:\n    int maxSumAfterPartitioning(vector<int>& A, int K) {\n        const auto W = K + 1;\n        vector<int> dp(W);\n        for (int i = 0; i < A.size(); ++i) {\n            int curr_max = 0;\n            // dp[i % W] = 0;  // no need in this problem\n            for (int k = 1; k <= min(K, i + 1); ++k) {\n                curr_max = max(curr_max, A[i - k + 1]);\n                dp[i % W] = max(dp[i % W], (i >= k ? dp[(i - k) % W] : 0) + curr_max * k);\n            }\n        }\n        return dp[(A.size() - 1) % W];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k)\n# Space: O(k)\n\nclass Solution(object):\n    def maxSumAfterPartitioning(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        W = K+1\n        dp = [0]*W\n        for i in xrange(len(A)):\n            curr_max = 0\n            # dp[i % W] = 0;  # no need in this problem\n            for k in xrange(1, min(K, i+1) + 1):\n                curr_max = max(curr_max, A[i-k+1])\n                dp[i % W] = max(dp[i % W], (dp[(i-k) % W] if i >= k else 0) + curr_max*k)\n        return dp[(len(A)-1) % W]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

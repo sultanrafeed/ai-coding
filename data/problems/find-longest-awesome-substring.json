@@ -1,0 +1,35 @@
+{
+  "id": "2d0e8df3-f05b-431a-889c-8541fe214c2d",
+  "slug": "find-longest-awesome-substring",
+  "title": "Find Longest Awesome Substring",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a string <code>s</code>. An <strong>awesome</strong> substring is a non-empty substring of <code>s</code> such that we can make any number of swaps in order to make it a palindrome.</p>\n\n<p>Return <em>the length of the maximum length <strong>awesome substring</strong> of</em> <code>s</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;3242415&quot;\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> &quot;24241&quot; is the longest awesome substring, we can form the palindrome &quot;24142&quot; with some swaps.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;12345678&quot;\n<strong>Output:</strong> 1\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;213123&quot;\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> &quot;213123&quot; is the longest awesome substring, we can form the palindrome &quot;231132&quot; with some swaps.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists only of digits.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(10 * n)\n// Space: O(1024)\n\nclass Solution {\npublic:\n    int longestAwesome(string s) {\n        static const int ALPHABET_SIZE = 10;\n        int result = 0, mask = 0;\n        vector<int> lookup(1 << ALPHABET_SIZE, s.length());\n        lookup[0] = -1;\n        for (int i = 0; i < s.length(); ++i) {\n            mask ^= 1 << (s[i] - '0');\n            if (lookup[mask] == s.length()) {\n                lookup[mask] = i;\n            }\n            result = max(result, i - lookup[mask]);  // no middle\n            for (int d = 0; d < ALPHABET_SIZE; ++d) {\n                result = max(result, i - lookup[mask ^ (1 << d)]);  // as middle\n            }\n            lookup[mask] = min(lookup[mask], i);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(10 * n)\n# Space: O(1024)\n\nclass Solution(object):\n    def longestAwesome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        ALPHABET_SIZE = 10\n        result, mask, lookup = 0, 0, [len(s)]*(2**ALPHABET_SIZE)\n        lookup[0] = -1\n        for i, ch in enumerate(s):\n            mask ^= 2**(ord(ch)-ord('0'))\n            if lookup[mask] == len(s):\n                lookup[mask] = i\n            result = max(result, i - lookup[mask])\n            for d in xrange(ALPHABET_SIZE):\n                result = max(result, i - lookup[mask^(2**d)])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

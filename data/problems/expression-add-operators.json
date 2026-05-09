@@ -1,0 +1,35 @@
+{
+  "id": "e493e2d6-5108-4563-bbd8-84bc245d51d3",
+  "slug": "expression-add-operators",
+  "title": "Expression Add Operators",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a string <code>num</code> that contains only digits and an integer <code>target</code>, return <em><strong>all possibilities</strong> to insert the binary operators </em><code>&#39;+&#39;</code><em>, </em><code>&#39;-&#39;</code><em>, and/or </em><code>&#39;*&#39;</code><em> between the digits of </em><code>num</code><em> so that the resultant expression evaluates to the </em><code>target</code><em> value</em>.</p>\n\n<p>Note that operands in the returned expressions <strong>should not</strong> contain leading zeros.</p>\n\n<p><strong>Note</strong> that a number can contain multiple digits.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;123&quot;, target = 6\n<strong>Output:</strong> [&quot;1*2*3&quot;,&quot;1+2+3&quot;]\n<strong>Explanation:</strong> Both &quot;1*2*3&quot; and &quot;1+2+3&quot; evaluate to 6.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;232&quot;, target = 8\n<strong>Output:</strong> [&quot;2*3+2&quot;,&quot;2+3*2&quot;]\n<strong>Explanation:</strong> Both &quot;2*3+2&quot; and &quot;2+3*2&quot; evaluate to 8.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;3456237490&quot;, target = 9191\n<strong>Output:</strong> []\n<strong>Explanation:</strong> There are no expressions that can be created from &quot;3456237490&quot; to evaluate to 9191.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num.length &lt;= 10</code></li>\n\t<li><code>num</code> consists of only digits.</li>\n\t<li><code>-2<sup>31</sup> &lt;= target &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(4^n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<string> addOperators(string num, int target) {\n        vector<string> result;\n        vector<string> expr;\n        int val = 0;\n        string val_str;\n        for (int i = 0; i < num.length(); ++i) {\n            val = val * 10 + num[i] - '0';\n            val_str.push_back(num[i]);\n            // Avoid overflow and \"00...\".\n            if (to_string(val) != val_str) {\n                break;\n            }\n            expr.emplace_back(val_str);\n            addOperatorsDFS(num, target, i + 1, 0, val, &expr, &result);\n            expr.pop_back();\n        }\n        return result;\n    }\n\n    void addOperatorsDFS(const string& num, const int& target, const int& pos,\n                         const int& operand1, const int& operand2,\n                         vector<string> *expr, vector<string> *result) {\n        if (pos == num.length() && operand1 + operand2 == target) {\n            result->emplace_back(join(*expr));\n        } else {\n            int val = 0;\n            string val_str;\n            for (int i = pos; i < num.length(); ++i) {\n                val = val * 10 + num[i] - '0';\n                val_str.push_back(num[i]);\n                // Avoid overflow and \"00...\".\n                if (to_string(val) != val_str) {\n                    break;\n                }\n    \n                // Case '+':\n                expr->emplace_back(\"+\" + val_str);\n                addOperatorsDFS(num, target, i + 1, operand1 + operand2, val, expr, result);\n                expr->pop_back();\n    \n                // Case '-':\n                expr->emplace_back(\"-\" + val_str);\n                addOperatorsDFS(num, target, i + 1, operand1 + operand2, -val, expr, result);\n                expr->pop_back();\n        \n                // Case '*':\n                expr->emplace_back(\"*\" + val_str);\n                addOperatorsDFS(num, target, i + 1, operand1, operand2 * val, expr, result);\n                expr->pop_back();\n            }\n        }\n    }\n    \n    string join(const vector<string>& expr) {\n        ostringstream stream;\n        copy(expr.cbegin(), expr.cend(), ostream_iterator<string>(stream));\n        return stream.str();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(4^n)\n# Space: O(n)\n\nclass Solution(object):\n    def addOperators(self, num, target):\n        \"\"\"\n        :type num: str\n        :type target: int\n        :rtype: List[str]\n        \"\"\"\n        result, expr = [], []\n        val, i = 0, 0\n        val_str = \"\"\n        while i < len(num):\n            val = val * 10 + ord(num[i]) - ord('0')\n            val_str += num[i]\n            # Avoid \"00...\".\n            if str(val) != val_str:\n                break\n            expr.append(val_str)\n            self.addOperatorsDFS(num, target, i + 1, 0, val, expr, result)\n            expr.pop()\n            i += 1\n        return result\n\n    def addOperatorsDFS(self, num, target, pos, operand1, operand2, expr, result):\n        if pos == len(num) and operand1 + operand2 == target:\n            result.append(\"\".join(expr))\n        else:\n            val, i = 0, pos\n            val_str = \"\"\n            while i < len(num):\n                val = val * 10 + ord(num[i]) - ord('0')\n                val_str += num[i]\n                # Avoid \"00...\".\n                if str(val) != val_str:\n                    break\n\n                # Case '+':\n                expr.append(\"+\" + val_str)\n                self.addOperatorsDFS(num, target, i + 1, operand1 + operand2, val, expr, result)\n                expr.pop()\n\n                # Case '-':\n                expr.append(\"-\" + val_str)\n                self.addOperatorsDFS(num, target, i + 1, operand1 + operand2, -val, expr, result)\n                expr.pop()\n\n                # Case '*':\n                expr.append(\"*\" + val_str)\n                self.addOperatorsDFS(num, target, i + 1, operand1, operand2 * val, expr, result)\n                expr.pop()\n\n                i += 1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "d0ac8570-eeb9-434b-bdc1-14a6ba2fd549",
+  "slug": "find-the-index-of-the-large-integer",
+  "title": "Find the Index of the Large Integer",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "interactive"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[7,7,7,7,10,7,7,7]\n[6,6,12]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int getIndex(ArrayReader &reader) {\n        int left = 0, right = reader.length() - 1;\n        while (left < right) {\n            const auto& mid = left + (right - left) / 2;\n            if (reader.compareSub(left, mid, (right - left + 1) % 2 ? mid : mid + 1, right) >= 0) {\n                right = mid;\n            }  else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass ArrayReader(object):\n   def compareSub(self, l, r, x, y):\n       pass\n\n   def length(self):\n       pass\n\nclass Solution(object):\n    def getIndex(self, reader):\n        \"\"\"\n        :type reader: ArrayReader\n        :rtype: integer\n        \"\"\"\n        left, right = 0, reader.length()-1\n        while left < right:\n            mid = left + (right-left)//2\n            if reader.compareSub(left, mid, mid if (right-left+1)%2 else mid+1, right) >= 0:\n                right = mid\n            else:\n                left = mid+1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

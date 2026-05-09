@@ -1,0 +1,35 @@
+{
+  "id": "e49f9cf3-4549-4af9-be83-555d23f43279",
+  "slug": "maximum-number-of-operations-with-the-same-score-ii",
+  "title": "Maximum Number of Operations With the Same Score II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers called <code>nums</code>, you can perform <strong>any</strong> of the following operation while <code>nums</code> contains <strong>at least</strong> <code>2</code> elements:</p>\n\n<ul>\n\t<li>Choose the first two elements of <code>nums</code> and delete them.</li>\n\t<li>Choose the last two elements of <code>nums</code> and delete them.</li>\n\t<li>Choose the first and the last elements of <code>nums</code> and delete them.</li>\n</ul>\n\n<p>The<strong> score</strong> of the operation is the sum of the deleted elements.</p>\n\n<p>Your task is to find the <strong>maximum</strong> number of operations that can be performed, such that <strong>all operations have the same score</strong>.</p>\n\n<p>Return <em>the <strong>maximum</strong> number of operations possible that satisfy the condition mentioned above</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,2,1,2,3,4]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We perform the following operations:\n- Delete the first two elements, with score 3 + 2 = 5, nums = [1,2,3,4].\n- Delete the first and the last elements, with score 1 + 4 = 5, nums = [2,3].\n- Delete the first and the last elements, with score 2 + 3 = 5, nums = [].\nWe are unable to perform any more operations as nums is empty.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,2,6,1,4]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> We perform the following operations:\n- Delete the first two elements, with score 3 + 2 = 5, nums = [6,1,4].\n- Delete the last two elements, with score 1 + 4 = 5, nums = [6].\nIt can be proven that we can perform at most 2 operations.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 2000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "memoization"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n^2)\n\n// memoization\nclass Solution {\npublic:\n    int maxOperations(vector<int>& nums) {\n        const function<int (int, int, int, vector<vector<int>>&)> memoization = [&](int left, int right, int target, vector<vector<int>>& lookup) {\n            if (!(right - left + 1 >= 2)) {\n                return 0;\n            }\n            if (lookup[left][right] == -1) {\n                lookup[left][right] = max({nums[left] + nums[left + 1]   == target ? 1 + memoization(left + 2, right - 0, target, lookup) : 0,\n                                           nums[left] + nums[right]      == target ? 1 + memoization(left + 1, right - 1, target, lookup) : 0,\n                                           nums[right - 1] + nums[right] == target ? 1 + memoization(left + 0, right - 2, target, lookup) : 0});\n            }\n            return lookup[left][right];\n        };\n\n        int result = 0;\n        for (const auto& target : unordered_set<int>{nums[0] + nums[1], nums[0] + nums[size(nums) - 1], nums[size(nums) - 2] + nums[size(nums) - 1]}) {\n            vector<vector<int>> lookup(size(nums), vector<int>(size(nums), -1));\n            result = max(result, memoization(0, size(nums) - 1, target, lookup));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n^2)\n\n# memoization\nclass Solution(object):\n    def maxOperations(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def memoization(left, right, target, lookup):\n            if not right-left+1 >= 2:\n                return 0\n            if lookup[left][right] == -1:\n                lookup[left][right] = max(1+memoization(left+2, right-0, target, lookup) if nums[left]+nums[left+1]   == target else 0,\n                                          1+memoization(left+1, right-1, target, lookup) if nums[left]+nums[right]    == target else 0,\n                                          1+memoization(left+0, right-2, target, lookup) if nums[right-1]+nums[right] == target else 0)\n            return lookup[left][right] \n\n        return max(memoization(0, len(nums)-1, target, [[-1]*(len(nums)) for _ in xrange(len(nums))]) for target in {nums[0]+nums[1], nums[0]+nums[-1], nums[-2]+nums[-1]})",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

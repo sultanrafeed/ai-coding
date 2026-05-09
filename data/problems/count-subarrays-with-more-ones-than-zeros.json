@@ -1,0 +1,46 @@
+{
+  "id": "6a0311f1-26a8-4ca4-b093-a34433ce8bde",
+  "slug": "count-subarrays-with-more-ones-than-zeros",
+  "title": "Count Subarrays With More Ones Than Zeros",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "binary-search",
+    "divide-and-conquer",
+    "binary-indexed-tree",
+    "segment-tree",
+    "merge-sort",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[0,1,1,0,1]\n[0]\n[1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int subarraysWithMoreZerosThanOnes(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        vector<int> lookup(2 * size(nums) + 1);\n        lookup[0 + size(nums)] = 1;\n        int result = 0, total = 0, same = 0, more = 0;\n        for (const auto& num : nums) {\n            total += (num == 1) ? 1 : -1;\n            const int new_same = lookup[total + size(nums)];\n            const int new_more = (num == 1) ? (same + more + 1) % MOD : (more - new_same + MOD) % MOD;\n            ++lookup[total + size(nums)];\n            result = (result + new_more) % MOD;\n            same = new_same, more = new_more;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int subarraysWithMoreZerosThanOnes(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        vector<int> lookup(2 * size(nums) + 1, -2);\n        lookup[0 + size(nums)] = -1;\n        vector<int> dp(size(nums));\n        int result = 0, total = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            total += (nums[i] == 1) ? 1 : -1;\n            if (lookup[total + size(nums)] == -2) {\n                if (total > 0) {\n                    dp[i] = i + 1;\n                }\n            } else {\n                const int j = lookup[total + size(nums)];\n                dp[i] = (j == -1) ? 0 : dp[j];\n                if (nums[i] > 0) {\n                    dp[i] += (i - 1) - j;\n                } \n            }\n            lookup[total + size(nums)] = i;\n            result = (result + dp[i]) % MOD;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def subarraysWithMoreZerosThanOnes(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n\n        lookup = collections.defaultdict(int)\n        lookup[0] = 1\n        result = total = same = more = 0\n        for x in nums:\n            total += 1 if x == 1 else -1\n            new_same = lookup[total]\n            new_more = (same+more+1)%MOD if x == 1 else (more-new_same)%MOD\n            lookup[total] += 1\n            result = (result+new_more)%MOD\n            same, more = new_same, new_more\n        return result\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    def subarraysWithMoreZerosThanOnes(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n\n        lookup = {0:-1}\n        dp = [0]*len(nums)\n        result = total = 0\n        for i, x in enumerate(nums):\n            total += 1 if x == 1 else -1\n            if total not in lookup:\n                if total > 0:\n                    dp[i] = i+1\n            else:\n                j = lookup[total]\n                if j != -1:\n                    dp[i] = dp[j]\n                if x > 0:\n                    dp[i] += (i-1)-j\n            lookup[total] = i\n            result = (result+dp[i])%MOD\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

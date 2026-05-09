@@ -1,0 +1,34 @@
+{
+  "id": "39363c6b-7478-4f65-9ec9-335bba7e7cd7",
+  "slug": "find-k-pairs-with-smallest-sums",
+  "title": "Find K Pairs with Smallest Sums",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two integer arrays <code>nums1</code> and <code>nums2</code> sorted in <strong>non-decreasing&nbsp;order</strong> and an integer <code>k</code>.</p>\n\n<p>Define a pair <code>(u, v)</code> which consists of one element from the first array and one element from the second array.</p>\n\n<p>Return <em>the</em> <code>k</code> <em>pairs</em> <code>(u<sub>1</sub>, v<sub>1</sub>), (u<sub>2</sub>, v<sub>2</sub>), ..., (u<sub>k</sub>, v<sub>k</sub>)</code> <em>with the smallest sums</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,7,11], nums2 = [2,4,6], k = 3\n<strong>Output:</strong> [[1,2],[1,4],[1,6]]\n<strong>Explanation:</strong> The first 3 pairs are returned from the sequence: [1,2],[1,4],[1,6],[7,2],[7,4],[11,2],[7,6],[11,4],[11,6]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,1,2], nums2 = [1,2,3], k = 2\n<strong>Output:</strong> [[1,1],[1,1]]\n<strong>Explanation:</strong> The first 2 pairs are returned from the sequence: [1,1],[1,1],[1,2],[2,1],[1,2],[2,2],[1,3],[1,3],[2,3]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums1.length, nums2.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= nums1[i], nums2[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>nums1</code> and <code>nums2</code> both are sorted in <strong>non-decreasing order</strong>.</li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>4</sup></code></li>\n\t<li><code>k &lt;=&nbsp;nums1.length *&nbsp;nums2.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(k * log(min(n, m, k))), where n is the size of num1, and m is the size of num2.\n// Space: O(min(n, m, k))\n\nclass Solution {\npublic:\n    vector<pair<int, int>> kSmallestPairs(vector<int>& nums1, vector<int>& nums2, int k) {\n        vector<pair<int, int>> pairs;\n        if (nums1.size() > nums2.size()) {\n            vector<pair<int, int>> tmp = kSmallestPairs(nums2, nums1, k);\n            for (const auto& pair : tmp) {\n                pairs.emplace_back(pair.second, pair.first);\n            }\n            return pairs;\n        }\n\n        using P = pair<int, pair<int, int>>;\n        priority_queue<P, vector<P>, greater<P>> q;\n        auto push = [&nums1, &nums2, &q](int i, int j) {\n            if (i < nums1.size() && j < nums2.size()) {\n                q.emplace(nums1[i] + nums2[j], make_pair(i, j));\n            }\n        };\n\n        push(0, 0);\n        while (!q.empty() && pairs.size() < k) {\n            auto tmp = q.top(); q.pop();\n            int i, j;\n            tie(i, j) = tmp.second;\n            pairs.emplace_back(nums1[i], nums2[j]);\n            push(i, j + 1);\n            if (j == 0) {\n                push(i + 1, 0);  // at most queue min(m, n) space.\n            }\n        }\n        return pairs; \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(k * log(min(n, m, k))), where n is the size of num1, and m is the size of num2.\n# Space: O(min(n, m, k))\n\nfrom heapq import heappush, heappop\n\nclass Solution(object):\n    def kSmallestPairs(self, nums1, nums2, k):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :type k: int\n        :rtype: List[List[int]]\n        \"\"\"\n        pairs = []\n        if len(nums1) > len(nums2):\n            tmp = self.kSmallestPairs(nums2, nums1, k)\n            for pair in tmp:\n                pairs.append([pair[1], pair[0]])\n            return pairs\n\n        min_heap = []\n        def push(i, j):\n            if i < len(nums1) and j < len(nums2):\n                heappush(min_heap, [nums1[i] + nums2[j], i, j])\n\n        push(0, 0)\n        while min_heap and len(pairs) < k:\n            _, i, j = heappop(min_heap)\n            pairs.append([nums1[i], nums2[j]])\n            push(i, j + 1)\n            if j == 0:\n                push(i + 1, 0)  # at most queue min(n, m) space\n        return pairs\n\n\n# time: O(mn * log k)\n# space: O(k)\nfrom heapq import nsmallest\nfrom itertools import product\n\n\nclass Solution2(object):\n    def kSmallestPairs(self, nums1, nums2, k):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :type k: int\n        :rtype: List[List[int]]\n        \"\"\"\n        return nsmallest(k, product(nums1, nums2), key=sum)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

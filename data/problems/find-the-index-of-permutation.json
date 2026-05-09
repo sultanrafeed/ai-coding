@@ -1,0 +1,45 @@
+{
+  "id": "b86f49cb-f5c6-4c02-818e-ffad76fd067f",
+  "slug": "find-the-index-of-permutation",
+  "title": "Find the Index of Permutation",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "divide-and-conquer",
+    "binary-indexed-tree",
+    "segment-tree",
+    "merge-sort",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2]\n[3,1,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// bit, fenwick tree, combinatorics\nclass Solution {\nprivate:\n    static const uint32_t MOD = 1e9 + 7;\n\npublic:\n    int getPermutationIndex(vector<int>& perm) {\n        vector<int> fact(size(perm) + 1);\n        fact[0] = 1;\n        for (int i = 0; i + 1 < size(fact); ++i) {\n            fact[i + 1] = (static_cast<int64_t>(i + 1) * fact[i]) % MOD;\n        }\n        int result = 0;\n        BIT bit(size(perm));\n        for (int i = 0; i < size(perm); ++i) {\n            result = (result + (static_cast<int64_t>((((perm[i] - 1) - bit.query((perm[i] - 1) - 1)) % MOD + MOD) % MOD) * fact[(size(perm) - 1) - i] % MOD)) % MOD;\n            bit.add(perm[i] - 1, +1);\n        }\n        return result;\n    }\n\nprivate:\n    class BIT {\n    public:\n        BIT(int n) : bit_(n + 1) {  // 0-indexed\n        }\n        \n        void add(int i, int val) {\n            ++i;\n            for (; i < size(bit_); i += lower_bit(i)) {\n                bit_[i] = (bit_[i] + val) % MOD;\n            }\n        }\n\n        int query(int i) const {\n            ++i;\n            int total = 0;\n            for (; i > 0; i -= lower_bit(i)) {\n                total = (total + bit_[i]) % MOD;\n            }\n            return total;\n        }\n    \n    private:\n        inline int lower_bit(int i) const {\n            return i & -i;\n        }\n        \n        vector<int> bit_;\n    };\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// bit, fenwick tree, combinatorics\nclass Solution2 {\nprivate:\n    static const uint32_t MOD = 1e9 + 7;\n\npublic:\n    int getPermutationIndex(vector<int>& perm) {\n        vector<int> fact = {1, 1};\n        const auto& factorial = [&](int n) {\n             while (size(fact) <= n) {  // lazy initialization\n                fact.emplace_back((static_cast<int64_t>(fact.back()) * size(fact)) % MOD);\n            }\n            return fact[n];\n        };\n\n        int result = 0;\n        BIT bit(size(perm));\n        for (int i = 0; i < size(perm); ++i) {\n            result = (result + (static_cast<int64_t>((((perm[i] - 1) - bit.query((perm[i] - 1) - 1)) % MOD + MOD) % MOD) * factorial((size(perm) - 1) - i) % MOD)) % MOD;\n            bit.add(perm[i] - 1, +1);\n        }\n        return result;\n    }\n\nprivate:\n    class BIT {\n    public:\n        BIT(int n) : bit_(n + 1) {  // 0-indexed\n        }\n        \n        void add(int i, int val) {\n            ++i;\n            for (; i < size(bit_); i += lower_bit(i)) {\n                bit_[i] = (bit_[i] + val) % MOD;\n            }\n        }\n\n        int query(int i) const {\n            ++i;\n            int total = 0;\n            for (; i > 0; i -= lower_bit(i)) {\n                total = (total + bit_[i]) % MOD;\n            }\n            return total;\n        }\n    \n    private:\n        inline int lower_bit(int i) const {\n            return i & -i;\n        }\n        \n        vector<int> bit_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\n# bit, fenwick tree, combinatorics\nclass Solution(object):\n    def getPermutationIndex(self, perm):\n        \"\"\"\n        :type perm: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        class BIT(object):  # 0-indexed.\n            def __init__(self, n):\n                self.__bit = [0]*(n+1)  # Extra one for dummy node.\n\n            def add(self, i, val):\n                i += 1  # Extra one for dummy node.\n                while i < len(self.__bit):\n                    self.__bit[i] = (self.__bit[i]+val) % MOD\n                    i += (i & -i)\n\n            def query(self, i):\n                i += 1  # Extra one for dummy node.\n                ret = 0\n                while i > 0:\n                    ret = (ret+self.__bit[i]) % MOD\n                    i -= (i & -i)\n                return ret\n\n        fact = [0]*len(perm)\n        fact[0] = 1\n        for i in xrange(len(fact)-1):\n            fact[i+1] = ((i+1)*fact[i])%MOD\n        result = 0\n        bit = BIT(len(perm))\n        for i, x in enumerate(perm):\n            result = (result+(((((x-1)-bit.query((x-1)-1))%MOD)*fact[(len(perm)-1)-i])%MOD))%MOD\n            bit.add(x-1, +1)\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\n# bit, fenwick tree, combinatorics\nclass Solution2(object):\n    def getPermutationIndex(self, perm):\n        \"\"\"\n        :type perm: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        fact = [1]*2            \n        def factorial(n):\n            while len(fact) <= n:  # lazy initialization\n                fact.append(fact[-1]*len(fact) % MOD)\n            return fact[n]\n\n        class BIT(object):  # 0-indexed.\n            def __init__(self, n):\n                self.__bit = [0]*(n+1)  # Extra one for dummy node.\n\n            def add(self, i, val):\n                i += 1  # Extra one for dummy node.\n                while i < len(self.__bit):\n                    self.__bit[i] = (self.__bit[i]+val) % MOD\n                    i += (i & -i)\n\n            def query(self, i):\n                i += 1  # Extra one for dummy node.\n                ret = 0\n                while i > 0:\n                    ret = (ret+self.__bit[i]) % MOD\n                    i -= (i & -i)\n                return ret\n\n        result = 0\n        bit = BIT(len(perm))\n        for i, x in enumerate(perm):\n            result = (result+(((((x-1)-bit.query((x-1)-1))%MOD)*factorial((len(perm)-1)-i))%MOD))%MOD\n            bit.add(x-1, +1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

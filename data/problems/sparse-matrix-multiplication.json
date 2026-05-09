@@ -1,0 +1,35 @@
+{
+  "id": "ea93443d-71ea-493a-92f0-bda123d69206",
+  "slug": "sparse-matrix-multiplication",
+  "title": "Sparse Matrix Multiplication",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n * l), A is m x n matrix, B is n x l matrix\n// Space: O(m * l)\n\nclass Solution {\npublic:\n    vector<vector<int>> multiply(vector<vector<int>>& A, vector<vector<int>>& B) {\n        const int m = A.size(), n = A[0].size(), l = B[0].size();\n        vector<vector<int>> res(m, vector<int>(l));\n        for (int i = 0; i < m; ++i) {\n            for (int k = 0; k < n; ++k) {\n                if (A[i][k]) {\n                    for (int j = 0; j < l; ++j) {\n                        res[i][j] += A[i][k] * B[k][j];\n                    }\n                }\n            }\n        }\n        return res;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n * l), A is m x n matrix, B is n x l matrix\n# Space: O(m * l)\n\nclass Solution(object):\n    def multiply(self, A, B):\n        \"\"\"\n        :type A: List[List[int]]\n        :type B: List[List[int]]\n        :rtype: List[List[int]]\n        \"\"\"\n        m, n, l = len(A), len(A[0]), len(B[0])\n        res = [[0 for _ in xrange(l)] for _ in xrange(m)]\n        for i in xrange(m):\n            for k in xrange(n):\n                if A[i][k]:\n                    for j in xrange(l):\n                        res[i][j] += A[i][k] * B[k][j]\n        return res",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

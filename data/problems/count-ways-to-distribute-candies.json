@@ -1,0 +1,39 @@
+{
+  "id": "b03b5cde-9458-4ed3-9f6d-a33d5053f801",
+  "slug": "count-ways-to-distribute-candies",
+  "title": "Count Ways to Distribute Candies",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n2\n4\n2\n20\n5",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k)\n// Space: O(k)\n\nclass Solution {\npublic:\n    int waysToDistribute(int n, int k) {\n        static int MOD = 1e9 + 7;\n        vector<int64_t> dp(k, 1);\n        for (int i = 1; i < n; ++i) {\n            for (int j = min(i, k) - 1; j >= 1; --j) {\n                dp[j] = ((j + 1) * dp[j] + dp[j - 1]) % MOD;\n            }\n        }\n        return dp[k - 1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k)\n# Space: O(k)\n\nclass Solution(object):\n    def waysToDistribute(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        dp = [1]*k\n        for i in xrange(1, n):\n            for j in reversed(xrange(1, min(i, k))):\n                dp[j] = ((j+1)*dp[j] + dp[j-1]) % MOD\n        return dp[k-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

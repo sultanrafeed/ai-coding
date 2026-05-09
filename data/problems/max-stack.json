@@ -1,0 +1,37 @@
+{
+  "id": "f7abc98b-220c-4d68-9d95-4013b443b0e2",
+  "slug": "max-stack",
+  "title": "Max Stack",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list",
+    "stack",
+    "design",
+    "doubly-linked-list",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  push:    O(logn)\n//        pop:     O(logn)\n//        popMax:  O(logn)\n//        top:     O(1)\n//        peekMax: O(1)\n// Space: O(n), n is the number of values in the current stack\n\nclass MaxStack {\npublic:\n    /** initialize your data structure here. */\n    MaxStack() {\n        \n    }\n    \n    void push(int x) {\n        const auto idx = idx_to_val_.empty() ? 0 : idx_to_val_.cbegin()->first + 1;\n        idx_to_val_[idx] = x;\n        val_to_idxs_[x].emplace_back(idx);\n    }\n    \n    int pop() {\n        const auto val = idx_to_val_.cbegin()->second;\n        remove(val);\n        return val;\n    }\n    \n    int top() {\n        return idx_to_val_.cbegin()->second;\n    }\n    \n    int peekMax() {\n        return val_to_idxs_.cbegin()->first;\n    }\n    \n    int popMax() {\n        const auto val = val_to_idxs_.cbegin()->first;\n        remove(val);\n        return val;\n    }\n\nprivate:    \n    void remove(const int val) {\n        const auto idx = val_to_idxs_[val].back();\n        val_to_idxs_[val].pop_back();\n        if (val_to_idxs_[val].empty()) {\n            val_to_idxs_.erase(val);\n        }\n        idx_to_val_.erase(idx);\n    }\n\n    map<int, int, greater<int>> idx_to_val_;\n    map<int, vector<int>, greater<int>> val_to_idxs_;\n};\n\n/**\n * Your MaxStack object will be instantiated and called as such:\n * MaxStack obj = new MaxStack();\n * obj.push(x);\n * int param_2 = obj.pop();\n * int param_3 = obj.top();\n * int param_4 = obj.peekMax();\n * int param_5 = obj.popMax();\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  push:    O(1)\n#        pop:     O(n), there is no built-in SortedDict in python. If applied, it could be reduced to O(logn)\n#        popMax:  O(n)\n#        top:     O(1)\n#        peekMax: O(1)\n# Space: O(n), n is the number of values in the current stack\n\nimport collections\n\n\nclass MaxStack(object):\n\n    def __init__(self):\n        \"\"\"\n        initialize your data structure here.\n        \"\"\"\n        self.__idx_to_val = collections.defaultdict(int)\n        self.__val_to_idxs = collections.defaultdict(list)\n        self.__top = None\n        self.__max = None\n\n\n    def push(self, x):\n        \"\"\"\n        :type x: int\n        :rtype: void\n        \"\"\"\n        idx = self.__val_to_idxs[self.__top][-1]+1 if self.__val_to_idxs else 0\n        self.__idx_to_val[idx] = x\n        self.__val_to_idxs[x].append(idx)\n        self.__top = x\n        self.__max = max(self.__max, x)\n\n\n    def pop(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        val = self.__top\n        self.__remove(val)\n        return val\n\n\n    def top(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__top\n\n\n    def peekMax(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__max\n\n\n    def popMax(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        val = self.__max\n        self.__remove(val)\n        return val\n\n\n    def __remove(self, val):\n        idx = self.__val_to_idxs[val][-1]\n        self.__val_to_idxs[val].pop()\n        if not self.__val_to_idxs[val]:\n            del self.__val_to_idxs[val]\n        del self.__idx_to_val[idx]\n        if val == self.__top:\n            self.__top = self.__idx_to_val[max(self.__idx_to_val.keys())] if self.__idx_to_val else None\n        if val == self.__max:\n            self.__max = max(self.__val_to_idxs.keys()) if self.__val_to_idxs else None",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

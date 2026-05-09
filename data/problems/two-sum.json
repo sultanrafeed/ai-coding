@@ -3,25 +3,84 @@
   "slug": "two-sum",
   "title": "Two Sum",
   "difficulty": "easy",
-  "descriptionHtml": "<p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>.</p>",
-  "tags": ["array", "hash-table"],
+  "descriptionHtml": "<p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>. You may not use the same element twice.</p>",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
   "constraints": {
     "n": "2 <= nums.length <= 10^4",
     "values": "-10^9 <= nums[i] <= 10^9",
-    "target": "-10^9 <= target <= 10^9"
+    "target": "-10^9 <= target <= 10^9",
+    "guarantee": "Exactly one valid answer exists"
   },
   "examples": [
     {
       "input": "nums = [2,7,11,15], target = 9",
       "output": "[0,1]",
-      "explanation": "Because nums[0] + nums[1] == 9, we return [0, 1]."
+      "explanation": "nums[0] + nums[1] = 2 + 7 = 9"
+    },
+    {
+      "input": "nums = [3,2,4], target = 6",
+      "output": "[1,2]"
     }
   ],
   "testCases": [
-    { "input": "[2,7,11,15]\n9", "expectedOutput": "[0,1]", "isHidden": false },
-    { "input": "[3,2,4]\n6", "expectedOutput": "[1,2]", "isHidden": false },
-    { "input": "[3,3]\n6", "expectedOutput": "[0,1]", "isHidden": true }
+    {
+      "input": "[2,7,11,15]\n9",
+      "expectedOutput": "[0,1]",
+      "isHidden": false
+    },
+    {
+      "input": "[3,2,4]\n6",
+      "expectedOutput": "[1,2]",
+      "isHidden": false
+    },
+    {
+      "input": "[3,3]\n6",
+      "expectedOutput": "[0,1]",
+      "isHidden": false
+    },
+    {
+      "input": "[-1,-2,-3]\n-5",
+      "expectedOutput": "[1,2]",
+      "isHidden": true
+    },
+    {
+      "input": "[0,4,3,0]\n0",
+      "expectedOutput": "[0,3]",
+      "isHidden": true
+    }
   ],
-  "timeComplexity": "O(n)",
-  "spaceComplexity": "O(n)"
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "def two_sum(nums: list[int], target: int) -> list[int]:\n    seen = {}\n    for i, n in enumerate(nums):\n        complement = target - n\n        if complement in seen:\n            return [seen[complement], i]\n        seen[n] = i\n    return []",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n)"
+    },
+    {
+      "language": "cpp",
+      "code": "vector<int> twoSum(vector<int>& nums, int target) {\n    unordered_map<int,int> seen;\n    for (int i = 0; i < nums.size(); i++) {\n        int complement = target - nums[i];\n        if (seen.count(complement)) return {seen[complement], i};\n        seen[nums[i]] = i;\n    }\n    return {};\n}",
+      "timeComplexity": "O(n)",
+      "spaceComplexity": "O(n)"
+    },
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nfunction twoSum(nums: number[], target: number): number[] {\n    let lookup = new Map();\n    for (let i = 0; i < nums.length; i++) {\n        if (lookup.has(target - nums[i])) {\n            return [lookup.get(target - nums[i]), i];\n        }\n        lookup.set(nums[i], i);\n    }\n    return [];\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "Hash map complement lookup",
+    "explanation": "For each element x at index i, compute complement = target - x. If complement is already in the hash map, we found our pair. Otherwise store x → i in the map. Single pass, no nested loop needed.",
+    "keyInsight": "Instead of searching the array for the complement on each step (O(n²)), store what you've seen so far in a hash map for O(1) lookup.",
+    "commonMistakes": [
+      "Using the same index twice: returning [i, i] when nums[i] == target/2",
+      "Nested loop O(n²) brute force — correct but fails time limit on large inputs",
+      "Returning values instead of indices",
+      "Off-by-one: checking complement in seen AFTER inserting the current element, allowing self-match"
+    ]
+  }
 }

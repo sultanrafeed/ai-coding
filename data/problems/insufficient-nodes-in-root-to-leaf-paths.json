@@ -1,0 +1,35 @@
+{
+  "id": "0891254d-3432-4e11-a55f-0dc67684035d",
+  "slug": "insufficient-nodes-in-root-to-leaf-paths",
+  "title": "Insufficient Nodes in Root to Leaf Paths",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree and an integer <code>limit</code>, delete all <strong>insufficient nodes</strong> in the tree simultaneously, and return <em>the root of the resulting binary tree</em>.</p>\n\n<p>A node is <strong>insufficient</strong> if every root to <strong>leaf</strong> path intersecting this node has a sum strictly less than <code>limit</code>.</p>\n\n<p>A <strong>leaf</strong> is a node with no children.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/06/05/insufficient-11.png\" style=\"width: 500px; height: 207px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,3,4,-99,-99,7,8,9,-99,-99,12,13,-99,14], limit = 1\n<strong>Output:</strong> [1,2,3,4,null,null,7,8,9,null,14]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/06/05/insufficient-3.png\" style=\"width: 400px; height: 274px;\" />\n<pre>\n<strong>Input:</strong> root = [5,4,8,11,null,17,4,7,1,null,null,5,3], limit = 22\n<strong>Output:</strong> [5,4,8,11,null,17,4,7,null,null,null,5]\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/06/11/screen-shot-2019-06-11-at-83301-pm.png\" style=\"width: 250px; height: 199px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,-3,-5,null,4,null], limit = -1\n<strong>Output:</strong> [1,null,-3,4]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 5000]</code>.</li>\n\t<li><code>-10<sup>5</sup> &lt;= Node.val &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= limit &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* sufficientSubset(TreeNode* root, int limit) {\n        if (!root) {\n            return nullptr;\n        }\n        if (!root->left && !root->right) {\n            return root->val < limit ? nullptr : root;\n        }\n        root->left = sufficientSubset(root->left, limit - root->val);\n        root->right = sufficientSubset(root->right, limit - root->val);\n        if (!root->left && !root->right) {\n            return nullptr;\n        }\n        return root;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def sufficientSubset(self, root, limit):\n        \"\"\"\n        :type root: TreeNode\n        :type limit: int\n        :rtype: TreeNode\n        \"\"\"\n        if not root:\n            return None\n        if not root.left and not root.right:\n            return None if root.val < limit else root\n        root.left = self.sufficientSubset(root.left, limit-root.val)\n        root.right = self.sufficientSubset(root.right, limit-root.val)\n        if not root.left and not root.right:\n            return None\n        return root",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "afc76dfb-d41d-48da-b0ba-b89b5730e2a7",
+  "slug": "type-of-triangle-ii",
+  "title": "Type Of Triangle Ii",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    string triangleType(vector<int>& nums) {\n        sort(begin(nums), end(nums));\n        const auto a = nums[0], b = nums[1], c = nums[2];\n        if (a + b <= c) {\n            return \"none\";\n        }\n        if (a == b && b == c) {\n            return \"equilateral\";\n        }\n        if (a == b || b == c) {\n            return \"isosceles\";\n        }\n        return \"scalene\";\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# math\nclass Solution(object):\n    def triangleType(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: str\n        \"\"\"\n        nums.sort()\n        a, b, c = nums\n        if a+b <= c:\n            return \"none\"\n        if a == b == c:\n            return \"equilateral\"\n        if a == b or b == c:\n            return \"isosceles\"\n        return \"scalene\"",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

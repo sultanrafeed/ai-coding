@@ -1,0 +1,36 @@
+{
+  "id": "8eb7cff2-78ea-495b-903f-231f26a28d89",
+  "slug": "divide-array-in-sets-of-k-consecutive-numbers",
+  "title": "Divide Array in Sets of K Consecutive Numbers",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers <code>nums</code> and a positive integer <code>k</code>, check whether it is possible to divide this array into sets of <code>k</code> consecutive numbers.</p>\n\n<p>Return <code>true</code> <em>if it is possible</em>.<strong> </strong>Otherwise, return <code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,3,4,4,5,6], k = 4\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Array can be divided into [1,2,3,4] and [3,4,5,6].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,2,1,2,3,4,3,4,5,9,10,11], k = 3\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Array can be divided into [1,2,3] , [2,3,4] , [3,4,5] and [9,10,11].\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4], k = 3\n<strong>Output:</strong> false\n<strong>Explanation:</strong> Each array should be divided in subarrays of size 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= k &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Note:</strong> This question is the same as&nbsp;846:&nbsp;<a href=\"https://leetcode.com/problems/hand-of-straights/\" target=\"_blank\">https://leetcode.com/problems/hand-of-straights/</a>",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool isPossibleDivide(vector<int>& nums, int k) {\n        map<int, int> count;\n        for (const auto& num : nums) {\n            ++count[num];\n        }\n        for (const auto [num, c] : count) {\n            if (!c) {\n                continue;\n            }\n            for (int i = num; i < num + k; ++i) {\n                if (count[i] < c) {\n                    return false;\n                }\n                count[i] -= c;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def isPossibleDivide(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: bool\n        \"\"\"\n        count = collections.Counter(nums)\n        for num in sorted(count.keys()):\n            c = count[num]\n            if not c:\n                continue\n            for i in xrange(num, num+k):\n                if count[i] < c:\n                    return False\n                count[i] -= c\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

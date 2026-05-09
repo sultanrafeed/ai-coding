@@ -1,0 +1,34 @@
+{
+  "id": "606c69ad-bceb-4a67-a44b-56c63d0b798d",
+  "slug": "xor-operation-in-an-array",
+  "title": "XOR Operation in an Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer <code>n</code> and an integer <code>start</code>.</p>\n\n<p>Define an array <code>nums</code> where <code>nums[i] = start + 2 * i</code> (<strong>0-indexed</strong>) and <code>n == nums.length</code>.</p>\n\n<p>Return <em>the bitwise XOR of all elements of</em> <code>nums</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 5, start = 0\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> Array nums is equal to [0, 2, 4, 6, 8] where (0 ^ 2 ^ 4 ^ 6 ^ 8) = 8.\nWhere &quot;^&quot; corresponds to bitwise XOR operator.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 4, start = 3\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> Array nums is equal to [3, 5, 7, 9] where (3 ^ 5 ^ 7 ^ 9) = 8.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 1000</code></li>\n\t<li><code>0 &lt;= start &lt;= 1000</code></li>\n\t<li><code>n == nums.length</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int xorOperation(int n, int start) {\n        return int(n % 2 && start % 2) + 2 * xorNums(n, start / 2);\n    }\n\nprivate:    \n    int xorNums(int n, int start) {\n        return (start % 2)\n               ? start ^ xorNumsBeginEven(n - 1, start + 1)\n               : xorNumsBeginEven(n, start);\n    }\n    \n    int xorNumsBeginEven(int n, int start) {\n        assert(start % 2 == 0);\n        // 2*i ^ (2*i+1) = 1\n        return ((n / 2) % 2) ^ ((n % 2) ? (start + n - 1) : 0);\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int xorOperation(int n, int start) {\n        int result = 0;\n        for (int i = start + 2 * n - 2; i >= start; i -= 2) {\n            result ^= i;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def xorOperation(self, n, start):\n        \"\"\"\n        :type n: int\n        :type start: int\n        :rtype: int\n        \"\"\"\n        def xorNums(n, start):\n            def xorNumsBeginEven(n, start):\n                assert(start%2 == 0)\n                # 2*i ^ (2*i+1) = 1\n                return ((n//2)%2)^((start+n-1) if n%2 else 0)\n\n            return start^xorNumsBeginEven(n-1, start+1) if start%2 else xorNumsBeginEven(n, start)\n        \n        return int(n%2 and start%2) + 2*xorNums(n, start//2)\n\n\n# Time:  O(n)\n# Space: O(1)\nimport operator\n\n\nclass Solution2(object):\n    def xorOperation(self, n, start):\n        \"\"\"\n        :type n: int\n        :type start: int\n        :rtype: int\n        \"\"\"\n        return reduce(operator.xor, (i for i in xrange(start, start+2*n, 2)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

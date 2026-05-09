@@ -1,0 +1,37 @@
+{
+  "id": "84bd5ad6-2279-4b2a-9642-1d4fe8715e41",
+  "slug": "maximum-frequency-score-of-a-subarray",
+  "title": "Maximum Frequency Score of a Subarray",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "stack",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// two pointers, sliding window, freq table, hash table\nclass Solution {\npublic:\n    int maxFrequencyScore(vector<int>& nums, int k) {\n        static const int MOD = 1e9 + 7;\n        unordered_map<int, unordered_map<int, int>> lookup;\n        const auto& powmod = [&](int n, int p) {\n            if (!lookup.count(n) || !lookup[n].count(p)) {\n                lookup[n][p] = p >= 2 ? (static_cast<int64_t>(lookup[n][p - 1]) * n) % MOD : n % MOD;  // assumed powmod(n, p-1) was accessed before powmod(n, p)\n            }\n            return lookup[n][p];\n        };\n\n        int result = 0, curr = 0;\n        unordered_map<int, int> cnt;\n        for (int i = 0; i < size(nums); ++i) {\n            if (i >= k) {\n                curr = ((curr - powmod(nums[i - k], cnt[nums[i - k]])) % MOD + MOD) % MOD;\n                --cnt[nums[i - k]];\n                if (cnt[nums[i - k]]) {\n                    curr = (curr + powmod(nums[i - k], cnt[nums[i - k]])) % MOD;\n                }\n            }\n            if (cnt[nums[i]]) {\n                curr = ((curr - powmod(nums[i], cnt[nums[i]])) % MOD + MOD) % MOD;\n            }\n            ++cnt[nums[i]];\n            curr = (curr + powmod(nums[i], cnt[nums[i]])) % MOD;\n            if (i >= k - 1) {\n                result = max(result, curr);\n            }\n        }\n        return result;\n    }\n};\n\n\n// Time:  O(n)\n// Space: O(n)\n// two pointers, sliding window, freq table\nclass Solution2 {\npublic:\n    int maxFrequencyScore(vector<int>& nums, int k) {\n        static const int MOD = 1e9 + 7;\n        const auto& powmod = [&](int a, int b) {\n            a %= MOD;\n            int64_t result = 1;\n            while (b) {\n                if (b & 1) {\n                    result = result * a % MOD;\n                }\n                a = int64_t(a) * a % MOD;\n                b >>= 1;\n            }\n            return result;\n        };\n\n        int result = 0, curr = 0;\n        unordered_map<int, int> cnt;\n        for (int i = 0; i < size(nums); ++i) {\n            if (i >= k) {\n                curr = ((curr - powmod(nums[i - k], cnt[nums[i - k]])) % MOD + MOD) % MOD;\n                --cnt[nums[i - k]];\n                if (cnt[nums[i - k]]) {\n                    curr = (curr + powmod(nums[i - k], cnt[nums[i - k]])) % MOD;\n                }\n            }\n            if (cnt[nums[i]]) {\n                curr = ((curr - powmod(nums[i], cnt[nums[i]])) % MOD + MOD) % MOD;\n            }\n            ++cnt[nums[i]];\n            curr = (curr + powmod(nums[i], cnt[nums[i]])) % MOD;\n            if (i >= k - 1) {\n                result = max(result, curr);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# two pointers, sliding window freq table, hash table\nclass Solution(object):\n    def maxFrequencyScore(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        lookup = {}\n        def powmod(n, p):\n            if (n, p) not in lookup:\n                lookup[n, p] = (lookup[n, p-1]*n)%MOD if p >= 2 else n%MOD  # assumed powmod(n, p-1) was accessed before powmod(n, p)\n            return lookup[n, p]\n\n        result = curr = 0\n        cnt = collections.Counter()\n        for i in xrange(len(nums)):\n            if i >= k:\n                curr = (curr-powmod(nums[i-k], cnt[nums[i-k]]))%MOD\n                cnt[nums[i-k]] -= 1\n                if cnt[nums[i-k]]:\n                    curr = (curr+powmod(nums[i-k], cnt[nums[i-k]]))%MOD\n            if cnt[nums[i]]:\n               curr = (curr-powmod(nums[i], cnt[nums[i]]))%MOD\n            cnt[nums[i]] += 1\n            curr = (curr+powmod(nums[i], cnt[nums[i]]))%MOD\n            if i >= k-1:\n                result = max(result, curr)\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nimport collections\n\n\n# two pointers, sliding window, freq table\nclass Solution2(object):\n    def maxFrequencyScore(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result = curr = 0\n        cnt = collections.Counter()\n        for i in xrange(len(nums)):\n            if i >= k:\n                curr = (curr-pow(nums[i-k], cnt[nums[i-k]], MOD))%MOD\n                cnt[nums[i-k]] -= 1\n                if cnt[nums[i-k]]:\n                    curr = (curr+pow(nums[i-k], cnt[nums[i-k]], MOD))%MOD\n            if cnt[nums[i]]:\n               curr = (curr-pow(nums[i], cnt[nums[i]], MOD))%MOD\n            cnt[nums[i]] += 1\n            curr = (curr+pow(nums[i], cnt[nums[i]], MOD))%MOD\n            if i >= k-1:\n                result = max(result, curr)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

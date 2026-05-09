@@ -1,0 +1,28 @@
+{
+  "id": "48384d65-eb38-4f87-b78e-88de21e3f19d",
+  "slug": "edit-distance",
+  "title": "Edit Distance",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two strings <code>word1</code> and <code>word2</code>, return <em>the minimum number of operations required to convert <code>word1</code> to <code>word2</code></em>.</p>\n\n<p>You have the following three operations permitted on a word:</p>\n\n<ul>\n\t<li>Insert a character</li>\n\t<li>Delete a character</li>\n\t<li>Replace a character</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> word1 = &quot;horse&quot;, word2 = &quot;ros&quot;\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> \nhorse -&gt; rorse (replace &#39;h&#39; with &#39;r&#39;)\nrorse -&gt; rose (remove &#39;r&#39;)\nrose -&gt; ros (remove &#39;e&#39;)\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> word1 = &quot;intention&quot;, word2 = &quot;execution&quot;\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> \nintention -&gt; inention (remove &#39;t&#39;)\ninention -&gt; enention (replace &#39;i&#39; with &#39;e&#39;)\nenention -&gt; exention (replace &#39;n&#39; with &#39;x&#39;)\nexention -&gt; exection (replace &#39;n&#39; with &#39;c&#39;)\nexection -&gt; execution (insert &#39;u&#39;)\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= word1.length, word2.length &lt;= 500</code></li>\n\t<li><code>word1</code> and <code>word2</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n * m)\n# Space: O(n + m)\n\nclass Solution(object):\n    # @return an integer\n    def minDistance(self, word1, word2):\n        if len(word1) < len(word2):\n            return self.minDistance(word2, word1)\n\n        distance = [i for i in xrange(len(word2) + 1)]\n\n        for i in xrange(1, len(word1) + 1):\n            pre_distance_i_j = distance[0]\n            distance[0] = i\n            for j in xrange(1, len(word2) + 1):\n                insert = distance[j - 1] + 1\n                delete = distance[j] + 1\n                replace = pre_distance_i_j\n                if word1[i - 1] != word2[j - 1]:\n                    replace += 1\n                pre_distance_i_j = distance[j]\n                distance[j] = min(insert, delete, replace)\n\n        return distance[-1]\n\n# Time:  O(n * m)\n# Space: O(n * m)\nclass Solution2(object):\n    # @return an integer\n    def minDistance(self, word1, word2):\n        distance = [[i] for i in xrange(len(word1) + 1)]\n        distance[0] = [j for j in xrange(len(word2) + 1)]\n\n        for i in xrange(1, len(word1) + 1):\n            for j in xrange(1, len(word2) + 1):\n                insert = distance[i][j - 1] + 1\n                delete = distance[i - 1][j] + 1\n                replace = distance[i - 1][j - 1]\n                if word1[i - 1] != word2[j - 1]:\n                    replace += 1\n                distance[i].append(min(insert, delete, replace))\n\n        return distance[-1][-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

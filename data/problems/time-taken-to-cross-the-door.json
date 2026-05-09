@@ -1,0 +1,41 @@
+{
+  "id": "e63f92f4-b07d-4381-976f-38170dc1998a",
+  "slug": "time-taken-to-cross-the-door",
+  "title": "Time Taken to Cross the Door",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "queue",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[0,1,1,2,4]\n[0,1,0,0,1]\n[0,0,0]\n[1,0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// queue, simulation\nclass Solution {\npublic:\n    vector<int> timeTaken(vector<int>& arrival, vector<int>& state) {\n        enum {UNKNOWN = -1, ENTERING, EXITING};\n        vector<int> result(size(arrival));\n        int curr = numeric_limits<int>::min(), direction = UNKNOWN;\n        vector<queue<int>> q(2);\n        const auto& go_until = [&](int t) {\n            while (curr <= t && any_of(cbegin(q), cend(q), [](const auto& x) { return !empty(x); })) {\n                if (empty(q[direction])) {\n                    direction ^= 1;\n                }\n                result[q[direction].front()] = curr++;\n                q[direction].pop();\n            }\n        };\n\n        for (int i = 0; i < size(arrival); ++i) {\n            go_until(arrival[i] - 1);\n            q[state[i]].emplace(i);\n            if (!(arrival[i] <= curr)) {\n                curr = arrival[i], direction = EXITING;\n            }\n        }\n        go_until(numeric_limits<int>::max());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\nimport itertools\n\n\n# queue, simulation\nclass Solution(object):\n    def timeTaken(self, arrival, state):\n        \"\"\"\n        :type arrival: List[int]\n        :type state: List[int]\n        :rtype: List[int]\n        \"\"\"\n        def go_until(t):\n            while curr[0] <= t and any(q):\n                if not q[direction[0]]:\n                    direction[0] ^= 1\n                result[q[direction[0]].popleft()] = curr[0]\n                curr[0] += 1\n    \n        UNKNOWN, ENTERING, EXITING = range(-1, 1+1)\n        result = [0]*len(arrival)\n        curr, direction = [float(\"-inf\")], [UNKNOWN]\n        q = [collections.deque(), collections.deque()]\n        for i, (a, s) in enumerate(itertools.izip(arrival, state)):\n            go_until(a-1)\n            q[s].append(i)\n            if not (a <= curr[0]):\n                curr, direction = [a], [EXITING]\n        go_until(float(\"inf\"))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

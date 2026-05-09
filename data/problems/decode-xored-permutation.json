@@ -1,0 +1,34 @@
+{
+  "id": "46d181a0-08a9-4fa4-a6a3-9f81e572a5b2",
+  "slug": "decode-xored-permutation",
+  "title": "Decode XORed Permutation",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There is an integer array <code>perm</code> that is a permutation of the first <code>n</code> positive integers, where <code>n</code> is always <strong>odd</strong>.</p>\n\n<p>It was encoded into another integer array <code>encoded</code> of length <code>n - 1</code>, such that <code>encoded[i] = perm[i] XOR perm[i + 1]</code>. For example, if <code>perm = [1,3,2]</code>, then <code>encoded = [2,1]</code>.</p>\n\n<p>Given the <code>encoded</code> array, return <em>the original array</em> <code>perm</code>. It is guaranteed that the answer exists and is unique.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> encoded = [3,1]\n<strong>Output:</strong> [1,2,3]\n<strong>Explanation:</strong> If perm = [1,2,3], then encoded = [1 XOR 2,2 XOR 3] = [3,1]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> encoded = [6,5,4,6]\n<strong>Output:</strong> [2,4,1,5,3]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= n &lt;&nbsp;10<sup>5</sup></code></li>\n\t<li><code>n</code>&nbsp;is odd.</li>\n\t<li><code>encoded.length == n - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> decode(vector<int>& encoded) {\n        int curr = 0;\n        for (int i = 1; i <= size(encoded) + 1; ++i) {\n            curr ^= i;\n            if (i < size(encoded) && i % 2 == 1) {\n                curr ^= encoded[i];\n            }\n        }\n        vector<int> result = {curr};\n        for (const auto& x: encoded) {\n            result.emplace_back(result.back() ^ x);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def decode(self, encoded):\n        \"\"\"\n        :type encoded: List[int]\n        :rtype: List[int]\n        \"\"\"\n        curr = 0\n        for i in xrange(1, (len(encoded)+1) + 1):\n            curr ^= i\n            if i < len(encoded) and i%2 == 1:\n                curr ^= encoded[i]\n        result = [curr]\n        for x in encoded:\n            result.append(result[-1]^x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

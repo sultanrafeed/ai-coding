@@ -1,0 +1,25 @@
+{
+  "id": "cff6dedc-886d-4218-87c5-65564e72445b",
+  "slug": "solveNQueens",
+  "title": "Solvenqueens",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n!)\n// Space Complexity: O(n)\n\nclass Solution {\n    public:\n        void addAnswer(int n) {\n            vector<string> v;\n\n            for(int i = 0; i < n; i++) {\n                string s(n, '.');\n                s[chess[i]] = 'Q';\n                v.push_back(s);\n            }\n\n            ans.push_back(v);\n        }\n\n        void dfs(int row) {\n            const int N = chess.size();\n            if(row == N) {\n                addAnswer(N);\n                return;\n            }\n\n            for(int i = 0; i < N; i++) {\n                if(cols[i] == 0 && main_diag[row + i] == 0 && anti_diag[row - i + N] == 0) {\n                    cols[i] = main_diag[row + i] = anti_diag[row - i + N] = 1;\n                    chess[row] = i;\n                    dfs(row + 1);\n                    cols[i] = main_diag[row + i] = anti_diag[row - i + N] = 0;\n                }\n            }\n        }\n\n        vector<vector<string> > solveNQueens(int n) {\n            cols = vector<int>(n, 0);\n            main_diag = vector<int>(2 * n, 0);\n            anti_diag = vector<int>(2 * n, 0);\n            chess = vector<int>(n, 0);\n\n            dfs(0);\n\n            return ans;\n        }\n\n    private:\n        vector<vector<string> > ans;\n        vector<int> cols;\n        vector<int> main_diag;\n        vector<int> anti_diag;\n        vector<int> chess;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

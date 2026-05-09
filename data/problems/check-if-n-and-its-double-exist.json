@@ -1,0 +1,37 @@
+{
+  "id": "7a67f6f3-274e-4d91-9a64-580e1b7a0ba0",
+  "slug": "check-if-n-and-its-double-exist",
+  "title": "Check If N and Its Double Exist",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an array <code>arr</code> of integers, check if there exist two indices <code>i</code> and <code>j</code> such that :</p>\n\n<ul>\n\t<li><code>i != j</code></li>\n\t<li><code>0 &lt;= i, j &lt; arr.length</code></li>\n\t<li><code>arr[i] == 2 * arr[j]</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [10,2,5,3]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> For i = 0 and j = 2, arr[i] == 10 == 2 * 5 == 2 * arr[j]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [3,1,7,11]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> There is no i and j that satisfy the conditions.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= arr.length &lt;= 500</code></li>\n\t<li><code>-10<sup>3</sup> &lt;= arr[i] &lt;= 10<sup>3</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "two-pointers",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool checkIfExist(vector<int>& arr) {\n        unordered_set<int> lookup;\n        for (const auto& x : arr) {\n            if (lookup.count(2 * x) ||\n                (x % 2 == 0 && lookup.count(x / 2))) {\n                return true;\n            }\n            lookup.emplace(x);\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def checkIfExist(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: bool\n        \"\"\"\n        lookup = set()\n        for x in arr:\n            if 2*x in lookup or \\\n               (x%2 == 0 and x//2 in lookup):\n                return True\n            lookup.add(x)\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

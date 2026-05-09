@@ -1,0 +1,25 @@
+{
+  "id": "11373b74-a374-4bee-859c-4a59464da871",
+  "slug": "threeSum2",
+  "title": "Threesum2",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n^2)\n// Space Complexity: O(1)\n\nclass Solution {\n    public:\n        vector<vector<int> > threeSum(vector<int> &num) {\n            vector<vector<int> > ans;\n            const int target = 0;\n\n            sort(num.begin(), num.end());\n            auto last = num.rend();\n            for(auto a = num.rbegin(); a < prev(last, 2); ++a) {\n                if(a > num.rbegin() && *a == *(a - 1))\n                    continue;\n                auto b = next(a);\n                auto c = prev(last);\n\n                while(b < c) {\n                    if(b > next(a) && *b == *(b - 1)) {\n                        ++b;\n                    }\n                    else if(c < prev(last) && *c == *(c + 1)) { \n                        --c;\n                    }\n                    else {\n                        const int sum = *a + *b + *c;\n\n                        if(sum < target)\n                            --c;\n                        else if(sum > target)\n                            ++b;\n                        else {\n                            ans.push_back({ *c, *b, *a});\n                            ++b;\n                            --c;\n                        }\n                    }\n                }\n            }\n\n            return ans;\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

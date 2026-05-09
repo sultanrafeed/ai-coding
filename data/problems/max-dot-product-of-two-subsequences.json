@@ -1,0 +1,34 @@
+{
+  "id": "9631947c-584b-4bdb-9e24-cb70cac1fa05",
+  "slug": "max-dot-product-of-two-subsequences",
+  "title": "Max Dot Product of Two Subsequences",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given two arrays <code>nums1</code>&nbsp;and <code><font face=\"monospace\">nums2</font></code><font face=\"monospace\">.</font></p>\n\n<p>Return the maximum dot product&nbsp;between&nbsp;<strong>non-empty</strong> subsequences of nums1 and nums2 with the same length.</p>\n\n<p>A subsequence of an array is a new array which is formed from the original array by deleting some (can be none) of the characters without disturbing the relative positions of the remaining characters. (ie,&nbsp;<code>[2,3,5]</code>&nbsp;is a subsequence of&nbsp;<code>[1,2,3,4,5]</code>&nbsp;while <code>[1,5,3]</code>&nbsp;is not).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [2,1,-2,5], nums2 = [3,0,-6]\n<strong>Output:</strong> 18\n<strong>Explanation:</strong> Take subsequence [2,-2] from nums1 and subsequence [3,-6] from nums2.\nTheir dot product is (2*3 + (-2)*(-6)) = 18.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [3,-2], nums2 = [2,-6,7]\n<strong>Output:</strong> 21\n<strong>Explanation:</strong> Take subsequence [3] from nums1 and subsequence [7] from nums2.\nTheir dot product is (3*7) = 21.</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [-1,-1], nums2 = [1,1]\n<strong>Output:</strong> -1\n<strong>Explanation: </strong>Take subsequence [-1] from nums1 and subsequence [1] from nums2.\nTheir dot product is -1.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums1.length, nums2.length &lt;= 500</code></li>\n\t<li><code>-1000 &lt;= nums1[i], nums2[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(min(m, n))\n\nclass Solution {\npublic:\n    int maxDotProduct(vector<int>& nums1, vector<int>& nums2) {\n        if (nums1.size() < nums2.size()) {\n            return maxDotProduct(nums2, nums1);\n        }\n        vector<vector<int64_t>> dp(2, vector<int64_t>(nums2.size()));\n        for (int i = 0; i < nums1.size(); ++i) {\n            for (int j = 0; j < nums2.size(); ++j) {\n                dp[i % 2][j] = int64_t(nums1[i]) * nums2[j];\n                if (i && j) {\n                    dp[i % 2][j] += max(dp[(i - 1) % 2][j - 1], int64_t(0));\n                }\n                if (i) {\n                    dp[i % 2][j] = max(dp[i % 2][j], dp[(i - 1) % 2][j]);\n                }\n                if (j) {\n                    dp[i % 2][j] = max(dp[i % 2][j], dp[i % 2][j - 1]);\n                }\n            }\n        }\n        return dp[(nums1.size() - 1) % 2].back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(min(m, n))\n\nclass Solution(object):\n    def maxDotProduct(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        if len(nums1) < len(nums2):\n            return self.maxDotProduct(nums2, nums1)\n        dp = [[0]*len(nums2) for i in xrange(2)]\n        for i in xrange(len(nums1)):\n            for j in xrange(len(nums2)):\n                dp[i%2][j] = nums1[i]*nums2[j]\n                if i and j:\n                    dp[i%2][j] += max(dp[(i-1)%2][j-1], 0)\n                if i:\n                    dp[i%2][j] = max(dp[i%2][j], dp[(i-1)%2][j])\n                if j:\n                    dp[i%2][j] = max(dp[i%2][j], dp[i%2][j-1])\n        return dp[(len(nums1)-1)%2][-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

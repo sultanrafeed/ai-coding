@@ -1,0 +1,33 @@
+{
+  "id": "0ad88b71-4653-4fa3-9273-7ee3c3ee7473",
+  "slug": "remove-9",
+  "title": "Remove 9",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int newInteger(int n) {\n        int result = 0, base = 1;\n        while (n > 0) {\n            result += (n % 9) * base;\n            n /= 9;\n            base *= 10;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def newInteger(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        result, base = 0, 1\n        while n > 0:\n            result += (n%9) * base\n            n /= 9\n            base *= 10\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

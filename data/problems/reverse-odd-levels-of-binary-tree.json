@@ -1,0 +1,42 @@
+{
+  "id": "a680c838-8d52-4915-b62a-308838cdf13f",
+  "slug": "reverse-odd-levels-of-binary-tree",
+  "title": "Reverse Odd Levels of Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a <strong>perfect</strong> binary tree, reverse the node values at each <strong>odd</strong> level of the tree.</p>\n\n<ul>\n\t<li>For example, suppose the node values at level 3 are <code>[2,1,3,4,7,11,29,18]</code>, then it should become <code>[18,29,11,7,4,3,1,2]</code>.</li>\n</ul>\n\n<p>Return <em>the root of the reversed tree</em>.</p>\n\n<p>A binary tree is <strong>perfect</strong> if all parent nodes have two children and all leaves are on the same level.</p>\n\n<p>The <strong>level</strong> of a node is the number of edges along the path between it and the root node.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/07/28/first_case1.png\" style=\"width: 626px; height: 191px;\" />\n<pre>\n<strong>Input:</strong> root = [2,3,5,8,13,21,34]\n<strong>Output:</strong> [2,5,3,8,13,21,34]\n<strong>Explanation:</strong> \nThe tree has only one odd level.\nThe nodes at level 1 are 3, 5 respectively, which are reversed and become 5, 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/07/28/second_case3.png\" style=\"width: 591px; height: 111px;\" />\n<pre>\n<strong>Input:</strong> root = [7,13,11]\n<strong>Output:</strong> [7,11,13]\n<strong>Explanation:</strong> \nThe nodes at level 1 are 13, 11, which are reversed and become 11, 13.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> root = [0,1,2,0,0,0,0,1,1,1,1,2,2,2,2]\n<strong>Output:</strong> [0,2,1,0,0,0,0,2,2,2,2,1,1,1,1]\n<strong>Explanation:</strong> \nThe odd levels have non-zero values.\nThe nodes at level 1 were 1, 2, and are 2, 1 after the reversal.\nThe nodes at level 3 were 1, 1, 1, 1, 2, 2, 2, 2, and are 2, 2, 2, 2, 1, 1, 1, 1 after the reversal.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 2<sup>14</sup>]</code>.</li>\n\t<li><code>0 &lt;= Node.val &lt;= 10<sup>5</sup></code></li>\n\t<li><code>root</code> is a <strong>perfect</strong> binary tree.</li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,3,5,8,13,21,34]\n[7,13,11]\n[0,1,2,0,0,0,0,1,1,1,1,2,2,2,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// bfs\nclass Solution {\npublic:\n    TreeNode* reverseOddLevels(TreeNode* root) {\n        vector<TreeNode*> q = {root};\n        for (int parity = 0; !empty(q); parity ^= 1) {\n            if (parity) {\n                for (int left = 0, right = size(q) - 1; left < right; ++left, --right) {\n                    swap(q[left]->val, q[right]->val);\n                }\n            }\n            if (!q[0]->left) {\n                break;\n            }\n            vector<TreeNode*> new_q;\n            for (const auto& node : q) {\n                new_q.emplace_back(node->left);\n                new_q.emplace_back(node->right);\n            }\n            q = move(new_q);\n        }\n        return root;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        pass\n\n\n# bfs\nclass Solution(object):\n    def reverseOddLevels(self, root):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :rtype: Optional[TreeNode]\n        \"\"\"\n        q = [root]\n        parity = 0\n        while q:\n            if parity:\n                left, right = 0, len(q)-1\n                while left < right:\n                    q[left].val, q[right].val = q[right].val, q[left].val\n                    left += 1\n                    right -= 1\n            if not q[0].left:\n                break\n            new_q = []\n            for node in q:\n                new_q.append(node.left)\n                new_q.append(node.right)\n            q = new_q       \n            parity ^= 1\n        return root",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

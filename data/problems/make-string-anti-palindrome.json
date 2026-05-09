@@ -1,0 +1,42 @@
+{
+  "id": "4cb376d3-660d-4b17-abdd-38ab054c62d9",
+  "slug": "make-string-anti-palindrome",
+  "title": "Make String Anti-palindrome",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "greedy",
+    "sorting",
+    "counting-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abca\"\n\"abba\"\n\"cccd\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// counting sort, greedy\nclass Solution {\npublic:\n    string makeAntiPalindrome(string s) {\n        vector<int> cnt(26);\n        for (const auto& x : s) {\n            ++cnt[x - 'a'];\n        }\n        if (ranges::max(cnt) > size(s) / 2) {\n            return \"-1\";\n        }\n        string result(size(s), 0);\n        for (int i = 0, j = 0; i < size(cnt); ++i) {\n            for (int _ = 0; _ < cnt[i]; ++_) {\n                result[j++] = 'a' + i;\n            }\n        }\n        int l = 0;\n        for (; l <= (size(s) / 2) / 2; ++l) {\n            if (result[size(s) / 2 + l] != result[size(s) / 2 - 1]) {\n                break;\n            }\n        }\n        if (l) {\n            for (int i = 0; i < cnt[result[size(s) / 2 - 1] - 'a'] - l; ++i) {\n                swap(result[size(s) / 2 + i], result[size(s) / 2 + i + l]);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n + 26)\n// Space: O(26)\n// counting sort, greedy, two pointers\nclass Solution2 {\npublic:\n    string makeAntiPalindrome(string s) {\n        vector<int> cnt(26);\n        for (const auto& x : s) {\n            ++cnt[x - 'a'];\n        }\n        if (ranges::max(cnt) > size(s) / 2) {\n            return \"-1\";\n        }\n        string result(size(s), 0);\n        for (int i = 0, j = 0; i < size(cnt); ++i) {\n            for (int _ = 0; _ < cnt[i]; ++_) {\n                result[j++] = 'a' + i;\n            }\n        }\n        int left = size(s) / 2;\n        int right = left + 1;\n        for (; right < size(s) && result[right] == result[left]; ++right);\n        for (; result[left] == result[(size(s) - 1) - left]; ++left, ++right) {\n            swap(result[left], result[right]);\n        }\n        return result;\n    }\n};\n\n// Time:  O(n * 26)\n// Space: O(26)\n// freq table, greedy\nclass Solution3 {\npublic:\n    string makeAntiPalindrome(string s) {\n        vector<int> cnt(26);\n        for (const auto& x : s) {\n            ++cnt[x - 'a'];\n        }\n        if (ranges::max(cnt) > size(s) / 2) {\n            return \"-1\";\n        }\n        string result(size(s), 0);\n        for (int i = 0; i < size(s) / 2; ++i) {\n            int j = 0;\n            for (; j < size(cnt); ++j) {\n                if (cnt[j]) {\n                    break;\n                }\n            }\n            --cnt[j];\n            result[i] = 'a' + j;\n        }\n        for (int i = size(s) / 2; i < size(s); ++i) {\n            int j = 0;\n            for (; j < size(cnt); ++j) {\n                if (cnt[j] && result[(size(s) - 1) - i] != 'a' + j) {\n                    break;\n                }\n            }\n            --cnt[j];\n            result[i] = 'a' + j;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# counting sort, greedy\nclass Solution(object):\n    def makeAntiPalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        cnt = [0]*26\n        for x in s:\n            cnt[ord(x)-ord('a')] += 1\n        if max(cnt) > len(s)//2:\n            return \"-1\"\n        result = [i for i, x in enumerate(cnt) for _ in xrange(x)]\n        l = next(l for l in xrange((len(s)//2)//2+1) if result[len(s)//2+l] != result[len(s)//2-1])\n        if l:\n            for i in xrange(cnt[result[len(s)//2-1]]-l):\n                result[len(s)//2+i], result[len(s)//2+i+l] = result[len(s)//2+i+l], result[len(s)//2+i]\n        return \"\".join(map(lambda x: chr(ord('a')+x), result))\n\n\n# Time:  O(n + 26)\n# Space: O(26)\n# counting sort, greedy, two pointers\nclass Solution2(object):\n    def makeAntiPalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        cnt = [0]*26\n        for x in s:\n            cnt[ord(x)-ord('a')] += 1\n        if max(cnt) > len(s)//2:\n            return \"-1\"\n        result = [i for i, x in enumerate(cnt) for _ in xrange(x)]\n        left = len(s)//2\n        right = left+1\n        while right < len(s) and result[right] == result[left]:\n            right += 1 \n        while result[left] == result[len(s)-1-left]:\n            result[left] , result[right] = result[right], result[left]\n            left += 1\n            right += 1\n        return \"\".join(map(lambda x: chr(ord('a')+x), result))\n    \n\n# Time:  O(n * 26)\n# Space: O(26)\n# freq table, greedy\nclass Solution3(object):\n    def makeAntiPalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        cnt = [0]*26\n        for x in s:\n            cnt[ord(x)-ord('a')] += 1\n        if max(cnt) > len(s)//2:\n            return \"-1\"\n        result = [-1]*len(s)\n        for i in xrange(len(s)//2):\n            j = next(j for j in xrange(len(cnt)) if cnt[j])\n            cnt[j] -= 1\n            result[i] = j\n        for i in xrange(len(s)//2, len(s)):\n            j = next(j for j in xrange(len(cnt)) if cnt[j] and result[(len(s)-1)-i] != j)\n            cnt[j] -= 1\n            result[i] = j\n        return \"\".join(map(lambda x: chr(ord('a')+x), result))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

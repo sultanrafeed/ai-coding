@@ -1,0 +1,31 @@
+{
+  "id": "93db1abe-503a-4478-a48a-820673d1b310",
+  "slug": "partial-function-with-placeholders",
+  "title": "Partial Function with Placeholders",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "(...args) => args\n[2,4,6]\n[8,10]\n(...args) => args\n[1,2,\"_\",4,\"_\",6]\n[3,5]\n(a, b, c) => b + a - c\n[\"_\", 5]\n[5, 20]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nfunction partial(fn: Function, args: any[]): Function {\n    return function(...restArgs) {\n        return fn(...args.map(x => x === '_' ? restArgs.shift() : x).concat(restArgs));   \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

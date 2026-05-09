@@ -1,0 +1,33 @@
+{
+  "id": "425df24f-ec36-4445-8a19-b0c5df417898",
+  "slug": "three-consecutive-odds",
+  "title": "Three Consecutive Odds",
+  "difficulty": "easy",
+  "descriptionHtml": "Given an integer array <code>arr</code>, return <code>true</code>&nbsp;if there are three consecutive odd numbers in the array. Otherwise, return&nbsp;<code>false</code>.\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [2,6,4,1]\n<strong>Output:</strong> false\n<b>Explanation:</b> There are no three consecutive odds.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,2,34,3,4,5,7,23,12]\n<strong>Output:</strong> true\n<b>Explanation:</b> [5,7,23] are three consecutive odds.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= arr[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool threeConsecutiveOdds(vector<int>& arr) {\n        int count = 0;\n        for (const auto& x : arr) {\n            count = x % 2 ? count + 1 : 0;\n            if (count == 3) {\n                return true;\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def threeConsecutiveOdds(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: bool\n        \"\"\"\n        count = 0\n        for x in arr:\n            count = count+1 if x%2 else 0\n            if count == 3:\n                return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

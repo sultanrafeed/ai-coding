@@ -1,0 +1,43 @@
+{
+  "id": "520b571c-a783-4b74-831c-9382a9ca4955",
+  "slug": "encode-n-ary-tree-to-binary-tree",
+  "title": "Encode N-ary Tree to Binary Tree",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "design",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,null,3,2,4,null,5,6]\n[1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]\n[]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/*\n// Definition for a Node.\nclass Node {\npublic:\n    int val = NULL;\n    vector<Node*> children;\n\n    Node() {}\n\n    Node(int _val, vector<Node*> _children) {\n        val = _val;\n        children = _children;\n    }\n};\n*/\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Codec {\npublic:\n\n    // Encodes an n-ary tree to a binary tree.\n    TreeNode* encode(Node* root) {\n        if (root == nullptr) {\n            return nullptr;\n        }\n        auto node = new TreeNode(root->val);\n        if (!root->children.empty()) {\n            node->right = encodeHelper(root->children[0], root, 0);\n        }\n        return node;\n    }\n\n    // Decodes your binary tree to an n-ary tree.\n    Node* decode(TreeNode* root) {\n        if (root == nullptr) {\n            return nullptr;\n        }\n        vector<Node*> children;\n        auto node = new Node(root->val, children);\n        decodeHelper(root->right, node);\n        return node;\n    }\n    \nprivate:\n    TreeNode *encodeHelper(Node *root, Node *parent, int index) {\n        if (root == nullptr) {\n            return nullptr;\n        }\n        auto node = new TreeNode(root->val);\n        if (index + 1 < parent->children.size()) {\n            node->left = encodeHelper(parent->children[index + 1], parent, index + 1);\n        }\n        if (!root->children.empty()) {\n            node->right = encodeHelper(root->children[0], root, 0);\n        }\n        return node;\n    }\n    \n    void decodeHelper(TreeNode* root, Node* parent) {\n        if (!root) {\n            return;   \n        }\n        vector<Node*> children;\n        auto node = new Node(root->val, children);\n        decodeHelper(root->right, node);\n        parent->children.push_back(node);\n        decodeHelper(root->left, parent);\n    }\n};\n\n// Your Codec object will be instantiated and called as such:\n// Codec codec;\n// codec.decode(codec.encode(root));",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Node(object):\n    def __init__(self, val, children):\n        self.val = val\n        self.children = children\n\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Codec(object):\n\n    def encode(self, root):\n        \"\"\"Encodes an n-ary tree to a binary tree.\n        \n        :type root: Node\n        :rtype: TreeNode\n        \"\"\"\n        def encodeHelper(root, parent, index):\n            if not root:\n                return None\n            node = TreeNode(root.val)\n            if index+1 < len(parent.children):\n                node.left = encodeHelper(parent.children[index+1], parent, index+1)\n            if root.children:\n                node.right = encodeHelper(root.children[0], root, 0)\n            return node\n\n        if not root:\n            return None\n        node = TreeNode(root.val)\n        if root.children:\n            node.right = encodeHelper(root.children[0], root, 0)\n        return node\n\n    def decode(self, data):\n        \"\"\"Decodes your binary tree to an n-ary tree.\n        \n        :type data: TreeNode\n        :rtype: Node\n        \"\"\"\n        def decodeHelper(root, parent):\n            if not root:\n                return\n            children = []\n            node = Node(root.val, children)\n            decodeHelper(root.right, node)\n            parent.children.append(node)\n            decodeHelper(root.left, parent)\n\n        if not data:\n            return None\n        children = []\n        node = Node(data.val, children)\n        decodeHelper(data.right, node)\n        return node",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

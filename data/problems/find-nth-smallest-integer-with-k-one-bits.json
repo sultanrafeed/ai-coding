@@ -1,0 +1,35 @@
+{
+  "id": "28ebf7fb-7951-4226-8a75-18183bb1ee89",
+  "slug": "find-nth-smallest-integer-with-k-one-bits",
+  "title": "Find Nth Smallest Integer With K One Bits",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two positive integers <code>n</code> and <code>k</code>.</p>\n\n<p>Return an integer denoting the <code>n<sup>th</sup></code> smallest positive integer that has <strong>exactly</strong> <code>k</code> ones in its binary representation. It is guaranteed that the answer is <strong>strictly less</strong> than <code>2<sup>50</sup></code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">9</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The 4 smallest positive integers that have exactly <code>k = 2</code> ones in their binary representations are:</p>\n\n<ul>\n\t<li><code>3 = 11<sub>2</sub></code></li>\n\t<li><code>5 = 101<sub>2</sub></code></li>\n\t<li><code>6 = 110<sub>2</sub></code></li>\n\t<li><code>9 = 1001<sub>2</sub></code></li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3, k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The 3 smallest positive integers that have exactly <code>k = 1</code> one in their binary representations are:</p>\n\n<ul>\n\t<li><code>1 = 1<sub>2</sub></code></li>\n\t<li><code>2 = 10<sub>2</sub></code></li>\n\t<li><code>4 = 100<sub>2</sub></code></li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 2<sup>50</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= 50</code></li>\n\t<li>The answer is strictly less than <code>2<sup>50</sup></code>.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "bit-manipulation",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:    O(r^2)\n//        runtime: O(r)\n// Space: O(r^2)\n\n// dp, combinatorics\nconst auto& init = [](int k) {\n    vector<vector<int64_t>> dp(k + 1, vector<int64_t>(k + 1));\n    for (int i = 0; i < size(dp); ++i) {\n        dp[i][0] = 1;\n        for (int j = 1; j <= i; ++j) {\n            dp[i][j] = dp[i - 1][j - 1] + dp[i - 1][j];\n        }\n    }\n    return dp;\n};\n\nstatic const int MAX_K = 50;\nconst auto& DP = init(MAX_K);\nclass Solution {\npublic:\n    long long nthSmallest(long long n, int k) {\n        int64_t result = 0;\n        for (int i = MAX_K - 1; i >= 0; --i) {\n            if (n <= DP[i][k]) {\n                continue;\n            }\n            n -= DP[i][k];\n            result |= 1ll << i;\n            if (--k == 0) {\n                break;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:    O(r^2)\n#        runtime: O(r)\n# Space: O(r^2)\n\n# dp, combinatorics\nMAX_K = 50\nDP = [[0]*(MAX_K+1) for _ in xrange(MAX_K+1)]\nfor i in xrange(MAX_K+1):\n    DP[i][0] = 1\n    for j in xrange(1, i+1):\n        DP[i][j] = DP[i-1][j-1]+DP[i-1][j]\nclass Solution(object):\n    def nthSmallest(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = 0\n        for i in reversed(xrange(MAX_K)):\n            if n <= DP[i][k]:\n                continue\n            n -= DP[i][k]\n            result |= 1<<i\n            k -= 1\n            if not k:\n                break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

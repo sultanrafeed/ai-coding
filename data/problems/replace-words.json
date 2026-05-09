@@ -1,0 +1,36 @@
+{
+  "id": "af8648e8-f8db-4ffd-a25f-a9408989c702",
+  "slug": "replace-words",
+  "title": "Replace Words",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>In English, we have a concept called <strong>root</strong>, which can be followed by some other word to form another longer word - let&#39;s call this word <strong>derivative</strong>. For example, when the <strong>root</strong> <code>&quot;help&quot;</code> is followed by the word <code>&quot;ful&quot;</code>, we can form a derivative <code>&quot;helpful&quot;</code>.</p>\n\n<p>Given a <code>dictionary</code> consisting of many <strong>roots</strong> and a <code>sentence</code> consisting of words separated by spaces, replace all the derivatives in the sentence with the <strong>root</strong> forming it. If a derivative can be replaced by more than one <strong>root</strong>, replace it with the <strong>root</strong> that has <strong>the shortest length</strong>.</p>\n\n<p>Return <em>the <code>sentence</code></em> after the replacement.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> dictionary = [&quot;cat&quot;,&quot;bat&quot;,&quot;rat&quot;], sentence = &quot;the cattle was rattled by the battery&quot;\n<strong>Output:</strong> &quot;the cat was rat by the bat&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> dictionary = [&quot;a&quot;,&quot;b&quot;,&quot;c&quot;], sentence = &quot;aadsfasf absbs bbab cadsfafs&quot;\n<strong>Output:</strong> &quot;a a b c&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= dictionary.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= dictionary[i].length &lt;= 100</code></li>\n\t<li><code>dictionary[i]</code> consists of only lower-case letters.</li>\n\t<li><code>1 &lt;= sentence.length &lt;= 10<sup>6</sup></code></li>\n\t<li><code>sentence</code> consists of only lower-case letters and spaces.</li>\n\t<li>The number of words in <code>sentence</code> is in the range <code>[1, 1000]</code></li>\n\t<li>The length of each word in <code>sentence</code> is in the range <code>[1, 1000]</code></li>\n\t<li>Every two consecutive words in <code>sentence</code> will be separated by exactly one space.</li>\n\t<li><code>sentence</code> does not have leading or trailing spaces.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(t), t is the number of nodes in trie\n\nclass Solution {\npublic:\n    string replaceWords(vector<string>& dict, string sentence) {\n        TrieNode trie;\n        string result;\n        for (const auto& s : dict) {\n            trie.Insert(s);\n        }\n        auto curr = &trie;\n        for (const auto& c : sentence) {\n            if (c == ' ' || !curr || !curr->isString) {\n                result += c;\n            }\n            if (c == ' ') {\n                curr = &trie;\n            } else if (curr && !curr->isString) {\n                curr = curr->leaves[c];\n            }\n        }\n        return result;\n    }\n\nprivate:\n    struct TrieNode {\n        bool isString = false;\n        unordered_map<char, TrieNode *> leaves;\n        \n        void Insert(const string& s) {\n            auto* p = this;\n            for (const auto& c : s) {\n                if (p->leaves.find(c) == p->leaves.cend()) {\n                    p->leaves[c] = new TrieNode;\n                }\n                p = p->leaves[c];\n            }\n            p->isString = true;\n        }\n        \n        ~TrieNode() {\n            for (auto& kv : leaves) {\n                if (kv.second) {\n                    delete kv.second;\n                }\n            }\n        }\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(t), t is the number of nodes in trie\n\nimport collections\n\n\nclass Solution(object):\n    def replaceWords(self, dictionary, sentence):\n        \"\"\"\n        :type dictionary: List[str]\n        :type sentence: str\n        :rtype: str\n        \"\"\"\n        _trie = lambda: collections.defaultdict(_trie)\n        trie = _trie()\n        for word in dictionary:\n            reduce(dict.__getitem__, word, trie).setdefault(\"_end\")\n\n        def replace(word):\n            curr = trie\n            for i, c in enumerate(word):\n                if c not in curr:\n                    break\n                curr = curr[c]\n                if \"_end\" in curr:\n                    return word[:i+1]\n            return word\n\n        return \" \".join(map(replace, sentence.split()))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

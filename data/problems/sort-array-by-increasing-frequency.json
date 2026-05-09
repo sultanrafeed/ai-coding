@@ -1,0 +1,41 @@
+{
+  "id": "ac4cd336-b6c0-4360-a3e9-d06a550e4294",
+  "slug": "sort-array-by-increasing-frequency",
+  "title": "Sort Array by Increasing Frequency",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an array of integers <code>nums</code>, sort the array in <strong>increasing</strong> order based on the frequency of the values. If multiple values have the same frequency, sort them in <strong>decreasing</strong> order.</p>\n\n<p>Return the <em>sorted array</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,2,2,2,3]\n<strong>Output:</strong> [3,1,1,2,2,2]\n<strong>Explanation:</strong> &#39;3&#39; has a frequency of 1, &#39;1&#39; has a frequency of 2, and &#39;2&#39; has a frequency of 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,3,1,3,2]\n<strong>Output:</strong> [1,3,3,2,2]\n<strong>Explanation:</strong> &#39;2&#39; and &#39;3&#39; both have a frequency of 2, so they are sorted in decreasing order.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [-1,1,-6,4,5,-6,1,4,1]\n<strong>Output:</strong> [5,-1,4,4,-6,-6,1,1,1]</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>-100 &lt;= nums[i] &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,2,2,2,3]\n[2,3,1,3,2]\n[-1,1,-6,4,5,-6,1,4,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> frequencySort(vector<int>& nums) {\n        unordered_map<int, int> count;\n        for (const auto& x : nums) {\n            ++count[x];\n        }\n        sort(begin(nums), end(nums),\n             [&count](const auto& a, const auto& b) {\n                 return count[a] == count[b] ? a > b : count[a] < count[b];\n             });\n        return nums;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def frequencySort(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        count = collections.Counter(nums)\n        return sorted(nums, key=lambda x: (count[x], -x))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

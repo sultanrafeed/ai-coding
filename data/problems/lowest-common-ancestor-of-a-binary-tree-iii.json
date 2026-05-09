@@ -1,0 +1,42 @@
+{
+  "id": "1a6fe7ac-a5c8-45e2-a0e7-9a1374854be2",
+  "slug": "lowest-common-ancestor-of-a-binary-tree-iii",
+  "title": "Lowest Common Ancestor of a Binary Tree III",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "two-pointers",
+    "tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,5,1,6,2,0,8,null,null,7,4]\n5\n1\n[3,5,1,6,2,0,8,null,null,7,4]\n5\n4\n[1,2]\n1\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(h)\n// Space: O(1)\n\n/*\n// Definition for a Node.\nclass Node {\npublic:\n    int val;\n    Node* left;\n    Node* right;\n    Node* parent;\n};\n*/\n\nclass Solution {\npublic:\n    Node* lowestCommonAncestor(Node* p, Node * q) {\n        auto a = p, b = q;\n        while (a != b) {\n            a = a ? a->parent : q;\n            b = b ? b->parent : p;\n        }\n        return a;\n    }\n};\n\n// Time:  O(h)\n// Space: O(1)\nclass Solution2 {\npublic:\n    Node* lowestCommonAncestor(Node* p, Node * q) {\n        int p_d = depth(p);\n        int q_d = depth(q);\n        while (p_d > q_d) {\n            p = p->parent;\n            --p_d;\n        }\n        while (p_d < q_d) {\n            q = q->parent;\n            --q_d;\n        }\n        while (p != q) {\n            p = p->parent;\n            q = q->parent;\n        }\n        return p;\n    }\n\nprivate:\n    int depth(Node *node) {\n        int d = 0;\n        while (node) {\n            node = node->parent;\n            ++d;\n        }\n        return d;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(h)\n# Space: O(1)\n\n# Definition for a Node.\nclass Node:\n    def __init__(self, val):\n        pass\n\nclass Solution(object):\n    def lowestCommonAncestor(self, p, q):\n        \"\"\"\n        :type node: Node\n        :rtype: Node\n        \"\"\"\n        a, b = p, q\n        while a != b:\n            a = a.parent if a else q\n            b = b.parent if b else p\n        return a\n\n\n# Time:  O(h)\n# Space: O(1)\nclass Solution2(object):\n    def lowestCommonAncestor(self, p, q):\n        \"\"\"\n        :type node: Node\n        :rtype: Node\n        \"\"\"\n        def depth(node):\n            d = 0\n            while node:\n                node = node.parent\n                d += 1\n            return d\n        \n        p_d, q_d = depth(p), depth(q)\n        while p_d > q_d:\n            p = p.parent\n            p_d -= 1\n        while p_d < q_d:\n            q = q.parent\n            q_d -= 1\n        while p != q:\n            p = p.parent\n            q = q.parent\n        return p",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

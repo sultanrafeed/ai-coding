@@ -1,0 +1,37 @@
+{
+  "id": "d0b1ad0f-cea6-42cc-ac0f-f9a5688309e6",
+  "slug": "maximum-number-of-integers-to-choose-from-a-range-i",
+  "title": "Maximum Number of Integers to Choose From a Range I",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>banned</code> and two integers <code>n</code> and <code>maxSum</code>. You are choosing some number of integers following the below rules:</p>\n\n<ul>\n\t<li>The chosen integers have to be in the range <code>[1, n]</code>.</li>\n\t<li>Each integer can be chosen <strong>at most once</strong>.</li>\n\t<li>The chosen integers should not be in the array <code>banned</code>.</li>\n\t<li>The sum of the chosen integers should not exceed <code>maxSum</code>.</li>\n</ul>\n\n<p>Return <em>the <strong>maximum</strong> number of integers you can choose following the mentioned rules</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> banned = [1,6,5], n = 5, maxSum = 6\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> You can choose the integers 2 and 4.\n2 and 4 are from the range [1, 5], both did not appear in banned, and their sum is 6, which did not exceed maxSum.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> banned = [1,2,3,4,5,6,7], n = 8, maxSum = 1\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> You cannot choose any integer while following the mentioned conditions.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> banned = [11], n = 7, maxSum = 50\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> You can choose the integers 1, 2, 3, 4, 5, 6, and 7.\nThey are from the range [1, 7], all did not appear in banned, and their sum is 28, which did not exceed maxSum.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= banned.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= banned[i], n &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= maxSum &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "binary-search",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(b)\n// Space: O(b)\n\n// math\nclass Solution {\npublic:\n    int maxCount(vector<int>& banned, int n, long long maxSum) {\n        int k = min(static_cast<int>(((-1 + sqrt(1 + 8 * maxSum)) / 2)), n); // k = argmax((k+1)*k//2 <= maxSum)\n        int64_t total = static_cast<int64_t>(k + 1) * k / 2;\n        int result = k;\n        unordered_set<int> lookup(cbegin(banned), cend(banned));\n        for (const auto& x : lookup) {\n            if (x <= k) {\n                total -= x;\n                --result;\n            }\n        }\n        for (int i = k + 1; i <= n; ++i) {\n            if (lookup.count(i)) {\n                continue;\n            }\n            if (total + i > maxSum) {\n                break;\n            }\n            total += i;\n            ++result;\n        }\n        return result;\n    }\n};\n\n// Time:  O(blogb + logn * logb)\n// Space: O(b)\n// binary search, prefix sum\nclass Solution2 {\npublic:\n    int maxCount(vector<int>& banned, int n, long long maxSum) {\n        unordered_set<int> banned_set(cbegin(banned), cend(banned));\n        vector<int> sorted_banned(cbegin(banned_set), cend(banned_set));\n        sort(begin(sorted_banned), end(sorted_banned));\n        vector<int64_t> prefix(size(sorted_banned) + 1);\n        for (int i = 0; i < size(sorted_banned); ++i) {\n            prefix[i + 1] = prefix[i] + sorted_banned[i];\n        }\n        const auto& check = [&](const int64_t x) {\n            return (x + 1) * x / 2 - prefix[distance(cbegin(sorted_banned), upper_bound(cbegin(sorted_banned), cend(sorted_banned), x))] <= maxSum;\n        };\n        int left = 1, right = n;\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (!check(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        } \n        return right - distance(cbegin(sorted_banned), upper_bound(cbegin(sorted_banned), cend(sorted_banned), right));\n    }\n};\n\n// Time:  O(n)\n// Space: O(b)\n// greedy\nclass Solution3 {\npublic:\n    int maxCount(vector<int>& banned, int n, int maxSum) {\n        unordered_set<int> lookup(cbegin(banned), cend(banned));\n        int result = 0;\n        for (int i = 1, total = 0; i <= n; ++i) {\n            if (lookup.count(i)) {\n                continue;\n            }\n            if (total + i > maxSum) {\n                break;\n            }\n            total += i;\n            ++result;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(b)\n# Space: O(b)\n\n# math\nclass Solution(object):\n    def maxCount(self, banned, n, maxSum):\n        \"\"\"\n        :type banned: List[int]\n        :type n: int\n        :type maxSum: int\n        :rtype: int\n        \"\"\"\n        k = min(int((-1+(1+8*maxSum))**0.5/2), n)  # k = argmax((k+1)*k//2 <= maxSum)\n        total = (k+1)*k//2\n        result = k\n        lookup = set(banned)\n        for x in lookup:\n            if x <= k:\n                total -= x\n                result -= 1\n        for i in xrange(k+1, n+1):\n            if i in lookup:\n                continue\n            if total+i > maxSum:\n                break\n            total += i\n            result += 1\n        return result\n\n\n# Time:  O(blogb + logn * logb)\n# Space: O(b)\nimport bisect\n\n\n# binary search, prefix sum\nclass Solution2(object):\n    def maxCount(self, banned, n, maxSum):\n        \"\"\"\n        :type banned: List[int]\n        :type n: int\n        :type maxSum: int\n        :rtype: int\n        \"\"\"\n        def check(x):\n            return (x+1)*x//2-prefix[bisect.bisect_right(sorted_banned, x)] <= maxSum\n    \n        sorted_banned = sorted(set(banned))\n        prefix = [0]*(len(sorted_banned)+1)\n        for i in xrange(len(sorted_banned)):\n            prefix[i+1] = prefix[i]+sorted_banned[i]\n        left, right = 1, n\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return right-bisect.bisect_right(sorted_banned, right)\n\n \n# Time:  O(n)\n# Space: O(b)\n# greedy\nclass Solution3(object):\n    def maxCount(self, banned, n, maxSum):\n        \"\"\"\n        :type banned: List[int]\n        :type n: int\n        :type maxSum: int\n        :rtype: int\n        \"\"\"\n        lookup = set(banned)\n        result = total = 0\n        for i in xrange(1, n+1):\n            if i in lookup:\n                continue\n            if total+i > maxSum:\n                break\n            total += i\n            result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

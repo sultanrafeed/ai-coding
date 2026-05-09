@@ -1,0 +1,35 @@
+{
+  "id": "4f13604e-e11b-4bfe-b690-b006c96c8c11",
+  "slug": "minimum-subsequence-in-non-increasing-order",
+  "title": "Minimum Subsequence in Non-Increasing Order",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the array <code>nums</code>, obtain a subsequence of the array whose sum of elements is <strong>strictly greater</strong> than the sum of the non&nbsp;included elements in such subsequence.&nbsp;</p>\n\n<p>If there are multiple solutions, return the subsequence with <strong>minimum size</strong> and if there still exist multiple solutions, return the subsequence with the <strong>maximum total sum</strong> of all its elements. A subsequence of an array can be obtained by erasing some (possibly zero) elements from the array.&nbsp;</p>\n\n<p>Note that the solution with the given constraints is guaranteed to be&nbsp;<strong>unique</strong>. Also return the answer sorted in <strong>non-increasing</strong> order.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [4,3,10,9,8]\n<strong>Output:</strong> [10,9] \n<strong>Explanation:</strong> The subsequences [10,9] and [10,8] are minimal such that the sum of their elements is strictly greater than the sum of elements not included. However, the subsequence [10,9] has the maximum total sum of its elements.&nbsp;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [4,4,7,6,7]\n<strong>Output:</strong> [7,7,6] \n<strong>Explanation:</strong> The subsequence [7,7] has the sum of its elements equal to 14 which is not strictly greater than the sum of elements not included (14 = 4 + 4 + 6). Therefore, the subsequence [7,6,7] is the minimal satisfying the conditions. Note the subsequence has to be returned in non-increasing order.  \n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 500</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> minSubsequence(vector<int>& nums) {\n        int total = accumulate(cbegin(nums), cend(nums), 0), curr = 0;\n        sort(begin(nums), end(nums), greater<int>());\n        int result = 0;\n        for (int i = 0; i < nums.size(); ++i) {\n            curr += nums[i];\n            if (curr > total - curr) {\n                result = i + 1;\n                break;\n            }\n        }\n        return vector<int>(cbegin(nums), cbegin(nums) + result);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def minSubsequence(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result, total, curr = [], sum(nums), 0\n        nums.sort(reverse=True)\n        for i, x in enumerate(nums):\n            curr += x\n            if curr > total-curr:\n                break\n        return nums[:i+1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

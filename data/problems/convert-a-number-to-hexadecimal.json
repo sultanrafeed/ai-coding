@@ -1,0 +1,35 @@
+{
+  "id": "9ffcfd11-0d3a-40b5-afa4-7e431d00594d",
+  "slug": "convert-a-number-to-hexadecimal",
+  "title": "Convert a Number to Hexadecimal",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a 32-bit integer <code>num</code>, return <em>a string representing its hexadecimal representation</em>. For negative integers, <a href=\"https://en.wikipedia.org/wiki/Two%27s_complement\" target=\"_blank\">two&rsquo;s complement</a> method is used.</p>\n\n<p>All the letters in the answer string should be lowercase characters, and there should not be any leading zeros in the answer except for the zero itself.</p>\n\n<p><strong>Note:&nbsp;</strong>You are not allowed to use any built-in library method to directly solve this problem.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> num = 26\n<strong>Output:</strong> \"1a\"\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> num = -1\n<strong>Output:</strong> \"ffffffff\"\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-2<sup>31</sup> &lt;= num &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string toHex(int num) {\n        if (!num) {\n            return \"0\";\n        }\n\n        string result;\n        while (num && result.length() != sizeof(int) * 2) {\n            int hex = num & 15;\n            if (hex < 10) {\n                result.push_back('0' + hex);\n            } else {\n                result.push_back('a' + hex - 10);\n            }\n            num >>= 4;\n        }\n        reverse(result.begin(), result.end());\n\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def toHex(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: str\n        \"\"\"\n        if not num:\n            return \"0\"\n\n        result = []\n        while num and len(result) != 8:\n            h = num & 15\n            if h < 10:\n                result.append(str(chr(ord('0') + h)))\n            else:\n                result.append(str(chr(ord('a') + h-10)))\n            num >>= 4\n        result.reverse()\n\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

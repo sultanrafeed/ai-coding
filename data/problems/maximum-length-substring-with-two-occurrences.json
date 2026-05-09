@@ -1,0 +1,35 @@
+{
+  "id": "d5a2589c-3eb0-4edd-baf1-037a5ea70b2f",
+  "slug": "maximum-length-substring-with-two-occurrences",
+  "title": "Maximum Length Substring With Two Occurrences",
+  "difficulty": "easy",
+  "descriptionHtml": "Given a string <code>s</code>, return the <strong>maximum</strong> length of a <span data-keyword=\"substring\">substring</span>&nbsp;such that it contains <em>at most two occurrences</em> of each character.\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;bcbbbcba&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\nThe following substring has a length of 4 and contains at most two occurrences of each character: <code>&quot;bcbb<u>bcba</u>&quot;</code>.</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;aaaa&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\nThe following substring has a length of 2 and contains at most two occurrences of each character: <code>&quot;<u>aa</u>aa&quot;</code>.</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>s</code> consists only of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// freq table, sliding window, two pointers\nclass Solution {\npublic:\n    int maximumLengthSubstring(string s) {\n        static const int COUNT = 2;\n\n        int result = 0;\n        vector<int> cnt(26);\n        int right = 0, left = 0;\n        for (int invalid_cnt = 0; right < size(s); ++right) {\n            if (cnt[s[right] - 'a'] == COUNT) {\n                ++invalid_cnt;\n            }\n            ++cnt[s[right] - 'a'];\n            if (invalid_cnt) {\n                --cnt[s[left] - 'a'];\n                if (cnt[s[left++] - 'a'] == COUNT) {\n                    --invalid_cnt;\n                }\n            }\n        }\n        return right - left;\n    }\n};\n\n// Time:  O(n + 26)\n// Space: O(26)\n// freq table, sliding window, two pointers\nclass Solution2 {\npublic:\n    int maximumLengthSubstring(string s) {\n        static const int COUNT = 2;\n\n        int result = 0;\n        vector<int> cnt(26);\n        for (int right = 0, left = 0; right < size(s); ++right) {\n            ++cnt[s[right] - 'a'];\n            while (cnt[s[right] - 'a'] > COUNT) {\n                --cnt[s[left++] - 'a'];\n            }\n            result = max(result, right - left + 1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# freq table, sliding window, two pointers\nclass Solution(object):\n    def maximumLengthSubstring(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        COUNT = 2\n        result = 0\n        cnt = [0]*26\n        left = invalid_cnt = 0\n        for right, x in enumerate(s):\n            if cnt[ord(x)-ord('a')] == COUNT:\n                invalid_cnt += 1\n            cnt[ord(x)-ord('a')] += 1\n            if invalid_cnt:\n                cnt[ord(s[left])-ord('a')] -= 1\n                if cnt[ord(s[left])-ord('a')] == COUNT:\n                    invalid_cnt -= 1\n                left += 1\n        return right-left+1\n\n\n# Time:  O(n + 26)\n# Space: O(26)\n# freq table, sliding window, two pointers\nclass Solution2(object):\n    def maximumLengthSubstring(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        COUNT = 2\n        result = 0\n        cnt = [0]*26\n        left = 0\n        for right, x in enumerate(s):\n            cnt[ord(x)-ord('a')] += 1\n            while cnt[ord(x)-ord('a')] > COUNT:\n                cnt[ord(s[left])-ord('a')] -= 1\n                left += 1\n            result = max(result, right-left+1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

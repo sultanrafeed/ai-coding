@@ -1,0 +1,40 @@
+{
+  "id": "383c8006-eeb9-4c5a-bc13-1ae2d91d54cd",
+  "slug": "valid-parentheses",
+  "title": "Valid Parentheses",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code> containing just the characters <code>&#39;(&#39;</code>, <code>&#39;)&#39;</code>, <code>&#39;{&#39;</code>, <code>&#39;}&#39;</code>, <code>&#39;[&#39;</code> and <code>&#39;]&#39;</code>, determine if the input string is valid.</p>\n\n<p>An input string is valid if:</p>\n\n<ol>\n\t<li>Open brackets must be closed by the same type of brackets.</li>\n\t<li>Open brackets must be closed in the correct order.</li>\n\t<li>Every close bracket has a corresponding open bracket of the same type.</li>\n</ol>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;()&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;()[]{}&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;(]&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n</div>\n\n<p><strong class=\"example\">Example 4:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;([])&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n</div>\n\n<p><strong class=\"example\">Example 5:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;([)]&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>s</code> consists of parentheses only <code>&#39;()[]{}&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"()\"\n\"()[]{}\"\n\"(]\"\n\"([])\"\n\"([)]\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\t\t\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool isValid(string s) {\n        const  unordered_map<char, char> symbol_pair = {{')', '('},\n                                                        {']', '['},\n                                                        {'}', '{'}};\n        stack<char> parentheses;\n        for (const auto& c: s) {\n            const auto& it = symbol_pair.find(c);\n            if (it != symbol_pair.cend()) {\n                if (parentheses.empty() ||\n                    parentheses.top() != it->second) {\n                    return false;\n                }\n                parentheses.pop();\n            } else {\n                parentheses.emplace(c);\n            }\n        }\n        return parentheses.empty();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    # @return a boolean\n    def isValid(self, s):\n        stack, lookup = [], {\"(\": \")\", \"{\": \"}\", \"[\": \"]\"}\n        for parenthese in s:\n            if parenthese in lookup:\n                stack.append(parenthese)\n            elif len(stack) == 0 or lookup[stack.pop()] != parenthese:\n                return False\n        return len(stack) == 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

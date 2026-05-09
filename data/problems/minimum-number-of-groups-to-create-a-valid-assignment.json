@@ -1,0 +1,35 @@
+{
+  "id": "625df1a4-0726-4dbc-a328-d3fe336a83a0",
+  "slug": "minimum-number-of-groups-to-create-a-valid-assignment",
+  "title": "Minimum Number of Groups to Create a Valid Assignment",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a collection of numbered <code>balls</code>&nbsp;and instructed to sort them into boxes for a nearly balanced distribution. There are two rules you must follow:</p>\n\n<ul>\n\t<li>Balls with the same&nbsp;box must have the same value. But, if you have more than one ball with the same number, you can put them in different boxes.</li>\n\t<li>The biggest box can only have one more ball than the smallest box.</li>\n</ul>\n\n<p>​Return the <em>fewest number of boxes</em> to sort these balls following these rules.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1: </strong></p>\n\n<div class=\"example-block\" style=\"border-color: var(--border-tertiary); border-left-width: 2px; color: var(--text-secondary); font-size: .875rem; margin-bottom: 1rem; margin-top: 1rem; overflow: visible; padding-left: 1rem;\">\n<p><strong>Input: </strong> <span class=\"example-io\" style=\"font-family: Menlo,sans-serif; font-size: 0.85rem;\"> balls = [3,2,3,2,3] </span></p>\n\n<p><strong>Output: </strong> <span class=\"example-io\" style=\"font-family: Menlo,sans-serif; font-size: 0.85rem;\"> 2 </span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>We can sort <code>balls</code> into boxes as follows:</p>\n\n<ul>\n\t<li><code>[3,3,3]</code></li>\n\t<li><code>[2,2]</code></li>\n</ul>\n\n<p>The size difference between the two boxes doesn&#39;t exceed one.</p>\n</div>\n\n<p><strong class=\"example\">Example 2: </strong></p>\n\n<div class=\"example-block\" style=\"border-color: var(--border-tertiary); border-left-width: 2px; color: var(--text-secondary); font-size: .875rem; margin-bottom: 1rem; margin-top: 1rem; overflow: visible; padding-left: 1rem;\">\n<p><strong>Input: </strong> <span class=\"example-io\" style=\"font-family: Menlo,sans-serif; font-size: 0.85rem;\"> balls = [10,10,10,3,1,1] </span></p>\n\n<p><strong>Output: </strong> <span class=\"example-io\" style=\"font-family: Menlo,sans-serif; font-size: 0.85rem;\"> 4 </span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>We can sort <code>balls</code> into boxes as follows:</p>\n\n<ul>\n</ul>\n\n<ul>\n\t<li><code>[10]</code></li>\n\t<li><code>[10,10]</code></li>\n\t<li><code>[3]</code></li>\n\t<li><code>[1,1]</code></li>\n</ul>\n\n<p>You can&#39;t use fewer than four boxes while still following the rules. For example, putting all three balls numbered 10 in one box would break the rule about the maximum size difference between boxes.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(min(cnt.values()) * n/min(cnt.values())) = O(n)\n// Space: O(n)\n\n// linear search, greedy, math\nclass Solution {\npublic:\n    int minGroupsForValidAssignment(vector<int>& nums) {\n        static const int INF = numeric_limits<int>::max();\n\n        const auto& ceil_divide = [](const auto& a, const auto& b) {\n            return (a + b - 1) / b;\n        };\n    \n        unordered_map<int, int> cnt;\n        const auto& count = [&](int x) {\n            int result = 0;\n            for (const auto& [_, c] : cnt) {\n                if (c % x > c / x) {\n                    return INF;\n                }\n                result += ceil_divide(c, x + 1);\n            }\n            return result;\n        };\n\n        for (const auto& x : nums) {\n            ++cnt[x];\n        }\n        int min_cnt = INF;\n        for (const auto& [_, c] : cnt) {\n            min_cnt = min(min_cnt, c);\n        }\n        for (int i = min_cnt; i >= 1; --i) {\n            const int c = count(i);\n            if (c != INF) {\n                return c;\n            }\n        }\n        return 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(min(cnt.values()) * n/min(cnt.values())) = O(n)\n# Space: O(n)\n\nimport collections\n\n\n# linear search, greedy, math\nclass Solution(object):\n    def minGroupsForValidAssignment(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        INF = float(\"inf\")\n\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n    \n        def count(x):\n            result = 0\n            for c in cnt.itervalues():\n                if c%x > c//x:\n                    return INF\n                result += ceil_divide(c, x+1)\n            return result\n\n        cnt = collections.Counter(nums)\n        for i in reversed(xrange(1, min(cnt.itervalues())+1)):\n            c = count(i)\n            if c != INF:\n                return c\n        return 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "d91d0e29-b0c8-4bd8-97e6-205daf1ce78f",
+  "slug": "substrings-that-begin-and-end-with-the-same-letter",
+  "title": "Substrings That Begin and End With the Same Letter",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "math",
+    "string",
+    "counting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    long long numberOfSubstrings(string s) {\n        unordered_map<char, int> cnt;\n        int64_t result = 0;\n        for (const auto& c : s) {\n            result += ++cnt[c];\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    long long numberOfSubstrings(string s) {\n        unordered_map<char, int64_t> cnt;\n        \n        for (const auto& c : s) {\n            ++cnt[c];\n        }\n        int64_t result = 0;\n        for (const auto& [_, v] : cnt) {\n            result += v * (v + 1) / 2;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def numberOfSubstrings(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = 0\n        cnt = collections.Counter()\n        for c in s:\n            cnt[c] += 1\n            result += cnt[c]\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\nimport collections\n\n\nclass Solution(object):\n    def numberOfSubstrings(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        return sum(v*(v+1)//2 for v in collections.Counter(s).itervalues())",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

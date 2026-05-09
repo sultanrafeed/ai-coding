@@ -1,0 +1,43 @@
+{
+  "id": "73fdee1a-436f-4bd2-ad42-9096c4d37f03",
+  "slug": "minimize-rounding-error-to-meet-target",
+  "title": "Minimize Rounding Error to Meet Target",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "string",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"0.700\",\"2.800\",\"4.900\"]\n8\n[\"1.500\",\"2.500\",\"3.500\"]\n10\n[\"1.500\",\"2.500\",\"3.500\"]\n9",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n) on average\n// Space: O(n)\n\nclass Solution {\npublic:\n    string minimizeError(vector<string>& prices, int target) {\n        vector<double> errors;\n        int lower = 0, upper = 0;\n        for (const auto& price : prices) {\n            const auto& p = stod(price);\n            lower += floor(p);\n            upper += ceil(p);\n            if (p != floor(p)) {\n                errors.emplace_back(p - floor(p));\n            }\n        }\n        if (target < lower || target > upper) {\n            return \"-1\";\n        }\n\n        int lower_round_count = upper - target;\n        nth_element(errors.begin(), errors.begin() + lower_round_count, errors.end());\n        double min_error = 0.0;\n        for (int i = 0; i < errors.size(); ++i) {\n            if (i < lower_round_count) {\n                min_error += errors[i];\n            } else {\n                min_error += 1.0 - errors[i];\n            }\n        }\n        const auto& result = to_string(min_error);\n        return result.substr(0, result.find(\".\") + 4);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n) on average\n# Space: O(n)\n\nimport math\nimport random\n\n\nclass Solution(object):\n    def minimizeError(self, prices, target):\n        \"\"\"\n        :type prices: List[str]\n        :type target: int\n        :rtype: str\n        \"\"\"\n        def kthElement(nums, k, compare=lambda a, b: a < b):\n            def PartitionAroundPivot(left, right, pivot_idx, nums, compare):\n                new_pivot_idx = left\n                nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]\n                for i in xrange(left, right):\n                    if compare(nums[i], nums[right]):\n                        nums[i], nums[new_pivot_idx] = nums[new_pivot_idx], nums[i]\n                        new_pivot_idx += 1\n\n                nums[right], nums[new_pivot_idx] = nums[new_pivot_idx], nums[right]\n                return new_pivot_idx\n\n            left, right = 0, len(nums) - 1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                new_pivot_idx = PartitionAroundPivot(left, right, pivot_idx, nums, compare)\n                if new_pivot_idx == k:\n                    return\n                elif new_pivot_idx > k:\n                    right = new_pivot_idx - 1\n                else:  # new_pivot_idx < k.\n                    left = new_pivot_idx + 1\n        \n        errors = []\n        lower, upper = 0, 0\n        for i, p in enumerate(map(float, prices)):\n            lower += int(math.floor(p))\n            upper += int(math.ceil(p))\n            if p != math.floor(p):\n                errors.append(p-math.floor(p))\n        if not lower <= target <= upper:\n            return \"-1\"\n\n        lower_round_count = upper-target\n        kthElement(errors, lower_round_count)\n        result = 0.0\n        for i in xrange(len(errors)):\n            if i < lower_round_count:\n                result += errors[i]\n            else:\n                result += 1.0-errors[i]\n        return \"{:.3f}\".format(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

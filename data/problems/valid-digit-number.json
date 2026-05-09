@@ -1,0 +1,37 @@
+{
+  "id": "341d352c-1245-4a5b-96b7-a3ba0b233e53",
+  "slug": "valid-digit-number",
+  "title": "Valid Digit Number",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer <code>n</code> and a digit <code>x</code>.</p>\n\n<p>A number is considered <strong>valid</strong> if:</p>\n\n<ul>\n\t<li>It contains <strong>at least one</strong> occurrence of digit <code>x</code>, and</li>\n\t<li>It <strong>does not start</strong> with digit <code>x</code>.</li>\n</ul>\n\n<p>Return <code>true</code> if <code>n</code> is <strong>valid</strong>, otherwise return <code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 101, x = 0</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The number contains digit 0 at index 1. It does not start with 0, so it satisfies both conditions. Thus, the answer is <code>true</code>​​​​​​​.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 232, x = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The number starts with 2, which violates the condition. Thus, the answer is <code>false</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 5, x = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The number does not contain digit 1. Thus, the answer is <code>false</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= n &lt;= 10<sup>5</sup>​​​​​​​</code></li>\n\t<li><code>0 &lt;= x &lt;= 9</code></li>\n</ul>\n",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "101\n0\n232\n2\n5\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    bool validDigit(int n, int x) {\n        bool result = false;\n        for (; n; n /= 10) {\n            if (n % 10 != x) {\n                continue;\n            }\n            if (!(n / 10)) {\n                return false;\n            }\n            result = true;\n        }\n        return result;\n    }\n};\n\n// Time:  O(logn)\n// Space: O(logn)\n// math\nclass Solution2 {\npublic:\n    bool validDigit(int n, int x) {\n        const auto& s = to_string(n);\n        x += '0';\n        return x != s[0] && s.find(x) != string::npos;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# math\nclass Solution(object):\n    def validDigit(self, n, x):\n        \"\"\"\n        :type n: int\n        :type x: int\n        :rtype: bool\n        \"\"\"\n        result = False\n        while n:\n            n, r = divmod(n, 10)\n            if r != x:\n                continue\n            if not n:\n                return False\n            result = True\n        return result\n\n\n# Time:  O(logn)\n# Space: O(logn)\n# math\nclass Solution2(object):\n    def validDigit(self, n, x):\n        \"\"\"\n        :type n: int\n        :type x: int\n        :rtype: bool\n        \"\"\"\n        digits = map(int, str(n))\n        return x != digits[0] and x in digits",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

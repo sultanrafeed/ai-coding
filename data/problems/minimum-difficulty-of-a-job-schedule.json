@@ -1,0 +1,34 @@
+{
+  "id": "7e630225-0d6f-4f04-ad52-664f95c91433",
+  "slug": "minimum-difficulty-of-a-job-schedule",
+  "title": "Minimum Difficulty of a Job Schedule",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You want to schedule a list of jobs in <code>d</code> days. Jobs are dependent (i.e To work on the <code>i<sup>th</sup></code> job, you have to finish all the jobs <code>j</code> where <code>0 &lt;= j &lt; i</code>).</p>\n\n<p>You have to finish <strong>at least</strong> one task every day. The difficulty of a job schedule is the sum of difficulties of each day of the <code>d</code> days. The difficulty of a day is the maximum difficulty of a job done on that day.</p>\n\n<p>You are given an integer array <code>jobDifficulty</code> and an integer <code>d</code>. The difficulty of the <code>i<sup>th</sup></code> job is <code>jobDifficulty[i]</code>.</p>\n\n<p>Return <em>the minimum difficulty of a job schedule</em>. If you cannot find a schedule for the jobs return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/01/16/untitled.png\" style=\"width: 365px; height: 370px;\" />\n<pre>\n<strong>Input:</strong> jobDifficulty = [6,5,4,3,2,1], d = 2\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> First day you can finish the first 5 jobs, total difficulty = 6.\nSecond day you can finish the last job, total difficulty = 1.\nThe difficulty of the schedule = 6 + 1 = 7 \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> jobDifficulty = [9,9,9], d = 4\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> If you finish a job per day you will still have a free day. you cannot find a schedule for the given jobs.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> jobDifficulty = [1,1,1], d = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The schedule is one job per day. total difficulty will be 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= jobDifficulty.length &lt;= 300</code></li>\n\t<li><code>0 &lt;= jobDifficulty[i] &lt;= 1000</code></li>\n\t<li><code>1 &lt;= d &lt;= 10</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(d * n^2)\n// Space: O(d * n)\n\nclass Solution {\npublic:\n    int minDifficulty(vector<int>& jobDifficulty, int d) {\n        if (jobDifficulty.size() < d) {\n            return -1;\n        }\n\n        vector<vector<int>> dp(d,\n                               vector<int>(jobDifficulty.size(),\n                                           numeric_limits<int>::max()));\n        dp[0][0] = jobDifficulty[0];\n        for (int i = 1; i < jobDifficulty.size(); ++i) {\n            dp[0][i] = max(dp[0][i - 1], jobDifficulty[i]);\n        }\n        for (int i = 1; i < d; ++i) {\n            for (int j = i; j < jobDifficulty.size(); ++j) {\n                int curr_max = jobDifficulty[j];\n                for (int k = j; k >= i; --k) {\n                    curr_max = max(curr_max, jobDifficulty[k]);\n                    if (dp[i - 1][k - 1] != numeric_limits<int>::max()) {\n                        dp[i][j] = min(dp[i][j], dp[i - 1][k - 1] + curr_max);\n                    }\n                }\n            }\n        }\n        return dp[d - 1][jobDifficulty.size() - 1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(d * n^2)\n# Space: O(d * n)\n\nclass Solution(object):\n    def minDifficulty(self, jobDifficulty, d):\n        \"\"\"\n        :type jobDifficulty: List[int]\n        :type d: int\n        :rtype: int\n        \"\"\"\n        if len(jobDifficulty) < d:\n            return -1\n        \n        dp = [[float(\"inf\")]*len(jobDifficulty) for _ in xrange(d)]\n        dp[0][0] = jobDifficulty[0]\n        for i in xrange(1, len(jobDifficulty)):\n            dp[0][i] = max(dp[0][i-1], jobDifficulty[i])\n        for i in xrange(1, d):\n            for j in xrange(i, len(jobDifficulty)):\n                curr_max = jobDifficulty[j]\n                for k in reversed(xrange(i, j+1)):\n                    curr_max = max(curr_max, jobDifficulty[k])\n                    dp[i][j] = min(dp[i][j], dp[i-1][k-1] + curr_max)\n        return dp[d-1][len(jobDifficulty)-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

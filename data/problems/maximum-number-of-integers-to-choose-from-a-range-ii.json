@@ -1,0 +1,42 @@
+{
+  "id": "c894ae7f-e256-436a-88f3-387e27ed4ba5",
+  "slug": "maximum-number-of-integers-to-choose-from-a-range-ii",
+  "title": "Maximum Number of Integers to Choose From a Range II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,4,6]\n6\n4\n[4,3,5,6]\n7\n18",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(b)\n// Space: O(b)\n\n// math\nclass Solution {\npublic:\n    int maxCount(vector<int>& banned, int n, long long maxSum) {\n        int k = min(static_cast<int>(((-1 + sqrt(1 + 8 * maxSum)) / 2)), n);  // k = argmax((k+1)*k//2 <= maxSum)\n        int64_t total = static_cast<int64_t>(k + 1) * k / 2;\n        int result = k;\n        unordered_set<int> lookup(cbegin(banned), cend(banned));\n        for (const auto& x : lookup) {\n            if (x <= k) {\n                total -= x;\n                --result;\n            }\n        }\n        for (int i = k + 1; i <= n; ++i) {\n            if (lookup.count(i)) {\n                continue;\n            }\n            if (total + i > maxSum) {\n                break;\n            }\n            total += i;\n            ++result;\n        }\n        return result;\n    }\n};\n\n// Time:  O(blogb + logn * logb)\n// Space: O(b)\n// binary search, prefix sum\nclass Solution2 {\npublic:\n    int maxCount(vector<int>& banned, int n, long long maxSum) {\n        unordered_set<int> banned_set(cbegin(banned), cend(banned));\n        vector<int> sorted_banned(cbegin(banned_set), cend(banned_set));\n        sort(begin(sorted_banned), end(sorted_banned));\n        vector<int64_t> prefix(size(sorted_banned) + 1);\n        for (int i = 0; i < size(sorted_banned); ++i) {\n            prefix[i + 1] = prefix[i] + sorted_banned[i];\n        }\n        const auto& check = [&](const int64_t x) {\n            return (x + 1) * x / 2 - prefix[distance(cbegin(sorted_banned), upper_bound(cbegin(sorted_banned), cend(sorted_banned), x))] <= maxSum;\n        };\n        int left = 1, right = n;\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (!check(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        } \n        return right - distance(cbegin(sorted_banned), upper_bound(cbegin(sorted_banned), cend(sorted_banned), right));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(b)\n# Space: O(b)\n\n# math\nclass Solution(object):\n    def maxCount(self, banned, n, maxSum):\n        \"\"\"\n        :type banned: List[int]\n        :type n: int\n        :type maxSum: int\n        :rtype: int\n        \"\"\"\n        k = min(int((-1+(1+8*maxSum))**0.5/2), n)  # k = argmax((k+1)*k//2 <= maxSum)\n        total = (k+1)*k//2\n        result = k\n        lookup = set(banned)\n        for x in lookup:\n            if x <= k:\n                total -= x\n                result -= 1\n        for i in xrange(k+1, n+1):\n            if i in lookup:\n                continue\n            if total+i > maxSum:\n                break\n            total += i\n            result += 1\n        return result\n\n\n# Time:  O(blogb + logn * logb)\n# Space: O(b)\nimport bisect\n\n\n# binary search, prefix sum\nclass Solution2(object):\n    def maxCount(self, banned, n, maxSum):\n        \"\"\"\n        :type banned: List[int]\n        :type n: int\n        :type maxSum: int\n        :rtype: int\n        \"\"\"\n        def check(x):\n            return (x+1)*x//2-prefix[bisect.bisect_right(sorted_banned, x)] <= maxSum\n    \n        sorted_banned = sorted(set(banned))\n        prefix = [0]*(len(sorted_banned)+1)\n        for i in xrange(len(sorted_banned)):\n            prefix[i+1] = prefix[i]+sorted_banned[i]\n        left, right = 1, n\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return right-bisect.bisect_right(sorted_banned, right)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

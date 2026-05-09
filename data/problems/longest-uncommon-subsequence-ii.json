@@ -1,0 +1,37 @@
+{
+  "id": "a7272689-97d5-46ca-b11e-cc648e7c84b2",
+  "slug": "longest-uncommon-subsequence-ii",
+  "title": "Longest Uncommon Subsequence II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of strings <code>strs</code>, return <em>the length of the <strong>longest uncommon subsequence</strong> between them</em>. If the longest uncommon subsequence does not exist, return <code>-1</code>.</p>\n\n<p>An <strong>uncommon subsequence</strong> between an array of strings is a string that is a <strong>subsequence of one string but not the others</strong>.</p>\n\n<p>A <strong>subsequence</strong> of a string <code>s</code> is a string that can be obtained after deleting any number of characters from <code>s</code>.</p>\n\n<ul>\n\t<li>For example, <code>&quot;abc&quot;</code> is a subsequence of <code>&quot;aebdc&quot;</code> because you can delete the underlined characters in <code>&quot;a<u>e</u>b<u>d</u>c&quot;</code> to get <code>&quot;abc&quot;</code>. Other subsequences of <code>&quot;aebdc&quot;</code> include <code>&quot;aebdc&quot;</code>, <code>&quot;aeb&quot;</code>, and <code>&quot;&quot;</code> (empty string).</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> strs = [\"aba\",\"cdc\",\"eae\"]\n<strong>Output:</strong> 3\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> strs = [\"aaa\",\"aaa\",\"aa\"]\n<strong>Output:</strong> -1\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= strs.length &lt;= 50</code></li>\n\t<li><code>1 &lt;= strs[i].length &lt;= 10</code></li>\n\t<li><code>strs[i]</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "two-pointers",
+    "string",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(l * n^2)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findLUSlength(vector<string>& strs) {\n        sort(strs.begin(), strs.end(),\n             [](const string& a, const string& b) { return a.length() > b.length(); });\n        for (int i = 0; i < strs.size(); ++i) {\n            bool all_of = true;\n            for (int j = 0; j < strs.size() && strs[j].length() >= strs[i].length(); ++j) {\n                if (i != j && isSubsequence(strs[i], strs[j])) {\n                    all_of = false;\n                    break;\n                }\n            }\n            if (all_of) {\n                return strs[i].length();\n            }\n        }\n        return -1;\n    }\n\nprivate:\n    bool isSubsequence(const string& a, const string& b) {\n        int i = 0;\n        for (int j = 0; j < b.length() && i < a.length(); ++j) {\n            if (a[i] == b[j]) {\n                ++i;\n            }\n        }\n        return i == a.length();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(l * n^2)\n# Space: O(1)\n\nclass Solution(object):\n    def findLUSlength(self, strs):\n        \"\"\"\n        :type strs: List[str]\n        :rtype: int\n        \"\"\"\n        def isSubsequence(a, b):\n            i = 0\n            for j in xrange(len(b)):\n                if i >= len(a):\n                    break\n                if a[i] == b[j]:\n                    i += 1\n            return i == len(a)\n\n        strs.sort(key=len, reverse=True)\n        for i in xrange(len(strs)):\n            all_of = True\n            for j in xrange(len(strs)):\n                if len(strs[j]) < len(strs[i]):\n                    break\n                if i != j and isSubsequence(strs[i], strs[j]):\n                    all_of = False\n                    break\n            if all_of:\n                return len(strs[i])\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "d0cf8b95-17cc-442f-b7a9-3709c42a0526",
+  "slug": "maximum-sum-with-at-most-k-elements",
+  "title": "Maximum Sum With at Most K Elements",
+  "difficulty": "medium",
+  "descriptionHtml": "<p data-pm-slice=\"1 3 []\">You are given a 2D integer matrix <code>grid</code> of size <code>n x m</code>, an integer array <code>limits</code> of length <code>n</code>, and an integer <code>k</code>. The task is to find the <strong>maximum sum</strong> of <strong>at most</strong> <code>k</code> elements from the matrix <code>grid</code> such that:</p>\n\n<ul data-spread=\"false\">\n\t<li>\n\t<p>The number of elements taken from the <code>i<sup>th</sup></code> row of <code>grid</code> does not exceed <code>limits[i]</code>.</p>\n\t</li>\n</ul>\n\n<p data-pm-slice=\"1 1 []\">Return the <strong>maximum sum</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[1,2],[3,4]], limits = [1,2], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">7</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>From the second row, we can take at most 2 elements. The elements taken are 4 and 3.</li>\n\t<li>The maximum possible sum of at most 2 selected elements is <code>4 + 3 = 7</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[5,3,7],[8,2,6]], limits = [2,2], k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">21</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>From the first row, we can take at most 2 elements. The element taken is 7.</li>\n\t<li>From the second row, we can take at most 2 elements. The elements taken are 8 and 6.</li>\n\t<li>The maximum possible sum of at most 3 selected elements is <code>7 + 8 + 6 = 21</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == grid.length == limits.length</code></li>\n\t<li><code>m == grid[i].length</code></li>\n\t<li><code>1 &lt;= n, m &lt;= 500</code></li>\n\t<li><code>0 &lt;= grid[i][j] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= limits[i] &lt;= m</code></li>\n\t<li><code>0 &lt;= k &lt;= min(n * m, sum(limits))</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting",
+    "heap-priority-queue",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * m)\n// Space: O(1)\n\n// greedy, quick select\nclass Solution {\npublic:\n    long long maxSum(vector<vector<int>>& grid, vector<int>& limits, int k) {\n        vector<int> candidates;\n        for (int i = 0; i < size(grid); ++i) {\n            int cnt = min(k, limits[i]);\n            if (cnt - 1 >= 0) {\n                nth_element(begin(grid[i]), begin(grid[i]) + (cnt - 1), end(grid[i]), greater<int>());\n                while (cnt) {\n                    candidates.emplace_back(grid[i][--cnt]);\n                }\n           }\n        }\n        int64_t result = 0;\n        if (k - 1 >= 0) {\n            nth_element(begin(candidates), begin(candidates) + (k - 1), end(candidates), greater<int>());\n            result = accumulate(cbegin(candidates), cbegin(candidates) + k, 0ll);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * m)\n# Space: O(1)\n\nimport random\n\n\n# greedy, quick select\nclass Solution(object):\n    def maxSum(self, grid, limits, k):\n        \"\"\"\n        :type grid: List[List[int]]\n        :type limits: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def nth_element(nums, n, compare=lambda a, b: a < b):\n            def tri_partition(nums, left, right, target, compare):\n                mid = left\n                while mid <= right:\n                    if nums[mid] == target:\n                        mid += 1\n                    elif compare(nums[mid], target):\n                        nums[left], nums[mid] = nums[mid], nums[left]\n                        left += 1\n                        mid += 1\n                    else:\n                        nums[mid], nums[right] = nums[right], nums[mid]\n                        right -= 1\n                return left, right\n\n            left, right = 0, len(nums)-1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)\n                if pivot_left <= n <= pivot_right:\n                    return\n                elif pivot_left > n:\n                    right = pivot_left-1\n                else:  # pivot_right < n.\n                    left = pivot_right+1\n\n        candidates = []\n        for i in xrange(len(grid)):\n            cnt = min(k, limits[i])\n            nth_element(grid[i], cnt-1, lambda a, b: a > b)\n            for j in xrange(cnt):\n                candidates.append(grid[i][j])\n        nth_element(candidates, k-1, lambda a, b: a > b)\n        return sum(candidates[i] for i in xrange(k))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

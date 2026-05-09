@@ -1,0 +1,34 @@
+{
+  "id": "012559ff-de40-45de-b236-2b6affa4e0c5",
+  "slug": "find-the-longest-semi-repetitive-substring",
+  "title": "Find the Longest Semi-Repetitive Substring",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a digit string <code>s</code> that consists of digits from 0 to 9.</p>\n\n<p>A string is called <strong>semi-repetitive</strong> if there is <strong>at most</strong> one adjacent pair of the same digit. For example, <code>&quot;0010&quot;</code>, <code>&quot;002020&quot;</code>, <code>&quot;0123&quot;</code>, <code>&quot;2002&quot;</code>, and <code>&quot;54944&quot;</code> are semi-repetitive while the following are not: <code>&quot;00101022&quot;</code> (adjacent same digit pairs are 00 and 22), and <code>&quot;1101234883&quot;</code> (adjacent same digit pairs are 11 and 88).</p>\n\n<p>Return the length of the <strong>longest semi-repetitive <span data-keyword=\"substring-nonempty\">substring</span></strong> of <code>s</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;52233&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The longest semi-repetitive substring is &quot;5223&quot;. Picking the whole string &quot;52233&quot; has two adjacent same digit pairs 22 and 33, but at most one is allowed.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;5494&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><code>s</code> is a semi-repetitive string.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;1111111&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The longest semi-repetitive substring is &quot;11&quot;. Picking the substring &quot;111&quot; has two adjacent same digit pairs, but at most one is allowed.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 50</code></li>\n\t<li><code>&#39;0&#39; &lt;= s[i] &lt;= &#39;9&#39;</code></li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// two pointers\nclass Solution {\npublic:\n    int longestSemiRepetitiveSubstring(string s) {\n        int result = 0, left = 0, prev = 0;\n        for (int right = 0; right < size(s); ++right) {\n            if (right - 1 >= 0 && s[right - 1] == s[right]) {\n                left = prev;\n                prev = right;\n            }\n            result = max(result, right - left + 1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# two pointers\nclass Solution(object):\n    def longestSemiRepetitiveSubstring(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = left = prev = 0\n        for right in xrange(len(s)):\n            if right-1 >= 0 and s[right-1] == s[right]:\n                left, prev = prev, right\n            result = max(result, right-left+1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

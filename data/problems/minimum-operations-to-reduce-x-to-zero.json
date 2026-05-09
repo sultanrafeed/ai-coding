@@ -1,0 +1,37 @@
+{
+  "id": "2af6d797-dfff-4d39-810d-0e6fa2e4b17f",
+  "slug": "minimum-operations-to-reduce-x-to-zero",
+  "title": "Minimum Operations to Reduce X to Zero",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> and an integer <code>x</code>. In one operation, you can either remove the leftmost or the rightmost element from the array <code>nums</code> and subtract its value from <code>x</code>. Note that this <strong>modifies</strong> the array for future operations.</p>\n\n<p>Return <em>the <strong>minimum number</strong> of operations to reduce </em><code>x</code> <em>to <strong>exactly</strong></em> <code>0</code> <em>if it is possible</em><em>, otherwise, return </em><code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,4,2,3], x = 5\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The optimal solution is to remove the last two elements to reduce x to zero.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,6,7,8,9], x = 4\n<strong>Output:</strong> -1\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,2,20,1,1,3], x = 10\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The optimal solution is to remove the last three elements and the first two elements (5 operations in total) to reduce x to zero.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= x &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "binary-search",
+    "sliding-window",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minOperations(vector<int>& nums, int x) {\n        int target = accumulate(cbegin(nums), cend(nums), 0) - x;\n        int result = -1;\n        int curr = 0, left = 0;\n        for (int right = 0; right < size(nums); ++right) {\n            curr += nums[right];\n            while (left < size(nums) && curr > target) {\n                curr -= nums[left++];\n            }\n            if (curr == target) {\n                result = max(result, right - left + 1);\n            }\n        }\n        return result != -1 ? size(nums) - result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minOperations(self, nums, x):\n        \"\"\"\n        :type nums: List[int]\n        :type x: int\n        :rtype: int\n        \"\"\"\n        target = sum(nums)-x\n        result = -1\n        curr = left = 0\n        for right in xrange(len(nums)):\n            curr += nums[right]\n            while left < len(nums) and curr > target:\n                curr -= nums[left]\n                left += 1\n            if curr == target:\n                result = max(result, right-left+1)\n        return len(nums)-result if result != -1 else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

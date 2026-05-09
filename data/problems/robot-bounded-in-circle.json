@@ -1,0 +1,41 @@
+{
+  "id": "fc79c707-c99f-4eeb-9606-98552315d7f9",
+  "slug": "robot-bounded-in-circle",
+  "title": "Robot Bounded In Circle",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>On an infinite plane, a robot initially stands at <code>(0, 0)</code> and faces north. Note that:</p>\n\n<ul>\n\t<li>The <strong>north direction</strong> is the positive direction of the y-axis.</li>\n\t<li>The <strong>south direction</strong> is the negative direction of the y-axis.</li>\n\t<li>The <strong>east direction</strong> is the positive direction of the x-axis.</li>\n\t<li>The <strong>west direction</strong> is the negative direction of the x-axis.</li>\n</ul>\n\n<p>The robot can receive one of three instructions:</p>\n\n<ul>\n\t<li><code>&quot;G&quot;</code>: go straight 1 unit.</li>\n\t<li><code>&quot;L&quot;</code>: turn 90 degrees to the left (i.e., anti-clockwise direction).</li>\n\t<li><code>&quot;R&quot;</code>: turn 90 degrees to the right (i.e., clockwise direction).</li>\n</ul>\n\n<p>The robot performs the <code>instructions</code> given in order, and repeats them forever.</p>\n\n<p>Return <code>true</code> if and only if there exists a circle in the plane such that the robot never leaves the circle.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> instructions = &quot;GGLLGG&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> The robot is initially at (0, 0) facing the north direction.\n&quot;G&quot;: move one step. Position: (0, 1). Direction: North.\n&quot;G&quot;: move one step. Position: (0, 2). Direction: North.\n&quot;L&quot;: turn 90 degrees anti-clockwise. Position: (0, 2). Direction: West.\n&quot;L&quot;: turn 90 degrees anti-clockwise. Position: (0, 2). Direction: South.\n&quot;G&quot;: move one step. Position: (0, 1). Direction: South.\n&quot;G&quot;: move one step. Position: (0, 0). Direction: South.\nRepeating the instructions, the robot goes into the cycle: (0, 0) --&gt; (0, 1) --&gt; (0, 2) --&gt; (0, 1) --&gt; (0, 0).\nBased on that, we return true.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> instructions = &quot;GG&quot;\n<strong>Output:</strong> false\n<strong>Explanation:</strong> The robot is initially at (0, 0) facing the north direction.\n&quot;G&quot;: move one step. Position: (0, 1). Direction: North.\n&quot;G&quot;: move one step. Position: (0, 2). Direction: North.\nRepeating the instructions, keeps advancing in the north direction and does not go into cycles.\nBased on that, we return false.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> instructions = &quot;GL&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> The robot is initially at (0, 0) facing the north direction.\n&quot;G&quot;: move one step. Position: (0, 1). Direction: North.\n&quot;L&quot;: turn 90 degrees anti-clockwise. Position: (0, 1). Direction: West.\n&quot;G&quot;: move one step. Position: (-1, 1). Direction: West.\n&quot;L&quot;: turn 90 degrees anti-clockwise. Position: (-1, 1). Direction: South.\n&quot;G&quot;: move one step. Position: (-1, 0). Direction: South.\n&quot;L&quot;: turn 90 degrees anti-clockwise. Position: (-1, 0). Direction: East.\n&quot;G&quot;: move one step. Position: (0, 0). Direction: East.\n&quot;L&quot;: turn 90 degrees anti-clockwise. Position: (0, 0). Direction: North.\nRepeating the instructions, the robot goes into the cycle: (0, 0) --&gt; (0, 1) --&gt; (-1, 1) --&gt; (-1, 0) --&gt; (0, 0).\nBased on that, we return true.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= instructions.length &lt;= 100</code></li>\n\t<li><code>instructions[i]</code> is <code>&#39;G&#39;</code>, <code>&#39;L&#39;</code> or, <code>&#39;R&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"GGLLGG\"\n\"GG\"\n\"GL\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isRobotBounded(string instructions) {\n        static const vector<vector<int>>& directions = {{ 1, 0}, {0, -1},\n                                                        {-1, 0}, {0, 1}};\n        int x = 0, y = 0, i = 0;\n        \n        for (const auto& instruction : instructions) {\n            if (instruction == 'R') {\n                i = (i + 1) % 4;\n            } else if (instruction == 'L') {\n                i = (4 + i - 1) % 4;\n            } else {\n                x += directions[i][0], y += directions[i][1];\n            }\n        }\n        return (x == 0 && y == 0) || i > 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def isRobotBounded(self, instructions):\n        \"\"\"\n        :type instructions: str\n        :rtype: bool\n        \"\"\"\n        directions = [[ 1, 0], [0, -1], [-1, 0], [0, 1]]\n        x, y, i = 0, 0, 0\n        for instruction in instructions:\n            if instruction == 'R':\n                i = (i+1) % 4\n            elif instruction == 'L':\n                i = (i-1) % 4\n            else:\n                x += directions[i][0]\n                y += directions[i][1]\n        return (x == 0 and y == 0) or i > 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

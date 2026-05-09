@@ -1,0 +1,34 @@
+{
+  "id": "772b8dc7-3c88-4871-9b91-47b2173ad2d9",
+  "slug": "smallest-string-with-a-given-numeric-value",
+  "title": "Smallest String With A Given Numeric Value",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>The <strong>numeric value</strong> of a <strong>lowercase character</strong> is defined as its position <code>(1-indexed)</code> in the alphabet, so the numeric value of <code>a</code> is <code>1</code>, the numeric value of <code>b</code> is <code>2</code>, the numeric value of <code>c</code> is <code>3</code>, and so on.</p>\n\n<p>The <strong>numeric value</strong> of a <strong>string</strong> consisting of lowercase characters is defined as the sum of its characters&#39; numeric values. For example, the numeric value of the string <code>&quot;abe&quot;</code> is equal to <code>1 + 2 + 5 = 8</code>.</p>\n\n<p>You are given two integers <code>n</code> and <code>k</code>. Return <em>the <strong>lexicographically smallest string</strong> with <strong>length</strong> equal to <code>n</code> and <strong>numeric value</strong> equal to <code>k</code>.</em></p>\n\n<p>Note that a string <code>x</code> is lexicographically smaller than string <code>y</code> if <code>x</code> comes before <code>y</code> in dictionary order, that is, either <code>x</code> is a prefix of <code>y</code>, or if <code>i</code> is the first position such that <code>x[i] != y[i]</code>, then <code>x[i]</code> comes before <code>y[i]</code> in alphabetic order.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 3, k = 27\n<strong>Output:</strong> &quot;aay&quot;\n<strong>Explanation:</strong> The numeric value of the string is 1 + 1 + 25 = 27, and it is the smallest string with such a value and length equal to 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 5, k = 73\n<strong>Output:</strong> &quot;aaszz&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>n &lt;= k &lt;= 26 * n</code></li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string getSmallestString(int n, int k) {\n        static const int MAX_DIFF = 'z' - 'a';\n        \n        k -= n;\n        string result(n, 'a');\n        for (int i = n - 1; i >= 0 && k > 0; --i, k -= min(k, MAX_DIFF)) {\n            result[i] = 'a' + min(k, MAX_DIFF);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def getSmallestString(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: str\n        \"\"\"\n        MAX_DIFF = ord('z')-ord('a')\n\n        k -= n\n        result = ['a']*n\n        for i in reversed(xrange(n)):\n            tmp = min(k, MAX_DIFF)\n            result[i] = chr(ord('a')+tmp)\n            k -= tmp\n            if k == 0:\n                break\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

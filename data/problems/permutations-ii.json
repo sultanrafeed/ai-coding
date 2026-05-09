@@ -1,0 +1,29 @@
+{
+  "id": "b25e92ea-9e36-4bb7-8b8b-ed8c8c476fe7",
+  "slug": "permutations-ii",
+  "title": "Permutations II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a collection of numbers, <code>nums</code>,&nbsp;that might contain duplicates, return <em>all possible unique permutations <strong>in any order</strong>.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,2]\n<strong>Output:</strong>\n[[1,1,2],\n [1,2,1],\n [2,1,1]]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3]\n<strong>Output:</strong> [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 8</code></li>\n\t<li><code>-10 &lt;= nums[i] &lt;= 10</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "backtracking",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n * n!)\n# Space: O(n)\n\nclass Solution(object):\n    def permuteUnique(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        nums.sort()\n        result = []\n        used = [False] * len(nums)\n        self.permuteUniqueRecu(result, used, [], nums)\n        return result\n\n    def permuteUniqueRecu(self, result, used, cur, nums):\n        if len(cur) == len(nums):\n            result.append(cur + [])\n            return\n        for i in xrange(len(nums)):\n            if used[i] or (i > 0 and nums[i-1] == nums[i] and not used[i-1]):\n                continue\n            used[i] = True\n            cur.append(nums[i])\n            self.permuteUniqueRecu(result, used, cur, nums)\n            cur.pop()\n            used[i] = False\n\nclass Solution2(object):\n    # @param num, a list of integer\n    # @return a list of lists of integers\n    def permuteUnique(self, nums):\n        solutions = [[]]\n\n        for num in nums:\n            next = []\n            for solution in solutions:\n                for i in xrange(len(solution) + 1):\n                    candidate = solution[:i] + [num] + solution[i:]\n                    if candidate not in next:\n                        next.append(candidate)\n\n            solutions = next\n\n        return solutions",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "78232182-43a5-4b79-b6d8-e692e629f707",
+  "slug": "maximize-the-beauty-of-the-garden",
+  "title": "Maximize the Beauty of the Garden",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maximumBeauty(vector<int>& flowers) {\n        unordered_map<int, int> lookup;\n        vector<int> prefix = {0};\n        int result = numeric_limits<int>::min();\n        for (int i = 0; i < size(flowers); ++i) {\n            prefix.emplace_back(flowers[i] > 0 ? prefix.back() + flowers[i] : prefix.back());\n            if (!lookup.count(flowers[i])) {\n                lookup[flowers[i]] = i;\n                continue;\n            }\n            result = max(result, (flowers[i] < 0) ? 2 * flowers[i] + prefix[i + 1] - prefix[lookup[flowers[i]]] : prefix[i + 1] - prefix[lookup[flowers[i]]]);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def maximumBeauty(self, flowers):\n        \"\"\"\n        :type flowers: List[int]\n        :rtype: int\n        \"\"\"\n        lookup = {}\n        prefix = [0]\n        result = float(\"-inf\")\n        for i, f in enumerate(flowers):\n            prefix.append(prefix[-1]+f if f > 0 else prefix[-1])\n            if not f in lookup:\n                lookup[f] = i\n                continue\n            result = max(result, 2*f+prefix[i+1]-prefix[lookup[f]] if f < 0 else prefix[i+1]-prefix[lookup[f]])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "38975364-2fdf-46f9-b976-799026b30c35",
+  "slug": "complex-number-multiplication",
+  "title": "Complex Number Multiplication",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A <a href=\"https://en.wikipedia.org/wiki/Complex_number\" target=\"_blank\">complex number</a> can be represented as a string on the form <code>&quot;<strong>real</strong>+<strong>imaginary</strong>i&quot;</code> where:</p>\n\n<ul>\n\t<li><code>real</code> is the real part and is an integer in the range <code>[-100, 100]</code>.</li>\n\t<li><code>imaginary</code> is the imaginary part and is an integer in the range <code>[-100, 100]</code>.</li>\n\t<li><code>i<sup>2</sup> == -1</code>.</li>\n</ul>\n\n<p>Given two complex numbers <code>num1</code> and <code>num2</code> as strings, return <em>a string of the complex number that represents their multiplications</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num1 = &quot;1+1i&quot;, num2 = &quot;1+1i&quot;\n<strong>Output:</strong> &quot;0+2i&quot;\n<strong>Explanation:</strong> (1 + i) * (1 + i) = 1 + i2 + 2 * i = 2i, and you need convert it to the form of 0+2i.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num1 = &quot;1+-1i&quot;, num2 = &quot;1+-1i&quot;\n<strong>Output:</strong> &quot;0+-2i&quot;\n<strong>Explanation:</strong> (1 - i) * (1 - i) = 1 + i2 - 2 * i = -2i, and you need convert it to the form of 0+-2i.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>num1</code> and <code>num2</code> are valid complex numbers.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string complexNumberMultiply(string a, string b) {\n        int ra, ia, rb, ib;\n        char op;\n        stringstream ssa(a), ssb(b);\n        ssa >> ra >> op >> ia;\n        ssb >> rb >> op >> ib;\n        string result = to_string(ra * rb - ia * ib);\n        result += \"+\";\n        result += to_string(ra * ib + rb * ia);\n        result += \"i\";\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def complexNumberMultiply(self, a, b):\n        \"\"\"\n        :type a: str\n        :type b: str\n        :rtype: str\n        \"\"\"\n        ra, ia = map(int, a[:-1].split('+'))\n        rb, ib = map(int, b[:-1].split('+'))\n        return '%d+%di' % (ra * rb - ia * ib, ra * ib + ia * rb)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

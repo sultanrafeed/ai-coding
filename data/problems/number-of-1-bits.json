@@ -1,0 +1,40 @@
+{
+  "id": "3080d561-3350-4a13-8be0-5bd12eb653df",
+  "slug": "number-of-1-bits",
+  "title": "Number of 1 Bits",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a positive integer <code>n</code>, write a function that returns the number of <span data-keyword=\"set-bit\">set bits</span> in its binary representation (also known as the <a href=\"http://en.wikipedia.org/wiki/Hamming_weight\" target=\"_blank\">Hamming weight</a>).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 11</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The input binary string <strong>1011</strong> has a total of three set bits.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 128</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The input binary string <strong>10000000</strong> has a total of one set bit.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 2147483645</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">30</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The input binary string <strong>1111111111111111111111111111101</strong> has a total of thirty set bits.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> If this function is called many times, how would you optimize it?",
+  "patterns": [
+    "divide-and-conquer",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "11\n128\n2147483645",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn(logn)) = O(5)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int hammingWeight(uint32_t n) {\n        n = (n & 0x55555555) + ((n >> 1) & 0x55555555);\n        n = (n & 0x33333333) + ((n >> 2) & 0x33333333);\n        n = (n & 0x0F0F0F0F) + ((n >> 4) & 0x0F0F0F0F);\n        n = (n & 0x00FF00FF) + ((n >> 8) & 0x00FF00FF);\n        n = (n & 0x0000FFFF) + ((n >> 16) & 0x0000FFFF);\n        return n;\n    }\n};\n\n// Time:  O(logn/4) = O(32/4) = O(8)\n// Space: O(1)\n// https://github.com/gcc-mirror/gcc/blob/master/libgcc/libgcc2.c#L856\nclass Solution2 {\npublic:\n    int hammingWeight(uint32_t n) {\n        int result = 0;\n        for (; n; n >>= 8) {\n            result += popcount_tab_[n & 0xff];\n        }\n        return result;\n    }\n\nprivate:\n    static constexpr int popcount_tab_[256] = {\n        0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,\n        1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n        1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n        1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,\n        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n        2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,\n        3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8\n    };\n};\n\n// Time:  O(logn/4) = O(32/4) = O(8)\n// Space: O(1)\nclass Solution3 {\npublic:\n    int hammingWeight(uint32_t n) {\n        return __builtin_popcount(n);\n    }\n};\n\n// Time:  O(logn) = O(32)\n// Space: O(1)\nclass Solution4 {\npublic:\n    int hammingWeight(uint32_t n) {\n        int count = 0;\n        for (; n; n &= n - 1) {\n            ++count;\n        }\n        return count;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(32), bit shift in python is not O(1), it's O(k), k is the number of bits shifted\n#             , see https://github.com/python/cpython/blob/2.7/Objects/longobject.c#L3652\n# Space: O(1)\n\nclass Solution(object):\n    # @param n, an integer\n    # @return an integer\n    def hammingWeight(self, n):\n        n = (n & 0x55555555) + ((n >> 1) & 0x55555555)\n        n = (n & 0x33333333) + ((n >> 2) & 0x33333333)\n        n = (n & 0x0F0F0F0F) + ((n >> 4) & 0x0F0F0F0F)\n        n = (n & 0x00FF00FF) + ((n >> 8) & 0x00FF00FF)\n        n = (n & 0x0000FFFF) + ((n >> 16) & 0x0000FFFF)\n        return n\n\n\n# Time:  O(logn/4) = O(32/4 + 8*4) = O(32)\n# Space: O(1) \n# https://github.com/gcc-mirror/gcc/blob/master/libgcc/libgcc2.c#L856\nclass Solution2(object):\n    def __init__(self):\n        self.__popcount_tab = \\\n        [ \\\n            0,1,1,2,1,2,2,3,1,2,2,3,2,3,3,4,1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5, \\\n            1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6, \\\n            1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6, \\\n            2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7, \\\n            1,2,2,3,2,3,3,4,2,3,3,4,3,4,4,5,2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6, \\\n            2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7, \\\n            2,3,3,4,3,4,4,5,3,4,4,5,4,5,5,6,3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7, \\\n            3,4,4,5,4,5,5,6,4,5,5,6,5,6,6,7,4,5,5,6,5,6,6,7,5,6,6,7,6,7,7,8 \\\n        ]\n\n    # @param n, an integer\n    # @return an integer\n    def hammingWeight(self, n):\n        result = 0\n        while n:\n            result += self.__popcount_tab[n & 0xff]\n            n >>= 8\n        return result\n\n    \n# Time:  O(logn) = O(32)\n# Space: O(1)\nclass Solution3(object):\n    # @param n, an integer\n    # @return an integer\n    def hammingWeight(self, n):\n        result = 0\n        while n:\n            n &= n - 1\n            result += 1\n        return result\n\n# Time:  O(logn) = O(32)\n# Space: O(1)\nclass Solution4(object):\n    # @param n, an integer\n    # @return an integer\n    def hammingWeight(self, n: int) -> int:\n        b=\"{0:b}\".format(n)\n        result=b.count(\"1\")\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

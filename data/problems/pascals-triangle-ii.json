@@ -1,0 +1,34 @@
+{
+  "id": "b1e2b734-74c8-41c5-a5cc-0c4e9f05b13d",
+  "slug": "pascals-triangle-ii",
+  "title": "Pascal's Triangle II",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer <code>rowIndex</code>, return the <code>rowIndex<sup>th</sup></code> (<strong>0-indexed</strong>) row of the <strong>Pascal&#39;s triangle</strong>.</p>\n\n<p>In <strong>Pascal&#39;s triangle</strong>, each number is the sum of the two numbers directly above it as shown:</p>\n<img alt=\"\" src=\"https://upload.wikimedia.org/wikipedia/commons/0/0d/PascalTriangleAnimated2.gif\" style=\"height:240px; width:260px\" />\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> rowIndex = 3\n<strong>Output:</strong> [1,3,3,1]\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> rowIndex = 0\n<strong>Output:</strong> [1]\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> rowIndex = 1\n<strong>Output:</strong> [1,1]\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= rowIndex &lt;= 33</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong> Could you optimize your algorithm to use only <code>O(rowIndex)</code> extra space?</p>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> getRow(int rowIndex) {\n        vector<int> result(rowIndex + 1);\n        for (int i = 0; i < result.size(); ++i) {\n            int prev_result = result[0] = 1;\n            for (int j = 1; j <= i; ++j) {\n                const int tmp = result[j];\n                result[j] += prev_result;\n                prev_result = tmp;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(1)\n\nclass Solution(object):\n    # @return a list of integers\n    def getRow(self, rowIndex):\n        result = [0] * (rowIndex + 1)\n        for i in xrange(rowIndex + 1):\n            old = result[0] = 1\n            for j in xrange(1, i + 1):\n                old, result[j] = result[j], old + result[j]\n        return result\n\n    def getRow2(self, rowIndex):\n        \"\"\"\n        :type rowIndex: int\n        :rtype: List[int]\n        \"\"\"\n        row = [1]\n        for _ in range(rowIndex):\n            row = [x + y for x, y in zip([0] + row, row + [0])]\n        return row\n\n    def getRow3(self, rowIndex):\n        \"\"\"\n        :type rowIndex: int\n        :rtype: List[int]\n        \"\"\"\n        if rowIndex == 0: return [1]\n        res = [1, 1]\n\n        def add(nums):\n            res = nums[:1]\n            for i, j in enumerate(nums):\n                if i < len(nums) - 1:\n                    res += [nums[i] + nums[i + 1]]\n            res += nums[:1]\n            return res\n\n        while res[1] < rowIndex:\n            res = add(res)\n        return res\n\n\n# Time:  O(n^2)\n# Space: O(n)\nclass Solution2(object):\n    # @return a list of integers\n    def getRow(self, rowIndex):\n        result = [1]\n        for i in range(1, rowIndex + 1):\n            result = [1] + [result[j - 1] + result[j] for j in xrange(1, i)] + [1]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

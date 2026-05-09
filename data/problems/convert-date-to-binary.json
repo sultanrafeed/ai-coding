@@ -1,0 +1,34 @@
+{
+  "id": "3426c5ad-ec40-4a31-aef6-e5e50be085e5",
+  "slug": "convert-date-to-binary",
+  "title": "Convert Date to Binary",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a string <code>date</code> representing a Gregorian calendar date in the <code>yyyy-mm-dd</code> format.</p>\n\n<p><code>date</code> can be written in its binary representation obtained by converting year, month, and day to their binary representations without any leading zeroes and writing them down in <code>year-month-day</code> format.</p>\n\n<p>Return the <strong>binary</strong> representation of <code>date</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">date = &quot;2080-02-29&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;100000100000-10-11101&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><span class=\"example-io\">100000100000, 10, and 11101 are the binary representations of 2080, 02, and 29 respectively.</span></p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">date = &quot;1900-01-01&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;11101101100-1-1&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><span class=\"example-io\">11101101100, 1, and 1 are the binary representations of 1900, 1, and 1 respectively.</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>date.length == 10</code></li>\n\t<li><code>date[4] == date[7] == &#39;-&#39;</code>, and all other <code>date[i]</code>&#39;s are digits.</li>\n\t<li>The input is generated such that <code>date</code> represents a valid Gregorian calendar date between Jan 1<sup>st</sup>, 1900 and Dec 31<sup>st</sup>, 2100 (both inclusive).</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// string\nclass Solution {\npublic:\n    string convertDateToBinary(string date) {\n        const auto& bin = [](int x) {\n            string result;\n            for (; x; x >>= 1) {\n                result.push_back(x & 1 ? '1' : '0'); \n            }\n            reverse(begin(result), end(result));\n            return result;\n        };\n    \n        return bin(stoi(date.substr(0, 4))) + \"-\" +\n               bin(stoi(date.substr(5, 2))) + \"-\" +\n               bin(stoi(date.substr(8, 2)));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# string\nclass Solution(object):\n    def convertDateToBinary(self, date):\n        \"\"\"\n        :type date: str\n        :rtype: str\n        \"\"\"\n        return \"-\".join(map(lambda x: bin(int(x))[2:], date.split('-')))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

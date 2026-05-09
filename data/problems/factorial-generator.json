@@ -1,0 +1,31 @@
+{
+  "id": "a3ca6e47-3eff-4cda-8528-10cde278e53e",
+  "slug": "factorial-generator",
+  "title": "Factorial Generator",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "5\n2\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// generator\nfunction* factorial(n: number): Generator<number> {\n    for (let i = Math.min(n, 1), result = 1; i <= n; result *= ++i) {\n        yield result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

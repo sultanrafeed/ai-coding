@@ -1,0 +1,37 @@
+{
+  "id": "af929aa2-1b9d-4af1-8368-af46c45e8509",
+  "slug": "convert-sorted-array-to-binary-search-tree",
+  "title": "Convert Sorted Array to Binary Search Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> where the elements are sorted in <strong>ascending order</strong>, convert <em>it to a </em><span data-keyword=\"height-balanced\"><strong><em>height-balanced</em></strong></span> <em>binary search tree</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/02/18/btree1.jpg\" style=\"width: 302px; height: 222px;\" />\n<pre>\n<strong>Input:</strong> nums = [-10,-3,0,5,9]\n<strong>Output:</strong> [0,-3,9,-10,null,5]\n<strong>Explanation:</strong> [0,-10,5,null,-3,null,9] is also accepted:\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/02/18/btree2.jpg\" style=\"width: 302px; height: 222px;\" />\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/02/18/btree.jpg\" style=\"width: 342px; height: 142px;\" />\n<pre>\n<strong>Input:</strong> nums = [1,3]\n<strong>Output:</strong> [3,1]\n<strong>Explanation:</strong> [1,null,3] and [3,1] are both height-balanced BSTs.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>-10<sup>4</sup> &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>\n\t<li><code>nums</code> is sorted in a <strong>strictly increasing</strong> order.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "divide-and-conquer",
+    "tree",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(logn)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* sortedArrayToBST(vector<int>& nums) {\n        return sortedArrayToBSTHelper(nums, 0, nums.size() - 1);\n    }\n\nprivate:\n    TreeNode *sortedArrayToBSTHelper(vector<int> &nums, int start, int end) {\n        if (start <= end) {\n            TreeNode *node = new TreeNode(nums[start + (end - start) / 2]);\n            node->left = sortedArrayToBSTHelper(nums, start, start + (end - start) / 2 - 1);\n            node->right = sortedArrayToBSTHelper(nums, start + (end - start) / 2 + 1, end);\n            return node;\n        }\n        return nullptr;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(logn)\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def sortedArrayToBST(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: TreeNode\n        \"\"\"\n        return self.sortedArrayToBSTRecu(nums, 0, len(nums))\n\n    def sortedArrayToBSTRecu(self, nums, start, end):\n        if start == end:\n            return None\n        mid = start + self.perfect_tree_pivot(end - start)\n        node = TreeNode(nums[mid])\n        node.left = self.sortedArrayToBSTRecu(nums, start, mid)\n        node.right = self.sortedArrayToBSTRecu(nums, mid + 1, end)\n        return node\n\n    def perfect_tree_pivot(self, n):\n        \"\"\"\n        Find the point to partition n keys for a perfect binary search tree\n        \"\"\"\n        x = 1\n        # find a power of 2 <= n//2\n        # while x <= n//2:  # this loop could probably be written more elegantly :)\n        #     x *= 2\n        x = 1 << (n.bit_length() - 1)  # use the left bit shift, same as multiplying x by 2**n-1\n\n        if x // 2 - 1 <= (n - x):\n            return x - 1  # case 1: the left subtree of the root is perfect and the right subtree has less nodes\n        else:\n            return n - x // 2  # case 2 == n - (x//2 - 1) - 1 : the left subtree of the root\n                               # has more nodes and the right subtree is perfect.\n\n# Time:  O(n)\n# Space: O(logn)\nclass Solution2(object):\n    def sortedArrayToBST(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: TreeNode\n        \"\"\"\n        self.iterator = iter(nums)\n        return self.helper(0, len(nums))\n    \n    def helper(self, start, end):\n        if start == end:\n            return None\n        \n        mid = (start + end) // 2\n        left = self.helper(start, mid)\n        current = TreeNode(next(self.iterator))\n        current.left = left\n        current.right = self.helper(mid+1, end)\n        return current",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

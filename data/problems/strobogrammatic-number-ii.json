@@ -1,0 +1,41 @@
+{
+  "id": "365d0757-3337-4a68-b199-03fe55cc033e",
+  "slug": "strobogrammatic-number-ii",
+  "title": "Strobogrammatic Number II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "2\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 5^(n/2))\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<string> findStrobogrammatic(int n) {\n        static const unordered_map<string, string> lookup{{\"0\", \"0\"}, {\"1\", \"1\"},\n                                                          {\"6\", \"9\"}, {\"8\", \"8\"}, \n                                                          {\"9\", \"6\"}};\n        vector<string> result = {\"\"};\n        if (n % 2) {\n            result = {\"0\", \"1\", \"8\"};\n        }\n        for (int i = n % 2; i < n; i += 2) {\n            vector<string> new_result;\n            for (const auto& num : result) {\n                for (const auto& [a, b] : lookup) {\n                    if (i != n - 2 || a != \"0\") {\n                        new_result.emplace_back(a + num + b);\n                    }\n                }\n            }\n            result = move(new_result);\n        }\n        return result;\n    }\n};\n\n// Time:  O(n * 5^(n/2))\n// Space: O(n)\nclass Solution2 {\npublic:\n    vector<string> findStrobogrammatic(int n) {\n        return findStrobogrammaticRecu(n, n);\n    }\n\nprivate:\n    vector<string> findStrobogrammaticRecu(const int n, int k) {\n        static const unordered_map<string, string> lookup{{\"0\", \"0\"}, {\"1\", \"1\"},\n                                                          {\"6\", \"9\"}, {\"8\", \"8\"}, \n                                                          {\"9\", \"6\"}};\n        if (k == 0) {\n            return {\"\"};\n        } else if (k == 1) {\n            return {\"0\", \"1\", \"8\"};\n        }\n        vector<string> result;\n        for (const auto& num : findStrobogrammaticRecu(n, k - 2)) {\n            for (const auto& kvp : lookup) {\n                if (n != k || kvp.first != \"0\") {\n                    result.emplace_back(kvp.first + num + kvp.second);\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 5^(n/2))\n# Space: O(n)\n\nclass Solution(object):\n    def findStrobogrammatic(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        lookup = {'0':'0', '1':'1', '6':'9', '8':'8', '9':'6'}\n        result = ['0', '1', '8'] if n%2 else ['']\n        for i in xrange(n%2, n, 2):\n            result = [a + num + b for a, b in lookup.iteritems() if i != n-2 or a != '0' for num in result]\n        return result\n\n\n# Time:  O(n * 5^(n/2))\n# Space: O(n)\nclass Solution2(object):\n    def findStrobogrammatic(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        lookup = {'0':'0', '1':'1', '6':'9', '8':'8', '9':'6'}\n        def findStrobogrammaticRecu(n, k):\n            if k == 0:\n                return ['']\n            elif k == 1:\n                return ['0', '1', '8']\n            result = []\n            for num in findStrobogrammaticRecu(n, k - 2):\n                for key, val in lookup.iteritems():\n                    if n != k or key != '0':\n                        result.append(key + num + val)\n            return result\n\n        return findStrobogrammaticRecu(n, n)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

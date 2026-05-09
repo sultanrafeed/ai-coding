@@ -1,0 +1,41 @@
+{
+  "id": "a25f7e97-4b3b-4865-a9bb-44c2a3224dbd",
+  "slug": "number-of-single-divisor-triplets",
+  "title": "Number of Single Divisor Triplets",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "counting",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,6,7,3,2]\n[1,2,2]\n[1,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(d^3), d is the number of distinct nums\n// Space: O(d)\n\n// combinatorics\nclass Solution {\npublic:\n    long long singleDivisorTriplet(vector<int>& nums) {\n        const auto& check = [](int a, int b, int c) {\n            const int total = a + b + c;\n            return (total % a == 0) + (total % b == 0) + (total % c == 0) == 1;\n        };\n        unordered_map<int, int64_t> cnt;\n        for (const auto& x : nums) {\n            ++cnt[x];\n        }\n        vector<int> unique_nums;\n        for (const auto& [k, _] : cnt) {\n            unique_nums.emplace_back(k);\n        }\n        int64_t result = 0;\n        for (int i = 0; i < size(unique_nums); ++i) {\n            for (int j = i + 1; j < size(unique_nums); ++j) {\n                for (int k = j + 1; k < size(unique_nums); ++k) {\n                    if (check(unique_nums[i], unique_nums[j], unique_nums[k])) {\n                        result += cnt[unique_nums[i]] * cnt[unique_nums[j]] * cnt[unique_nums[k]];\n                    }\n                }\n            }\n        }\n        for (int i = 0; i < size(unique_nums); ++i) {\n            for (int j = 0; j < size(unique_nums); ++j) {\n                if (check(unique_nums[i], unique_nums[i], unique_nums[j])) {\n                    result += cnt[unique_nums[i]] * (cnt[unique_nums[i]] - 1) / 2 * cnt[unique_nums[j]];\n                }\n            }\n        }\n        return result * 6;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(d^3), d is the number of distinct nums\n# Space: O(d)\n\nimport collections\nimport itertools\n\n# combinatorics\nclass Solution(object):\n    def singleDivisorTriplet(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def check(a, b, c):\n            return sum((a+b+c)%x == 0 for x in (a, b, c)) == 1\n\n        cnt = collections.Counter(nums)\n        return 6*(sum(cnt[a]*cnt[b]*cnt[c] for a, b, c in itertools.combinations(cnt.keys(), 3) if check(a, b, c)) +\n                  sum(cnt[a]*(cnt[a]-1)//2*cnt[b] for a, b in itertools.permutations(cnt.keys(), 2) if check(a, a, b)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

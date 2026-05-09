@@ -1,0 +1,31 @@
+{
+  "id": "82b186a5-025b-46c4-b88b-12eb12ca4782",
+  "slug": "array-prototype-foreach",
+  "title": "Array Prototype ForEach",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3]\nfunction(val, i, arr){ arr[i] = val * 2 }\n{\"context\": true}\n[true, true, false, false]\nfunction(val, i, arr){ arr[i] = this }\n{\"context\": false}\n[true, true, false, false]\nfunction(val, i, arr){ arr[i] = !val }\n{\"context\": 5}",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// symbol\nArray.prototype.forEach = function(callback: Function, context: any): void {\n    const symbol = Symbol();\n    context[symbol] = callback;\n    for (let i = 0; i < this.length; i++) {\n        context[symbol](this[i], i, this);\n    }\n    delete context[symbol];\n}\n\nArray.prototype.forEach = function(callback: Function, context: any): void {\n    for (let i = 0; i < this.length; i++) {\n        callback.call(context, this[i], i, this);\n    }\n}",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

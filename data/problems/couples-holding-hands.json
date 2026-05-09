@@ -1,0 +1,37 @@
+{
+  "id": "f1654fc5-5684-4f42-b51e-3ca5cff9dcd3",
+  "slug": "couples-holding-hands",
+  "title": "Couples Holding Hands",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>There are <code>n</code> couples sitting in <code>2n</code> seats arranged in a row and want to hold hands.</p>\n\n<p>The people and seats are represented by an integer array <code>row</code> where <code>row[i]</code> is the ID of the person sitting in the <code>i<sup>th</sup></code> seat. The couples are numbered in order, the first couple being <code>(0, 1)</code>, the second couple being <code>(2, 3)</code>, and so on with the last couple being <code>(2n - 2, 2n - 1)</code>.</p>\n\n<p>Return <em>the minimum number of swaps so that every couple is sitting side by side</em>. A swap consists of choosing any two people, then they stand up and switch seats.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> row = [0,2,1,3]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> We only need to swap the second (row[1]) and third (row[2]) person.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> row = [3,2,0,1]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> All couples are already seated side by side.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2n == row.length</code></li>\n\t<li><code>2 &lt;= n &lt;= 30</code>​​​​​​​</li>\n\t<li><code>0 &lt;= row[i] &lt; 2n</code></li>\n\t<li>All the elements of <code>row</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "greedy",
+    "depth-first-search",
+    "breadth-first-search",
+    "union-find",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int minSwapsCouples(vector<int>& row) {\n        int N = row.size() / 2;\n        vector<vector<int>> couples(N);\n        for (int seat = 0; seat < row.size(); ++seat) {\n            couples[row[seat] / 2].emplace_back(seat / 2);\n        }\n        vector<vector<int>> adj(N);\n        for (const auto& couple : couples) {\n            adj[couple[0]].emplace_back(couple[1]);\n            adj[couple[1]].emplace_back(couple[0]);\n        }\n        \n        int result = 0;\n        for (int couch = 0; couch < N; ++couch) {\n            if (adj[couch].empty()) {\n                continue;\n            }\n            int couch1 = couch;\n            int couch2 = adj[couch1].back(); adj[couch1].pop_back();\n            while (couch2 != couch) {\n                ++result;\n                adj[couch2].erase(find(adj[couch2].begin(), adj[couch2].end(), couch1));\n                couch1 = couch2;\n                couch2 = adj[couch1].back(); adj[couch1].pop_back();\n            }\n        }\n        return result;  // also equals to N - (# of cycles)\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def minSwapsCouples(self, row):\n        \"\"\"\n        :type row: List[int]\n        :rtype: int\n        \"\"\"\n        N = len(row)//2\n        couples = [[] for _ in xrange(N)]\n        for seat, num in enumerate(row):\n            couples[num//2].append(seat//2)\n        adj = [[] for _ in xrange(N)]\n        for couch1, couch2 in couples:\n            adj[couch1].append(couch2)\n            adj[couch2].append(couch1)\n\n        result = 0\n        for couch in xrange(N):\n            if not adj[couch]: continue\n            couch1, couch2 = couch, adj[couch].pop()\n            while couch2 != couch:\n                result += 1\n                adj[couch2].remove(couch1)\n                couch1, couch2 = couch2, adj[couch2].pop()\n        return result  # also equals to N - (# of cycles)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

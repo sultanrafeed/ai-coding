@@ -1,0 +1,43 @@
+{
+  "id": "35ed7f59-64e6-4df8-9098-00856e3f793c",
+  "slug": "the-number-of-weak-characters-in-the-game",
+  "title": "The Number of Weak Characters in the Game",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are playing a game that contains multiple characters, and each of the characters has <strong>two</strong> main properties: <strong>attack</strong> and <strong>defense</strong>. You are given a 2D integer array <code>properties</code> where <code>properties[i] = [attack<sub>i</sub>, defense<sub>i</sub>]</code> represents the properties of the <code>i<sup>th</sup></code> character in the game.</p>\n\n<p>A character is said to be <strong>weak</strong> if any other character has <strong>both</strong> attack and defense levels <strong>strictly greater</strong> than this character&#39;s attack and defense levels. More formally, a character <code>i</code> is said to be <strong>weak</strong> if there exists another character <code>j</code> where <code>attack<sub>j</sub> &gt; attack<sub>i</sub></code> and <code>defense<sub>j</sub> &gt; defense<sub>i</sub></code>.</p>\n\n<p>Return <em>the number of <strong>weak</strong> characters</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> properties = [[5,5],[6,3],[3,6]]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> No character has strictly greater attack and defense than the other.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> properties = [[2,2],[3,3]]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The first character is weak because the second character has a strictly greater attack and defense.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> properties = [[1,5],[10,4],[4,3]]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The third character is weak because the second character has a strictly greater attack and defense.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= properties.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>properties[i].length == 2</code></li>\n\t<li><code>1 &lt;= attack<sub>i</sub>, defense<sub>i</sub> &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "stack",
+    "greedy",
+    "sorting",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[5,5],[6,3],[3,6]]\n[[2,2],[3,3]]\n[[1,5],[10,4],[4,3]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int numberOfWeakCharacters(vector<vector<int>>& properties) {\n        sort(begin(properties), end(properties),\n             [](const auto& a, const auto& b) {\n                 return a[0] == b[0] ? a[1] > b[1] : a[0] < b[0];\n             });\n        int result = 0, max_d = 0;\n        for (int i = size(properties) - 1; i >= 0; --i) {\n            if (properties[i][1] < max_d) {\n                ++result;\n            }\n            max_d = max(max_d, properties[i][1]);\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// faster in sort by using more space\nclass Solution2 {\npublic:\n    int numberOfWeakCharacters(vector<vector<int>>& properties) {\n        unordered_map<int, vector<int>> lookup;\n        for (const auto& p : properties) {\n            lookup[p[0]].emplace_back(p[1]);\n        }\n        vector<int> sorted_as;\n        for (const auto& [a, _] : lookup) {\n            sorted_as.emplace_back(a);\n        }\n        sort(begin(sorted_as), end(sorted_as), greater<int>());\n        int result = 0, max_d = 0;\n        for (const auto& a : sorted_as) {\n            for (const auto& d : lookup[a]) {\n                if (d < max_d) {\n                    ++result;\n                }\n            }\n            for (const auto& d : lookup[a]) {\n                max_d = max(max_d, d);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def numberOfWeakCharacters(self, properties):\n        \"\"\"\n        :type properties: List[List[int]]\n        :rtype: int\n        \"\"\"\n        properties.sort(cmp=lambda a, b: cmp(b[1], a[1]) if a[0] == b[0] else cmp(a[0], b[0]))\n        result = max_d = 0\n        for a, d in reversed(properties):\n            if d < max_d:\n                result += 1\n            max_d = max(max_d, d)\n        return result\n\n    \n# Time:  O(nlogn)\n# Space: O(n)\nimport collections\n\n\n# faster in sort by using more space\nclass Solution(object):\n    def numberOfWeakCharacters(self, properties):\n        \"\"\"\n        :type properties: List[List[int]]\n        :rtype: int\n        \"\"\"\n        lookup = collections.defaultdict(list)\n        for a, d in properties:\n            lookup[a].append(d)\n        result = max_d = 0\n        for a in sorted(lookup.iterkeys(), reverse=True):\n            result += sum(d < max_d for d in lookup[a])\n            max_d = max(max_d, max(lookup[a]))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

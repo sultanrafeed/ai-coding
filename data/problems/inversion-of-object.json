@@ -1,0 +1,31 @@
+{
+  "id": "29743930-9414-4ac9-aa15-38562301e65e",
+  "slug": "inversion-of-object",
+  "title": "Inversion of Object",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"a\": \"1\",\"b\": \"2\",\"c\": \"3\",\"d\": \"4\" }\n{\"a\": \"1\",\"b\": \"2\",\"c\": \"2\",\"d\": \"4\" }\n[\"1\",\"2\",\"3\",\"4\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nfunction invertObject(obj: Record<any, any>): Record<any, any> {\n    let result = {};\n    for (let [k, v] of Object.entries(obj)) {\n        if (!(v in result)) {\n            result[v] = k;\n        } else if (!Array.isArray(result[v])) {\n            result[v] = [result[v], k];\n        } else {\n            result[v].push(k);\n        }\n    }\n    return result;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

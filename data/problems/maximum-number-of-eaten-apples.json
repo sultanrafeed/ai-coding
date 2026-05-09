@@ -1,0 +1,35 @@
+{
+  "id": "a780f8d3-d8ca-4a5b-8c63-7e7c7ed27142",
+  "slug": "maximum-number-of-eaten-apples",
+  "title": "Maximum Number of Eaten Apples",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There is a special kind of apple tree that grows apples every day for <code>n</code> days. On the <code>i<sup>th</sup></code> day, the tree grows <code>apples[i]</code> apples that will rot after <code>days[i]</code> days, that is on day <code>i + days[i]</code> the apples will be rotten and cannot be eaten. On some days, the apple tree does not grow any apples, which are denoted by <code>apples[i] == 0</code> and <code>days[i] == 0</code>.</p>\n\n<p>You decided to eat <strong>at most</strong> one apple a day (to keep the doctors away). Note that you can keep eating after the first <code>n</code> days.</p>\n\n<p>Given two integer arrays <code>days</code> and <code>apples</code> of length <code>n</code>, return <em>the maximum number of apples you can eat.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> apples = [1,2,3,5,2], days = [3,2,1,4,2]\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> You can eat 7 apples:\n- On the first day, you eat an apple that grew on the first day.\n- On the second day, you eat an apple that grew on the second day.\n- On the third day, you eat an apple that grew on the second day. After this day, the apples that grew on the third day rot.\n- On the fourth to the seventh days, you eat apples that grew on the fourth day.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> apples = [3,0,0,0,0,2], days = [3,0,0,0,0,2]\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> You can eat 5 apples:\n- On the first to the third day you eat apples that grew on the first day.\n- Do nothing on the fouth and fifth days.\n- On the sixth and seventh days you eat apples that grew on the sixth day.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == apples.length == days.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= apples[i], days[i] &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>days[i] = 0</code> if and only if <code>apples[i] = 0</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int eatenApples(vector<int>& apples, vector<int>& days) {\n        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> min_heap;\n        int result = 0;\n        for (int i = 0; i < size(apples) || !empty(min_heap); ++i) {\n            if (i < size(apples) && apples[i]) {\n                min_heap.emplace(i + days[i], i);\n            }\n            while (!empty(min_heap) &&\n                   (min_heap.top().first <= i || apples[min_heap.top().second] == 0)) {\n                min_heap.pop();\n            }\n            if (!empty(min_heap)) {\n                --apples[min_heap.top().second];\n                ++result;\n            }  \n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport heapq\n\n\nclass Solution(object):\n    def eatenApples(self, apples, days):\n        \"\"\"\n        :type apples: List[int]\n        :type days: List[int]\n        :rtype: int\n        \"\"\"\n        min_heap = []\n        result = i = 0\n        while i < len(apples) or min_heap:\n            if i < len(apples) and apples[i] > 0:\n                heapq.heappush(min_heap, [i+days[i], i])\n            while min_heap and (min_heap[0][0] <= i or apples[min_heap[0][1]] == 0):\n                heapq.heappop(min_heap)\n            if min_heap:\n                apples[min_heap[0][1]] -= 1\n                result += 1\n            i += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

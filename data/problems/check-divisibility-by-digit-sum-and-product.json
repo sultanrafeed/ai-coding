@@ -1,0 +1,33 @@
+{
+  "id": "26ca8465-18f2-4dbd-8460-5c68739f064d",
+  "slug": "check-divisibility-by-digit-sum-and-product",
+  "title": "Check Divisibility by Digit Sum and Product",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a positive integer <code>n</code>. Determine whether <code>n</code> is divisible by the <strong>sum </strong>of the following two values:</p>\n\n<ul>\n\t<li>\n\t<p>The <strong>digit sum</strong> of <code>n</code> (the sum of its digits).</p>\n\t</li>\n\t<li>\n\t<p>The <strong>digit</strong> <strong>product</strong> of <code>n</code> (the product of its digits).</p>\n\t</li>\n</ul>\n\n<p>Return <code>true</code> if <code>n</code> is divisible by this sum; otherwise, return <code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 99</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Since 99 is divisible by the sum (9 + 9 = 18) plus product (9 * 9 = 81) of its digits (total 99), the output is true.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 23</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Since 23 is not divisible by the sum (2 + 3 = 5) plus product (2 * 3 = 6) of its digits (total 11), the output is false.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    bool checkDivisibility(int n) {\n        int total = 0, product = 1;\n        for (int curr = n; curr; curr /= 10) {\n            total += curr % 10;\n            product *= curr % 10;\n        }\n        return n % (total + product) == 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# math\nclass Solution(object):\n    def checkDivisibility(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: bool\n        \"\"\"\n        curr = n\n        total, product = 0, 1\n        while curr:\n            curr, r = divmod(curr, 10)\n            total += r\n            product *= r\n        return n%(total+product) == 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

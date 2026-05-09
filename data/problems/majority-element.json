@@ -1,0 +1,43 @@
+{
+  "id": "919a1242-fad1-4c39-972a-6ca1bc4806a5",
+  "slug": "majority-element",
+  "title": "Majority Element",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an array <code>nums</code> of size <code>n</code>, return <em>the majority element</em>.</p>\n\n<p>The majority element is the element that appears more than <code>&lfloor;n / 2&rfloor;</code> times. You may assume that the majority element always exists in the array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> nums = [3,2,3]\n<strong>Output:</strong> 3\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> nums = [2,2,1,1,1,2,2]\n<strong>Output:</strong> 2\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li>The input is generated such that a majority element will exist in the array.</li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow-up:</strong> Could you solve the problem in linear time and in <code>O(1)</code> space?",
+  "patterns": [
+    "array",
+    "hash-table",
+    "divide-and-conquer",
+    "sorting",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,2,3]\n[2,2,1,1,1,2,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int majorityElement(vector<int>& nums) {\n        const auto& boyer_moore_majority_vote = [&]() {\n            int result = 0, cnt = 0;\n            for (const auto& x : nums) {\n                if (cnt == 0) {\n                    result = x;\n                }\n                if (x == result) {\n                    ++cnt;\n                } else {\n                    --cnt;\n                }\n            }\n            return result; \n        };\n\n        return boyer_moore_majority_vote();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def majorityElement(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def boyer_moore_majority_vote():\n            result, cnt = None, 0\n            for x in nums:\n                if not cnt:\n                    result = x\n                if x == result:\n                    cnt += 1\n                else:\n                    cnt -= 1\n            return result\n\n        return boyer_moore_majority_vote()\n\n\n# Time:  O(n)\n# Space: O(n)\nimport collections\n\n\nclass Solution2(object):\n    def majorityElement(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return collections.Counter(nums).most_common(1)[0][0]\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nimport collections\n\n\nclass Solution3(object):\n    def majorityElement(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return sorted(collections.Counter(nums).items(), key=lambda a: a[1], reverse=True)[0][0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

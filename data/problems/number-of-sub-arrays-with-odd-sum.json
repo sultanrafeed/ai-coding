@@ -1,0 +1,36 @@
+{
+  "id": "930e0276-0bcd-4b5c-be46-843766d0cdae",
+  "slug": "number-of-sub-arrays-with-odd-sum",
+  "title": "Number of Sub-arrays With Odd Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers <code>arr</code>, return <em>the number of subarrays with an <strong>odd</strong> sum</em>.</p>\n\n<p>Since the answer can be very large, return it modulo <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,3,5]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> All subarrays are [[1],[1,3],[1,3,5],[3],[3,5],[5]]\nAll sub-arrays sum are [1,4,9,3,8,5].\nOdd sums are [1,9,3,5] so the answer is 4.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [2,4,6]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> All subarrays are [[2],[2,4],[2,4,6],[4],[4,6],[6]]\nAll sub-arrays sum are [2,6,12,4,10,6].\nAll sub-arrays have even sum and the answer is 0.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,2,3,4,5,6,7]\n<strong>Output:</strong> 16\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= arr[i] &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int numOfSubarrays(vector<int>& arr) {\n        static const int MOD = 1e9 + 7;\n        int result = 0, accu = 0;\n        vector<int> dp(2);\n        ++dp[0];\n        for (const auto& x : arr) {\n            accu ^= x & 1;\n             ++dp[accu];\n            result = (result + dp[accu ^ 1]) % MOD;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def numOfSubarrays(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result, accu = 0, 0\n        dp = [1, 0]\n        for x in arr:\n            accu ^= x&1\n            dp[accu] += 1\n            result = (result + dp[accu^1]) % MOD\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "cec2d4ed-4b21-42c1-92c8-ec5b1f79c8e0",
+  "slug": "convert-json-string-to-object",
+  "title": "Convert JSON String to Object",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "'{\"a\":2,\"b\":[1,2,3]}'\n'true'\n'[1,5,\"false\",{\"a\":2}]'",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// stack\nfunction jsonParse(str: string): any {\n    let stk = [];\n    let result = null;\n    let k = null;\n    for (let i = 0; i < str.length; i++) {\n        if (str[i] === \",\" || str[i] === \":\") {\n            continue;\n        }\n        if (str[i] === '{' || str[i] === '[') {\n            let v = str[i] === '{' ? {} : [];\n            if (result !== null) {\n                if (k !== null) {\n                    result[k] = v;\n                    k = null;\n                } else {\n                    result.push(v);\n                }\n                stk.push(result);\n            }\n            result = v;\n        } else if (str[i] === '}' || str[i] === ']') {\n            if (stk.length !== 0) {\n                result = stk.pop();\n            }\n        } else {\n            let v;\n            if (str[i] === '-' || ('0' <= str[i] && str[i] <= '9')) {\n                let j = i;\n                while (i + 1 < str.length && \n                       (str[i + 1] === '-' || ('0' <= str[i + 1] && str[i + 1] <= '9') || str[i + 1] === '.')) {\n                    i++;\n                }\n                v = Number(str.substring(j, i + 1));\n            } else if (str[i] === '\"') {\n                let j = i + 1;\n                while (i + 1 < str.length && str[i + 1] !== '\"') {\n                    i++;\n                }\n                v = str.substring(j, i + 1);\n                i++;\n            } else {\n                if (i + 3 < str.length && str.substring(i, i + 4) === \"true\") {\n                    v = true;\n                    i += 3;\n                } else if (i + 4 < str.length && str.substring(i, i + 5) === \"false\") {\n                    v = false;\n                    i += 4;\n                } else {\n                    v = null;\n                    i += 3;\n                }\n            }\n            if (result === null) {\n                result = v;\n            } else if (str[i + 1] === \":\") {\n                k = v;\n            } else if (k !== null) {\n                result[k] = v;\n                k = null;\n            } else {\n                result.push(v);\n            }\n        }\n    }\n    return result;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "a8913273-6e24-4e96-983c-fa76895a8d1b",
+  "slug": "climbing-stairs",
+  "title": "Climbing Stairs",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are climbing a staircase. It takes <code>n</code> steps to reach the top.</p>\n\n<p>Each time you can either climb <code>1</code> or <code>2</code> steps. In how many distinct ways can you climb to the top?</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> There are two ways to climb to the top.\n1. 1 step + 1 step\n2. 2 steps\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> There are three ways to climb to the top.\n1. 1 step + 1 step + 1 step\n2. 1 step + 2 steps\n3. 2 steps + 1 step\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 45</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "memoization"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int climbStairs(int n) {\n\t    vector<vector<int>> T = {{1, 1},\n                                 {1, 0}};\n        return matrixMult({{1, 0}}, matrixExpo(T, n))[0][0];  // [a0, a(-1)] * T^n\n    }\n\nprivate:\n    vector<vector<int>> matrixExpo(const vector<vector<int>>& A, int pow) {\n        vector<vector<int>> result(A.size(), vector<int>(A.size()));\n        vector<vector<int>> A_exp(A);\n        for (int i = 0; i < A.size(); ++i) {\n            result[i][i] = 1;\n        }\n        while (pow) {\n            if (pow % 2 == 1) {\n                result = matrixMult(result, A_exp);\n            }\n            A_exp = matrixMult(A_exp, A_exp);\n            pow /= 2;\n        }\n        return result;\n    }\n\n    vector<vector<int>> matrixMult(const vector<vector<int>>& A, const vector<vector<int>>& B) {\n        vector<vector<int>> result(A.size(), vector<int>(B[0].size()));\n        for (int i = 0; i < A.size(); ++i) {\n            for (int j = 0; j < B[0].size(); ++j) {\n                int64_t entry = 0;\n                for (int k = 0; k < B.size(); ++k) {\n                    entry = (static_cast<int64_t>(A[i][k]) * B[k][j] + entry);\n                }\n                result[i][j] = static_cast<int>(entry);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int climbStairs(int n) {\n        vector<int> steps(3, 0);\n        steps[0] = 1;\n        steps[1] = 1;\n        for (int i = 2; i <= n; ++i) {\n            steps[i % 3] = steps[(i - 1) % 3] + steps[(i - 2) % 3];\n        }\n        return steps[n % 3];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nimport itertools\n\n\nclass Solution(object):\n    def climbStairs(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        def matrix_expo(A, K):\n            result = [[int(i==j) for j in xrange(len(A))] \\\n                      for i in xrange(len(A))]\n            while K:\n                if K % 2:\n                    result = matrix_mult(result, A)\n                A = matrix_mult(A, A)\n                K /= 2\n            return result\n\n        def matrix_mult(A, B):\n            ZB = zip(*B)\n            return [[sum(a*b for a, b in itertools.izip(row, col)) \\\n                     for col in ZB] for row in A]\n\n        T = [[1, 1],\n             [1, 0]]\n        return matrix_mult([[1,  0]], matrix_expo(T, n))[0][0]  # [a0, a(-1)] * T^n\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    \"\"\"\n    :type n: int\n    :rtype: int\n    \"\"\"\n    def climbStairs(self, n):\n        prev, current = 0, 1\n        for i in xrange(n):\n            prev, current = current, prev + current,\n        return current",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

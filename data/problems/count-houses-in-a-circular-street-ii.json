@@ -1,0 +1,37 @@
+{
+  "id": "38e3bb3b-bbc4-4c23-900b-94b88d5e6c4b",
+  "slug": "count-houses-in-a-circular-street-ii",
+  "title": "Count Houses in a Circular Street II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,1,1]\n10\n[1,0,1,1,0]\n5",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(k)\n// Space: O(1)\n\n// constructive algorithms\nclass Solution {\npublic:\n    int houseCount(Street* street, int k) {\n        while (!street->isDoorOpen()) {\n            street->moveRight();\n        }\n        int result = 0;\n        for (int i = 0; i <= k; ++i) {\n            if (i && street->isDoorOpen()) {\n                street->closeDoor();\n                result = i;\n            }\n            street->moveRight();\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(k)\n# Space: O(1)\n\n# Definition for a street.\nclass Street:\n    def closeDoor(self):\n        pass\n    def isDoorOpen(self):\n        pass\n    def moveRight(self):\n        pass\n\n\n# constructive algorithms\nclass Solution(object):\n    def houseCount(self, street, k):\n        \"\"\"\n        :type street: Street\n        :type k: int\n        :rtype: int\n        \"\"\"\n        while not street.isDoorOpen():\n            street.moveRight()\n        result = 0\n        for i in xrange(k+1):\n            if i and street.isDoorOpen():\n                street.closeDoor()\n                result = i\n            street.moveRight()\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

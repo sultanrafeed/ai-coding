@@ -1,0 +1,25 @@
+{
+  "id": "bb15185c-08be-4222-8678-cf05fb5c204a",
+  "slug": "canCompleteCircuit",
+  "title": "Cancompletecircuit",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(1)\n\nclass Solution {\n    public:\n        int canCompleteCircuit(vector<int> &gas, vector<int> &cost) {\n            int total = 0;\n            int sum = 0;\n            int j = -1;\n\n            for(int i = 0; i < gas.size(); ++i) {\n                total += gas[i] - cost[i];\n                sum += gas[i] - cost[i];\n                if(sum < 0) { // find the gas station which should be the last one\n                    sum = 0;\n                    j = i;\n                }\n            }\n\n            return (total >= 0) ? j + 1 : -1;\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

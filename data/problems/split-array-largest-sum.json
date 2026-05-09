@@ -1,0 +1,43 @@
+{
+  "id": "f76ddbe3-165a-4157-91cf-20c2743471be",
+  "slug": "split-array-largest-sum",
+  "title": "Split Array Largest Sum",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> and an integer <code>k</code>, split <code>nums</code> into <code>k</code> non-empty subarrays such that the largest sum of any subarray is <strong>minimized</strong>.</p>\n\n<p>Return <em>the minimized largest sum of the split</em>.</p>\n\n<p>A <strong>subarray</strong> is a contiguous part of the array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [7,2,5,10,8], k = 2\n<strong>Output:</strong> 18\n<strong>Explanation:</strong> There are four ways to split nums into two subarrays.\nThe best way is to split it into [7,2,5] and [10,8], where the largest sum among the two subarrays is only 18.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4,5], k = 2\n<strong>Output:</strong> 9\n<strong>Explanation:</strong> There are four ways to split nums into two subarrays.\nThe best way is to split it into [1,2,3] and [4,5], where the largest sum among the two subarrays is only 9.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= min(50, nums.length)</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "dynamic-programming",
+    "greedy",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[7,2,5,10,8]\n2\n[1,2,3,4,5]\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogs), s is the sum of nums\n// Space: O(1)\n\nclass Solution {\npublic:\n    int splitArray(vector<int>& nums, int m) {\n        int64_t left = *max_element(cbegin(nums), cend(nums));\n        int64_t right = accumulate(cbegin(nums), cend(nums), 0LL);\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (check(nums, m, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n\nprivate:\n    bool check(vector<int>& nums, int m, int64_t total) {\n        int cnt = 1;\n        int64_t curr_sum = 0;\n        for (const auto& num : nums) {\n            curr_sum += num;\n            if (curr_sum > total) {\n                curr_sum = num;\n                ++cnt;\n            }\n        }\n        return cnt <= m;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogs), s is the sum of nums\n# Space: O(1)\n\nclass Solution(object):\n    def splitArray(self, nums, m):\n        \"\"\"\n        :type nums: List[int]\n        :type m: int\n        :rtype: int\n        \"\"\"\n        def check(nums, m, s):\n            cnt, curr_sum = 1, 0\n            for num in nums:\n                curr_sum += num\n                if curr_sum > s:\n                    curr_sum = num\n                    cnt += 1\n            return cnt <= m\n\n        left, right = max(nums), sum(nums)\n        while left <= right:\n            mid = left + (right - left) // 2\n            if check(nums, m, mid):\n                right = mid - 1\n            else:\n                left = mid + 1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

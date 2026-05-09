@@ -1,0 +1,44 @@
+{
+  "id": "0ecd5544-fa9b-4f28-9df4-80a9fe9f7592",
+  "slug": "binary-search-tree-iterator-ii",
+  "title": "Binary Search Tree Iterator II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "stack",
+    "tree",
+    "design",
+    "binary-search-tree",
+    "binary-tree",
+    "iterator"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"BSTIterator\",\"next\",\"next\",\"prev\",\"next\",\"hasNext\",\"next\",\"next\",\"next\",\"hasNext\",\"hasPrev\",\"prev\",\"prev\"]\n[[[7,3,15,null,null,9,20]],[null],[null],[null],[null],[null],[null],[null],[null],[null],[null],[null],[null]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1), amortized\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode() : val(0), left(nullptr), right(nullptr) {}\n *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}\n *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}\n * };\n */\nclass BSTIterator {\npublic:\n    BSTIterator(TreeNode* root) : pos_(-1) {\n        traverseLeft(root);\n    }\n    \n    bool hasNext() {\n        return pos_ + 1 != size(vals_) || !empty(stk_);\n    }\n    \n    int next() {\n        if (++pos_ == size(vals_)) {\n            TreeNode *node = stk_.back(); stk_.pop_back();\n            traverseLeft(node->right);\n            vals_.emplace_back(node->val);\n        }\n        return vals_[pos_];\n    }\n    \n    bool hasPrev() {\n        return pos_ - 1 >= 0;\n    }\n    \n    int prev() {\n        return vals_[--pos_];\n    }\n\nprivate:\n    void traverseLeft(TreeNode *node) {\n        for (; node != nullptr; node = node->left) {\n            stk_.emplace_back(node);\n        }\n    }\n    \n    vector<TreeNode *> stk_;\n    vector<int> vals_;\n    int pos_;\n};\n\n/**\n * Your BSTIterator object will be instantiated and called as such:\n * BSTIterator* obj = new BSTIterator(root);\n * bool param_1 = obj->hasNext();\n * int param_2 = obj->next();\n * bool param_3 = obj->hasPrev();\n * int param_4 = obj->prev();\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1), amortized\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\nclass BSTIterator(object):\n\n    def __init__(self, root):\n        \"\"\"\n        :type root: TreeNode\n        \"\"\"\n        self.__stk = []\n        self.__traversalLeft(root)\n        self.__vals = []\n        self.__pos = -1\n\n    def hasNext(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return self.__pos+1 != len(self.__vals) or self.__stk\n\n    def next(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        self.__pos += 1\n        if self.__pos == len(self.__vals):\n            node = self.__stk.pop()\n            self.__traversalLeft(node.right)\n            self.__vals.append(node.val)\n        return self.__vals[self.__pos]\n        \n    def hasPrev(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return self.__pos-1 >= 0\n\n    def prev(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        self.__pos -= 1\n        return self.__vals[self.__pos]\n    \n    def __traversalLeft(self, node):\n        while node is not None:\n            self.__stk.append(node)\n            node = node.left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

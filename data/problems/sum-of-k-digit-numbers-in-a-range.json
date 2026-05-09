@@ -1,0 +1,36 @@
+{
+  "id": "c884457e-c716-4493-84e4-ac94989f96b0",
+  "slug": "sum-of-k-digit-numbers-in-a-range",
+  "title": "Sum of K-Digit Numbers in a Range",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given three integers <code>l</code>, <code>r</code>, and <code>k</code>.</p>\n\n<p>Consider all possible integers consisting of <strong>exactly</strong> <code>k</code> digits, where each digit is chosen independently from the integer range <code>[l, r]</code> (inclusive). If 0 is included in the range, leading zeros are allowed.</p>\n\n<p>Return an integer representing the <b>sum of all such numbers.</b>​​​​​​​ Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">l = 1, r = 2, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">66</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>All numbers formed using <code>k = 2</code> digits in the range <code>[1, 2]</code> are <code>11, 12, 21, 22</code>.</li>\n\t<li>The total sum is <code>11 + 12 + 21 + 22 = 66</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">l = 0, r = 1, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">444</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>All numbers formed using <code>k = 3</code> digits in the range <code>[0, 1]</code> are <code>000, 001, 010, 011, 100, 101, 110, 111</code>​​​​​​​.</li>\n\t<li>These numbers without leading zeros are <code>0, 1, 10, 11, 100, 101, 110, 111</code>.</li>\n\t<li>The total sum is 444.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">l = 5, r = 5, k = 10</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">555555520</span></p>\n\n<p><strong>Explanation:</strong>​​​​​​​</p>\n\n<ul>\n\t<li>5555555555 is the only valid number consisting of <code>k = 10</code> digits in the range <code>[5, 5]</code>.</li>\n\t<li>The total sum is <code>5555555555 % (10<sup>9</sup> + 7) = 555555520</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= l &lt;= r &lt;= 9</code></li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "divide-and-conquer",
+    "combinatorics",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logr), r = MOD\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    int sumOfNumbers(int l, int r, int k) {\n        static const uint32_t MOD = 1e9 + 7;\n\n        const auto& addmod = [](uint32_t a, uint32_t b, uint32_t mod) {  // avoid overflow\n            // a %= mod, b %= mod;  // assumed a, b have been mod\n            if (mod - a <= b) {\n                b -= mod;  // relied on unsigned integer overflow in order to give the expected results\n            }\n            return a + b;\n        };\n\n        const auto& submod = [&](uint32_t a, uint32_t b, uint32_t mod) {\n            // a %= mod, b %= mod;  // assumed a, b have been mod\n            return addmod(a, mod - b, mod);\n        };\n\n        const auto& mulmod = [&](uint32_t a, uint32_t b, uint32_t mod)  {  // avoid overflow\n            // a %= mod, b %= mod;  // assumed a, b have been mod\n            uint32_t result = 0;\n            if (a < b) {\n                swap(a, b);\n            }\n            while (b > 0)  { \n                if (b % 2 == 1) {\n                    result = addmod(result, a, mod);\n                }\n                a = addmod(a, a, mod);\n                b /= 2; \n            } \n            return result; \n        };\n\n        const auto& powmod = [&](uint32_t a, uint32_t b, uint32_t mod) {\n            a %= mod;\n            uint32_t result = 1;\n            while (b) {\n                if (b & 1) {\n                    result = mulmod(result, a, mod);\n                }\n                a = mulmod(a, a, mod);\n                b >>= 1;\n            }\n            return result;\n        };\n\n        const auto& invmod = [&](uint32_t x, uint32_t mod) {\n            return powmod(x, mod - 2, mod);\n        };\n\n        return mulmod(mulmod((r + l) * (r - l + 1) / 2, powmod(r - l + 1, k - 1, MOD), MOD),\n                      mulmod(submod(powmod(10, k, MOD), 1, MOD), invmod(10 - 1, MOD), MOD), MOD);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logr)\n# Space: O(1)\n\n# math\nclass Solution(object):\n    def sumOfNumbers(self, l, r, k):\n        \"\"\"\n        :type l: int\n        :type r: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def invmod(x, MOD):\n            return pow(x, MOD-2, MOD)\n    \n        MOD = 10**9+7\n        return (((((r+l)*(r-l+1)//2)*pow(r-l+1, k-1, MOD))%MOD)*((((pow(10, k, MOD)-1)%MOD)*invmod(10-1, MOD))%MOD))%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

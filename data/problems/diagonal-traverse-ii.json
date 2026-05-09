@@ -1,0 +1,35 @@
+{
+  "id": "e01847a8-ab4f-44ce-8bc6-09cacdd7fd9f",
+  "slug": "diagonal-traverse-ii",
+  "title": "Diagonal Traverse II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a 2D integer array <code>nums</code>, return <em>all elements of </em><code>nums</code><em> in diagonal order as shown in the below images</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/04/08/sample_1_1784.png\" style=\"width: 158px; height: 143px;\" />\n<pre>\n<strong>Input:</strong> nums = [[1,2,3],[4,5,6],[7,8,9]]\n<strong>Output:</strong> [1,4,2,7,5,3,8,6,9]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/04/08/sample_2_1784.png\" style=\"width: 230px; height: 177px;\" />\n<pre>\n<strong>Input:</strong> nums = [[1,2,3,4,5],[6,7],[8],[9,10,11],[12,13,14,15,16]]\n<strong>Output:</strong> [1,6,2,8,7,3,9,4,12,10,5,13,11,14,15,16]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i].length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= sum(nums[i].length) &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i][j] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "sorting",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m)\n\nclass Solution {\npublic:\n    vector<int> findDiagonalOrder(vector<vector<int>>& nums) {\n        const auto& n = accumulate(nums.cbegin(), nums.cend(), uint64_t(0ull),\n                                   [](const auto& x, const auto& y) {\n                                       return max(x, y.size());\n                                   });\n        vector<int> result;\n        deque<pair<int, int>> dq;\n        for (int r = 0; r < nums.size() + n - 1; ++r) {\n            deque<pair<int, int>> new_dq;\n            if (r < nums.size()) {\n                dq.emplace_front(r, 0);\n            }\n            for (const auto& [r, c] : dq) {\n                result.emplace_back(nums[r][c]);\n                if (c + 1 < nums[r].size()) {\n                    new_dq.emplace_back(r, c + 1);\n                }\n            }\n            dq = move(new_dq);\n        }\n        return result;\n    }\n};\n\n// Time:  O(m * n)\n// Space: O(m * n)\nclass Solution2 {\npublic:\n    vector<int> findDiagonalOrder(vector<vector<int>>& nums) {\n        vector<vector<int>> ans;\n        for (int r = 0; r < nums.size(); ++r) {\n            for (int c = 0; c < nums[r].size(); ++c) {\n                if (ans.size() <= r + c) {\n                    ans.emplace_back();\n                }\n                ans[r + c].emplace_back(nums[r][c]);\n            }\n        }\n        vector<int> result;\n        for (const auto& row: ans) {\n            for (int i = row.size() - 1; i >= 0; --i) {\n                result.emplace_back(row[i]);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m)\n\nimport itertools\nimport collections\n\n\nclass Solution(object):\n    def findDiagonalOrder(self, nums):\n        \"\"\"\n        :type nums: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        result, dq, col = [], collections.deque(), 0\n        for i in xrange(len(nums)+max(itertools.imap(len, nums))-1):\n            new_dq = collections.deque()\n            if i < len(nums):\n                dq.appendleft((i, 0))\n            for r, c in dq:\n                result.append(nums[r][c])\n                if c+1 < len(nums[r]):\n                    new_dq.append((r, c+1))\n            dq = new_dq\n        return result\n\n\n# Time:  O(m * n)\n# Space: O(m * n)\nclass Solution2(object):\n    def findDiagonalOrder(self, nums):\n        \"\"\"\n        :type nums: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        for r, row in enumerate(nums):\n            for c, num in enumerate(row):\n                if len(result) <= r+c:\n                    result.append([])\n                result[r+c].append(num)\n        return [num for row in result for num in reversed(row)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "d0b09dc6-a688-4542-a727-2b8e47602d75",
+  "slug": "longest-word-in-dictionary",
+  "title": "Longest Word in Dictionary",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of strings <code>words</code> representing an English Dictionary, return <em>the longest word in</em> <code>words</code> <em>that can be built one character at a time by other words in</em> <code>words</code>.</p>\n\n<p>If there is more than one possible answer, return the longest word with the smallest lexicographical order. If there is no answer, return the empty string.</p>\n\n<p>Note that the word should be built from left to right with each additional character being added to the end of a previous word.&nbsp;</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;w&quot;,&quot;wo&quot;,&quot;wor&quot;,&quot;worl&quot;,&quot;world&quot;]\n<strong>Output:</strong> &quot;world&quot;\n<strong>Explanation:</strong> The word &quot;world&quot; can be built one character at a time by &quot;w&quot;, &quot;wo&quot;, &quot;wor&quot;, and &quot;worl&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;a&quot;,&quot;banana&quot;,&quot;app&quot;,&quot;appl&quot;,&quot;ap&quot;,&quot;apply&quot;,&quot;apple&quot;]\n<strong>Output:</strong> &quot;apple&quot;\n<strong>Explanation:</strong> Both &quot;apply&quot; and &quot;apple&quot; can be built from other words in the dictionary. However, &quot;apple&quot; is lexicographically smaller than &quot;apply&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 30</code></li>\n\t<li><code>words[i]</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "trie",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"w\",\"wo\",\"wor\",\"worl\",\"world\"]\n[\"a\",\"banana\",\"app\",\"appl\",\"ap\",\"apply\",\"apple\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n), n is the total sum of the lengths of words\n// Space: O(t), t is the number of nodes in trie\n\nclass Solution {\npublic:\n    string longestWord(vector<string>& words) {\n        TrieNode trie;\n        for (int i = 0; i < words.size(); ++i) {\n            trie.Insert(words[i], i);\n        }\n\n        // DFS\n        stack<TrieNode *> stk;\n        for (const auto& node : trie.leaves) {\n            if (node) {\n                stk.emplace(node);\n            }\n        }\n        \n        string result;\n        while (!stk.empty()) {\n            const auto curr = stk.top(); stk.pop();\n            if (curr->isString) {\n                const auto& word = words[curr->val];\n                if (word.size() > result.size() || (word.size() == result.size() && word < result)) {\n                    result = word;\n                }\n                for (const auto& node : curr->leaves) {\n                    if (node) {\n                        stk.emplace(node);\n                    }\n                }\n            }\n        }\n        return result;\n    }\n\nprivate:\n    struct TrieNode {\n        bool isString;\n        int  val;\n        vector<TrieNode *> leaves;\n        \n        TrieNode() : isString{false}, val{0}, leaves(26) {}\n        \n        void Insert(const string& s, const int i) {\n            auto* p = this;\n            for (const auto& c : s) {\n                if (!p->leaves[c - 'a']) {\n                    p->leaves[c - 'a'] = new TrieNode;\n                }\n                p = p->leaves[c - 'a'];\n            }\n            p->isString = true;\n            p->val = i;\n        }\n        \n        ~TrieNode() {\n            for (auto& node : leaves) {\n                if (node) {\n                    delete node;\n                }\n            }\n        }\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n), n is the total sum of the lengths of words\n# Space: O(t), t is the number of nodes in trie\n\nfrom collections import defaultdict\nfrom operator import getitem\n\n\nclass Solution(object):\n    def longestWord(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: str\n        \"\"\"\n        _trie = lambda: defaultdict(_trie)\n        trie = _trie()\n        for i, word in enumerate(words):\n            reduce(getitem, word, trie)[\"_end\"] = i\n\n        # DFS\n        stack = trie.values()\n        result = \"\"\n        while stack:\n            curr = stack.pop()\n            if \"_end\" in curr:\n                word = words[curr[\"_end\"]]\n                if len(word) > len(result) or (len(word) == len(result) and word < result):\n                    result = word\n                stack += [curr[letter] for letter in curr if letter != \"_end\"]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

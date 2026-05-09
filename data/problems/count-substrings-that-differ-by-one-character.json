@@ -1,0 +1,36 @@
+{
+  "id": "d0cb0f20-8c21-4fe7-a014-ea7cb3c87745",
+  "slug": "count-substrings-that-differ-by-one-character",
+  "title": "Count Substrings That Differ by One Character",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two strings <code>s</code> and <code>t</code>, find the number of ways you can choose a non-empty substring of <code>s</code> and replace a <strong>single character</strong> by a different character such that the resulting substring is a substring of <code>t</code>. In other words, find the number of substrings in <code>s</code> that differ from some substring in <code>t</code> by <strong>exactly</strong> one character.</p>\n\n<p>For example, the underlined substrings in <code>&quot;<u>compute</u>r&quot;</code> and <code>&quot;<u>computa</u>tion&quot;</code> only differ by the <code>&#39;e&#39;</code>/<code>&#39;a&#39;</code>, so this is a valid way.</p>\n\n<p>Return <em>the number of substrings that satisfy the condition above.</em></p>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters within a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aba&quot;, t = &quot;baba&quot;\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The following are the pairs of substrings from s and t that differ by exactly 1 character:\n(&quot;<u>a</u>ba&quot;, &quot;<u>b</u>aba&quot;)\n(&quot;<u>a</u>ba&quot;, &quot;ba<u>b</u>a&quot;)\n(&quot;ab<u>a</u>&quot;, &quot;<u>b</u>aba&quot;)\n(&quot;ab<u>a</u>&quot;, &quot;ba<u>b</u>a&quot;)\n(&quot;a<u>b</u>a&quot;, &quot;b<u>a</u>ba&quot;)\n(&quot;a<u>b</u>a&quot;, &quot;bab<u>a</u>&quot;)\nThe underlined portions are the substrings that are chosen from s and t.\n</pre>\n​​<strong class=\"example\">Example 2:</strong>\n\n<pre>\n<strong>Input:</strong> s = &quot;ab&quot;, t = &quot;bb&quot;\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The following are the pairs of substrings from s and t that differ by 1 character:\n(&quot;<u>a</u>b&quot;, &quot;<u>b</u>b&quot;)\n(&quot;<u>a</u>b&quot;, &quot;b<u>b</u>&quot;)\n(&quot;<u>ab</u>&quot;, &quot;<u>bb</u>&quot;)\n​​​​The underlined portions are the substrings that are chosen from s and t.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length, t.length &lt;= 100</code></li>\n\t<li><code>s</code> and <code>t</code> consist of lowercase English letters only.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "dynamic-programming",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countSubstrings(string s, string t) {\n        int result = 0;\n        // for each possible alignment, count the number of substrs that differ by 1 char\n        for (int i = 0; i < size(s); ++i) {\n            result += count(s, t, i, 0);\n        }\n        for (int j = 1; j < size(t); ++j) {  // j starts from 1 to avoid duplicated count(0, 0)\n            result += count(s, t, 0, j);\n        }\n        return result;\n    }\n\nprivate:\n    int count(const string& s, const string& t, int i, int j) {\n        int l = min(size(s) - i, size(t) - j);\n        int result = 0, left_cnt = 0, right_cnt = 0;  // left and right consecutive same counts relative to the different char\n        for (int k = 0; k < l; ++k) {\n            ++right_cnt;\n            if (s[i + k] != t[j + k]) {\n                left_cnt = right_cnt;\n                right_cnt = 0;\n                // left_i = i+k-left+1\n            }\n            result += left_cnt;  // target substrs are [s[left_i+c:i+k+1] for c in xrange(left_cnt)]\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    def countSubstrings(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: int\n        \"\"\"\n        def count(i, j):  # for each possible alignment, count the number of substrs that differ by 1 char\n            result = left_cnt = right_cnt = 0  # left and right consecutive same counts relative to the different char\n            for k in xrange(min(len(s)-i, len(t)-j)):\n                right_cnt += 1\n                if s[i+k] != t[j+k]:\n                    left_cnt, right_cnt = right_cnt, 0\n                    # prev_i = i+k-prev+1\n                result += left_cnt  # target substrs are [s[left_i+c:i+k+1] for c in xrange(left_cnt)]\n            return result\n\n        return sum(count(i, 0) for i in xrange(len(s))) + \\\n               sum(count(0, j) for j in xrange(1, len(t)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

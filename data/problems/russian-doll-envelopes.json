@@ -1,0 +1,36 @@
+{
+  "id": "f06341a6-4a01-41f1-95fd-4c84acec88bd",
+  "slug": "russian-doll-envelopes",
+  "title": "Russian Doll Envelopes",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a 2D array of integers <code>envelopes</code> where <code>envelopes[i] = [w<sub>i</sub>, h<sub>i</sub>]</code> represents the width and the height of an envelope.</p>\n\n<p>One envelope can fit into another if and only if both the width and height of one envelope are greater than the other envelope&#39;s width and height.</p>\n\n<p>Return <em>the maximum number of envelopes you can Russian doll (i.e., put one inside the other)</em>.</p>\n\n<p><strong>Note:</strong> You cannot rotate an envelope.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> envelopes = [[5,4],[6,4],[6,7],[2,3]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The maximum number of envelopes you can Russian doll is <code>3</code> ([2,3] =&gt; [5,4] =&gt; [6,7]).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> envelopes = [[1,1],[1,1],[1,1]]\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= envelopes.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>envelopes[i].length == 2</code></li>\n\t<li><code>1 &lt;= w<sub>i</sub>, h<sub>i</sub> &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "dynamic-programming",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn + nlogk) = O(nlogn), k is the length of the result.\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxEnvelopes(vector<pair<int, int>>& envelopes) {\n        vector<int> result;\n\n        sort(envelopes.begin(), envelopes.end(),  // O(nlogn)\n            [](const pair<int, int>& a, const pair<int, int>& b) {\n                if (a.first == b.first) {\n                    return a.second > b.second;\n                }\n                return a.first < b.first;\n            });\n        for (const auto& envelope : envelopes) {\n            const auto target = envelope.second;\n            auto it = lower_bound(result.begin(), result.end(), target);  // O(logk)\n            if (it == result.end()) {\n                result.emplace_back(target);\n            } else {\n                *it = target;\n            }\n        }\n\n        return result.size();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn + nlogk) = O(nlogn), k is the length of the result.\n# Space: O(1)\n\nclass Solution(object):\n    def maxEnvelopes(self, envelopes):\n        \"\"\"\n        :type envelopes: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def insert(target):\n            left, right = 0, len(result) - 1\n            while left <= right:\n                mid = left + (right - left) / 2\n                if result[mid] >= target:\n                    right = mid - 1\n                else:\n                    left = mid + 1\n            if left == len(result):\n                result.append(target)\n            else:\n                result[left] = target\n\n        result = []\n\n        envelopes.sort(lambda x, y: y[1] - x[1] if x[0] == y[0] else \\\n                                    x[0] - y[0])\n        for envelope in envelopes:\n            insert(envelope[1])\n\n        return len(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

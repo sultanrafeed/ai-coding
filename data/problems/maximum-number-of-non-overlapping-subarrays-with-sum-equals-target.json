@@ -1,0 +1,42 @@
+{
+  "id": "a0bc326d-707a-4f61-9545-f5ab1f9768ad",
+  "slug": "maximum-number-of-non-overlapping-subarrays-with-sum-equals-target",
+  "title": "Maximum Number of Non-Overlapping Subarrays With Sum Equals Target",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array <code>nums</code> and an integer <code>target</code>, return <em>the maximum number of <strong>non-empty</strong> <strong>non-overlapping</strong> subarrays such that the sum of values in each subarray is equal to</em> <code>target</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,1,1,1], target = 2\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> There are 2 non-overlapping subarrays [<strong>1,1</strong>,1,<strong>1,1</strong>] with sum equals to target(2).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [-1,3,5,1,4,2,-9], target = 6\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> There are 3 subarrays with sum equal to 6.\n([5,1], [4,2], [3,5,1,4,2,-9]) but only the first 2 are non-overlapping.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>4</sup> &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= target &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,1,1,1]\n2\n[-1,3,5,1,4,2,-9]\n6",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxNonOverlapping(vector<int>& nums, int target) {\n        unordered_map<int, int> lookup = {{0, -1}};\n        int result = 0, accu = 0, right = -1;\n        for (int i = 0; i < nums.size(); ++i) {\n            accu += nums[i];\n            if (lookup.count(accu - target) && lookup[accu - target] >= right) {\n                right = i;\n                ++result;  // greedy\n            }\n            lookup[accu] = i;\n        }\n        return result; \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def maxNonOverlapping(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        lookup = {0:-1}\n        result, accu, right = 0, 0, -1\n        for i, num in enumerate(nums):\n            accu += num\n            if accu-target in lookup and lookup[accu-target] >= right:\n                right = i\n                result += 1  # greedy\n            lookup[accu] = i\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

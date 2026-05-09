@@ -1,0 +1,36 @@
+{
+  "id": "ccfe22cb-3f14-4f5f-8aa0-9d0f329a3076",
+  "slug": "add-binary",
+  "title": "Add Binary",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two binary strings <code>a</code> and <code>b</code>, return <em>their sum as a binary string</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> a = \"11\", b = \"1\"\n<strong>Output:</strong> \"100\"\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> a = \"1010\", b = \"1011\"\n<strong>Output:</strong> \"10101\"\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= a.length, b.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>a</code> and <code>b</code> consist&nbsp;only of <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code> characters.</li>\n\t<li>Each string does not contain leading zeros except for the zero itself.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "bit-manipulation",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string addBinary(string a, string b) {\n        string res;\n        size_t res_len = max(a.length(), b.length()) ;\n\n        size_t carry = 0;\n        for (int i = 0; i < res_len; ++i) {\n            const size_t a_bit_i = i < a.length() ? a[a.length() - 1 - i] - '0' : 0;\n            const size_t b_bit_i = i < b.length() ? b[b.length() - 1 - i] - '0' : 0;\n            size_t sum = carry + a_bit_i + b_bit_i;\n            carry = sum / 2;\n            sum %= 2;\n            res.push_back('0' + sum);\n        }\n        if (carry) {\n            res.push_back('0' + carry);\n        }\n        reverse(res.begin(), res.end());\n\n        return res;\n    }\n};\n\n// Iterator solution.\nclass Solution2 {\npublic:\n    string addBinary(string a, string b) {\n        size_t carry = 0;\n        string res;\n\n        for (auto a_it = a.rbegin(), b_it = b.rbegin(); a_it != a.rend() || b_it != b.rend();) {\n            const size_t a_bit_i = (a_it != a.rend()) ? *a_it - '0' : 0;\n            const size_t b_bit_i = (b_it != b.rend()) ? *b_it - '0' : 0;\n            size_t sum = a_bit_i + b_bit_i + carry;\n            carry = sum / 2;\n            sum %= 2;\n            res.push_back('0' + sum);\n\n            if (a_it != a.rend()) {\n                ++a_it;\n            }\n            if (b_it != b.rend()) {\n                ++b_it;\n            }\n        }\n        if (carry) {\n            res.push_back('0' + carry);\n        }\n        reverse(res.begin(), res.end());\n\n        return res;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    # @param a, a string\n    # @param b, a string\n    # @return a string\n    def addBinary(self, a, b):\n        result, carry, val = \"\", 0, 0\n        for i in xrange(max(len(a), len(b))):\n            val = carry\n            if i < len(a):\n                val += int(a[-(i + 1)])\n            if i < len(b):\n                val += int(b[-(i + 1)])\n            carry, val = divmod(val, 2)\n            result += str(val)\n        if carry:\n            result += str(carry)\n        return result[::-1]\n\n\n# Time:  O(n)\n# Space: O(1)\nfrom itertools import izip_longest\n\n\nclass Solution2(object):\n    def addBinary(self, a, b):\n        \"\"\"\n        :type a: str\n        :type b: str\n        :rtype: str\n        \"\"\"\n        result = \"\"\n        carry = 0\n        for x, y in izip_longest(reversed(a), reversed(b), fillvalue=\"0\"):\n            carry, remainder = divmod(int(x)+int(y)+carry, 2)\n            result += str(remainder)\n        \n        if carry:\n            result += str(carry)\n        \n        return result[::-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

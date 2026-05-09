@@ -1,0 +1,34 @@
+{
+  "id": "d5ab04dc-9740-4731-9761-4886b3556300",
+  "slug": "special-positions-in-a-binary-matrix",
+  "title": "Special Positions in a Binary Matrix",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an <code>m x n</code> binary matrix <code>mat</code>, return <em>the number of special positions in </em><code>mat</code><em>.</em></p>\n\n<p>A position <code>(i, j)</code> is called <strong>special</strong> if <code>mat[i][j] == 1</code> and all other elements in row <code>i</code> and column <code>j</code> are <code>0</code> (rows and columns are <strong>0-indexed</strong>).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/12/23/special1.jpg\" style=\"width: 244px; height: 245px;\" />\n<pre>\n<strong>Input:</strong> mat = [[1,0,0],[0,0,1],[1,0,0]]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> (1, 2) is a special position because mat[1][2] == 1 and all other elements in row 1 and column 2 are 0.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/12/24/special-grid.jpg\" style=\"width: 244px; height: 245px;\" />\n<pre>\n<strong>Input:</strong> mat = [[1,0,0],[0,1,0],[0,0,1]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> (0, 0), (1, 1) and (2, 2) are special positions.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == mat.length</code></li>\n\t<li><code>n == mat[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 100</code></li>\n\t<li><code>mat[i][j]</code> is either <code>0</code> or <code>1</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int numSpecial(vector<vector<int>>& mat) {\n        vector<int> rows(size(mat)), cols(size(mat[0]));\n        for (int i = 0; i < size(rows); ++i) {\n            for (int j = 0; j < size(cols); ++j) {\n                if (mat[i][j]) {\n                    ++rows[i], ++cols[j];\n                }\n            }\n        }\n        int result = 0;\n        for (int i = 0; i < size(rows); ++i) {\n            for (int j = 0; j < size(cols); ++j) {\n                if (mat[i][j] && rows[i] == 1 && cols[j] == 1) {\n                    ++result;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def numSpecial(self, mat):\n        \"\"\"\n        :type mat: List[List[int]]\n        :rtype: int\n        \"\"\"\n        rows, cols = [0]*len(mat), [0]*len(mat[0])\n        for i in xrange(len(rows)):\n            for j in xrange(len(cols)):\n                if mat[i][j]:\n                    rows[i] += 1\n                    cols[j] += 1\n        result = 0\n        for i in xrange(len(rows)):\n            for j in xrange(len(cols)):\n                if mat[i][j] == rows[i] == cols[j] == 1:\n                    result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

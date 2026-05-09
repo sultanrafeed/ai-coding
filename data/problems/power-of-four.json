@@ -1,0 +1,41 @@
+{
+  "id": "65629f56-02fe-4d9c-8344-5aece0aec571",
+  "slug": "power-of-four",
+  "title": "Power of Four",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, return <em><code>true</code> if it is a power of four. Otherwise, return <code>false</code></em>.</p>\n\n<p>An integer <code>n</code> is a power of four, if there exists an integer <code>x</code> such that <code>n == 4<sup>x</sup></code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> n = 16\n<strong>Output:</strong> true\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> n = 5\n<strong>Output:</strong> false\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> n = 1\n<strong>Output:</strong> true\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-2<sup>31</sup> &lt;= n &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Could you solve it without loops/recursion?",
+  "patterns": [
+    "math",
+    "bit-manipulation",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "16\n5\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isPowerOfFour(int num) {\n        return num > 0 && (num & (num - 1)) == 0 &&\n               ((num & 0b01010101010101010101010101010101) == num);\n    }\n};\n\n// Time:  O(1)\n// Space: O(1)\nclass Solution2 {\npublic:\n    bool isPowerOfFour(int num) {\n        while (num && !(num & 0b11)) {\n            num >>= 2;\n        }\n        return (num == 1);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def isPowerOfFour(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: bool\n        \"\"\"\n        return num > 0 and (num & (num - 1)) == 0 and \\\n               ((num & 0b01010101010101010101010101010101) == num)\n\n\n# Time:  O(1)\n# Space: O(1)\nclass Solution2(object):\n    def isPowerOfFour(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: bool\n        \"\"\"\n        while num and not (num & 0b11):\n            num >>= 2\n        return (num == 1)\n\n\nclass Solution3(object):\n    def isPowerOfFour(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: bool\n        \"\"\"\n        num = bin(num)\n        return True if num[2:].startswith('1') and len(num[2:]) == num.count('0') and num.count('0') % 2 and '-' not in num else False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

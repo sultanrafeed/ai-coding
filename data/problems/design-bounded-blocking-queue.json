@@ -1,0 +1,39 @@
+{
+  "id": "c3837d31-c7bc-44a5-bd6a-a09c2270b4a1",
+  "slug": "design-bounded-blocking-queue",
+  "title": "Design Bounded Blocking Queue",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "concurrency"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "1\n1\n[\"BoundedBlockingQueue\",\"enqueue\",\"dequeue\",\"dequeue\",\"enqueue\",\"enqueue\",\"enqueue\",\"enqueue\",\"dequeue\"]\n[[2],[1],[],[],[0],[2],[3],[4],[]]\n3\n4\n[\"BoundedBlockingQueue\",\"enqueue\",\"enqueue\",\"enqueue\",\"dequeue\",\"dequeue\",\"dequeue\",\"enqueue\"]\n[[3],[1],[0],[2],[],[],[],[3]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass BoundedBlockingQueue {\npublic:    \n    BoundedBlockingQueue(int capacity)\n      : cap_(capacity) {\n        \n    }\n    \n    void enqueue(int element) {\n        {\n            unique_lock<mutex> l(m_);\n            cv_.wait(l, [this]() { return q_.size() != cap_; }) ;\n            q_.emplace(element);\n        }\n        cv_.notify_all();\n    }\n    \n    int dequeue() {\n        int element;\n        {\n            unique_lock<mutex> l(m_);\n            cv_.wait(l, [this]() { return !q_.empty(); }) ;\n            element = q_.front(); q_.pop();\n        }\n        cv_.notify_all();\n        return element;\n    }\n    \n    int size() {\n        unique_lock<mutex> l(m_);\n        return q_.size();\n    }\n\nprivate:\n    mutex m_;\n    condition_variable cv_;\n    queue<int> q_;\n    int cap_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport threading\nimport collections\n\n\nclass BoundedBlockingQueue(object):\n    def __init__(self, capacity):\n        \"\"\"\n        :type capacity: int\n        \"\"\"\n        self.__cv = threading.Condition()\n        self.__q = collections.deque()\n        self.__cap = capacity\n\n    def enqueue(self, element):\n        \"\"\"\n        :type element: int\n        :rtype: void\n        \"\"\"\n        with self.__cv:\n            while len(self.__q) == self.__cap:\n                self.__cv.wait()\n            self.__q.append(element)\n            self.__cv.notifyAll()\n\n    def dequeue(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        with self.__cv:\n            while not self.__q:\n                self.__cv.wait()\n            self.__cv.notifyAll()\n            return self.__q.popleft()\n\n    def size(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        with self.__cv:\n            return len(self.__q)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

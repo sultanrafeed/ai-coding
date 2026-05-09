@@ -1,0 +1,44 @@
+{
+  "id": "841834eb-f68d-4b1d-ae73-b8ddaa366ef6",
+  "slug": "binary-tree-vertical-order-traversal",
+  "title": "Binary Tree Vertical Order Traversal",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "sorting",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,9,20,null,null,15,7]\n[3,9,8,4,0,1,7]\n[1,2,3,4,10,9,11,null,5,null,null,null,null,null,null,null,6]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<vector<int>> verticalOrder(TreeNode* root) {\n        unordered_map<int, vector<int>> cols;\n        vector<pair<TreeNode *, int>> queue{{root, 0}};\n        for (int i = 0; i < queue.size(); ++i) {\n            TreeNode *node;\n            int j;\n            tie(node, j) = queue[i];\n            if (node) {\n                cols[j].emplace_back(node->val);\n                queue.push_back({node->left, j - 1});\n                queue.push_back({node->right, j + 1});\n            }\n        }\n        int min_idx = numeric_limits<int>::max(), \n            max_idx = numeric_limits<int>::min();\n        for (const auto& kvp : cols) {\n            min_idx = min(min_idx, kvp.first);\n            max_idx = max(max_idx, kvp.first);\n        }\n        vector<vector<int>> res;\n        for (int i = min_idx; !cols.empty() && i <= max_idx; ++i) {\n            res.emplace_back(move(cols[i]));\n        }\n        return res;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# BFS + hash solution.\nclass Solution(object):\n    def verticalOrder(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[List[int]]\n        \"\"\"\n        cols = collections.defaultdict(list)\n        queue = [(root, 0)]\n        for node, i in queue:\n            if node:\n                cols[i].append(node.val)\n                queue += (node.left, i - 1), (node.right, i + 1)\n        return [cols[i] for i in xrange(min(cols.keys()),\n                                        max(cols.keys()) + 1)] if cols else []",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

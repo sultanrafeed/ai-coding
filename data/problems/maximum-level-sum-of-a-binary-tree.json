@@ -1,0 +1,42 @@
+{
+  "id": "77438d4e-dd80-48d4-a13d-1ec04cfd3835",
+  "slug": "maximum-level-sum-of-a-binary-tree",
+  "title": "Maximum Level Sum of a Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree, the level of its root is <code>1</code>, the level of its children is <code>2</code>, and so on.</p>\n\n<p>Return the <strong>smallest</strong> level <code>x</code> such that the sum of all the values of nodes at level <code>x</code> is <strong>maximal</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/05/03/capture.JPG\" style=\"width: 200px; height: 175px;\" />\n<pre>\n<strong>Input:</strong> root = [1,7,0,7,-8,null,null]\n<strong>Output:</strong> 2\n<strong>Explanation: </strong>\nLevel 1 sum = 1.\nLevel 2 sum = 7 + 0 = 7.\nLevel 3 sum = 7 + -8 = -1.\nSo we return the level with the maximum sum which is level 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> root = [989,null,10250,98693,-89388,null,null,null,-32127]\n<strong>Output:</strong> 2\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>\n\t<li><code>-10<sup>5</sup> &lt;= Node.val &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,7,0,7,-8,null,null]\n[989,null,10250,98693,-89388,null,null,null,-32127]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\n\n// dfs solution\nclass Solution {\npublic:\n    int maxLevelSum(TreeNode* root) {\n        vector<int> level_sums;\n        dfs(root, 0, &level_sums);\n        return distance(level_sums.cbegin(),\n                        max_element(level_sums.cbegin(), level_sums.cend())) + 1;\n    }\n\nprivate:\n    void dfs(TreeNode *node, int i, vector<int> *level_sums) {\n        if (!node) {\n            return;\n        }\n        if (i == level_sums->size()) {\n            level_sums->emplace_back();\n        }\n        (*level_sums)[i] += node->val;\n        dfs(node->left, i + 1, level_sums);\n        dfs(node->right, i + 1, level_sums);\n    }\n};\n\n// Time:  O(n)\n// Space: O(w)\n// bfs solution\nclass Solution2 {\npublic:\n    int maxLevelSum(TreeNode* root) {\n        int result = 0, level = 1, max_total = numeric_limits<int>::min();\n        queue<TreeNode*> q({root});\n        while (!q.empty()) {\n            queue<TreeNode*> next_q;\n            int total = 0;\n            while (!q.empty()) {\n                const auto node = q.front(); q.pop();\n                total += node->val;\n                if (node->left) {\n                    next_q.emplace(node->left);\n                }\n                if (node->right) {\n                    next_q.emplace(node->right);\n                }\n            }\n            if (total > max_total) {\n                max_total = total;\n                result = level;\n            }\n            q = move(next_q);\n            ++level;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nimport collections\n\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\n# dfs solution\nclass Solution(object):\n    def maxLevelSum(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        def dfs(node, i, level_sums):\n            if not node:\n                return\n            if i == len(level_sums):\n                level_sums.append(0)\n            level_sums[i] += node.val\n            dfs(node.left, i+1, level_sums)\n            dfs(node.right, i+1, level_sums)\n\n        level_sums = []\n        dfs(root, 0, level_sums)\n        return level_sums.index(max(level_sums))+1\n\n    \n# Time:  O(n)\n# Space: O(w)\n# bfs solution\nclass Solution2(object):\n    def maxLevelSum(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        result, level, max_total = 0, 1, float(\"-inf\")\n        q = collections.deque([root])\n        while q:\n            total = 0\n            for _ in xrange(len(q)):\n                node = q.popleft()\n                total += node.val\n                if node.left:\n                    q.append(node.left)\n                if node.right:\n                    q.append(node.right)\n            if total > max_total:\n                result, max_total = level, total\n            level += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

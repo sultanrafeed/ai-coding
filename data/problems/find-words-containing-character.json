@@ -1,0 +1,34 @@
+{
+  "id": "66c8ccdb-b32b-4581-ab99-7e471517bc56",
+  "slug": "find-words-containing-character",
+  "title": "Find Words Containing Character",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> array of strings <code>words</code> and a character <code>x</code>.</p>\n\n<p>Return <em>an <strong>array of indices</strong> representing the words that contain the character </em><code>x</code>.</p>\n\n<p><strong>Note</strong> that the returned array may be in <strong>any</strong> order.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;leet&quot;,&quot;code&quot;], x = &quot;e&quot;\n<strong>Output:</strong> [0,1]\n<strong>Explanation:</strong> &quot;e&quot; occurs in both words: &quot;l<strong><u>ee</u></strong>t&quot;, and &quot;cod<u><strong>e</strong></u>&quot;. Hence, we return indices 0 and 1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;abc&quot;,&quot;bcd&quot;,&quot;aaaa&quot;,&quot;cbc&quot;], x = &quot;a&quot;\n<strong>Output:</strong> [0,2]\n<strong>Explanation:</strong> &quot;a&quot; occurs in &quot;<strong><u>a</u></strong>bc&quot;, and &quot;<u><strong>aaaa</strong></u>&quot;. Hence, we return indices 0 and 2.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;abc&quot;,&quot;bcd&quot;,&quot;aaaa&quot;,&quot;cbc&quot;], x = &quot;z&quot;\n<strong>Output:</strong> []\n<strong>Explanation:</strong> &quot;z&quot; does not occur in any of the words. Hence, we return an empty array.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 50</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 50</code></li>\n\t<li><code>x</code> is a lowercase English letter.</li>\n\t<li><code>words[i]</code> consists only of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l)\n// Space: O(1)\n\n// string\nclass Solution {\npublic:\n    vector<int> findWordsContaining(vector<string>& words, char x) {\n        vector<int> result;\n        for (int i = 0; i < size(words); ++i) {\n            if (find(cbegin(words[i]), cend(words[i]), x) != cend(words[i])) {\n                result.emplace_back(i);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l)\n# Space: O(1)\n\n# string\nclass Solution(object):\n    def findWordsContaining(self, words, x):\n        \"\"\"\n        :type words: List[str]\n        :type x: str\n        :rtype: List[int]\n        \"\"\"\n        return [i for i, w in enumerate(words) if x in w]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

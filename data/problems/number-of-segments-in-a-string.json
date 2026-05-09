@@ -1,0 +1,39 @@
+{
+  "id": "6d9a2aa8-b228-49ea-908e-734efe3f522e",
+  "slug": "number-of-segments-in-a-string",
+  "title": "Number of Segments in a String",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code>, return <em>the number of segments in the string</em>.</p>\n\n<p>A <strong>segment</strong> is defined to be a contiguous sequence of <strong>non-space characters</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;Hello, my name is John&quot;\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The five segments are [&quot;Hello,&quot;, &quot;my&quot;, &quot;name&quot;, &quot;is&quot;, &quot;John&quot;]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;Hello&quot;\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= s.length &lt;= 300</code></li>\n\t<li><code>s</code> consists of lowercase and uppercase English letters, digits, or one of the following characters <code>&quot;!@#$%^&amp;*()_+-=&#39;,.:&quot;</code>.</li>\n\t<li>The only space character in <code>s</code> is <code>&#39; &#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"Hello, my name is John\"\n\"Hello\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countSegments(string s) {\n        int result = static_cast<int>(!s.empty() && s.back() != ' ');\n        for (int i = 1; i < s.size(); ++i) {\n            if (s[i] == ' ' && s[i - 1] != ' ') {\n                ++result;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def countSegments(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = int(len(s) and s[-1] != ' ')\n        for i in xrange(1, len(s)):\n            if s[i] == ' ' and s[i-1] != ' ':\n                result += 1\n        return result\n\n    def countSegments2(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        return len([i for i in s.strip().split(' ') if i])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

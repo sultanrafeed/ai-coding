@@ -1,0 +1,34 @@
+{
+  "id": "5e17ae04-82f6-48f8-9eee-a065585ba791",
+  "slug": "number-of-subarrays-with-bounded-maximum",
+  "title": "Number of Subarrays with Bounded Maximum",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> and two integers <code>left</code> and <code>right</code>, return <em>the number of contiguous non-empty <strong>subarrays</strong> such that the value of the maximum array element in that subarray is in the range </em><code>[left, right]</code>.</p>\n\n<p>The test cases are generated so that the answer will fit in a <strong>32-bit</strong> integer.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,4,3], left = 2, right = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> There are three subarrays that meet the requirements: [2], [2, 1], [3].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,9,2,5,6], left = 2, right = 8\n<strong>Output:</strong> 7\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>0 &lt;= left &lt;= right &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int numSubarrayBoundedMax(vector<int>& A, int L, int R) {\n        return count(A, R) - count(A, L - 1);\n    }\n\nprivate:\n    int count(const vector<int>& A, int bound) const {\n        int result = 0, curr = 0;\n        for (const auto& i : A) {\n            curr = (i <= bound) ? curr + 1 : 0;\n            result += curr;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def numSubarrayBoundedMax(self, A, L, R):\n        \"\"\"\n        :type A: List[int]\n        :type L: int\n        :type R: int\n        :rtype: int\n        \"\"\"\n        def count(A, bound):\n            result, curr = 0, 0\n            for i in A :\n                curr = curr + 1 if i <= bound else 0\n                result += curr\n            return result\n\n        return count(A, R) - count(A, L-1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

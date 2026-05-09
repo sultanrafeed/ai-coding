@@ -1,0 +1,43 @@
+{
+  "id": "89879d4e-8f00-4095-8d3a-8d66fd90c64b",
+  "slug": "determine-if-a-simple-graph-exists",
+  "title": "Determine if a Simple Graph Exists",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "graph",
+    "sorting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,1,2,2]\n[1,3,3,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// Erdős–Gallai theorem, sort, prefix sum, two pointers\nclass Solution {\npublic:\n    bool simpleGraphExists(vector<int>& degrees) {\n        // reference: https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93Gallai_theorem\n        const auto& total = accumulate(cbegin(degrees), cend(degrees), 0LL);\n        if (total % 2) {\n            return false;\n        }\n        sort(begin(degrees), end(degrees), greater<int>());\n        int64_t lhs = 0, suffix1 = total, suffix2 = 0;\n        for (int k = 1, i = size(degrees) - 1; k <= size(degrees); ++k) {\n            lhs += degrees[k - 1];\n            suffix1 -= degrees[k - 1];\n            for (; i >= 0 && degrees[i] < k; --i) {\n                suffix2 += degrees[i];\n            };\n            const auto& rhs = static_cast<int64_t>(k) * (k - 1) + ((i - k + 1 > 0) ? static_cast<int64_t>(i - k + 1) * k + suffix2: suffix1);\n            if (!(lhs <= rhs)) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# Erdős–Gallai theorem, sort, prefix sum, two pointers\nclass Solution(object):\n    def simpleGraphExists(self, degrees):\n        \"\"\"\n        :type degrees: List[int]\n        :rtype: bool\n        \"\"\"\n        # reference: https://en.wikipedia.org/wiki/Erd%C5%91s%E2%80%93Gallai_theorem\n        if sum(degrees)%2:\n            return False\n        degrees.sort(reverse=True)\n        prefix = 0\n        suffix1 = sum(degrees)\n        suffix2 = 0\n        i = len(degrees)-1\n        for k in xrange(1, len(degrees)+1):\n            prefix += degrees[k-1]\n            suffix1 -= degrees[k-1]\n            while i >= 0 and degrees[i] < k:\n                suffix2 += degrees[i]\n                i -= 1\n            if not prefix <= k*(k-1)+((i-k+1)*k+suffix2 if i-k+1 > 0 else suffix1):\n                return False\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

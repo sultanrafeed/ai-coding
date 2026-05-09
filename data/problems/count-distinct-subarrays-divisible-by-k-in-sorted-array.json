@@ -1,0 +1,35 @@
+{
+  "id": "3297bd9d-5e73-4f63-a9f9-43ed90abc6d2",
+  "slug": "count-distinct-subarrays-divisible-by-k-in-sorted-array",
+  "title": "Count Distinct Subarrays Divisible by K in Sorted Array",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> <strong>sorted</strong> in <strong>non-descending</strong> order and a positive integer <code>k</code>.</p>\n\n<p>A <strong><span data-keyword=\"subarray-nonempty\">subarray</span></strong> of <code>nums</code> is <strong>good</strong> if the sum of its elements is <strong>divisible</strong> by <code>k</code>.</p>\n\n<p>Return an integer denoting the number of <strong>distinct</strong> <strong>good</strong> subarrays of <code>nums</code>.</p>\n\n<p>Subarrays are <strong>distinct</strong> if their sequences of values are. For example, there are 3 <strong>distinct</strong> subarrays in <code>[1, 1, 1]</code>, namely <code>[1]</code>, <code>[1, 1]</code>, and <code>[1, 1, 1]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3], k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The good subarrays are <code>[1, 2]</code>, <code>[3]</code>, and <code>[1, 2, 3]</code>. For example, <code>[1, 2, 3]</code> is good because the sum of its elements is <code>1 + 2 + 3 = 6</code>, and <code>6 % k = 6 % 3 = 0</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,2,2,2,2,2], k = 6</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The good subarrays are <code>[2, 2, 2]</code> and <code>[2, 2, 2, 2, 2, 2]</code>. For example, <code>[2, 2, 2]</code> is good because the sum of its elements is <code>2 + 2 + 2 = 6</code>, and <code>6 % k = 6 % 6 = 0</code>.</p>\n\n<p>Note that <code>[2, 2, 2]</code> is counted only once.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>nums</code> is sorted in non-descending order.</li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(min(n, k))\n\n// prefix sum, freq table\nclass Solution {\npublic:\n    long long numGoodSubarrays(vector<int>& nums, int k) {\n        unordered_map<int, int> cnt;\n        cnt[0] = 1;\n        int64_t result = 0, prefix = 0;\n        for (int64_t i = 0, prefix = 0; i < size(nums);) {\n            int j = i, prefix2 = prefix;\n            for (; j < size(nums) && nums[j] == nums[i]; ++j) {\n                prefix2 = (prefix2 + nums[j]) % k;\n                result += cnt[prefix2];\n            }\n            for (; i < j; ++i) {\n                prefix = (prefix + nums[i]) % k;\n                ++cnt[prefix];\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(min(n, k))\n// prefix sum, freq table\nclass Solution2 {\npublic:\n    long long numGoodSubarrays(vector<int>& nums, int k) {\n        unordered_map<int, int> cnt;\n        cnt[0] = 1;\n        int64_t result = 0, prefix = 0;\n        for (const auto& x : nums) {\n            prefix = (prefix + x) % k;\n            result += cnt[prefix];\n            ++cnt[prefix];\n        }\n        for (int i = 0, l = 0; i < size(nums); ++i) {\n            ++l;\n            if (i + 1 == size(nums) || nums[i + 1] != nums[i]) {\n                for (int64_t j = 1; j <= l; ++j) {\n                    if (nums[i] * j % k == 0) {\n                        result -= (l - j + 1) - 1;\n                    }\n                }\n                l = 0;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(min(n, k))\n\nimport collections\n\n\n# prefix sum, freq table\nclass Solution(object):\n    def numGoodSubarrays(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = prefix = 0\n        cnt = collections.defaultdict(int)\n        cnt[0] = 1\n        i = 0\n        while i < len(nums):\n            j, prefix2 = i, prefix\n            while j < len(nums) and nums[j] == nums[i]:\n                prefix2 = (prefix2+nums[j])%k\n                result += cnt[prefix2]\n                j += 1\n            while i < j:\n                prefix = (prefix+nums[i])%k\n                cnt[prefix] += 1\n                i += 1\n        return result\n\n\n# Time:  O(n)\n# Space: O(min(n, k))\nimport collections\n\n\n# prefix sum, freq table\nclass Solution2(object):\n    def numGoodSubarrays(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = prefix = 0\n        cnt = collections.defaultdict(int)\n        cnt[0] = 1\n        for x in nums:\n            prefix = (prefix+x)%k\n            result += cnt[prefix]\n            cnt[prefix] += 1\n        l = 0\n        for i in xrange(len(nums)):\n            l += 1\n            if i+1 == len(nums) or nums[i+1] != nums[i]:\n                for j in xrange(1, l+1):\n                    if nums[i]*j%k == 0:\n                        result -= (l-j+1)-1\n                l = 0\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

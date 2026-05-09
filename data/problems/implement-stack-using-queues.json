@@ -1,0 +1,35 @@
+{
+  "id": "159169c5-fdbe-4ceb-99e4-a8a9a52ae42d",
+  "slug": "implement-stack-using-queues",
+  "title": "Implement Stack using Queues",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Implement a last-in-first-out (LIFO) stack using only two queues. The implemented stack should support all the functions of a normal stack (<code>push</code>, <code>top</code>, <code>pop</code>, and <code>empty</code>).</p>\n\n<p>Implement the <code>MyStack</code> class:</p>\n\n<ul>\n\t<li><code>void push(int x)</code> Pushes element x to the top of the stack.</li>\n\t<li><code>int pop()</code> Removes the element on the top of the stack and returns it.</li>\n\t<li><code>int top()</code> Returns the element on the top of the stack.</li>\n\t<li><code>boolean empty()</code> Returns <code>true</code> if the stack is empty, <code>false</code> otherwise.</li>\n</ul>\n\n<p><b>Notes:</b></p>\n\n<ul>\n\t<li>You must use <strong>only</strong> standard operations of a queue, which means that only <code>push to back</code>, <code>peek/pop from front</code>, <code>size</code> and <code>is empty</code> operations are valid.</li>\n\t<li>Depending on your language, the queue may not be supported natively. You may simulate a queue using a list or deque (double-ended queue) as long as you use only a queue&#39;s standard operations.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;MyStack&quot;, &quot;push&quot;, &quot;push&quot;, &quot;top&quot;, &quot;pop&quot;, &quot;empty&quot;]\n[[], [1], [2], [], [], []]\n<strong>Output</strong>\n[null, null, null, 2, 2, false]\n\n<strong>Explanation</strong>\nMyStack myStack = new MyStack();\nmyStack.push(1);\nmyStack.push(2);\nmyStack.top(); // return 2\nmyStack.pop(); // return 2\nmyStack.empty(); // return False\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= x &lt;= 9</code></li>\n\t<li>At most <code>100</code> calls will be made to <code>push</code>, <code>pop</code>, <code>top</code>, and <code>empty</code>.</li>\n\t<li>All the calls to <code>pop</code> and <code>top</code> are valid.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow-up:</strong> Can you implement the stack using only one queue?</p>\n",
+  "patterns": [
+    "stack",
+    "design",
+    "queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  push: O(n), pop: O(1), top: O(1)\n// Space: O(n)\n\nclass Stack {\npublic:\n    queue<int> q_;\n    \n    // Push element x onto stack.\n    void push(int x) {  // O(n)\n        q_.emplace(x);\n        for (int i = 0; i < q_.size() - 1; ++i) {\n            q_.emplace(q_.front());\n            q_.pop();\n        }\n    }\n\n    // Remove the element on top of the stack.\n    void pop() {  // O(1)\n        q_.pop();\n    }\n\n    // Get the top element.\n    int top() {  // O(1)\n        return q_.front();\n    }\n\n    // Return whether the stack is empty.\n    bool empty() {  // O(1)\n        return q_.empty();\n    }\n};\n\n// Time:  push: O(1), pop: O(n), top: O(1)\n// Space: O(n)\nclass Stack2 {\npublic:\n    queue<int> q_;\n    int top_;\n    \n    // Push element x onto stack.\n    void push(int x) {  // O(1)\n        q_.emplace(x);\n        top_ = x;\n    }\n\n    // Remove the element on top of the stack.\n    void pop() {  // O(n)\n        for (int i = 0; i < q_.size() - 1; ++i) {\n            top_ = q_.front();\n            q_.emplace(top_);\n            q_.pop();\n        }\n        q_.pop();\n    }\n\n    // Get the top element.\n    int top() {  // O(1)\n        return top_;\n    }\n\n    // Return whether the stack is empty.\n    bool empty() {  // O(1)\n        return q_.empty();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time: push: O(n), pop: O(1), top: O(1)\n# Space: O(n)\n\nimport collections\n\n\nclass Queue(object):\n    def __init__(self):\n        self.data = collections.deque()\n\n    def push(self, x):\n        self.data.append(x)\n\n    def peek(self):\n        return self.data[0]\n\n    def pop(self):\n        return self.data.popleft()\n\n    def size(self):\n        return len(self.data)\n\n    def empty(self):\n        return len(self.data) == 0\n\n\nclass Stack(object):\n    # initialize your data structure here.\n    def __init__(self):\n        self.q_ = Queue()\n\n    # @param x, an integer\n    # @return nothing\n    def push(self, x):\n        self.q_.push(x)\n        for _ in xrange(self.q_.size() - 1):\n            self.q_.push(self.q_.pop())\n\n    # @return nothing\n    def pop(self):\n        self.q_.pop()\n\n    # @return an integer\n    def top(self):\n        return self.q_.peek()\n\n    # @return an boolean\n    def empty(self):\n        return self.q_.empty()\n\n\n# Time: push: O(1), pop: O(n), top: O(1)\n# Space: O(n)\nclass Stack2(object):\n    # initialize your data structure here.\n    def __init__(self):\n        self.q_ = Queue()\n        self.top_ = None\n\n    # @param x, an integer\n    # @return nothing\n    def push(self, x):\n        self.q_.push(x)\n        self.top_ = x\n\n    # @return nothing\n    def pop(self):\n        for _ in xrange(self.q_.size() - 1):\n            self.top_ = self.q_.pop()\n            self.q_.push(self.top_)\n        return self.q_.pop() \n\n    # @return an integer\n    def top(self):\n        return self.top_\n\n    # @return an boolean\n    def empty(self):\n        return self.q_.empty()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

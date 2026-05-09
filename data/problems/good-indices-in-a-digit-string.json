@@ -1,0 +1,40 @@
+{
+  "id": "10bfd912-c8fc-4c45-99ae-58b7b95c68df",
+  "slug": "good-indices-in-a-digit-string",
+  "title": "Good Indices in a Digit String",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"0234567890112\"\n\"01234\"\n\"12345\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// math, sliding window\nclass Solution {\npublic:\n    vector<int> goodIndices(string s) {\n        vector<int> result;\n        for (int i = 0, curr = 0, base = 1; i < size(s); ++i) {\n            if (i == base * 10) {\n                base *= 10;\n            }\n            curr = (curr % base) * 10 + (s[i] - '0');\n            if (curr == i) {\n                result.emplace_back(i);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# math, sliding window\nclass Solution(object):\n    def goodIndices(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        curr, base = 0, 1\n        for i in xrange(len(s)):\n            if i == base*10:\n                base *= 10\n            curr = (curr%base)*10+(ord(s[i])-ord('0'))\n            if curr == i:\n                result.append(i)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

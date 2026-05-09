@@ -1,0 +1,45 @@
+{
+  "id": "c6e22dbd-1538-4587-add3-c6b906d450b6",
+  "slug": "design-an-array-statistics-tracker",
+  "title": "Design an Array Statistics Tracker ",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "binary-search",
+    "design",
+    "queue",
+    "heap-priority-queue",
+    "data-stream",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"StatisticsTracker\",\"addNumber\",\"addNumber\",\"addNumber\",\"addNumber\",\"getMean\",\"getMedian\",\"getMode\",\"removeFirstAddedNumber\",\"getMode\"]\n[[],[4],[4],[2],[3],[],[],[],[],[]]\n[\"StatisticsTracker\",\"addNumber\",\"addNumber\",\"getMean\",\"removeFirstAddedNumber\",\"addNumber\",\"addNumber\",\"removeFirstAddedNumber\",\"getMedian\",\"addNumber\",\"getMode\"]\n[[],[9],[5],[],[],[5],[6],[],[],[8],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:                   O(1)\n//        addNumber:              O(logn)\n//        removeFirstAddedNumber: O(logn)\n//        getMean:                O(1)\n//        getMedian:              O(1)\n//        getMode:                O(1)\n// Space: O(n)\n\n// deque, freq table, bst\nclass StatisticsTracker {\npublic:\n    StatisticsTracker() {\n        \n    }\n    \n    void addNumber(int number) {\n        total_ += number;\n        dq_.emplace_back(number);\n        update(number, +1);\n        if (empty(bst2_) || *begin(bst2_) <= number) {\n            bst2_.emplace(number);\n        } else {\n            bst1_.emplace(number);\n        }\n        rebalance();\n    }\n    \n    void removeFirstAddedNumber() {\n        const int number = dq_.front(); dq_.pop_front();\n        total_ -= number;\n        update(number, -1);\n        if (bst2_.count(number)) {\n            bst2_.erase(bst2_.find(number));\n        } else {\n            bst1_.erase(bst1_.find(number));\n        }\n        rebalance();\n    }\n    \n    int getMean() {\n        return total_ / size(dq_);\n    }\n    \n    int getMedian() {\n        return *begin(bst2_);\n    }\n    \n    int getMode() {\n        return *begin(rbegin(freq_to_nums_)->second);\n    }\n\nprivate:\n    void update(int number, int d) {\n        if (num_to_freq_.count(number)) {\n            freq_to_nums_[num_to_freq_[number]].erase(freq_to_nums_[num_to_freq_[number]].find(number));\n            if (empty(freq_to_nums_[num_to_freq_[number]])) {\n                freq_to_nums_.erase(num_to_freq_[number]);\n            }\n        }\n        num_to_freq_[number] += d;\n        if (!num_to_freq_[number]) {\n            num_to_freq_.erase(number);\n        } else {\n            freq_to_nums_[num_to_freq_[number]].emplace(number);\n        }\n    }\n\n    void rebalance() {\n        if (size(bst2_)  == size(bst1_) + 2) {\n            bst1_.emplace(*begin(bst2_));\n            bst2_.erase(begin(bst2_));\n        } else if (size(bst2_) + 1 == size(bst1_)) {\n            bst2_.emplace(*prev(end(bst1_)));\n            bst1_.erase(prev(end(bst1_)));\n        }\n    }\n\n    int64_t total_ = 0;\n    deque<int> dq_;\n    unordered_map<int, int> num_to_freq_;\n    map<int, multiset<int>> freq_to_nums_;\n    multiset<int> bst1_, bst2_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:                   O(1)\n#        addNumber:              O(logn)\n#        removeFirstAddedNumber: O(logn)\n#        getMean:                O(1)\n#        getMedian:              O(1)\n#        getMode:                O(1)\n# Space: O(n)\n\n# deque, freq table, sorted list\nfrom sortedcontainers import SortedList\nimport collections\n\n\nclass StatisticsTracker(object):\n\n    def __init__(self):\n        self.__total = 0\n        self.__dq = collections.deque()\n        self.__sl1 = SortedList()\n        self.__sl2 = SortedList()\n        self.__num_to_freq = collections.defaultdict(int)\n        self.__sorted_freqs = SortedList()\n        self.__freq_to_nums = collections.defaultdict(SortedList)\n\n    def __update(self, number, d):\n        if number in self.__num_to_freq:\n            self.__freq_to_nums[self.__num_to_freq[number]].remove(number)\n            if not self.__freq_to_nums[self.__num_to_freq[number]]:\n                del self.__freq_to_nums[self.__num_to_freq[number]]\n                self.__sorted_freqs.remove(self.__num_to_freq[number]) \n        self.__num_to_freq[number] += d\n        if not self.__num_to_freq[number]:\n            del self.__num_to_freq[number]\n        else:\n            if not self.__freq_to_nums[self.__num_to_freq[number]]:\n                self.__sorted_freqs.add(self.__num_to_freq[number])\n            self.__freq_to_nums[self.__num_to_freq[number]].add(number)\n\n    def __rebalance(self):\n        if len(self.__sl2) == len(self.__sl1)+2:\n            self.__sl1.add(self.__sl2.pop(0))\n        elif len(self.__sl2)+1 == len(self.__sl1):\n            self.__sl2.add(self.__sl1.pop(-1))\n        \n    def addNumber(self, number):\n        \"\"\"\n        :type number: int\n        :rtype: None\n        \"\"\"\n        self.__total += number\n        self.__dq.append(number)\n        self.__update(number, +1)\n        (self.__sl2 if not self.__sl2 or self.__sl2[0] <= number else self.__sl1).add(number)\n        self.__rebalance()\n\n    def removeFirstAddedNumber(self):\n        \"\"\"\n        :rtype: None\n        \"\"\"\n        number = self.__dq.popleft()\n        self.__total -= number\n        self.__update(number, -1)\n        (self.__sl2 if number in self.__sl2 else self.__sl1).remove(number)\n        self.__rebalance()\n\n    def getMean(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__total//len(self.__dq)\n\n    def getMedian(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__sl2[0]\n\n    def getMode(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__freq_to_nums[self.__sorted_freqs[-1]][0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

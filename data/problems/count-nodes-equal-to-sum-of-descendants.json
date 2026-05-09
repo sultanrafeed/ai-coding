@@ -1,0 +1,41 @@
+{
+  "id": "76dd49f2-fd82-4209-b2b9-48a090ef2373",
+  "slug": "count-nodes-equal-to-sum-of-descendants",
+  "title": "Count Nodes Equal to Sum of Descendants",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[10,3,4,2,1]\n[2,3,null,2,null]\n[0]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\nclass Solution {\npublic:\n    int equalToDescendants(TreeNode* root) {\n        return iter_dfs(root);\n    }\n\nprivate:\n    int iter_dfs(TreeNode *node) {\n        int result = 0;\n        uint64_t total = 0;\n        vector<tuple<int, TreeNode *, unique_ptr<uint64_t>, unique_ptr<uint64_t>, uint64_t*>> stk;\n        stk.emplace_back(1, node, nullptr,  nullptr, &total);\n        while (!empty(stk)) {\n            const auto [step, node, ret1, ret2, ret] = move(stk.back()); stk.pop_back();\n            if (step == 1) {\n                if (!node) {\n                    continue;\n                }\n                auto ret1 = make_unique<uint64_t>(), ret2 = make_unique<uint64_t>();\n                auto p1 = ret1.get(), p2 = ret2.get();\n                stk.emplace_back(2, node, move(ret1), move(ret2), ret);\n                stk.emplace_back(1, node->right, nullptr, nullptr, p2);\n                stk.emplace_back(1, node->left, nullptr, nullptr, p1);\n            } else if (step == 2) {\n                if (node->val == *ret1 + *ret2) {\n                    ++result;\n                }\n                *ret = *ret1 + *ret2 + node->val;\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\nclass Solution2 {\npublic:\n    int equalToDescendants(TreeNode* root) {\n        int result = 0;\n        dfs(root, &result);\n        return result;\n    }\n\nprivate:\n    uint64_t dfs(TreeNode *node, int *result) {\n        if (!node) {\n            return 0;\n        }\n        uint64_t total = dfs(node->left, result) + dfs(node->right, result);\n        if (node->val == total) {\n            ++(*result);\n        }\n        return total + node->val;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        pass\n\n\nclass Solution(object):\n    def equalToDescendants(self, root):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :rtype: int\n        \"\"\"\n        def iter_dfs(node):\n            result = 0\n            stk = [(1, [node, [0]])]\n            while stk:\n                step, args = stk.pop()\n                if step == 1:\n                    node, ret = args\n                    if not node:\n                        continue\n                    ret1, ret2 = [0], [0]\n                    stk.append((2, [node, ret1, ret2, ret]))\n                    stk.append((1, [node.right, ret2]))\n                    stk.append((1, [node.left, ret1]))\n                elif step == 2:\n                    node, ret1, ret2, ret = args\n                    if node.val == ret1[0]+ret2[0]:\n                        result += 1\n                    ret[0] = ret1[0]+ret2[0]+node.val\n            return result\n\n        return iter_dfs(root)\n\n\n# Time:  O(n)\n# Space: O(h)\nclass Solution2(object):\n    def equalToDescendants(self, root):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :rtype: int\n        \"\"\"\n        def dfs(node, result):\n            if not node:\n                return 0\n            total = dfs(node.left, result) + dfs(node.right, result)\n            if node.val == total:\n                result[0] += 1\n            return total+node.val\n\n        result = [0]\n        dfs(root, result)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

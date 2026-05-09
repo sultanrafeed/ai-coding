@@ -1,0 +1,44 @@
+{
+  "id": "770a21c2-e13d-41e2-a5f6-5d72f75eb38e",
+  "slug": "maximum-binary-tree",
+  "title": "Maximum Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> with no duplicates. A <strong>maximum binary tree</strong> can be built recursively from <code>nums</code> using the following algorithm:</p>\n\n<ol>\n\t<li>Create a root node whose value is the maximum value in <code>nums</code>.</li>\n\t<li>Recursively build the left subtree on the <strong>subarray prefix</strong> to the <strong>left</strong> of the maximum value.</li>\n\t<li>Recursively build the right subtree on the <strong>subarray suffix</strong> to the <strong>right</strong> of the maximum value.</li>\n</ol>\n\n<p>Return <em>the <strong>maximum binary tree</strong> built from </em><code>nums</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/12/24/tree1.jpg\" style=\"width: 302px; height: 421px;\" />\n<pre>\n<strong>Input:</strong> nums = [3,2,1,6,0,5]\n<strong>Output:</strong> [6,3,5,null,2,0,null,null,1]\n<strong>Explanation:</strong> The recursive calls are as follow:\n- The largest value in [3,2,1,6,0,5] is 6. Left prefix is [3,2,1] and right suffix is [0,5].\n    - The largest value in [3,2,1] is 3. Left prefix is [] and right suffix is [2,1].\n        - Empty array, so no child.\n        - The largest value in [2,1] is 2. Left prefix is [] and right suffix is [1].\n            - Empty array, so no child.\n            - Only one element, so child is a node with value 1.\n    - The largest value in [0,5] is 5. Left prefix is [0] and right suffix is [].\n        - Only one element, so child is a node with value 0.\n        - Empty array, so no child.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/12/24/tree2.jpg\" style=\"width: 182px; height: 301px;\" />\n<pre>\n<strong>Input:</strong> nums = [3,2,1]\n<strong>Output:</strong> [3,null,2,null,1]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 1000</code></li>\n\t<li>All integers in <code>nums</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "divide-and-conquer",
+    "stack",
+    "tree",
+    "monotonic-stack",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,2,1,6,0,5]\n[3,2,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* constructMaximumBinaryTree(vector<int>& nums) {\n        // https://github.com/kamyu104/LintCode/blob/master/C++/max-tree.cpp\n        vector<TreeNode *> nodeStack;\n        for (int i = 0; i < nums.size(); ++i) {\n            auto node = new TreeNode(nums[i]);\n            while (!nodeStack.empty() && nums[i] > nodeStack.back()->val) {\n                node->left = nodeStack.back();\n                nodeStack.pop_back();\n            }\n            if (!nodeStack.empty()) {\n                nodeStack.back()->right = node;\n            }\n            nodeStack.emplace_back(node);\n        }\n        return nodeStack.front();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def constructMaximumBinaryTree(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: TreeNode\n        \"\"\"\n        # https://github.com/kamyu104/LintCode/blob/master/C++/max-tree.cpp\n        nodeStack = []\n        for num in nums:\n            node = TreeNode(num)\n            while nodeStack and num > nodeStack[-1].val:\n                node.left = nodeStack.pop()\n            if nodeStack:\n                nodeStack[-1].right = node\n            nodeStack.append(node)\n        return nodeStack[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "e3d62184-3708-4e0a-93a3-f2c788d4882b",
+  "slug": "word-pattern-ii",
+  "title": "Word Pattern II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abab\"\n\"redblueredblue\"\n\"aaaa\"\n\"asdasdasdasd\"\n\"aabb\"\n\"xyzabcxzyabc\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * C(n - 1, c - 1)), n is length of str, c is unique count of pattern,\n//                                there are H(n - c, c - 1) = C(n - 1, c - 1) possible splits of string,\n//                                and each one costs O(n) to check if it matches the word pattern.\n// Space: O(n + c) \n\nclass Solution {\npublic:\n    bool wordPatternMatch(string pattern, string str) {\n        unordered_map<string, char> w2p;\n        unordered_map<char, string> p2w;\n        return match(pattern, str, 0, 0, &w2p, &p2w);\n    }\n\n    bool match(const string &pattern, const string &str,\n               const int i, const int j,\n               unordered_map<string, char>* w2p,\n               unordered_map<char, string>* p2w) {\n\n        bool is_match = false;\n        if (i == pattern.length() && j == str.length()) {\n            is_match = true;\n        } else if (i < pattern.length() && j < str.length()) {\n            const char p = pattern[i];\n            if (p2w->count(p)) {\n                const auto& w = (*p2w)[p];\n                if (w == str.substr(j, w.length())) {  // Match pattern.\n                    is_match = match(pattern, str, i + 1, j + w.length(), w2p, p2w);\n                }  // Else return false.\n            } else {\n                for (int k = j; k < str.length() && !is_match; ++k) {\n                    const string w = str.substr(j, k - j + 1);\n                    if (!w2p->count(w)) {\n                        // Build mapping. Space: O(n + c)\n                        (*w2p)[w] = p, (*p2w)[p] = w;\n                        is_match = match(pattern, str, i + 1, k + 1, w2p, p2w);\n                        w2p->erase(w), p2w->erase(p);\n                    }  // Else try longer word.\n                }\n            }\n        }\n        return is_match;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * C(n - 1, c - 1)), n is length of str, c is unique count of pattern,\n#                                there are H(n - c, c - 1) = C(n - 1, c - 1) possible splits of string,\n#                                and each one costs O(n) to check if it matches the word pattern.\n# Space: O(n + c)\n\nclass Solution(object):\n    def wordPatternMatch(self, pattern, str):\n        \"\"\"\n        :type pattern: str\n        :type str: str\n        :rtype: bool\n        \"\"\"\n        w2p, p2w = {}, {}\n        return self.match(pattern, str, 0, 0, w2p, p2w)\n\n\n    def match(self, pattern, str, i, j, w2p, p2w):\n        is_match = False\n        if i == len(pattern) and j == len(str):\n            is_match = True\n        elif i < len(pattern) and j < len(str):\n            p = pattern[i]\n            if p in p2w:\n                w = p2w[p]\n                if w == str[j:j+len(w)]:  # Match pattern.\n                    is_match = self.match(pattern, str, i + 1, j + len(w), w2p, p2w)\n                # Else return false.\n            else:\n                for k in xrange(j, len(str)):  # Try any possible word\n                    w = str[j:k+1]\n                    if w not in w2p:\n                        # Build mapping. Space: O(n + c)\n                        w2p[w], p2w[p] = p, w\n                        is_match = self.match(pattern, str, i + 1, k + 1, w2p, p2w)\n                        w2p.pop(w), p2w.pop(p)\n                    if is_match:\n                        break\n        return is_match",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

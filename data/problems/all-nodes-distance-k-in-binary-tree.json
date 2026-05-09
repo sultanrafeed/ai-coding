@@ -1,0 +1,37 @@
+{
+  "id": "6bbbac03-d572-4afa-b509-2ed7b91b0d57",
+  "slug": "all-nodes-distance-k-in-binary-tree",
+  "title": "All Nodes Distance K in Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree, the value of a target node <code>target</code>, and an integer <code>k</code>, return <em>an array of the values of all nodes that have a distance </em><code>k</code><em> from the target node.</em></p>\n\n<p>You can return the answer in <strong>any order</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://s3-lc-upload.s3.amazonaws.com/uploads/2018/06/28/sketch0.png\" style=\"width: 500px; height: 429px;\" />\n<pre>\n<strong>Input:</strong> root = [3,5,1,6,2,0,8,null,null,7,4], target = 5, k = 2\n<strong>Output:</strong> [7,4,1]\nExplanation: The nodes that are a distance 2 from the target node (with value 5) have values 7, 4, and 1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> root = [1], target = 1, k = 3\n<strong>Output:</strong> []\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 500]</code>.</li>\n\t<li><code>0 &lt;= Node.val &lt;= 500</code></li>\n\t<li>All the values <code>Node.val</code> are <strong>unique</strong>.</li>\n\t<li><code>target</code> is the value of one of the nodes in the tree.</li>\n\t<li><code>0 &lt;= k &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<int> distanceK(TreeNode* root, TreeNode* target, int K) {\n        unordered_map<int, vector<int>> neighbors;\n        dfs(nullptr, root, &neighbors);\n\n        vector<int> bfs{target->val};\n        unordered_set<int> lookup{target->val};\n        for (int i = 0; i < K; ++i) {\n            vector<int> curr;\n            for (const auto& node : bfs) {\n                for (const auto& nei : neighbors[node]) {\n                    if (!lookup.count(nei)) {\n                        curr.emplace_back(nei);\n                        lookup.emplace(nei);\n                    }\n                }\n            }\n            swap(bfs, curr);\n        }\n        return bfs;\n    }\n\nprivate:\n    void dfs(TreeNode *parent, TreeNode *child,\n             unordered_map<int, vector<int>> *neighbors) {\n        if (!child) {\n            return;\n        }\n        if (parent) {\n            (*neighbors)[parent->val].emplace_back(child->val);\n            (*neighbors)[child->val].emplace_back(parent->val);\n        }\n        dfs(child, child->left, neighbors);\n        dfs(child, child->right, neighbors);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def distanceK(self, root, target, K):\n        \"\"\"\n        :type root: TreeNode\n        :type target: TreeNode\n        :type K: int\n        :rtype: List[int]\n        \"\"\"\n        def dfs(parent, child, neighbors):\n            if not child:\n                return\n            if parent:\n                neighbors[parent.val].append(child.val)\n                neighbors[child.val].append(parent.val)\n            dfs(child, child.left, neighbors)\n            dfs(child, child.right, neighbors)\n\n        neighbors = collections.defaultdict(list)\n        dfs(None, root, neighbors)\n        bfs = [target.val]\n        lookup = set(bfs)\n        for _ in xrange(K):\n            bfs = [nei for node in bfs\n                   for nei in neighbors[node]\n                   if nei not in lookup]\n            lookup |= set(bfs)\n        return bfs",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

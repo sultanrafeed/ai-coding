@@ -1,0 +1,40 @@
+{
+  "id": "b01a7f98-c7fa-4c28-acdc-0926f66981fa",
+  "slug": "number-of-zigzag-arrays-ii",
+  "title": "Number of ZigZag Arrays II",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given three integers <code>n</code>, <code>l</code>, and <code>r</code>.</p>\n\n<p>A <strong>ZigZag</strong> array of length <code>n</code> is defined as follows:</p>\n\n<ul>\n\t<li>Each element lies in the range <code>[l, r]</code>.</li>\n\t<li>No <strong>two</strong> adjacent elements are equal.</li>\n\t<li>No <strong>three</strong> consecutive elements form a <strong>strictly increasing</strong> or <strong>strictly decreasing</strong> sequence.</li>\n</ul>\n\n<p>Return the total number of valid <strong>ZigZag</strong> arrays.</p>\n\n<p>Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>A <strong>sequence</strong> is said to be <strong>strictly increasing</strong> if each element is strictly greater than its previous one (if exists).</p>\n\n<p>A <strong>sequence</strong> is said to be <strong>strictly decreasing</strong> if each element is strictly smaller than its previous one (if exists).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3, l = 4, r = 5</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There are only 2 valid ZigZag arrays of length <code>n = 3</code> using values in the range <code>[4, 5]</code>:</p>\n\n<ul>\n\t<li><code>[4, 5, 4]</code></li>\n\t<li><code>[5, 4, 5]</code></li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3, l = 1, r = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">10</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>​​​​​​​There are 10 valid ZigZag arrays of length <code>n = 3</code> using values in the range <code>[1, 3]</code>:</p>\n\n<ul>\n\t<li><code>[1, 2, 1]</code>, <code>[1, 3, 1]</code>, <code>[1, 3, 2]</code></li>\n\t<li><code>[2, 1, 2]</code>, <code>[2, 1, 3]</code>, <code>[2, 3, 1]</code>, <code>[2, 3, 2]</code></li>\n\t<li><code>[3, 1, 2]</code>, <code>[3, 1, 3]</code>, <code>[3, 2, 3]</code></li>\n</ul>\n\n<p>All arrays meet the ZigZag conditions.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= n &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= l &lt; r &lt;= 75</code>​​​​​​​</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n4\n5\n3\n1\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((r - l)^3 * logn)\n// Space: O((r - l)^2)\n\n// matrix fast exponentiation\nclass Solution {\npublic:\n    int zigZagArrays(int n, int l, int r) {\n        r -= l;\n        vector<vector<int>> matrix(r + 1, vector<int>(r + 1));\n        for (int i = 0; i <= r; ++i) {\n            for (int j = 0; j <= r - 1 - i; ++j) {\n                matrix[i][j] = 1;\n            }\n        }\n        const auto& matrix_pow_t = matrixExpo(matrix, n - 1);\n        const auto& result = matrixMult(vector<vector<int>>{vector<int>(r + 1, 1)}, matrix_pow_t);\n        return (accumulate(cbegin(result[0]), cend(result[0]), 0, [](const auto& accu, const auto& x) {\n            return (accu + x) % MOD;\n        }) * 2) % MOD;\n    }\n\nprivate:\n    vector<vector<int>> matrixExpo(const vector<vector<int>>& A, int64_t pow) {\n        vector<vector<int>> result(size(A), vector<int>(size(A)));\n        vector<vector<int>> A_exp(A);\n        for (int i = 0; i < size(A); ++i) {\n            result[i][i] = 1;\n        }\n        while (pow) {\n            if ((pow & 1) == 1) {\n                result = matrixMult(result, A_exp);\n            }\n            A_exp = matrixMult(A_exp, A_exp);\n            pow >>= 1;\n        }\n        return result;\n    }\n\n    vector<vector<int>> matrixMult(const vector<vector<int>>& A, const vector<vector<int>>& B) {\n        vector<vector<int>> result(size(A), vector<int>(size(B[0])));\n        for (int i = 0; i < size(A); ++i) {\n            for (int j = 0; j < size(B[0]); ++j) {\n                int64_t entry = 0;\n                for (int k = 0; k < size(B); ++k) {\n                    entry = (static_cast<int64_t>(A[i][k]) * B[k][j] % MOD + entry) % MOD;\n                }\n                result[i][j] = static_cast<int>(entry);\n            }\n        }\n        return result;\n    }\n\n    static const int MOD = 1e9 + 7;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((r - l)^3 * logn)\n# Space: O((r - l)^2)\n\nimport itertools\n\n\n# matrix fast exponentiation\nclass Solution(object):\n    def zigZagArrays(self, n, l, r):\n        \"\"\"\n        :type n: int\n        :type l: int\n        :type r: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def matrix_mult(A, B):\n            ZB = zip(*B)\n            return [[sum(a*b % MOD for a, b in itertools.izip(row, col)) % MOD for col in ZB] for row in A]\n \n        def matrix_expo(A, K):\n            result = [[int(i == j) for j in xrange(len(A))] for i in xrange(len(A))]\n            while K:\n                if K % 2:\n                    result = matrix_mult(result, A)\n                A = matrix_mult(A, A)\n                K /= 2\n            return result\n    \n        r -= l\n        matrix = [[int(i+j < r) for j in xrange(r+1)] for i in xrange(r+1)]\n        matrix_pow_t = matrix_expo(matrix, n-1)\n        return (reduce(lambda accu, x: (accu+x)%MOD, matrix_mult([[1]*(r+1)], matrix_pow_t)[0], 0)*2)%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

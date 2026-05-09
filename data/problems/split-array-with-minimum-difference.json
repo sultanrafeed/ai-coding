@@ -1,0 +1,40 @@
+{
+  "id": "437549a1-af1e-423d-8ef2-6aed08534919",
+  "slug": "split-array-with-minimum-difference",
+  "title": "Split Array With Minimum Difference",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Split the array into <strong>exactly</strong> two <span data-keyword=\"subarray-nonempty\">subarrays</span>, <code>left</code> and <code>right</code>, such that <code>left</code> is <strong><span data-keyword=\"strictly-increasing-array\">strictly increasing</span> </strong> and <code>right</code> is <strong><span data-keyword=\"strictly-decreasing-array\">strictly decreasing</span></strong>.</p>\n\n<p>Return the <strong>minimum possible absolute difference</strong> between the sums of <code>left</code> and <code>right</code>. If no valid split exists, return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,3,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<table style=\"border: 1px solid black;\">\n\t<thead>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\"><code>i</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>left</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>right</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Validity</th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>left</code> sum</th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>right</code> sum</th>\n\t\t\t<th style=\"border: 1px solid black;\">Absolute difference</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">0</td>\n\t\t\t<td style=\"border: 1px solid black;\">[1]</td>\n\t\t\t<td style=\"border: 1px solid black;\">[3, 2]</td>\n\t\t\t<td style=\"border: 1px solid black;\">Yes</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">5</td>\n\t\t\t<td style=\"border: 1px solid black;\"><code>|1 - 5| = 4</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">[1, 3]</td>\n\t\t\t<td style=\"border: 1px solid black;\">[2]</td>\n\t\t\t<td style=\"border: 1px solid black;\">Yes</td>\n\t\t\t<td style=\"border: 1px solid black;\">4</td>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\"><code>|4 - 2| = 2</code></td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>Thus, the minimum absolute difference is 2.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,4,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<table style=\"border: 1px solid black;\">\n\t<thead>\n\t\t<tr>\n\t\t\t<th style=\"border: 1px solid black;\"><code>i</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>left</code></th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>right</code></th>\n\t\t\t<th style=\"border: 1px solid black;\">Validity</th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>left</code> sum</th>\n\t\t\t<th style=\"border: 1px solid black;\"><code>right</code> sum</th>\n\t\t\t<th style=\"border: 1px solid black;\">Absolute difference</th>\n\t\t</tr>\n\t</thead>\n\t<tbody>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">0</td>\n\t\t\t<td style=\"border: 1px solid black;\">[1]</td>\n\t\t\t<td style=\"border: 1px solid black;\">[2, 4, 3]</td>\n\t\t\t<td style=\"border: 1px solid black;\">No</td>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">9</td>\n\t\t\t<td style=\"border: 1px solid black;\">-</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">1</td>\n\t\t\t<td style=\"border: 1px solid black;\">[1, 2]</td>\n\t\t\t<td style=\"border: 1px solid black;\">[4, 3]</td>\n\t\t\t<td style=\"border: 1px solid black;\">Yes</td>\n\t\t\t<td style=\"border: 1px solid black;\">3</td>\n\t\t\t<td style=\"border: 1px solid black;\">7</td>\n\t\t\t<td style=\"border: 1px solid black;\"><code>|3 - 7| = 4</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td style=\"border: 1px solid black;\">2</td>\n\t\t\t<td style=\"border: 1px solid black;\">[1, 2, 4]</td>\n\t\t\t<td style=\"border: 1px solid black;\">[3]</td>\n\t\t\t<td style=\"border: 1px solid black;\">Yes</td>\n\t\t\t<td style=\"border: 1px solid black;\">7</td>\n\t\t\t<td style=\"border: 1px solid black;\">3</td>\n\t\t\t<td style=\"border: 1px solid black;\"><code>|7 - 3| = 4</code></td>\n\t\t</tr>\n\t</tbody>\n</table>\n\n<p>Thus, the minimum absolute difference is 4.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,1,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>No valid split exists, so the answer is -1.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,3,2]\n[1,2,4,3]\n[3,1,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// two pointers\nclass Solution {\npublic:\n    long long splitArray(vector<int>& nums) {\n        int64_t left = 0, i = 0;\n        while (i + 1 < size(nums) && nums[i] < nums[i + 1]) {\n            left += nums[i++];\n        }\n        int64_t right = 0, j = size(nums) - 1;;\n        while (j - 1 >= 0 && nums[j] < nums[j - 1]) {\n            right += nums[j--];\n        }\n        if (j - i + 1 >= 3) {\n            return -1;\n        }\n        if (j - i + 1 == 2) {\n            return abs((right + nums[j]) - (left + nums[i]));\n        }\n        return min(abs(right - (left + nums[i])), abs((right + nums[j]) - left));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# two pointers\nclass Solution(object):\n    def splitArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left, i = 0, 0\n        while i+1 < len(nums) and nums[i] < nums[i+1]:\n            left += nums[i]\n            i += 1\n        right, j = 0, len(nums)-1\n        while j-1 >= 0 and nums[j] < nums[j-1]:\n            right += nums[j]\n            j -= 1\n        if j-i+1 >= 3:\n            return -1\n        if j-i+1 == 2:\n            return abs((right+nums[j])-(left+nums[i]))\n        return min(abs(right-(left+nums[i])), abs((right+nums[j])-left))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

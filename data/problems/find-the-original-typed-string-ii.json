@@ -1,0 +1,35 @@
+{
+  "id": "a5378967-b845-4554-af0c-4063b9ba79ae",
+  "slug": "find-the-original-typed-string-ii",
+  "title": "Find the Original Typed String II",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Alice is attempting to type a specific string on her computer. However, she tends to be clumsy and <strong>may</strong> press a key for too long, resulting in a character being typed <strong>multiple</strong> times.</p>\n\n<p>You are given a string <code>word</code>, which represents the <strong>final</strong> output displayed on Alice&#39;s screen. You are also given a <strong>positive</strong> integer <code>k</code>.</p>\n\n<p>Return the total number of <em>possible</em> original strings that Alice <em>might</em> have intended to type, if she was trying to type a string of size <strong>at least</strong> <code>k</code>.</p>\n\n<p>Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word = &quot;aabbccdd&quot;, k = 7</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The possible strings are: <code>&quot;aabbccdd&quot;</code>, <code>&quot;aabbccd&quot;</code>, <code>&quot;aabbcdd&quot;</code>, <code>&quot;aabccdd&quot;</code>, and <code>&quot;abbccdd&quot;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word = &quot;aabbccdd&quot;, k = 8</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The only possible string is <code>&quot;aabbccdd&quot;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word = &quot;aaabbb&quot;, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">8</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= word.length &lt;= 5 * 10<sup>5</sup></code></li>\n\t<li><code>word</code> consists only of lowercase English letters.</li>\n\t<li><code>1 &lt;= k &lt;= 2000</code></li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + k^2)\n// Space: O(n + k)\n\n// dp, prefix sum\nclass Solution {\npublic:\n    int possibleStringCount(string word, int k) {\n        static const int MOD = 1e9 + 7;\n\n        vector<int> cnt = {0};\n        for (int i = 0; i < size(word); ++i) {\n            ++cnt.back();\n            if (i + 1 == size(word) || word[i + 1] != word[i]) {\n                cnt.emplace_back(0);\n            }\n        }\n        cnt.pop_back();\n        int result = accumulate(cbegin(cnt), cend(cnt), 1ll, [](const auto& accu, const auto& x) {\n            return (accu * x) % MOD;\n        });\n        if (k <= size(cnt)) {\n            return result;\n        }\n        vector<int> dp(k - size(cnt));\n        dp[0] = 1;\n        for (const auto& l : cnt) {\n            for (int i = 0; i + 1 < size(dp); ++i) {\n                dp[i + 1] = (dp[i + 1] + dp[i]) % MOD;\n            }\n            for (int i = size(dp) - 1; i >= l; --i) {\n                dp[i] = ((dp[i] - dp[i - l]) % MOD + MOD) % MOD;\n            }\n        }\n        return ((result - accumulate(cbegin(dp), cend(dp), 0, [](const auto& accu, const auto& x) {\n            return (accu + x) % MOD;\n        })) % MOD + MOD) % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + k^2)\n# Space: O(n + k)\n\n# dp, prefix sum\nclass Solution(object):\n    def possibleStringCount(self, word, k):\n        MOD = 10**9+7\n        cnt = [0]\n        for i in xrange(len(word)):\n            cnt[-1] += 1\n            if i+1 == len(word) or word[i+1] != word[i]:\n                cnt.append(0)\n        cnt.pop()\n        result = reduce(lambda accu, x: accu*x%MOD, cnt, 1)\n        if k <= len(cnt):\n            return result\n        dp = [0]*(k-len(cnt))\n        dp[0] = 1\n        for l in cnt:\n            for i in xrange(len(dp)-1):\n                dp[i+1] = (dp[i+1]+dp[i])%MOD\n            for i in reversed(xrange(l, len(dp))):\n                dp[i] = (dp[i]-dp[i-l])%MOD\n        return reduce(lambda accu, x: (accu-x)%MOD, dp, result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

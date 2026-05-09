@@ -1,0 +1,43 @@
+{
+  "id": "fc65e87b-dac0-4e78-859e-e4386c53b511",
+  "slug": "evaluate-valid-expressions",
+  "title": "Evaluate Valid Expressions",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "math",
+    "string",
+    "divide-and-conquer",
+    "stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"add(2,3)\"\n\"-42\"\n\"div(mul(4,sub(9,5)),add(1,1))\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// stack\nclass Solution {\npublic:\n    long long evaluateExpression(string expression) {\n        static const unordered_map<string, function<int64_t (int64_t, int64_t)>> LOOKUP = {\n            {\"add\", [](int64_t a, int64_t b) { return a + b; }},\n            {\"sub\", [](int64_t a, int64_t b) { return a - b; }},\n            {\"mul\", [](int64_t a, int64_t b) { return a * b; }},\n            {\"div\", [](int64_t a, int64_t b) { return a / b; }}\n        };\n    \n        static const string SYMBOLS = \"(,)\";\n\n        string curr;\n        vector<string> ops;\n        vector<vector<int64_t>> params(1);\n        for (const auto& x : expression) {\n            if (SYMBOLS.find(x) == string::npos) {\n                curr.push_back(x);\n                continue;\n            }\n            if (x == '(') {\n                ops.emplace_back(curr);\n                curr.clear();\n                params.emplace_back();\n                continue;\n            }\n            if (!empty(curr)) {\n                params.back().emplace_back(stoll(curr));\n                curr.clear();\n            }\n            if (x != ')') {\n                continue;\n            }\n            const auto op = ops.back(); ops.pop_back();\n            const auto param = params.back(); params.pop_back();\n            params.back().emplace_back(LOOKUP.at(op)(param[0], param[1]));\n        }\n        return !empty(params[0]) ? params[0][0] : stoll(curr);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# stack\nclass Solution(object):\n    def evaluateExpression(self, expression):\n        \"\"\"\n        :type expression: str\n        :rtype: int\n        \"\"\"\n        LOOKUP = {\n            \"add\":lambda a, b: a+b,\n            \"sub\":lambda a, b: a-b,\n            \"mul\":lambda a, b: a*b,\n            \"div\":lambda a, b: a//b\n        }\n\n        SYMBOLS = \"(,)\"\n\n        stk, curr = [[]], []\n        for x in expression:\n            if x not in SYMBOLS:\n                curr.append(x)\n                continue\n            if x == '(':\n                stk.append([\"\".join(curr)])\n                curr = []\n                continue\n            if curr:\n                stk[-1].append(int(\"\".join(curr)))\n                curr = []\n            if x != ')':\n                continue\n            op, a, b = stk.pop()\n            stk[-1].append(LOOKUP[op](a, b))\n        return stk[0][0] if stk[0] else int(\"\".join(curr))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "13c85d19-20a0-45fb-9275-e7a56cf49e75",
+  "slug": "design-video-sharing-platform",
+  "title": "Design Video Sharing Platform",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "design",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"VideoSharingPlatform\",\"upload\",\"upload\",\"remove\",\"remove\",\"upload\",\"watch\",\"watch\",\"like\",\"dislike\",\"dislike\",\"getLikesAndDislikes\",\"getViews\"]\n[[],[\"123\"],[\"456\"],[4],[0],[\"789\"],[1,0,5],[1,0,1],[1],[1],[1],[1],[1]]\n[\"VideoSharingPlatform\",\"remove\",\"watch\",\"like\",\"dislike\",\"getLikesAndDislikes\",\"getViews\"]\n[[],[0],[0,0,1],[0],[0],[0],[0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:                O(1)\n//        upload:              O(logn+l)\n//        remove:              O(logn)\n//        like:                O(1)\n//        dislike:             O(1)\n//        view:                O(l)\n//        getLikesAndDislikes: O(1)\n//        getViews:            O(1)\n// Space: O(n * l), n = len(videos), l = max(len(v) for v in videos) \n\n// design, heap\nclass VideoSharingPlatform {\npublic:\n    VideoSharingPlatform() {\n        \n    }\n    \n    int upload(string video) {\n        int i;\n        if (!empty(avails_)) {\n            i = avails_.top(); avails_.pop();\n        } else {\n            i = size(videos_);\n            videos_.emplace_back();\n            likes_.emplace_back();\n            dislikes_.emplace_back();\n            views_.emplace_back();\n        }\n        videos_[i] = video;\n        return i;\n    }\n    \n    void remove(int videoId) {\n        if (videoId >= size(videos_) || views_[videoId] == -1) {\n            return;\n        }\n        avails_.emplace(videoId);\n        videos_[videoId].clear();\n        likes_[videoId] = dislikes_[videoId] = views_[videoId] = 0;\n    }\n    \n    string watch(int videoId, int startMinute, int endMinute) {\n        if (videoId >= size(videos_) || empty(videos_[videoId])) {\n            return \"-1\";\n        }\n        ++views_[videoId];\n        return videos_[videoId].substr(startMinute, endMinute - startMinute + 1);\n    }\n    \n    void like(int videoId) {\n        if (videoId >= size(videos_) || empty(videos_[videoId])) {\n            return;\n        }\n        ++likes_[videoId];\n    }\n    \n    void dislike(int videoId) {\n        if (videoId >= size(videos_) || empty(videos_[videoId])) {\n            return;\n        }\n        ++dislikes_[videoId];\n    }\n    \n    vector<int> getLikesAndDislikes(int videoId) {\n        if (videoId >= size(videos_) || empty(videos_[videoId])) {\n            return {-1};\n        }\n        return {likes_[videoId], dislikes_[videoId]};\n    }\n    \n    int getViews(int videoId) {\n        if (videoId >= size(videos_) || empty(videos_[videoId])) {\n            return -1;\n        }\n        return views_[videoId];\n    }\n\nprivate:\n    priority_queue<int, vector<int>, greater<int>> avails_;\n    vector<string> videos_;\n    vector<int> likes_;\n    vector<int> dislikes_;\n    vector<int> views_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:                O(1)\n#        upload:              O(logn+l)\n#        remove:              O(logn)\n#        like:                O(1)\n#        dislike:             O(1)\n#        view:                O(l)\n#        getLikesAndDislikes: O(1)\n#        getViews:            O(1)\n# Space: O(n * l), n = len(videos), l = max(len(v) for v in videos) \n\nimport heapq\n\n\n# design, heap\nclass VideoSharingPlatform(object):\n\n    def __init__(self):\n        self.__avails = []\n        self.__videos = []\n        self.__likes = []\n        self.__dislikes = []\n        self.__views = []\n\n    def upload(self, video):\n        \"\"\"\n        :type video: str\n        :rtype: int\n        \"\"\"\n        if self.__avails:\n            i = heapq.heappop(self.__avails)\n        else:\n            i = len(self.__videos)\n            self.__videos.append(None)\n            self.__likes.append(0)\n            self.__dislikes.append(0)\n            self.__views.append(0)\n        self.__videos[i] = video\n        return i\n        \n    def remove(self, videoId):\n        \"\"\"\n        :type videoId: int\n        :rtype: None\n        \"\"\"\n        if videoId >= len(self.__videos) or not self.__videos[videoId]:\n            return\n        heapq.heappush(self.__avails, videoId)\n        self.__videos[videoId] = None\n        self.__likes[videoId] = self.__dislikes[videoId] = self.__views[videoId] = 0\n        \n    def watch(self, videoId, startMinute, endMinute):\n        \"\"\"\n        :type videoId: int\n        :type startMinute: int\n        :type endMinute: int\n        :rtype: str\n        \"\"\"\n        if videoId >= len(self.__videos) or not self.__videos[videoId]:\n            return \"-1\"\n        self.__views[videoId] += 1\n        return self.__videos[videoId][startMinute:endMinute+1]\n\n    def like(self, videoId):\n        \"\"\"\n        :type videoId: int\n        :rtype: None\n        \"\"\"\n        if videoId >= len(self.__videos) or not self.__videos[videoId]:\n            return\n        self.__likes[videoId] += 1\n\n    def dislike(self, videoId):\n        \"\"\"\n        :type videoId: int\n        :rtype: None\n        \"\"\"\n        if videoId >= len(self.__videos) or not self.__videos[videoId]:\n            return\n        self.__dislikes[videoId] += 1\n\n    def getLikesAndDislikes(self, videoId):\n        \"\"\"\n        :type videoId: int\n        :rtype: List[int]\n        \"\"\"\n        if videoId >= len(self.__videos) or not self.__videos[videoId]:\n            return [-1]\n        return [self.__likes[videoId], self.__dislikes[videoId]]\n\n    def getViews(self, videoId):\n        \"\"\"\n        :type videoId: int\n        :rtype: int\n        \"\"\"\n        if videoId >= len(self.__videos) or not self.__videos[videoId]:\n            return -1\n        return self.__views[videoId]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

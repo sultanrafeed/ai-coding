@@ -1,0 +1,43 @@
+{
+  "id": "15d3050c-b920-4ed4-97f4-25a62911e545",
+  "slug": "design-a-file-sharing-system",
+  "title": "Design a File Sharing System",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "design",
+    "sorting",
+    "heap-priority-queue",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"FileSharing\",\"join\",\"join\",\"join\",\"request\",\"request\",\"leave\",\"request\",\"leave\",\"join\"]\n[[4],[[1,2]],[[2,3]],[[4]],[1,3],[2,2],[1],[2,1],[2],[[]]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:    O(1)\n//        join:    O(logu + c), u is the number of total joined users\n//        leave:   O(logu + c), c is the number of chunks\n//        request: O(u)\n// Space: O(u * c)\n\n// \"u ~= n\" solution, n is the average number of users who own the chunk\nclass FileSharing {\npublic:\n    FileSharing(int m) {\n        \n    }\n    \n    int join(vector<int> ownedChunks) {\n        int userID = users_.size() + 1;\n        if (!min_heap_.empty()) {\n            userID = min_heap_.top();\n            min_heap_.pop();\n        } else {\n            users_.emplace_back();\n        }\n        for (const auto& chunk : ownedChunks) {\n            users_[userID - 1].emplace(chunk);\n        }\n        lookup_.emplace(userID);\n        return userID;\n    }\n    \n    void leave(int userID) {\n        if (!lookup_.count(userID)) {\n            return;\n        }\n        lookup_.erase(userID);\n        users_[userID - 1].clear();\n        min_heap_.emplace(userID);\n    }\n    \n    vector<int> request(int userID, int chunkID) {\n        vector<int> result;\n        for (int i = 0; i < users_.size(); ++i) {\n            if (users_[i].count(chunkID)) {\n                result.emplace_back(i + 1);\n            }\n        }\n        if (!result.empty()) {\n            users_[userID - 1].emplace(chunkID);\n        }\n        return result;\n    }\n\nprivate:\n    vector<unordered_set<int>> users_;\n    unordered_set<int> lookup_;\n    priority_queue<int, vector<int>, greater<int>> min_heap_;\n};\n\n// Time:  ctor:    O(1)\n//        join:    O(logu + c), u is the number of total joined users\n//        leave:   O(logu + c), c is the number of chunks\n//        request: O(nlogn)   , n is the average number of users who own the chunk\n// Space: O(u * c + m)\n// \"u >> n\" solution\nclass FileSharing2 {\npublic:\n    FileSharing2(int m) {\n        \n    }\n    \n    int join(vector<int> ownedChunks) {\n        int userID = users_.size() + 1;\n        if (!min_heap_.empty()) {\n            userID = min_heap_.top();\n            min_heap_.pop();\n        } else {\n            users_.emplace_back();\n        }\n        for (const auto& chunk : ownedChunks) {\n            users_[userID - 1].emplace(chunk);\n            chunks_[chunk].emplace(userID);\n        }\n        lookup_.emplace(userID);\n        return userID;\n    }\n    \n    void leave(int userID) {\n        if (!lookup_.count(userID)) {\n            return;\n        }\n        lookup_.erase(userID);\n        for (const auto& chunk : users_[userID - 1]) {\n            chunks_[chunk].erase(userID);\n        }\n        users_[userID - 1].clear();\n        min_heap_.emplace(userID);\n    }\n    \n    vector<int> request(int userID, int chunkID) {\n        vector<int> result(cbegin(chunks_[chunkID]), cend(chunks_[chunkID]));\n        sort(begin(result), end(result));\n        if (!result.empty()) {\n            users_[userID - 1].emplace(chunkID);\n            chunks_[chunkID].emplace(userID);\n        }\n        return result;\n    }\n\nprivate:\n    vector<unordered_set<int>> users_;\n    unordered_set<int> lookup_;\n    unordered_map<int, unordered_set<int>> chunks_;\n    priority_queue<int, vector<int>, greater<int>> min_heap_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:    O(1)\n#        join:    O(logu + c), u is the number of total joined users\n#        leave:   O(logu + c), c is the number of chunks\n#        request: O(u)\n# Space: O(u * c)\n\nimport heapq\n\n\n# \"u ~= n\" solution, n is the average number of users who own the chunk\nclass FileSharing(object):\n\n    def __init__(self, m):\n        \"\"\"\n        :type m: int\n        \"\"\"\n        self.__users = []\n        self.__lookup = set()\n        self.__min_heap = []\n\n    def join(self, ownedChunks):\n        \"\"\"\n        :type ownedChunks: List[int]\n        :rtype: int\n        \"\"\"\n        if self.__min_heap:\n            userID = heapq.heappop(self.__min_heap)\n        else:\n            userID = len(self.__users)+1\n            self.__users.append(set())\n        self.__users[userID-1] = set(ownedChunks)\n        self.__lookup.add(userID)\n        return userID\n\n    def leave(self, userID):\n        \"\"\"\n        :type userID: int\n        :rtype: None\n        \"\"\"\n        if userID not in self.__lookup:\n            return\n        self.__lookup.remove(userID)\n        self.__users[userID-1] = []\n        heapq.heappush(self.__min_heap, userID)\n\n    def request(self, userID, chunkID):\n        \"\"\"\n        :type userID: int\n        :type chunkID: int\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        for u, chunks in enumerate(self.__users, 1):\n            if chunkID not in chunks:\n                continue\n            result.append(u)\n        if not result:\n            return\n        self.__users[userID-1].add(chunkID)\n        return result\n\n\n# Time:  ctor:    O(1)\n#        join:    O(logu + c), u is the number of total joined users\n#        leave:   O(logu + c), c is the number of chunks\n#        request: O(nlogn)   , n is the average number of users who own the chunk\n# Space: O(u * c + m), m is the total number of unique chunks\nimport collections\nimport heapq\n\n\n# \"u >> n\" solution\nclass FileSharing2(object):\n\n    def __init__(self, m):\n        \"\"\"\n        :type m: int\n        \"\"\"\n        self.__users = []\n        self.__lookup = set() \n        self.__chunks = collections.defaultdict(set)\n        self.__min_heap = []\n\n    def join(self, ownedChunks):\n        \"\"\"\n        :type ownedChunks: List[int]\n        :rtype: int\n        \"\"\"\n        if self.__min_heap:\n            userID = heapq.heappop(self.__min_heap)\n        else:\n            userID = len(self.__users)+1\n            self.__users.append(set())\n        self.__users[userID-1] = set(ownedChunks)\n        self.__lookup.add(userID)\n        for c in ownedChunks:\n            self.__chunks[c].add(userID)\n        return userID\n\n    def leave(self, userID):\n        \"\"\"\n        :type userID: int\n        :rtype: None\n        \"\"\"\n        if userID not in self.__lookup:\n            return\n        for c in self.__users[userID-1]:\n            self.__chunks[c].remove(userID)\n        self.__lookup.remove(userID)\n        self.__users[userID-1] = []\n        heapq.heappush(self.__min_heap, userID)\n\n    def request(self, userID, chunkID):\n        \"\"\"\n        :type userID: int\n        :type chunkID: int\n        :rtype: List[int]\n        \"\"\"\n        result = sorted(self.__chunks[chunkID])\n        if not result:\n            return\n        self.__users[userID-1].add(chunkID)\n        self.__chunks[chunkID].add(userID)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

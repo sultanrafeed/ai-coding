@@ -1,0 +1,39 @@
+{
+  "id": "d968a819-af04-458c-b950-7cfe4c8ba255",
+  "slug": "remove-vowels-from-a-string",
+  "title": "Remove Vowels from a String",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"leetcodeisacommunityforcoders\"\n\"aeiou\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string removeVowels(string S) {\n         return accumulate(S.cbegin(), S.cend(), string{},\n                           [](const auto &a, const auto &b) {\n                               static const unordered_set<char> lookup = {'a', 'e', 'i', 'o', 'u'};\n                               if (!lookup.count(b)) {\n                                   return a + b;\n                               }\n                               return a;\n                           });\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def removeVowels(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: str\n        \"\"\"\n        lookup = set(\"aeiou\")\n        return \"\".join(c for c in S if c not in lookup)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

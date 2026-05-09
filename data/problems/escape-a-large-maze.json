@@ -1,0 +1,36 @@
+{
+  "id": "fa30caa2-e505-44bf-91c7-30e33cf4d7b8",
+  "slug": "escape-a-large-maze",
+  "title": "Escape a Large Maze",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>There is a 1 million by 1 million grid on an XY-plane, and the coordinates of each grid square are <code>(x, y)</code>.</p>\n\n<p>We start at the <code>source = [s<sub>x</sub>, s<sub>y</sub>]</code> square and want to reach the <code>target = [t<sub>x</sub>, t<sub>y</sub>]</code> square. There is also an array of <code>blocked</code> squares, where each <code>blocked[i] = [x<sub>i</sub>, y<sub>i</sub>]</code> represents a blocked square with coordinates <code>(x<sub>i</sub>, y<sub>i</sub>)</code>.</p>\n\n<p>Each move, we can walk one square north, east, south, or west if the square is <strong>not</strong> in the array of <code>blocked</code> squares. We are also not allowed to walk outside of the grid.</p>\n\n<p>Return <code>true</code><em> if and only if it is possible to reach the </em><code>target</code><em> square from the </em><code>source</code><em> square through a sequence of valid moves</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> blocked = [[0,1],[1,0]], source = [0,0], target = [0,2]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> The target square is inaccessible starting from the source square because we cannot move.\nWe cannot move north or east because those squares are blocked.\nWe cannot move south or west because we cannot go outside of the grid.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> blocked = [], source = [0,0], target = [999999,999999]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Because there are no blocked cells, it is possible to reach the target square.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= blocked.length &lt;= 200</code></li>\n\t<li><code>blocked[i].length == 2</code></li>\n\t<li><code>0 &lt;= x<sub>i</sub>, y<sub>i</sub> &lt; 10<sup>6</sup></code></li>\n\t<li><code>source.length == target.length == 2</code></li>\n\t<li><code>0 &lt;= s<sub>x</sub>, s<sub>y</sub>, t<sub>x</sub>, t<sub>y</sub> &lt; 10<sup>6</sup></code></li>\n\t<li><code>source != target</code></li>\n\t<li>It is guaranteed that <code>source</code> and <code>target</code> are not blocked.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "depth-first-search",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2), n is the number of blocked\n// Space: O(n)\n\nclass Solution {\npublic:\n    template <typename T>\n    struct PairHash {\n        size_t operator()(const pair<T, T>& p) const {\n            size_t seed = 0;\n            seed ^= std::hash<T>{}(p.first)  + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            seed ^= std::hash<T>{}(p.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            return seed;\n        }\n    };\n    \n    bool isEscapePossible(vector<vector<int>>& blocked, vector<int>& source, vector<int>& target) {\n        unordered_set<pair<int, int>, PairHash<int>> blocks;\n        for (const auto& block : blocked) {\n            blocks.emplace(block[0], block[1]);\n        }\n        return bfs(blocks, make_pair(source[0], source[1]), make_pair(target[0], target[1])) &&\n               bfs(blocks, make_pair(target[0], target[1]), make_pair(source[0], source[1]));\n    }\n    \nprivate:\n    bool bfs(const unordered_set<pair<int, int>, PairHash<int>>& blocks,\n             const pair<int, int>& source, const pair<int, int>& target) {\n        static const int R = 1e6;\n        static const int C = 1e6;\n        static const vector<pair<int, int>> directions{{0, -1}, {0, 1},\n                                                       {-1, 0}, {1, 0}};\n\n        const auto& max_area_surrounded_by_blocks = blocks.size() * (blocks.size() - 1) / 2;\n        unordered_set<pair<int, int>, PairHash<int>> lookup{source};\n        if (lookup.size() > max_area_surrounded_by_blocks) {\n            return true;\n        }\n        queue<pair<int, int>> q({source});\n        while (!q.empty()) {\n            auto source = q.front();  q.pop();\n            if (source == target) {\n                return true;\n            }\n            for (const auto& dir : directions) {\n                const auto nr = source.first + dir.first, nc = source.second + dir.second;\n                \n                if (!((0 <= nr && nr < R) &&\n                      (0 <= nc && nc < C) &&\n                      !lookup.count(make_pair(nr, nc)) &&\n                      !blocks.count(make_pair(nr, nc)))) {\n                    continue;\n                }\n                lookup.emplace(nr, nc);\n                if (lookup.size() > max_area_surrounded_by_blocks) {\n                    return true;\n                }\n                q.emplace(nr, nc);\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2), n is the number of blocked\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def isEscapePossible(self, blocked, source, target):\n        \"\"\"\n        :type blocked: List[List[int]]\n        :type source: List[int]\n        :type target: List[int]\n        :rtype: bool\n        \"\"\"\n        R, C = 10**6, 10**6\n        directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]\n\n        def bfs(blocks, source, target):\n            max_area_surrounded_by_blocks = len(blocks)*(len(blocks)-1)//2\n            lookup = set([source])\n            if len(lookup) > max_area_surrounded_by_blocks:\n                return True\n            q = collections.deque([source])\n            while q:\n                source = q.popleft()\n                if source == target:\n                    return True\n                for direction in directions:\n                    nr, nc = source[0]+direction[0], source[1]+direction[1]\n                    if not ((0 <= nr < R) and\n                            (0 <= nc < C) and \n                            (nr, nc) not in lookup and\n                            (nr, nc) not in blocks):\n                        continue\n                    lookup.add((nr, nc))\n                    if len(lookup) > max_area_surrounded_by_blocks:\n                        return True\n                    q.append((nr, nc))\n            return False\n        \n        return bfs(set(map(tuple, blocked)), tuple(source), tuple(target)) and \\\n               bfs(set(map(tuple, blocked)), tuple(target), tuple(source))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

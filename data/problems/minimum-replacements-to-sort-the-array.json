@@ -1,0 +1,41 @@
+{
+  "id": "648eeac9-1fff-4049-9e91-4f4f9c345865",
+  "slug": "minimum-replacements-to-sort-the-array",
+  "title": "Minimum Replacements to Sort the Array",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>. In one operation you can replace any element of the array with <strong>any two</strong> elements that <strong>sum</strong> to it.</p>\n\n<ul>\n\t<li>For example, consider <code>nums = [5,6,7]</code>. In one operation, we can replace <code>nums[1]</code> with <code>2</code> and <code>4</code> and convert <code>nums</code> to <code>[5,2,4,7]</code>.</li>\n</ul>\n\n<p>Return <em>the minimum number of operations to make an array that is sorted in <strong>non-decreasing</strong> order</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,9,3]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> Here are the steps to sort the array in non-decreasing order:\n- From [3,9,3], replace the 9 with 3 and 6 so the array becomes [3,3,6,3]\n- From [3,3,6,3], replace the 6 with 3 and 3 so the array becomes [3,3,3,3,3]\nThere are 2 steps to sort the array in non-decreasing order. Therefore, we return 2.\n\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4,5]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The array is already in non-decreasing order. Therefore, we return 0. \n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,9,3]\n[1,2,3,4,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// greedy, math\nclass Solution {\npublic:\n    long long minimumReplacement(vector<int>& nums) {\n        const auto& ceil_divide = [](int a, int b) {\n            return (a + b - 1) / b;\n        };\n\n        int64_t result = 0;\n        int curr = nums.back();\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            const int cnt = ceil_divide(nums[i], curr);\n            result += cnt -1;\n            curr = nums[i] / cnt;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# greedy, math\nclass Solution(object):\n    def minimumReplacement(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n\n        result = 0\n        curr = nums[-1]\n        for x in reversed(nums):\n            cnt = ceil_divide(x, curr)\n            result += cnt-1\n            curr = x//cnt\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

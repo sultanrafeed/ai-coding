@@ -1,0 +1,35 @@
+{
+  "id": "bdfb212a-5429-4e15-bcd1-472c212a9871",
+  "slug": "sum-of-beauty-of-all-substrings",
+  "title": "Sum of Beauty of All Substrings",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>The <strong>beauty</strong> of a string is the difference in frequencies between the most frequent and least frequent characters.</p>\n\n<ul>\n\t<li>For example, the beauty of <code>&quot;abaacc&quot;</code> is <code>3 - 1 = 2</code>.</li>\n</ul>\n\n<p>Given a string <code>s</code>, return <em>the sum of <strong>beauty</strong> of all of its substrings.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aabcb&quot;\n<strong>Output:</strong> 5\n<strong>Explanation: </strong>The substrings with non-zero beauty are [&quot;aab&quot;,&quot;aabc&quot;,&quot;aabcb&quot;,&quot;abcb&quot;,&quot;bcb&quot;], each with beauty equal to 1.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aabcbaa&quot;\n<strong>Output:</strong> 17\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;=<sup> </sup>500</code></li>\n\t<li><code>s</code> consists of only lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int beautySum(string s) {\n        int result = 0;\n        for (int i = 0; i < size(s); ++i) {\n            array<int, 26> lookup = {0};\n            for (int j = i; j < size(s); ++j) {\n                ++lookup[s[j] - 'a'];\n                result += *max_element(cbegin(lookup), cend(lookup)) -\n                          *min_element(cbegin(lookup), cend(lookup),\n                                       [](const auto& a, const auto& b) {\n                                           if (a == 0) {\n                                               return false;\n                                           }\n                                           if (b == 0) {\n                                               return true;\n                                           }\n                                           return a < b;\n                                       });\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(1)\n\nclass Solution(object):\n    def beautySum(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = 0 \n        for i in xrange(len(s)):\n            lookup = [0]*26\n            for j in xrange(i, len(s)):\n                lookup[ord(s[j])-ord('a')] += 1\n                result += max(lookup) - min(x for x in lookup if x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

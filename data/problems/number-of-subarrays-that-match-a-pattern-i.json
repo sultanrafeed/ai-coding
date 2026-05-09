@@ -1,0 +1,36 @@
+{
+  "id": "d0c9627a-433e-4769-8dff-8f8e0ff69b2f",
+  "slug": "number-of-subarrays-that-match-a-pattern-i",
+  "title": "Number of Subarrays That Match a Pattern I",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> of size <code>n</code>, and a <strong>0-indexed</strong> integer array <code>pattern</code> of size <code>m</code> consisting of integers <code>-1</code>, <code>0</code>, and <code>1</code>.</p>\n\n<p>A <span data-keyword=\"subarray\">subarray</span> <code>nums[i..j]</code> of size <code>m + 1</code> is said to match the <code>pattern</code> if the following conditions hold for each element <code>pattern[k]</code>:</p>\n\n<ul>\n\t<li><code>nums[i + k + 1] &gt; nums[i + k]</code> if <code>pattern[k] == 1</code>.</li>\n\t<li><code>nums[i + k + 1] == nums[i + k]</code> if <code>pattern[k] == 0</code>.</li>\n\t<li><code>nums[i + k + 1] &lt; nums[i + k]</code> if <code>pattern[k] == -1</code>.</li>\n</ul>\n\n<p>Return <em>the<strong> count</strong> of subarrays in</em> <code>nums</code> <em>that match the</em> <code>pattern</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4,5,6], pattern = [1,1]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The pattern [1,1] indicates that we are looking for strictly increasing subarrays of size 3. In the array nums, the subarrays [1,2,3], [2,3,4], [3,4,5], and [4,5,6] match this pattern.\nHence, there are 4 subarrays in nums that match the pattern.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,4,4,1,3,5,5,3], pattern = [1,0,-1]\n<strong>Output:</strong> 2\n<strong>Explanation: </strong>Here, the pattern [1,0,-1] indicates that we are looking for a sequence where the first number is smaller than the second, the second is equal to the third, and the third is greater than the fourth. In the array nums, the subarrays [1,4,4,1], and [3,5,5,3] match this pattern.\nHence, there are 2 subarrays in nums that match the pattern.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= n == nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= m == pattern.length &lt; n</code></li>\n\t<li><code>-1 &lt;= pattern[i] &lt;= 1</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "rolling-hash",
+    "string-matching",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(m)\n\n// kmp\nclass Solution {\npublic:\n    int countMatchingSubarrays(vector<int>& nums, vector<int>& pattern) {\n        const auto& KMP = [](const auto& text, const auto& pattern) {\n            const auto& getPrefix = [](const auto& pattern) {\n                vector<int> prefix(size(pattern), -1);\n                int j = -1;\n                for (int i = 1; i < size(pattern); ++i) {\n                    while (j != -1 && pattern[j + 1] != pattern[i]) {\n                        j = prefix[j];\n                    }\n                    if (pattern[j + 1] == pattern[i]) {\n                        ++j;\n                    }\n                    prefix[i] = j;\n                }\n                return prefix;\n            };\n\n            int result = 0;\n            const vector<int> prefix = getPrefix(pattern);\n            int j = -1;\n            for (int i = 0; i < size(text); ++i) {\n                while (j > -1 && pattern[j + 1] != text[i]) {\n                    j = prefix[j];\n                }\n                if (pattern[j + 1] == text[i]) {\n                    ++j;\n                }\n                if (j == size(pattern) - 1) {\n                    ++result;\n                    j = prefix[j];\n                }\n            }\n            return result;\n        };\n    \n        for (int i = 0; i + 1 < size(nums); ++i) {\n            if (nums[i + 1] > nums[i]) {\n                nums[i] = 1;\n            } else if (nums[i + 1] < nums[i]) {\n                nums[i] = -1;\n            } else {\n                nums[i] = 0;\n            }\n        }\n        return KMP(nums, pattern);\n    }\n};\n\n// Time:  O(n * m)\n// Space: O(1)\n// brute force\nclass Solution2 {\npublic:\n    int countMatchingSubarrays(vector<int>& nums, vector<int>& pattern) {\n        const auto& check = [&](int i, const auto& pattern) {\n            for (int j = 0; j < size(pattern); ++j) {\n                if (nums[i + j] != pattern[j]) {\n                    return false;\n                }\n            }\n            return true;\n        };\n\n        for (int i = 0; i + 1 < size(nums); ++i) {\n            if (nums[i + 1] > nums[i]) {\n                nums[i] = 1;\n            } else if (nums[i + 1] < nums[i]) {\n                nums[i] = -1;\n            } else {\n                nums[i] = 0;\n            }\n        }\n        int result = 0;\n        for (int i = 0; i < size(nums) - size(pattern) + 1; ++i) {\n            if (check(i, pattern)) {\n                ++result;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(m)\n\n# kmp\nclass Solution(object):\n    def countMatchingSubarrays(self, nums, pattern):\n        \"\"\"\n        :type nums: List[int]\n        :type pattern: List[int]\n        :rtype: int\n        \"\"\"\n        def getPrefix(pattern):\n            prefix = [-1]*len(pattern)\n            j = -1\n            for i in xrange(1, len(pattern)):\n                while j+1 > 0 and pattern[j+1] != pattern[i]:\n                    j = prefix[j]\n                if pattern[j+1] == pattern[i]:\n                    j += 1\n                prefix[i] = j\n            return prefix\n\n        def KMP(text, pattern):\n            prefix = getPrefix(pattern)\n            j = -1\n            for i, x in enumerate(text):\n                while j+1 > 0 and pattern[j+1] != x:\n                    j = prefix[j]\n                if pattern[j+1] == x:\n                    j += 1\n                if j+1 == len(pattern):\n                    yield i-j\n                    j = prefix[j]\n\n        return sum(1 for _ in KMP((cmp(nums[i+1], nums[i]) for i in xrange(len(nums)-1)), pattern))\n\n\n# Time:  O(n * m)\n# Space: O(1)\n# brute force\nclass Solution2(object):\n    def countMatchingSubarrays(self, nums, pattern):\n        \"\"\"\n        :type nums: List[int]\n        :type pattern: List[int]\n        :rtype: int\n        \"\"\"\n        def check(i):\n            return all(nums[i+j] == pattern[j] for j in xrange(len(pattern)))\n    \n        for i in xrange(len(nums)-1):\n            nums[i] = cmp(nums[i+1], nums[i])\n        return sum(check(i) for i in xrange(len(nums)-len(pattern)+1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

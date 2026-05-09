@@ -1,0 +1,31 @@
+{
+  "id": "cac8d922-21b9-4a5d-a85a-25efa05c0e7d",
+  "slug": "coin-change-2",
+  "title": "Coin Change 2",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * m)\n// Space: O(m)\n\nclass Solution {\npublic:\n    int change(int amount, vector<int>& coins) {\n        vector<int> dp(amount + 1);\n        dp[0] = 1;\n        for (const auto& coin : coins) {\n            for (int i = coin; i <= amount; ++i) {\n                dp[i] += dp[i - coin];\n            }\n        }\n        return dp[amount];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * m)\n# Space: O(m)\n\nclass Solution(object):\n    def change(self, amount, coins):\n        \"\"\"\n        :type amount: int\n        :type coins: List[int]\n        :rtype: int\n        \"\"\"\n        dp = [0] * (amount+1)\n        dp[0] = 1\n        for coin in coins:\n            for i in xrange(coin, amount+1):\n                dp[i] += dp[i-coin]\n        return dp[amount]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

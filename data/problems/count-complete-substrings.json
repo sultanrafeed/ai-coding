@@ -1,0 +1,35 @@
+{
+  "id": "2a65beee-511b-4fcd-a5cf-01d6cbd7750f",
+  "slug": "count-complete-substrings",
+  "title": "Count Complete Substrings",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a string <code>word</code> and an integer <code>k</code>.</p>\n\n<p>A substring <code>s</code> of <code>word</code> is <strong>complete</strong> if:</p>\n\n<ul>\n\t<li>Each character in <code>s</code> occurs <strong>exactly</strong> <code>k</code> times.</li>\n\t<li>The difference between two adjacent characters is <strong>at most</strong> <code>2</code>. That is, for any two adjacent characters <code>c1</code> and <code>c2</code> in <code>s</code>, the absolute difference in their positions in the alphabet is <strong>at most</strong> <code>2</code>.</li>\n</ul>\n\n<p>Return <em>the number of <strong>complete </strong>substrings of</em> <code>word</code>.</p>\n\n<p>A <strong>substring</strong> is a <strong>non-empty</strong> contiguous sequence of characters in a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> word = &quot;igigee&quot;, k = 2\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The complete substrings where each character appears exactly twice and the difference between adjacent characters is at most 2 are: <u><strong>igig</strong></u>ee, igig<u><strong>ee</strong></u>, <u><strong>igigee</strong></u>.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> word = &quot;aaabbbccc&quot;, k = 3\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The complete substrings where each character appears exactly three times and the difference between adjacent characters is at most 2 are: <strong><u>aaa</u></strong>bbbccc, aaa<u><strong>bbb</strong></u>ccc, aaabbb<u><strong>ccc</strong></u>, <strong><u>aaabbb</u></strong>ccc, aaa<u><strong>bbbccc</strong></u>, <u><strong>aaabbbccc</strong></u>.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= word.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>word</code> consists only of lowercase English letters.</li>\n\t<li><code>1 &lt;= k &lt;= word.length</code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(26 + d * n), d = len(set(word))\n// Space: O(26)\n\n// freq table, two pointers, sliding window\nclass Solution {\npublic:\n    int countCompleteSubstrings(string word, int k) {\n        const int d = size(unordered_set<char>(cbegin(word), cend(word)));\n        int result = 0, valid = 0;\n        vector<int> cnt(26);\n        for (int c = 1; c <= d; ++c) {\n            int left = 0;\n            for (int right = 0; right < size(word); ++right) {\n                const int curr = ++cnt[word[right] - 'a'];\n                valid += curr == k ? 1 : curr == k + 1 ? -1 : 0;\n                if (right - left + 1 == c * k + 1) {\n                    const int curr = cnt[word[left++] - 'a']--;\n                    valid -= curr == k ? 1 : curr == k + 1 ? -1 : 0;\n                }\n                if (valid == c) {\n                    ++result;\n                }\n                if (right + 1 == size(word) || abs(word[right + 1] - word[right]) > 2) {\n                    while (left < right + 1) {\n                        const int curr = cnt[word[left++] - 'a']--;\n                        valid -= curr == k ? 1 : curr == k + 1 ? -1 : 0;\n                    }\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(26 + d * n), d = len(set(word))\n# Space: O(26)\n\n# freq table, two pointers, sliding window\nclass Solution(object):\n    def countCompleteSubstrings(self, word, k):\n        \"\"\"\n        :type word: str\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = valid = 0\n        cnt = [0]*26\n        for c in xrange(1, len(set(word))+1):\n            left = 0\n            for right in xrange(len(word)):\n                cnt[ord(word[right])-ord('a')] += 1\n                curr = cnt[ord(word[right])-ord('a')]\n                valid += 1 if curr == k else -1 if curr == k+1 else 0\n                if right-left+1 == c*k+1:\n                    curr = cnt[ord(word[left])-ord('a')]\n                    valid -= 1 if curr == k else -1 if curr == k+1 else 0\n                    cnt[ord(word[left])-ord('a')] -= 1\n                    left += 1\n                if valid == c:\n                    result += 1\n                if right+1 == len(word) or abs(ord(word[right+1])-ord(word[right])) > 2:\n                    while left < right+1:\n                        curr = cnt[ord(word[left])-ord('a')]\n                        valid -= 1 if curr == k else -1 if curr == k+1 else 0\n                        cnt[ord(word[left])-ord('a')] -= 1\n                        left += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

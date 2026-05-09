@@ -1,0 +1,36 @@
+{
+  "id": "aa30be57-1131-402c-8144-86d147fb66e7",
+  "slug": "hand-of-straights",
+  "title": "Hand of Straights",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Alice has some number of cards and she wants to rearrange the cards into groups so that each group is of size <code>groupSize</code>, and consists of <code>groupSize</code> consecutive cards.</p>\n\n<p>Given an integer array <code>hand</code> where <code>hand[i]</code> is the value written on the <code>i<sup>th</sup></code> card and an integer <code>groupSize</code>, return <code>true</code> if she can rearrange the cards, or <code>false</code> otherwise.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> hand = [1,2,3,6,2,3,4,7,8], groupSize = 3\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Alice&#39;s hand can be rearranged as [1,2,3],[2,3,4],[6,7,8]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> hand = [1,2,3,4,5], groupSize = 4\n<strong>Output:</strong> false\n<strong>Explanation:</strong> Alice&#39;s hand can not be rearranged into groups of 4.\n\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= hand.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= hand[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= groupSize &lt;= hand.length</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Note:</strong> This question is the same as 1296: <a href=\"https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/\" target=\"_blank\">https://leetcode.com/problems/divide-array-in-sets-of-k-consecutive-numbers/</a></p>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool isNStraightHand(vector<int>& hand, int W) {\n        if (hand.size() % W) {\n            return false;\n        }\n\n        unordered_map<int, int> counts;\n        for (const auto& i : hand) {\n            ++counts[i];\n        }\n\n        priority_queue<int, vector<int>, greater<int>> min_heap(hand.begin(), hand.end());\n        for (int i = 0; i < hand.size() / W; ++i) {\n            while (counts[min_heap.top()] == 0) {\n                min_heap.pop();\n            }\n            int start = min_heap.top(); min_heap.pop();\n            for (int j = 0; j < W; ++j) {\n                --counts[start];\n                if (counts[start] < 0) {\n                    return false;\n                }\n                ++start;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nfrom collections import Counter\nfrom heapq import heapify, heappop\n\n\nclass Solution(object):\n    def isNStraightHand(self, hand, W):\n        \"\"\"\n        :type hand: List[int]\n        :type W: int\n        :rtype: bool\n        \"\"\"\n        if len(hand) % W:\n            return False\n\n        counts = Counter(hand)\n        min_heap = list(hand)\n        heapify(min_heap)\n        for _ in xrange(len(min_heap)//W):\n            while counts[min_heap[0]] == 0:\n                heappop(min_heap)\n            start = heappop(min_heap)\n            for _ in xrange(W):\n                counts[start] -= 1\n                if counts[start] < 0:\n                    return False\n                start += 1\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "f0b7757f-8254-4947-a599-0947af073ccd",
+  "slug": "best-time-to-buy-and-sell-stock-with-transaction-fee",
+  "title": "Best Time to Buy and Sell Stock with Transaction Fee",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on the <code>i<sup>th</sup></code> day, and an integer <code>fee</code> representing a transaction fee.</p>\n\n<p>Find the maximum profit you can achieve. You may complete as many transactions as you like, but you need to pay the transaction fee for each transaction.</p>\n\n<p><strong>Note:</strong></p>\n\n<ul>\n\t<li>You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).</li>\n\t<li>The transaction fee is only charged once for each stock purchase and sale.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [1,3,2,8,4,9], fee = 2\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> The maximum profit can be achieved by:\n- Buying at prices[0] = 1\n- Selling at prices[3] = 8\n- Buying at prices[4] = 4\n- Selling at prices[5] = 9\nThe total profit is ((8 - 1) - 2) + ((9 - 4) - 2) = 8.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [1,3,7,5,10,3], fee = 3\n<strong>Output:</strong> 6\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= prices.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= prices[i] &lt; 5 * 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= fee &lt; 5 * 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxProfit(vector<int>& prices, int fee) {\n        int cash = 0, hold = -prices[0];\n        for (int i = 1; i < prices.size(); ++i) {\n            cash = max(cash, hold + prices[i] - fee);\n            hold = max(hold, cash - prices[i]);\n        }\n        return cash;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n\nclass Solution(object):\n    def maxProfit(self, prices, fee):\n        \"\"\"\n        :type prices: List[int]\n        :type fee: int\n        :rtype: int\n        \"\"\"\n        cash, hold = 0, -prices[0]\n        for i in xrange(1, len(prices)):\n            cash = max(cash, hold+prices[i]-fee)\n            hold = max(hold, cash-prices[i])\n        return cash",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

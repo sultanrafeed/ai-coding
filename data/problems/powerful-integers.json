@@ -1,0 +1,41 @@
+{
+  "id": "9060c4bb-24b9-4655-9997-6545155a93e7",
+  "slug": "powerful-integers",
+  "title": "Powerful Integers",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given three integers <code>x</code>, <code>y</code>, and <code>bound</code>, return <em>a list of all the <strong>powerful integers</strong> that have a value less than or equal to</em> <code>bound</code>.</p>\n\n<p>An integer is <strong>powerful</strong> if it can be represented as <code>x<sup>i</sup> + y<sup>j</sup></code> for some integers <code>i &gt;= 0</code> and <code>j &gt;= 0</code>.</p>\n\n<p>You may return the answer in <strong>any order</strong>. In your answer, each value should occur <strong>at most once</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = 2, y = 3, bound = 10\n<strong>Output:</strong> [2,3,4,5,7,9,10]\n<strong>Explanation:</strong>\n2 = 2<sup>0</sup> + 3<sup>0</sup>\n3 = 2<sup>1</sup> + 3<sup>0</sup>\n4 = 2<sup>0</sup> + 3<sup>1</sup>\n5 = 2<sup>1</sup> + 3<sup>1</sup>\n7 = 2<sup>2</sup> + 3<sup>1</sup>\n9 = 2<sup>3</sup> + 3<sup>0</sup>\n10 = 2<sup>0</sup> + 3<sup>2</sup>\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = 3, y = 5, bound = 15\n<strong>Output:</strong> [2,4,6,8,10,14]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= x, y &lt;= 100</code></li>\n\t<li><code>0 &lt;= bound &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "math",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "2\n3\n10\n3\n5\n15",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((logn)^2), n is the bound\n// Space: O(r),        r is the size of the result\n\nclass Solution {\npublic:\n    vector<int> powerfulIntegers(int x, int y, int bound) {\n        unordered_set<int> result;\n        int log_x = (x != 1) ? int(floor(log(bound) / log(x))) + 1 : 1;\n        int log_y = (y != 1) ? int(floor(log(bound) / log(y))) + 1 : 1;\n        for (int i = 0, pow_x = 1; i < log_x; ++i, pow_x *= x) {\n            for (int j = 0, pow_y = 1; j < log_y; ++j, pow_y *= y) {\n                auto val = pow_x + pow_y;\n                if (val <= bound) {\n                    result.emplace(val);\n                }\n            }\n        }\n        return vector<int>(result.cbegin(), result.cend());\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((logn)^2), n is the bound\n# Space: O(r), r is the size of the result\n\nimport math\n\n\nclass Solution(object):\n    def powerfulIntegers(self, x, y, bound):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :type bound: int\n        :rtype: List[int]\n        \"\"\"\n        result = set()\n        log_x = int(math.floor(math.log(bound) / math.log(x)))+1 if x != 1 else 1\n        log_y = int(math.floor(math.log(bound) / math.log(y)))+1 if y != 1 else 1\n        pow_x = 1\n        for i in xrange(log_x):\n            pow_y = 1\n            for j in xrange(log_y):\n                val = pow_x + pow_y\n                if val <= bound:\n                    result.add(val)\n                pow_y *= y\n            pow_x *= x\n        return list(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

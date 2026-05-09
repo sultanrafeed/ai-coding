@@ -1,0 +1,37 @@
+{
+  "id": "2e2a2aea-0c3c-46c2-907f-68f3b4b0adfe",
+  "slug": "all-elements-in-two-binary-search-trees",
+  "title": "All Elements in Two Binary Search Trees",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two binary search trees <code>root1</code> and <code>root2</code>, return <em>a list containing all the integers from both trees sorted in <strong>ascending</strong> order</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/12/18/q2-e1.png\" style=\"width: 457px; height: 207px;\" />\n<pre>\n<strong>Input:</strong> root1 = [2,1,4], root2 = [1,0,3]\n<strong>Output:</strong> [0,1,1,2,3,4]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/12/18/q2-e5-.png\" style=\"width: 352px; height: 197px;\" />\n<pre>\n<strong>Input:</strong> root1 = [1,null,8], root2 = [8,1]\n<strong>Output:</strong> [1,1,8,8]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in each tree is in the range <code>[0, 5000]</code>.</li>\n\t<li><code>-10<sup>5</sup> &lt;= Node.val &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-search-tree",
+    "sorting",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<int> getAllElements(TreeNode* root1, TreeNode* root2) {\n        vector<int> result;\n        Iterator<TreeNode*> left(root1), right(root2);\n        while (*left || *right) {\n            if (!*right || ((*left) && (*left)->val < (*right)->val)) {\n                result.emplace_back((*left)->val);\n                ++left;\n            } else {\n                result.emplace_back((*right)->val);\n                ++right;\n            }\n        }\n        return result;\n    }\n\nprivate:\n    template<typename T>\n    class Iterator {\n    public:\n        Iterator(T root)\n         : stack_{{root, false}}\n         , curr_{} {\n             ++(*this);\n        }\n        \n        Iterator& operator++() {\n            while (!stack_.empty()) {\n                T root; bool is_visited;\n                tie(root, is_visited) = stack_.back(); stack_.pop_back();\n                if (!root) {\n                    continue;\n                }\n                if (is_visited) {\n                    curr_ = root;\n                    return *this;\n                }\n                stack_.emplace_back(root->right, false);\n                stack_.emplace_back(root, true);\n                stack_.emplace_back(root->left, false);\n            }\n            curr_ = T{};\n            return *this;\n        }\n        \n        const T& operator*() const {\n            return curr_;\n        }\n        \n    private:\n        vector<pair<T, bool>> stack_;\n        T curr_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def getAllElements(self, root1, root2):\n        \"\"\"\n        :type root1: TreeNode\n        :type root2: TreeNode\n        :rtype: List[int]\n        \"\"\"\n        def inorder_gen(root):\n            result, stack = [], [(root, False)]\n            while stack:\n                root, is_visited = stack.pop()\n                if root is None:\n                    continue\n                if is_visited:\n                    yield root.val\n                else:\n                    stack.append((root.right, False))\n                    stack.append((root, True))\n                    stack.append((root.left, False))\n            yield None\n        \n        result = []\n        left_gen, right_gen = inorder_gen(root1), inorder_gen(root2)\n        left, right = next(left_gen), next(right_gen)\n        while left is not None or right is not None:\n            if right is None or (left is not None and left < right):\n                result.append(left)\n                left = next(left_gen)\n            else:\n                result.append(right)\n                right = next(right_gen)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

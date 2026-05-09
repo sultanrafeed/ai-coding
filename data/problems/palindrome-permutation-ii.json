@@ -1,0 +1,41 @@
+{
+  "id": "f8ad62c3-f0d0-43dc-96ce-066bef08f17d",
+  "slug": "palindrome-permutation-ii",
+  "title": "Palindrome Permutation II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"aabb\"\n\"abc\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * n!)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<string> generatePalindromes(string s) {\n        if (s.empty()) {\n            return {};\n        }\n\n        unordered_map<char, int> cnt;\n        for (const auto& c : s) {\n            ++cnt[c];\n        }\n\n        string mid, chars;\n        for (const auto& kvp : cnt) {\n            if (kvp.second % 2) {\n                if (mid.empty()) {\n                    mid.push_back(kvp.first);\n                } else {  // The count of the middle char is at most one. \n                    return {};\n                }\n            }\n            chars.append(kvp.second / 2, kvp.first);\n        }\n        return permuteUnique(mid, chars);\n    }\n    \n    vector<string> permuteUnique(const string& mid, string& chars) {\n        vector<string> result;\n        sort(chars.begin(), chars.end());\n        do {\n            string reverse_chars(chars.crbegin(), chars.crend());\n            result.emplace_back(chars + mid + reverse_chars);\n        } while (next_permutation(chars.begin(), chars.end()));\n        return result;\n    }\n};\n\nclass Solution2 {\npublic:\n    vector<string> generatePalindromes(string s) {\n        if (s.empty()) {\n            return {};\n        }\n\n        unordered_map<char, int> cnt;\n        for (const auto& c : s) {\n            ++cnt[c];\n        }\n\n        string mid, chars;\n        for (const auto& kvp : cnt) {\n            if (kvp.second % 2) {\n                if (mid.empty()) {\n                    mid.append(1, kvp.first);\n                } else {  // The count of the middle char is at most one. \n                    return {};\n                }\n            }\n            chars.append(kvp.second / 2, kvp.first);\n        }\n\n        return permuteUnique(mid, chars);\n    }\n    \n    vector<string> permuteUnique(const string& mid, string& s) {\n        vector<string> result;\n        vector<bool> used(s.length(), false);\n        string ans;\n\n        sort(s.begin(), s.end());\n        permuteUniqueRecu(mid, s, &used, &ans, &result);\n        return result;\n    }\n\n    void permuteUniqueRecu(const string& mid, const string& s, vector<bool> *used,\n                           string *ans, vector<string> *result) {\n        if (ans->length() == s.length()) {\n            string reverse_ans(ans->crbegin(), ans->crend());\n            result->emplace_back(*ans + mid + reverse_ans);\n            return;\n        }\n\n        for (int i = 0; i < s.length(); ++i) {\n            if (!(*used)[i] && !(i != 0 && s[i - 1] == s[i] && (*used)[i - 1])) {\n                (*used)[i] = true;\n                ans->push_back(s[i]);\n                permuteUniqueRecu(mid, s, used, ans, result);\n                ans->pop_back();\n                (*used)[i] = false;\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * n!)\n# Space: O(n)\n\nimport collections\nimport itertools\n\n\nclass Solution(object):\n    def generatePalindromes(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: List[str]\n        \"\"\"\n        cnt = collections.Counter(s)\n        mid = ''.join(k for k, v in cnt.iteritems() if v % 2)\n        chars = ''.join(k * (v / 2) for k, v in cnt.iteritems())\n        return self.permuteUnique(mid, chars) if len(mid) < 2 else []\n\n    def permuteUnique(self, mid, nums):\n        result = []\n        used = [False] * len(nums)\n        self.permuteUniqueRecu(mid, result, used, [], nums)\n        return result\n\n    def permuteUniqueRecu(self, mid, result, used, cur, nums):\n        if len(cur) == len(nums):\n            half_palindrome = ''.join(cur)\n            result.append(half_palindrome + mid + half_palindrome[::-1])\n            return\n        for i in xrange(len(nums)):\n            if not used[i] and not (i > 0 and nums[i-1] == nums[i] and used[i-1]):\n                used[i] = True\n                cur.append(nums[i])\n                self.permuteUniqueRecu(mid, result, used, cur, nums)\n                cur.pop()\n                used[i] = False\n\nclass Solution2(object):\n    def generatePalindromes(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: List[str]\n        \"\"\"\n        cnt = collections.Counter(s)\n        mid = tuple(k for k, v in cnt.iteritems() if v % 2)\n        chars = ''.join(k * (v / 2) for k, v in cnt.iteritems())\n        return [''.join(half_palindrome + mid + half_palindrome[::-1]) \\\n                for half_palindrome in set(itertools.permutations(chars))] if len(mid) < 2 else []",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "4806e8f0-0211-47af-bb74-d61d12d49306",
+  "slug": "last-substring-in-lexicographical-order",
+  "title": "Last Substring in Lexicographical Order",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a string <code>s</code>, return <em>the last substring of</em> <code>s</code> <em>in lexicographical order</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abab&quot;\n<strong>Output:</strong> &quot;bab&quot;\n<strong>Explanation:</strong> The substrings are [&quot;a&quot;, &quot;ab&quot;, &quot;aba&quot;, &quot;abab&quot;, &quot;b&quot;, &quot;ba&quot;, &quot;bab&quot;]. The lexicographically maximum substring is &quot;bab&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;leetcode&quot;\n<strong>Output:</strong> &quot;tcode&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 4 * 10<sup>5</sup></code></li>\n\t<li><code>s</code> contains only lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string lastSubstring(string s) {\n        int left = 0, right = 1, l = 0;\n        while (right + l < size(s)) {\n            if (s[left + l] == s[right + l]) {\n                ++l;\n                continue;\n            }\n            if (s[left + l] > s[right + l]) {\n                right += l + 1;\n            } else {\n                left = max(right, left + l + 1);\n                right = left + 1;\n            }\n            l = 0;\n        }\n        return s.substr(left);\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution2 {\npublic:\n    string lastSubstring(string s) {\n        unordered_map<char, vector<size_t>> count;\n        for (size_t i = 0; i < s.length(); ++i) {\n            count[s[i]].emplace_back(i);\n        }\n\n        const auto& max_c = max_element(count.cbegin(), count.cend(),\n                                        [](const auto& a, const auto& b) {\n                                            return a.first < b.first;\n                                        })->first;\n        unordered_map<int, int> starts;\n        for (const auto& i : count[max_c]) {\n            starts[i] = i + 1;\n        }\n        while (starts.size() > 1) {\n            unordered_set<int> lookup;\n            unordered_map<char, vector<int>> next_count;\n            for (const auto& [start, end] : starts) {\n                if (end == s.length())  {  // finished\n                    lookup.emplace(start);\n                    continue;\n                }\n                next_count[s[end]].emplace_back(start);\t\t\t\n                if (starts.count(end)) {  // overlapped\n                    lookup.emplace(end);\n                }\n            }\n            unordered_map<int, int> next_starts;\n            const auto& max_c = max_element(next_count.cbegin(), next_count.cend(),\n                                            [](const auto& a, const auto& b) {\n                                                return a.first < b.first;\n                                            })->first;\n            for (const auto& start : next_count[max_c]) {\n                if (!lookup.count(start)) {\n                    next_starts[start] = starts[start] + 1;\n                }\n            }\n            starts = move(next_starts);\n        }\n        return s.substr(starts.cbegin()->first);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def lastSubstring(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        left, right, l = 0, 1, 0\n        while right+l < len(s):\n            if s[left+l] == s[right+l]:\n                l += 1\n                continue\n            if s[left+l] > s[right+l]:\n                right += l+1\n            else:\n                left = max(right, left+l+1)\n                right = left+1\n            l = 0\n        return s[left:]\n\n\n# Time:  O(n)\n# Space: O(n)\nimport collections\n\n\nclass Solution2(object):\n    def lastSubstring(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        count = collections.defaultdict(list)\n        for i in xrange(len(s)):\n            count[s[i]].append(i)\n\n        max_c = max(count.iterkeys())\n        starts = {}\n        for i in count[max_c]:\n            starts[i] = i+1\n        while len(starts)-1 > 0:\n            lookup = set()\n            next_count = collections.defaultdict(list)\n            for start, end in starts.iteritems():\n                if end == len(s):  # finished\n                    lookup.add(start)\n                    continue\n                next_count[s[end]].append(start)\t\t\t\t\n                if end in starts:  # overlapped\n                    lookup.add(end)\t\t\t\n            next_starts = {}\n            max_c = max(next_count.iterkeys())\n            for start in next_count[max_c]:\n                if start not in lookup:\n                    next_starts[start] = starts[start]+1\n            starts = next_starts\n        return s[next(starts.iterkeys()):]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "4cbe3658-eb2e-4736-a638-241a0d936868",
+  "slug": "minimize-connected-groups-by-inserting-interval",
+  "title": "Minimize Connected Groups by Inserting Interval",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "sliding-window",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,3],[5,6],[8,10]]\n3\n[[5,10],[1,1],[3,3]]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// sort, prefix sum, two pointers, sliding window\nclass Solution {\npublic:\n    int minConnectedGroups(vector<vector<int>>& intervals, int k) {\n        sort(begin(intervals), end(intervals));\n        int result = 0;\n        vector<int> prefix(size(intervals) + 1);\n        for (int right = 0, left = 0, mx = numeric_limits<int>::min(); right < size(intervals); ++right) {\n            prefix[right + 1] = prefix[right] + (mx < intervals[right][0] ? 1 : 0);\n            mx = max(mx, intervals[right][1]);\n            for (; intervals[right][0] - intervals[left][1] > k; ++left);\n            result = max(result, prefix[right + 1] - prefix[left + 1]);\n        }\n        return prefix.back() - result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\n# sort, prefix sum, two pointers, sliding window\nclass Solution(object):\n    def minConnectedGroups(self, intervals, k):\n        \"\"\"\n        :type intervals: List[List[int]]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        intervals.sort()\n        result = 0\n        prefix = [0]*(len(intervals)+1)\n        mx = float(\"-inf\")\n        left = 0\n        for right in xrange(len(intervals)):\n            prefix[right+1] = prefix[right]+int(mx < intervals[right][0])\n            mx = max(mx, intervals[right][1])\n            while intervals[right][0]-intervals[left][1] > k:\n                left += 1\n            result = max(result, prefix[right+1]-prefix[left+1])\n        return prefix[-1]-result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

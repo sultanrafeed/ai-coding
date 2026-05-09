@@ -1,0 +1,41 @@
+{
+  "id": "2578fee9-9bd2-4ef0-b699-135875e88711",
+  "slug": "maximum-value-at-a-given-index-in-a-bounded-array",
+  "title": "Maximum Value at a Given Index in a Bounded Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given three positive integers:&nbsp;<code>n</code>, <code>index</code>, and <code>maxSum</code>. You want to construct an array <code>nums</code> (<strong>0-indexed</strong>)<strong> </strong>that satisfies the following conditions:</p>\n\n<ul>\n\t<li><code>nums.length == n</code></li>\n\t<li><code>nums[i]</code> is a <strong>positive</strong> integer where <code>0 &lt;= i &lt; n</code>.</li>\n\t<li><code>abs(nums[i] - nums[i+1]) &lt;= 1</code> where <code>0 &lt;= i &lt; n-1</code>.</li>\n\t<li>The sum of all the elements of <code>nums</code> does not exceed <code>maxSum</code>.</li>\n\t<li><code>nums[index]</code> is <strong>maximized</strong>.</li>\n</ul>\n\n<p>Return <code>nums[index]</code><em> of the constructed array</em>.</p>\n\n<p>Note that <code>abs(x)</code> equals <code>x</code> if <code>x &gt;= 0</code>, and <code>-x</code> otherwise.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 4, index = 2,  maxSum = 6\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> nums = [1,2,<u><strong>2</strong></u>,1] is one array that satisfies all the conditions.\nThere are no arrays that satisfy all the conditions and have nums[2] == 3, so 2 is the maximum nums[2].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 6, index = 1,  maxSum = 10\n<strong>Output:</strong> 3\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= maxSum &lt;= 10<sup>9</sup></code></li>\n\t<li><code>0 &lt;= index &lt; n</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "binary-search",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "4\n2\n6\n6\n1\n10",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logm)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxValue(int n, int index, int maxSum) {\n        maxSum -= n;\n        const auto& check = [&n, &index, &maxSum](int x) {\n            int64_t y = max(x - index, 0);\n            auto total = (x + y) * (x - y + 1) / 2;\n            y = max(x - (n - 1 - index), 0);\n            total += (x + y) * (x - y + 1) / 2;\n            return total - x <= maxSum;\n        };\n        int left = 0, right = maxSum;\n        while (left <= right) {\n            int mid = left + (right - left) / 2;\n            if (!check(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return 1 + right;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logm)\n# Space: O(1)\n\nclass Solution(object):\n    def maxValue(self, n, index, maxSum):\n        \"\"\"\n        :type n: int\n        :type index: int\n        :type maxSum: int\n        :rtype: int\n        \"\"\"\n        def check(n, index, maxSum, x):\n            y = max(x-index, 0)\n            total = (x+y)*(x-y+1)//2\n            y = max(x-((n-1)-index), 0)\n            total += (x+y)*(x-y+1)//2\n            return total-x <= maxSum\n\n        maxSum -= n\n        left, right = 0, maxSum\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(n, index, maxSum, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return 1+right",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

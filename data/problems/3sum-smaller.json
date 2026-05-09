@@ -1,0 +1,42 @@
+{
+  "id": "f1f34023-2b8d-4fc8-adbd-b9729e70a05d",
+  "slug": "3sum-smaller",
+  "title": "3Sum Smaller",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[-2,0,1,3]\n2\n[]\n0\n[0]\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int threeSumSmaller(vector<int>& nums, int target) {\n        sort(nums.begin(), nums.end());\n        const int n = nums.size();\n\n        int count = 0;\n        for (int k = 2; k < n; ++k) {\n            int i = 0, j = k - 1;\n            while (i < j) {  // Two Pointers, linear time.\n                if (nums[i] + nums[j] + nums[k] >= target) {\n                    --j;\n                } else {\n                    count += j - i;\n                    ++i;\n                }\n            }\n        }\n\n        return count;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(1)\n\nclass Solution(object):\n    # @param {integer[]} nums\n    # @param {integer} target\n    # @return {integer}\n    def threeSumSmaller(self, nums, target):\n        nums.sort()\n        n = len(nums)\n\n        count, k = 0, 2\n        while k < n:\n            i, j = 0, k - 1\n            while i < j:  # Two Pointers, linear time.\n                if nums[i] + nums[j] + nums[k] >= target:\n                    j -= 1\n                else:\n                    count += j - i\n                    i += 1\n            k += 1\n\n        return count",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

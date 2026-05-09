@@ -1,0 +1,34 @@
+{
+  "id": "a6142d75-83b5-487d-8489-4ee6427f5c08",
+  "slug": "max-difference-you-can-get-from-changing-an-integer",
+  "title": "Max Difference You Can Get From Changing an Integer",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer <code>num</code>. You will apply the following steps to <code>num</code> <strong>two</strong> separate times:</p>\n\n<ul>\n\t<li>Pick a digit <code>x (0 &lt;= x &lt;= 9)</code>.</li>\n\t<li>Pick another digit <code>y (0 &lt;= y &lt;= 9)</code>. Note <code>y</code> can be equal to <code>x</code>.</li>\n\t<li>Replace all the occurrences of <code>x</code> in the decimal representation of <code>num</code> by <code>y</code>.</li>\n</ul>\n\n<p>Let <code>a</code> and <code>b</code> be the two results from applying the operation to <code>num</code> <em>independently</em>.</p>\n\n<p>Return <em>the max difference</em> between <code>a</code> and <code>b</code>.</p>\n\n<p>Note that neither <code>a</code> nor <code>b</code> may have any leading zeros, and <strong>must not</strong> be 0.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 555\n<strong>Output:</strong> 888\n<strong>Explanation:</strong> The first time pick x = 5 and y = 9 and store the new integer in a.\nThe second time pick x = 5 and y = 1 and store the new integer in b.\nWe have now a = 999 and b = 111 and max difference = 888\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 9\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> The first time pick x = 9 and y = 9 and store the new integer in a.\nThe second time pick x = 9 and y = 1 and store the new integer in b.\nWe have now a = 9 and b = 1 and max difference = 8\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num &lt;= 10<sup>8</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    int maxDiff(int num) {\n        const auto& find = [](int num, const auto& check) {\n            int result = 0;\n            for (; num; num /= 10) {\n                const auto& d = num % 10;\n                if (check(d)) {\n                    result = d;\n                }\n            }\n            return result;\n        };\n\n        const auto& reverse = [](int num, int l) {\n            int result = 0;\n            for (; num || l > 0; num /= 10, --l) {\n                result = result * 10 + num % 10;\n            };\n            return result;\n        };\n\n        const auto& replace = [&](int num, int x, int y) {\n            int result = 0, l = 0;\n            for (; num; num /= 10, ++l) {\n                auto d = num % 10;\n                if (d == x) {\n                    d = y;\n                }\n                result = result * 10 + d;\n            };\n            return reverse(result, l);\n        };\n\n        const auto& b = find(num, [](int x) { return x < 9; });\n        const auto& a = find(num, [](int x) { return x > 1; });\n        return replace(num, b, 9) - replace(num, a, reverse(num, 0) % 10 != 1 ? 1 : 0);\n    }\n};\n\n// Time:  O(logn)\n// Space: O(logn)\n// greedy\nclass Solution2 {\npublic:\n    int maxDiff(int num) {\n        const auto& digits = to_string(num);\n        char b = '0';\n        for (const auto& c : digits) {\n            if (c < '9') {\n                b = c;\n                break;\n            }\n        }\n        char a = '0';\n        for (const auto& c : digits) {\n            if (c > '1') {\n                a = c;\n                break;\n            }\n        }\n        string big(digits), small(digits);\n        replace(begin(big), end(big), b, '9');\n        replace(begin(small), end(small), a, digits[0] != '1' ? '1' : '0');\n        return stoi(big) - stoi(small);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def maxDiff(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: int\n        \"\"\"\n        def find(num, check):\n            result = 0\n            while num:\n                num, d = divmod(num, 10)\n                if check(d):\n                    result = d\n            return result\n\n        def reverse(num, l):\n            result = 0\n            while num or l > 0:\n                num, d = divmod(num, 10)\n                result = result*10+d\n                l -= 1\n            return result\n\n        def replace(num, x, y):\n            result = l = 0\n            while num:\n                num, d = divmod(num, 10)\n                if d == x:\n                    d = y\n                result = result*10+d\n                l += 1\n            return reverse(result, l)\n    \n        b = find(num, lambda x: x < 9)\n        a = find(num, lambda x: x > 1)\n        return replace(num, b, 9)-replace(num, a, 1 if reverse(num, 0)%10 != 1 else 0)\n\n\n# Time:  O(logn)\n# Space: O(logn)\n# greedy\nclass Solution2(object):\n    def maxDiff(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: int\n        \"\"\"\n        digits = str(num)\n        b = next((x for x in digits if x < '9'), '0')\n        a = next((x for x in digits if x > '1'), '0')\n        return int(digits.replace(b, '9'))-int(digits.replace(a, '1' if digits[0] != '1' else '0'))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

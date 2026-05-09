@@ -1,0 +1,35 @@
+{
+  "id": "31f7edef-8933-4c14-a0d8-3cb0272610e3",
+  "slug": "find-target-indices-after-sorting-array",
+  "title": "Find Target Indices After Sorting Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> and a target element <code>target</code>.</p>\n\n<p>A <strong>target index</strong> is an index <code>i</code> such that <code>nums[i] == target</code>.</p>\n\n<p>Return <em>a list of the target indices of</em> <code>nums</code> after<em> sorting </em><code>nums</code><em> in <strong>non-decreasing</strong> order</em>. If there are no target indices, return <em>an <strong>empty</strong> list</em>. The returned list must be sorted in <strong>increasing</strong> order.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,5,2,3], target = 2\n<strong>Output:</strong> [1,2]\n<strong>Explanation:</strong> After sorting, nums is [1,<u><strong>2</strong></u>,<u><strong>2</strong></u>,3,5].\nThe indices where nums[i] == 2 are 1 and 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,5,2,3], target = 3\n<strong>Output:</strong> [3]\n<strong>Explanation:</strong> After sorting, nums is [1,2,2,<u><strong>3</strong></u>,5].\nThe index where nums[i] == 3 is 3.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,5,2,3], target = 5\n<strong>Output:</strong> [4]\n<strong>Explanation:</strong> After sorting, nums is [1,2,2,3,<u><strong>5</strong></u>].\nThe index where nums[i] == 5 is 4.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i], target &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> targetIndices(vector<int>& nums, int target) {\n        int less = count_if(cbegin(nums), cend(nums), [&](int n) { return n < target; });\n        int equal = count(cbegin(nums), cend(nums), target);\n        vector<int> result(equal);\n        iota(begin(result), end(result), less);\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def targetIndices(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: List[int]\n        \"\"\"\n        less = sum(x < target for x in nums)\n        return range(less, less+sum(x == target for x in nums))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

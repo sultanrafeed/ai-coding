@@ -1,0 +1,44 @@
+{
+  "id": "140c78be-481d-4e8d-a1dd-df35f0440e25",
+  "slug": "regions-cut-by-slashes",
+  "title": "Regions Cut By Slashes",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>An <code>n x n</code> grid is composed of <code>1 x 1</code> squares where each <code>1 x 1</code> square consists of a <code>&#39;/&#39;</code>, <code>&#39;\\&#39;</code>, or blank space <code>&#39; &#39;</code>. These characters divide the square into contiguous regions.</p>\n\n<p>Given the grid <code>grid</code> represented as a string array, return <em>the number of regions</em>.</p>\n\n<p>Note that backslash characters are escaped, so a <code>&#39;\\&#39;</code> is represented as <code>&#39;\\\\&#39;</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2018/12/15/1.png\" style=\"width: 200px; height: 200px;\" />\n<pre>\n<strong>Input:</strong> grid = [&quot; /&quot;,&quot;/ &quot;]\n<strong>Output:</strong> 2\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2018/12/15/2.png\" style=\"width: 200px; height: 198px;\" />\n<pre>\n<strong>Input:</strong> grid = [&quot; /&quot;,&quot;  &quot;]\n<strong>Output:</strong> 1\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2018/12/15/4.png\" style=\"width: 200px; height: 200px;\" />\n<pre>\n<strong>Input:</strong> grid = [&quot;/\\\\&quot;,&quot;\\\\/&quot;]\n<strong>Output:</strong> 5\n<strong>Explanation: </strong>Recall that because \\ characters are escaped, &quot;\\\\/&quot; refers to \\/, and &quot;/\\\\&quot; refers to /\\.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == grid.length == grid[i].length</code></li>\n\t<li><code>1 &lt;= n &lt;= 30</code></li>\n\t<li><code>grid[i][j]</code> is either <code>&#39;/&#39;</code>, <code>&#39;\\&#39;</code>, or <code>&#39; &#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "depth-first-search",
+    "breadth-first-search",
+    "union-find",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\" /\",\"/ \"]\n[\" /\",\"  \"]\n[\"/\\\\\",\"\\\\/\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    int regionsBySlashes(vector<string>& grid) {\n        UnionFind union_find(grid.size() * grid.size() * 4);\n        for (int i = 0; i < grid.size(); ++i) {\n            for (int j = 0; j < grid[0].size(); ++j) {\n                if (i) {\n                    union_find.union_set(index(grid.size(), i - 1, j, S),\n                                         index(grid.size(), i, j, N));\n                }\n                if (j) {\n                    union_find.union_set(index(grid.size(), i, j - 1, E),\n                                         index(grid.size(), i, j, W));\n                }\n                if (grid[i][j] != '/') {\n                    union_find.union_set(index(grid.size(), i, j, N),\n                                         index(grid.size(), i, j, E));\n                    union_find.union_set(index(grid.size(), i, j, S),\n                                         index(grid.size(), i, j, W));\n                }\n                if (grid[i][j] != '\\\\') {\n                    union_find.union_set(index(grid.size(), i, j, W),\n                                         index(grid.size(), i, j, N));\n                    union_find.union_set(index(grid.size(), i, j, E),\n                                         index(grid.size(), i, j, S));\n                }\n            }\n        }\n        return union_find.size();\n    }\n    \nprivate:\n    enum NODES {N, E, S, W};\n    \n    class UnionFind {\n        public:\n            UnionFind(const int n) : set_(n), count_(n) {\n                iota(set_.begin(), set_.end(), 0);\n            }\n\n            int find_set(const int x) {\n               if (set_[x] != x) {\n                   set_[x] = find_set(set_[x]);  // Path compression.\n               }\n               return set_[x];\n            }\n\n            void union_set(const int x, const int y) {\n                int x_root = find_set(x), y_root = find_set(y);\n                if (x_root != y_root) {\n                    set_[min(x_root, y_root)] = max(x_root, y_root);\n                    --count_;\n                }\n            }\n\n            int size() const {\n                return count_;\n            }\n\n        private:\n            vector<int> set_;\n            int count_;\n    };\n    \n    int index(int n, int i, int j, int k) {\n        return (i * n + j) * 4 + k;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n^2)\n\nclass UnionFind(object):\n    def __init__(self, n):\n        self.set = range(n)\n        self.count = n\n\n    def find_set(self, x):\n       if self.set[x] != x:\n           self.set[x] = self.find_set(self.set[x])  # path compression.\n       return self.set[x]\n\n    def union_set(self, x, y):\n        x_root, y_root = map(self.find_set, (x, y))\n        if x_root != y_root:\n            self.set[min(x_root, y_root)] = max(x_root, y_root)\n            self.count -= 1\n\n\nclass Solution(object):\n    def regionsBySlashes(self, grid):\n        \"\"\"\n        :type grid: List[str]\n        :rtype: int\n        \"\"\"\n        def index(n, i, j, k):\n            return (i*n + j)*4 + k\n    \n        union_find = UnionFind(len(grid)**2 * 4)\n        N, E, S, W = range(4)\n        for i in xrange(len(grid)):\n            for j in xrange(len(grid)):\n                if i:\n                    union_find.union_set(index(len(grid), i-1, j, S),\n                                         index(len(grid),i, j, N))\n                if j:\n                    union_find.union_set(index(len(grid), i, j-1, E),\n                                         index(len(grid), i, j, W))\n                if grid[i][j] != \"/\":\n                    union_find.union_set(index(len(grid), i, j, N),\n                                         index(len(grid), i, j, E))\n                    union_find.union_set(index(len(grid), i, j, S),\n                                         index(len(grid), i, j, W))\n                if grid[i][j] != \"\\\\\":\n                    union_find.union_set(index(len(grid), i, j, W),\n                                         index(len(grid), i, j, N))\n                    union_find.union_set(index(len(grid), i, j, E),\n                                         index(len(grid), i, j, S))\n        return union_find.count",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

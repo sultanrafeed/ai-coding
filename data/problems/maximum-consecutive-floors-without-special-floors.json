@@ -1,0 +1,40 @@
+{
+  "id": "cb9111d8-8347-4f3d-940e-4ce6172b5037",
+  "slug": "maximum-consecutive-floors-without-special-floors",
+  "title": "Maximum Consecutive Floors Without Special Floors",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Alice manages a company and has rented some floors of a building as office space. Alice has decided some of these floors should be <strong>special floors</strong>, used for relaxation only.</p>\n\n<p>You are given two integers <code>bottom</code> and <code>top</code>, which denote that Alice has rented all the floors from <code>bottom</code> to <code>top</code> (<strong>inclusive</strong>). You are also given the integer array <code>special</code>, where <code>special[i]</code> denotes a special floor that Alice has designated for relaxation.</p>\n\n<p>Return <em>the <strong>maximum</strong> number of consecutive floors without a special floor</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> bottom = 2, top = 9, special = [4,6]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The following are the ranges (inclusive) of consecutive floors without a special floor:\n- (2, 3) with a total amount of 2 floors.\n- (5, 5) with a total amount of 1 floor.\n- (7, 9) with a total amount of 3 floors.\nTherefore, we return the maximum number which is 3 floors.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> bottom = 6, top = 8, special = [7,6,8]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Every floor rented is a special floor, so we return 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= special.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= bottom &lt;= special[i] &lt;= top &lt;= 10<sup>9</sup></code></li>\n\t<li>All the values of <code>special</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "2\n9\n[4,6]\n6\n8\n[7,6,8]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// sort\nclass Solution {\npublic:\n    int maxConsecutive(int bottom, int top, vector<int>& special) {\n        sort(begin(special), end(special));\n        int result = max(special[0] - bottom, top - special.back());\n        for (int i = 1; i < size(special); ++i) {\n            result = max(result, special[i] - special[i - 1] - 1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# sort\nclass Solution(object):\n    def maxConsecutive(self, bottom, top, special):\n        \"\"\"\n        :type bottom: int\n        :type top: int\n        :type special: List[int]\n        :rtype: int\n        \"\"\"\n        special.sort()\n        result = max(special[0]-bottom, top-special[-1])\n        for i in xrange(1, len(special)):\n            result = max(result, special[i]-special[i-1]-1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

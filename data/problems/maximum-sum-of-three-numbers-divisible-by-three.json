@@ -1,0 +1,42 @@
+{
+  "id": "2f069365-dde3-4d88-a54a-a9dfcc34821d",
+  "slug": "maximum-sum-of-three-numbers-divisible-by-three",
+  "title": "Maximum Sum of Three Numbers Divisible by Three",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Your task is to choose <strong>exactly three</strong> integers from <code>nums</code> such that their sum is divisible by three.</p>\n\n<p>Return the <strong>maximum</strong> possible sum of such a triplet. If no such triplet exists, return 0.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [4,2,3,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">9</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The valid triplets whose sum is divisible by 3 are:</p>\n\n<ul>\n\t<li><code>(4, 2, 3)</code> with a sum of <code>4 + 2 + 3 = 9</code>.</li>\n\t<li><code>(2, 3, 1)</code> with a sum of <code>2 + 3 + 1 = 6</code>.</li>\n</ul>\n\n<p>Thus, the answer is 9.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,1,5]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>No triplet forms a sum divisible by 3, so the answer is 0.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,2,3,1]\n[2,1,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// sort, math\nclass Solution {\npublic:\n    int maximumSum(vector<int>& nums) {\n        const auto& add = [](auto& arr, int x) {\n            for (int i = 0; i < size(arr); ++i) {\n                if (x > arr[i]) {\n                    swap(arr[i], x);\n                }\n            }\n            if (size(arr) != 3) {\n                arr.emplace_back(x);\n            }\n        };\n\n        vector<vector<int>> group(3);\n        for (const auto& x : nums) {\n            add(group[x % 3], x);\n        }\n        int result = 0;\n        for (auto& g : group) {\n            if (size(g) == 3) {\n                result = max(result, accumulate(cbegin(g), cend(g), 0));\n            }\n        }\n        if (!empty(group[0]) && !empty(group[1]) && !empty(group[2])) {\n            result = max(result, group[0][0] + group[1][0] + group[2][0]);\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// sort, math\nclass Solution2 {\npublic:\n    int maximumSum(vector<int>& nums) {\n        vector<vector<int>> group(3);\n        for (const auto& x : nums) {\n            group[x % 3].emplace_back(x);\n        }\n        int result = 0;\n        for (auto& g : group) {\n            sort(begin(g), end(g), greater<int>());\n            if (size(g) >= 3) {\n                result = max(result, accumulate(cbegin(g), cbegin(g) + 3, 0));\n            }\n        }\n        if (!empty(group[0]) && !empty(group[1]) && !empty(group[2])) {\n            result = max(result, group[0][0] + group[1][0] + group[2][0]);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# sort, math\nclass Solution(object):\n    def maximumSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def add(arr, x):\n            for i in xrange(len(arr)):\n                if x > arr[i]:\n                    arr[i], x = x, arr[i]\n            if len(arr) != 3:\n                arr.append(x)\n\n        group = [[] for _ in xrange(3)]\n        for x in nums:\n            add(group[x%3], x)\n        result = 0\n        for g in group:\n            if len(g) == 3:\n                result = max(result, sum(g))\n        if group[0] and group[1] and group[2]:\n            result = max(result, group[0][0]+group[1][0]+group[2][0])\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\n# sort, math\nclass Solution2(object):\n    def maximumSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        group = [[] for _ in xrange(3)]\n        for x in nums:\n            group[x%3].append(x)\n        result = 0\n        for g in group:\n            g.sort(reverse=True)\n            if len(g) >= 3:\n                result = max(result, sum(g[i] for i in xrange(3)))\n        if group[0] and group[1] and group[2]:\n            result = max(result, group[0][0]+group[1][0]+group[2][0])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

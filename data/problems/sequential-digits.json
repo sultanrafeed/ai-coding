@@ -1,0 +1,33 @@
+{
+  "id": "17b50363-4a82-450f-bedc-35b9ed1721f3",
+  "slug": "sequential-digits",
+  "title": "Sequential Digits",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>An&nbsp;integer has <em>sequential digits</em> if and only if each digit in the number is one more than the previous digit.</p>\n\n<p>Return a <strong>sorted</strong> list of all the integers&nbsp;in the range <code>[low, high]</code>&nbsp;inclusive that have sequential digits.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> low = 100, high = 300\n<strong>Output:</strong> [123,234]\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> low = 1000, high = 13000\n<strong>Output:</strong> [1234,2345,3456,4567,5678,6789,12345]\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>10 &lt;= low &lt;= high &lt;= 10^9</code></li>\n</ul>\n",
+  "patterns": [
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((8 + 1) * 8 / 2) = O(1)\n// Space: O(8) = O(1)\n\nclass Solution {\npublic:\n    vector<int> sequentialDigits(int low, int high) {\n        vector<int> result;\n        queue<int> q{{1, 2, 3, 4, 5, 6, 7, 8}};\n        while (!q.empty()) {\n            const auto num = q.front(); q.pop();\n            if (num > high) {\n                continue;\n            }\n            if (low <= num) {\n                result.emplace_back(num);\n            }\n            if (num % 10 + 1 < 10) {\n                q.emplace(num * 10 + num % 10 + 1);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((8 + 1) * 8 / 2) = O(1)\n# Space: O(8) = O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def sequentialDigits(self, low, high):\n        \"\"\"\n        :type low: int\n        :type high: int\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        q = collections.deque(range(1, 9))\n        while q:\n            num = q.popleft()\n            if num > high:\n                continue\n            if low <= num:\n                result.append(num)\n            if num%10+1 < 10:\n                q.append(num*10+num%10+1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

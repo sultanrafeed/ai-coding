@@ -1,0 +1,35 @@
+{
+  "id": "28ec8266-deb6-4b96-8c40-35e9ae0c5b8f",
+  "slug": "maximum-count-of-positive-integer-and-negative-integer",
+  "title": "Maximum Count of Positive Integer and Negative Integer",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an array <code>nums</code> sorted in <strong>non-decreasing</strong> order, return <em>the maximum between the number of positive integers and the number of negative integers.</em></p>\n\n<ul>\n\t<li>In other words, if the number of positive integers in <code>nums</code> is <code>pos</code> and the number of negative integers is <code>neg</code>, then return the maximum of <code>pos</code> and <code>neg</code>.</li>\n</ul>\n\n<p><strong>Note</strong> that <code>0</code> is neither positive nor negative.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [-2,-1,-1,1,2,3]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> There are 3 positive integers and 3 negative integers. The maximum count among them is 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [-3,-2,-1,0,0,1,2]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> There are 2 positive integers and 3 negative integers. The maximum count among them is 3.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,20,66,1314]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> There are 4 positive integers and 0 negative integers. The maximum count among them is 4.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 2000</code></li>\n\t<li><code>-2000 &lt;= nums[i] &lt;= 2000</code></li>\n\t<li><code>nums</code> is sorted in a <strong>non-decreasing order</strong>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong> Can you solve the problem in <code>O(log(n))</code> time complexity?</p>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// binary search\nclass Solution {\npublic:\n    int maximumCount(vector<int>& nums) {\n        return max(\n            distance(cbegin(nums), lower_bound(cbegin(nums), cend(nums), 0)),\n            distance(lower_bound(cbegin(nums), cend(nums), 1),  cend(nums))\n        ); \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nimport bisect\n\n\n# binary search\nclass Solution(object):\n    def maximumCount(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return max(bisect.bisect_left(nums, 0)-0, len(nums)-bisect.bisect_left(nums, 1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

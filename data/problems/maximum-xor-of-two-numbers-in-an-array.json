@@ -1,0 +1,36 @@
+{
+  "id": "90e7f98f-d728-471d-b28b-30f8e82795d7",
+  "slug": "maximum-xor-of-two-numbers-in-an-array",
+  "title": "Maximum XOR of Two Numbers in an Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, return <em>the maximum result of </em><code>nums[i] XOR nums[j]</code>, where <code>0 &lt;= i &lt;= j &lt; n</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,10,5,25,2,8]\n<strong>Output:</strong> 28\n<strong>Explanation:</strong> The maximum result is 5 XOR 25 = 28.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [14,70,53,83,49,91,36,80,92,51,66,70]\n<strong>Output:</strong> 127\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 2 * 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "bit-manipulation",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr), r = max(nums)\n// Space: O(t)\n\nclass Solution {\nprivate:\n    class Trie {\n    public:\n        Trie(int bit_length)\n         : bit_length_(bit_length)\n         , nodes_() {\n             new_node();\n         }\n\n        void insert(int num) {\n            int curr = 0;\n            for (int i = bit_length_ - 1; i >= 0; --i) {\n                int x = num >> i;\n                if (nodes_[curr][x & 1] == -1) {\n                    nodes_[curr][x & 1] = new_node();\n                }\n                curr = nodes_[curr][x & 1];\n            }\n        }\n\n        int query(int num) {\n            int result = 0, curr = 0;\n            for (int i = bit_length_ - 1; i >= 0; --i) {\n                result <<= 1;\n                const int x = num >> i;\n                if (nodes_[curr][1 ^ (x & 1)] != -1) {\n                    result |= 1;\n                    curr = nodes_[curr][1 ^ (x & 1)];\n                } else {\n                    curr = nodes_[curr][x & 1];\n                }\n            }\n            return result;\n        }\n\n    private:\n        int new_node() {\n            nodes_.push_back(array<int, 2>{-1, -1});\n            return size(nodes_) - 1;\n        }\n\n        const int bit_length_;\n        vector<array<int, 2>> nodes_;\n    };\n\npublic:\n    int findMaximumXOR(vector<int>& nums) {\n        Trie trie(bit_length(*max_element(cbegin(nums), cend(nums))));\n        int result = 0;\n        for (const auto& num : nums) {\n            trie.insert(num);\n            result = max(result, trie.query(num));\n        }\n        return result;\n    }\n\nprivate:\n    int bit_length(int x) {\n        return x != 0 ? 32 - __builtin_clz(x) : 1;\n    }\n};\n\n// Time:  O(nlogr), r = max(nums)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int findMaximumXOR(vector<int>& nums) {\n        int result = 0;\n        \n        for (int i = bit_length(*max_element(cbegin(nums), cend(nums))) - 1; i >= 0; --i) {\n            result <<= 1;\n            unordered_set<int> prefixes;\n            for (const auto& n : nums) {\n                prefixes.emplace(n >> i);\n            }\n            for (const auto& p : prefixes) {\n                if (prefixes.count((result | 1) ^ p)) {\n                    result |= 1;\n                    break;\n                }\n            }\n        }\n\n        return result;\n    }\n\nprivate:\n    int bit_length(int x) {\n        return x != 0 ? 32 - __builtin_clz(x) : 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr), r = max(nums)\n# Space: O(t)\n\nclass Solution(object):\n    def findMaximumXOR(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        class Trie(object):\n            def __init__(self, bit_length):\n                self.__nodes = []\n                self.__new_node()\n                self.__bit_length = bit_length\n            \n            def __new_node(self):\n                self.__nodes.append([-1]*2)\n                return len(self.__nodes)-1\n\n            def insert(self, num):\n                curr = 0\n                for i in reversed(xrange(self.__bit_length)):\n                    x = num>>i\n                    if self.__nodes[curr][x&1] == -1:\n                        self.__nodes[curr][x&1] = self.__new_node()\n                    curr = self.__nodes[curr][x&1]\n                        \n            def query(self, num):\n                result = curr = 0\n                for i in reversed(xrange(self.__bit_length)):\n                    result <<= 1\n                    x = num>>i\n                    if self.__nodes[curr][1^(x&1)] != -1:\n                        curr = self.__nodes[curr][1^(x&1)]\n                        result |= 1\n                    else:\n                        curr = self.__nodes[curr][x&1]\n                return result\n\n        trie = Trie(max(nums).bit_length())\n        result = 0\n        for num in nums:\n            trie.insert(num)\n            result = max(result, trie.query(num))\n        return result\n\n\n# Time:  O(nlogr), r = max(nums)\n# Space: O(n)\nclass Solution2(object):\n    def findMaximumXOR(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = 0\n        for i in reversed(xrange(max(nums).bit_length())):\n            result <<= 1\n            prefixes = set()\n            for n in nums:\n                prefixes.add(n >> i)\n            for p in prefixes:\n                if (result | 1) ^ p in prefixes:\n                    result |= 1\n                    break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

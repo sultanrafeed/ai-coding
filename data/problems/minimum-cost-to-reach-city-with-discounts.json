@@ -1,0 +1,35 @@
+{
+  "id": "706e308d-d63b-4dae-b195-0295c8385cfd",
+  "slug": "minimum-cost-to-reach-city-with-discounts",
+  "title": "Minimum Cost to Reach City With Discounts",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "graph",
+    "heap-priority-queue",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((|E| + |V|) * log|V|) = O(|E| * log|V|) by using binary heap,\n//        if we can further to use Fibonacci heap, it would be O(|E| + |V| * log|V|)\n// Space: O(|E| + |V|) = O(|E|)\n\nclass Solution {\npublic:\n    int minimumCost(int n, vector<vector<int>>& highways, int discounts) {\n        using P = pair<int, int>;\n        unordered_map<int, vector<P>> adj;\n        for (const auto& highway : highways) {\n            int u, v, w;\n            tie(u, v, w) = make_tuple(highway[0], highway[1], highway[2]);\n            adj[u].emplace_back(v, w);\n            adj[v].emplace_back(u, w);\n        }\n        \n        unordered_map<int, unordered_map<int, int>> best;\n        best[0][discounts] = 0;\n        using T = tuple<int, int, int>;\n        priority_queue<T, vector<T>, greater<T>> min_heap;\n        min_heap.emplace(0, 0, discounts);\n        while (!empty(min_heap)) {\n            auto [total, u, k] = min_heap.top(); min_heap.pop();\n            if ((best.count(u) && best[u].count(k) &&  best[u][k] < total)) {\n                continue;\n            }\n            if (u == n - 1) {\n                return total;\n            }\n            for (const auto& [v, w] : adj[u]) {\n                if (!best.count(v) ||\n                    !best[v].count(k) ||\n                    total + w < best[v][k]) {\n                    best[v][k] = total + w;\n                    min_heap.emplace(total + w, v, k);\n                }\n                if (k > 0 &&\n                    (!best.count(v) ||\n                    !best[v].count(k - 1) ||\n                    total + w / 2 < best[v][k - 1])) {\n                    best[v][k - 1] = total + w / 2;\n                    min_heap.emplace(total + w / 2, v, k - 1);\n                }\n            }\n        }\n        return -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((|E| + |V|) * log|V|) = O(|E| * log|V|) by using binary heap,\n#        if we can further to use Fibonacci heap, it would be O(|E| + |V| * log|V|)\n# Space: O(|E| + |V|) = O(|E|)\n\nimport collections\nimport heapq\n\n\nclass Solution(object):\n    def minimumCost(self, n, highways, discounts):\n        \"\"\"\n        :type n: int\n        :type highways: List[List[int]]\n        :type discounts: int\n        :rtype: int\n        \"\"\"\n        adj = [[] for _ in xrange(n)]\n        for u, v, w in highways:\n            adj[u].append((v, w))\n            adj[v].append((u, w))\n        src, dst = 0, n-1\n        best = collections.defaultdict(lambda: collections.defaultdict(lambda: float(\"inf\")))\n        best[src][discounts] = 0\n        min_heap = [(0, src, discounts)]\n        while min_heap:\n            result, u, k = heapq.heappop(min_heap)\n            if best[u][k] < result:\n                continue\n            if u == dst:\n                return result\n            for v, w in adj[u]:\n                if result+w < best[v][k]:\n                    best[v][k] = result+w                    \n                    heapq.heappush(min_heap, (result+w, v, k))\n                if k > 0 and result+w//2 < best[v][k-1]:\n                    best[v][k-1] = result+w//2                   \n                    heapq.heappush(min_heap, (result+w//2, v, k-1))\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

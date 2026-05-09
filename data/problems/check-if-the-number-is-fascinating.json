@@ -1,0 +1,34 @@
+{
+  "id": "6431c6db-c5b0-4794-a2a3-c8ef343dd91e",
+  "slug": "check-if-the-number-is-fascinating",
+  "title": "Check if The Number is Fascinating",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer <code>n</code> that consists of exactly <code>3</code> digits.</p>\n\n<p>We call the number <code>n</code> <strong>fascinating</strong> if, after the following modification, the resulting number contains all the digits from <code>1</code> to <code>9</code> <strong>exactly</strong> once and does not contain any <code>0</code>&#39;s:</p>\n\n<ul>\n\t<li><strong>Concatenate</strong> <code>n</code> with the numbers <code>2 * n</code> and <code>3 * n</code>.</li>\n</ul>\n\n<p>Return <code>true</code><em> if </em><code>n</code><em> is fascinating, or </em><code>false</code><em> otherwise</em>.</p>\n\n<p><strong>Concatenating</strong> two numbers means joining them together. For example, the concatenation of <code>121</code> and <code>371</code> is <code>121371</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 192\n<strong>Output:</strong> true\n<strong>Explanation:</strong> We concatenate the numbers n = 192 and 2 * n = 384 and 3 * n = 576. The resulting number is 192384576. This number contains all the digits from 1 to 9 exactly once.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 100\n<strong>Output:</strong> false\n<strong>Explanation:</strong> We concatenate the numbers n = 100 and 2 * n = 200 and 3 * n = 300. The resulting number is 100200300. This number does not satisfy any of the conditions.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>100 &lt;= n &lt;= 999</code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// string, bitmasks\nclass Solution {\npublic:\n    bool isFascinating(int n) {\n        int lookup = 0;\n        const auto& check = [&](int x) {\n            for (; x ; x /= 10) {\n                const int d = x % 10;\n                if (d == 0 || lookup & (1 << d)) {\n                    return false;\n                }\n                lookup |= 1 << d;\n            }\n            return true;\n        };\n\n        return check(n) && check(2 * n) && check(3 * n);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# string, bitmasks\nclass Solution(object):\n    def isFascinating(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: bool\n        \"\"\"\n        lookup = [0]\n        def check(x):\n            while x:\n                x, d = divmod(x, 10)\n                if d == 0 or lookup[0]&(1<<d):\n                    return False\n                lookup[0] |= (1<<d)\n            return True\n    \n        return check(n) and check(2*n) and check(3*n)\n\n\n# Time:  O(logn)\n# Space: O(logn)\n# string\nclass Solution2(object):\n    def isFascinating(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: bool\n        \"\"\"\n        s = str(n)+str(2*n)+str(3*n)\n        return '0' not in s and len(s) == 9 and len(set(s)) == 9",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

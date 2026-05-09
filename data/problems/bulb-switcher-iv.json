@@ -1,0 +1,31 @@
+{
+  "id": "ea9620d8-6b53-4bf2-beb9-51257fff75aa",
+  "slug": "bulb-switcher-iv",
+  "title": "Bulb Switcher Iv",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minFlips(string target) {\n        int result = 0;\n        char curr = '0';\n        for (const auto& c : target) {\n            if (c == curr) {\n                continue;\n            }\n            curr = c;\n            ++result;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minFlips(self, target):\n        \"\"\"\n        :type target: str\n        :rtype: int\n        \"\"\"\n        result, curr = 0, '0'\n        for c in target:\n            if c == curr:\n                continue\n            curr = c\n            result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

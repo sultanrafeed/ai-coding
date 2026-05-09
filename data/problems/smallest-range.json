@@ -1,0 +1,31 @@
+{
+  "id": "e095c0d5-2213-4037-b4d3-ae7aeae421e1",
+  "slug": "smallest-range",
+  "title": "Smallest Range",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogk)\n// Space: O(k)\n\nclass Solution {\npublic:\n    vector<int> smallestRange(vector<vector<int>>& nums) {\n        using VIT = vector<int>::iterator;\n        \n        const auto comp = [](const pair<VIT, VIT>& p1, const pair<VIT, VIT>& p2) {\n                              return *p1.first > *p2.first;\n                          };\n        \n        int left = numeric_limits<int>::max(), right = numeric_limits<int>::min();\n        priority_queue<pair<VIT, VIT>, vector<pair<VIT, VIT>>, decltype(comp)> min_heap(comp);\n        for (auto &row : nums) {\n            left = min(left, row[0]);\n            right = max(right, row[0]);\n            min_heap.emplace(row.begin(), row.end());\n        }\n        \n        vector<int> result = {left, right};\n        while (!min_heap.empty()) {\n            auto p = min_heap.top();\n            min_heap.pop();\n            ++p.first;\n            if (p.first == p.second) {\n                break;\n            }\n            min_heap.emplace(p);\n            \n            left = *min_heap.top().first;\n            right = max(right, *p.first);\n            if (right - left < result[1] - result[0]) {\n                result = {left, right};\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogk)\n# Space: O(k)\n\nimport heapq\n\n\nclass Solution(object):\n    def smallestRange(self, nums):\n        \"\"\"\n        :type nums: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        left, right = float(\"inf\"), float(\"-inf\")\n        min_heap = []\n        for row in nums:\n            left = min(left, row[0])\n            right = max(right, row[0])\n            it = iter(row)\n            heapq.heappush(min_heap, (next(it, None), it))\n\n        result = (left, right)\n        while min_heap:\n            (val, it) = heapq.heappop(min_heap)\n            val = next(it, None)\n            if val is None:\n                break\n            heapq.heappush(min_heap, (val, it))\n            left, right = min_heap[0][0], max(right, val)\n            if right - left < result[1] - result[0]:\n                result = (left, right)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

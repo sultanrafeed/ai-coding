@@ -1,0 +1,30 @@
+{
+  "id": "02f0bee6-76ba-4cc5-9a46-28f84d409cb4",
+  "slug": "binary-tree-right-side-view",
+  "title": "Binary Tree Right Side View",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree, imagine yourself standing on the <strong>right side</strong> of it, return <em>the values of the nodes you can see ordered from top to bottom</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">root = [1,2,3,null,5,null,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[1,3,4]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/11/24/tmpd5jn43fs-1.png\" style=\"width: 400px; height: 207px;\" /></p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">root = [1,2,3,4,null,null,null,5]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[1,3,4,5]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/11/24/tmpkpe40xeh-1.png\" style=\"width: 400px; height: 214px;\" /></p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">root = [1,null,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[1,3]</span></p>\n</div>\n\n<p><strong class=\"example\">Example 4:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">root = []</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[]</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[0, 100]</code>.</li>\n\t<li><code>-100 &lt;= Node.val &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    # @param root, a tree node\n    # @return a list of integers\n    def rightSideView(self, root):\n        result = []\n        self.rightSideViewDFS(root, 1, result)\n        return result\n\n    def rightSideViewDFS(self, node, depth, result):\n        if not node:\n            return\n\n        if depth > len(result):\n            result.append(node.val)\n\n        self.rightSideViewDFS(node.right, depth+1, result)\n        self.rightSideViewDFS(node.left, depth+1, result)\n\n\n# BFS solution\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    # @param root, a tree node\n    # @return a list of integers\n    def rightSideView(self, root):\n        if root is None:\n            return []\n\n        result, current = [], [root]\n        while current:\n            next_level = []\n            for node in current:\n                if node.left:\n                    next_level.append(node.left)\n                if node.right:\n                    next_level.append(node.right)                \n            result.append(node.val)\n            current = next_level\n\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "994db370-1565-4e05-a466-b430fa8f7b8f",
+  "slug": "stamping-the-sequence",
+  "title": "Stamping The Sequence",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two strings <code>stamp</code> and <code>target</code>. Initially, there is a string <code>s</code> of length <code>target.length</code> with all <code>s[i] == &#39;?&#39;</code>.</p>\n\n<p>In one turn, you can place <code>stamp</code> over <code>s</code> and replace every letter in the <code>s</code> with the corresponding letter from <code>stamp</code>.</p>\n\n<ul>\n\t<li>For example, if <code>stamp = &quot;abc&quot;</code> and <code>target = &quot;abcba&quot;</code>, then <code>s</code> is <code>&quot;?????&quot;</code> initially. In one turn you can:\n\n\t<ul>\n\t\t<li>place <code>stamp</code> at index <code>0</code> of <code>s</code> to obtain <code>&quot;abc??&quot;</code>,</li>\n\t\t<li>place <code>stamp</code> at index <code>1</code> of <code>s</code> to obtain <code>&quot;?abc?&quot;</code>, or</li>\n\t\t<li>place <code>stamp</code> at index <code>2</code> of <code>s</code> to obtain <code>&quot;??abc&quot;</code>.</li>\n\t</ul>\n\tNote that <code>stamp</code> must be fully contained in the boundaries of <code>s</code> in order to stamp (i.e., you cannot place <code>stamp</code> at index <code>3</code> of <code>s</code>).</li>\n</ul>\n\n<p>We want to convert <code>s</code> to <code>target</code> using <strong>at most</strong> <code>10 * target.length</code> turns.</p>\n\n<p>Return <em>an array of the index of the left-most letter being stamped at each turn</em>. If we cannot obtain <code>target</code> from <code>s</code> within <code>10 * target.length</code> turns, return an empty array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> stamp = &quot;abc&quot;, target = &quot;ababc&quot;\n<strong>Output:</strong> [0,2]\n<strong>Explanation:</strong> Initially s = &quot;?????&quot;.\n- Place stamp at index 0 to get &quot;abc??&quot;.\n- Place stamp at index 2 to get &quot;ababc&quot;.\n[1,0,2] would also be accepted as an answer, as well as some other answers.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> stamp = &quot;abca&quot;, target = &quot;aabcaca&quot;\n<strong>Output:</strong> [3,0,1]\n<strong>Explanation:</strong> Initially s = &quot;???????&quot;.\n- Place stamp at index 3 to get &quot;???abca&quot;.\n- Place stamp at index 0 to get &quot;abcabca&quot;.\n- Place stamp at index 1 to get &quot;aabcaca&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= stamp.length &lt;= target.length &lt;= 1000</code></li>\n\t<li><code>stamp</code> and <code>target</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "stack",
+    "greedy",
+    "queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((n - m) * m)\n// Space: O((n - m) * m)\n\nclass Solution {\npublic:\n    vector<int> movesToStamp(string stamp, string target) {\n        const int M = stamp.size(), N = target.size();\n        \n        queue<int> q;\n        vector<bool> lookup(N);\n        vector<int> result;\n        vector<pair<unordered_set<int>, unordered_set<int>>> A;\n        for (int i = 0; i < N - M + 1; ++i) {\n            unordered_set<int> made, todo;\n            for (int j = 0; j < M; ++j) {\n                if (stamp[j] == target[i + j]) {\n                    made.emplace(i + j);\n                } else {\n                    todo.emplace(i + j);\n                }\n            }\n            A.emplace_back(made, todo);\n            if (!todo.empty()) {\n                continue;\n            }\n            result.emplace_back(i);\n            for (const auto& m : made) {\n                if (lookup[m]) {\n                    continue;\n                }\n                q.emplace(m);\n                lookup[m] = true;\n            }\n        }\n        \n        while (!q.empty()) {\n            auto i = q.front(); q.pop();\n            for (int j = max(0, i - M + 1); j < min(N - M, i) + 1; ++j) {\n                unordered_set<int>& made = A[j].first;\n                unordered_set<int>& todo = A[j].second;\n                if (!todo.count(i)) {\n                    continue;\n                }\n                todo.erase(i);\n                if (!todo.empty()) {\n                    continue;\n                }\n                result.emplace_back(j);\n                for (const auto& m : made) {\n                    if (lookup[m]) {\n                        continue;\n                    }\n                    q.emplace(m);\n                    lookup[m] = true;\n                }\n            }\n        }\n        if (std::all_of(lookup.cbegin(), lookup.cend(), [](bool i){ return i; })) {\n            reverse(result.begin(), result.end());\n            return result;\n        }\n        return {};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((n - m) * m)\n# Space: O((n - m) * m)\n\nimport collections\n\n\nclass Solution(object):\n    def movesToStamp(self, stamp, target):\n        M, N = len(stamp), len(target)\n\n        q = collections.deque()\n        lookup = [False]*N\n        result = []\n        A = []\n        for i in xrange(N-M+1):\n            made, todo = set(), set()\n            for j, c in enumerate(stamp):\n                if c == target[i+j]:\n                    made.add(i+j)\n                else:\n                    todo.add(i+j)\n            A.append((made, todo))\n            if todo:\n                continue\n            result.append(i)\n            for m in made:\n                if lookup[m]:\n                    continue\n                q.append(m)\n                lookup[m] = True\n\n        while q:\n            i = q.popleft()\n            for j in xrange(max(0, i-M+1), min(N-M, i)+1):\n                made, todo = A[j]\n                if i not in todo:\n                    continue\n                todo.discard(i)\n                if todo:\n                    continue\n                result.append(j)\n                for m in made:\n                    if lookup[m]:\n                        continue\n                    q.append(m)\n                    lookup[m] = True\n        return result[::-1] if all(lookup) else []",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

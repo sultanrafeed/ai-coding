@@ -1,0 +1,28 @@
+{
+  "id": "8fdf7011-81ca-45ba-bae6-0acb98934b9c",
+  "slug": "best-time-to-buy-and-sell-stock-iii",
+  "title": "Best Time to Buy and Sell Stock III",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an array <code>prices</code> where <code>prices[i]</code> is the price of a given stock on the <code>i<sup>th</sup></code> day.</p>\n\n<p>Find the maximum profit you can achieve. You may complete <strong>at most two transactions</strong>.</p>\n\n<p><strong>Note:</strong> You may not engage in multiple transactions simultaneously (i.e., you must sell the stock before you buy again).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [3,3,5,0,0,3,1,4]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> Buy on day 4 (price = 0) and sell on day 6 (price = 3), profit = 3-0 = 3.\nThen buy on day 7 (price = 1) and sell on day 8 (price = 4), profit = 4-1 = 3.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [1,2,3,4,5]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> Buy on day 1 (price = 1) and sell on day 5 (price = 5), profit = 5-1 = 4.\nNote that you cannot buy on day 1, buy on day 2 and sell them later, as you are engaging multiple transactions at the same time. You must sell before buying again.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [7,6,4,3,1]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> In this case, no transaction is done, i.e. max profit = 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= prices.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= prices[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def maxProfit(self, prices):\n        \"\"\"\n        :type prices: List[int]\n        :rtype: int\n        \"\"\"\n        hold1, hold2 = float(\"-inf\"), float(\"-inf\")\n        release1, release2 = 0, 0\n        for i in prices:\n            hold1 = max(hold1, -i)\n            release1 = max(release1, hold1 + i)\n            hold2 = max(hold2, release1 - i)\n            release2 = max(release2, hold2 + i)\n        return release2\n\n\n# Time:  O(k * n)\n# Space: O(k)\nclass Solution2(object):\n    def maxProfit(self, prices):\n        \"\"\"\n        :type prices: List[int]\n        :rtype: int\n        \"\"\"\n        def maxAtMostKPairsProfit(prices, k):\n            max_buy = [float(\"-inf\") for _ in xrange(k + 1)]\n            max_sell = [0 for _ in xrange(k + 1)]\n            for i in xrange(len(prices)):\n                for j in xrange(1, k + 1):\n                    max_buy[j] = max(max_buy[j], max_sell[j-1] - prices[i])\n                    max_sell[j] = max(max_sell[j], max_buy[j] + prices[i])\n            return max_sell[k]\n\n        return maxAtMostKPairsProfit(prices, 2)\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution3(object):\n    # @param prices, a list of integer\n    # @return an integer\n    def maxProfit(self, prices):\n        min_price, max_profit_from_left, max_profits_from_left = \\\n            float(\"inf\"), 0, []\n        for price in prices:\n            min_price = min(min_price, price)\n            max_profit_from_left = max(max_profit_from_left, price - min_price)\n            max_profits_from_left.append(max_profit_from_left)\n\n        max_price, max_profit_from_right, max_profits_from_right = 0, 0, []\n        for i in reversed(range(len(prices))):\n            max_price = max(max_price, prices[i])\n            max_profit_from_right = max(max_profit_from_right,\n                                        max_price - prices[i])\n            max_profits_from_right.insert(0, max_profit_from_right)\n\n        max_profit = 0\n        for i in range(len(prices)):\n            max_profit = max(max_profit,\n                             max_profits_from_left[i] +\n                             max_profits_from_right[i])\n\n        return max_profit",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

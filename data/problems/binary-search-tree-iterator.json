@@ -1,0 +1,38 @@
+{
+  "id": "2723ab55-e23d-4ccd-8a41-2e4126eae175",
+  "slug": "binary-search-tree-iterator",
+  "title": "Binary Search Tree Iterator",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Implement the <code>BSTIterator</code> class that represents an iterator over the <strong><a href=\"https://en.wikipedia.org/wiki/Tree_traversal#In-order_(LNR)\" target=\"_blank\">in-order traversal</a></strong> of a binary search tree (BST):</p>\n\n<ul>\n\t<li><code>BSTIterator(TreeNode root)</code> Initializes an object of the <code>BSTIterator</code> class. The <code>root</code> of the BST is given as part of the constructor. The pointer should be initialized to a non-existent number smaller than any element in the BST.</li>\n\t<li><code>boolean hasNext()</code> Returns <code>true</code> if there exists a number in the traversal to the right of the pointer, otherwise returns <code>false</code>.</li>\n\t<li><code>int next()</code> Moves the pointer to the right, then returns the number at the pointer.</li>\n</ul>\n\n<p>Notice that by initializing the pointer to a non-existent smallest number, the first call to <code>next()</code> will return the smallest element in the BST.</p>\n\n<p>You may assume that <code>next()</code> calls will always be valid. That is, there will be at least a next number in the in-order traversal when <code>next()</code> is called.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2018/12/25/bst-tree.png\" style=\"width: 189px; height: 178px;\" />\n<pre>\n<strong>Input</strong>\n[&quot;BSTIterator&quot;, &quot;next&quot;, &quot;next&quot;, &quot;hasNext&quot;, &quot;next&quot;, &quot;hasNext&quot;, &quot;next&quot;, &quot;hasNext&quot;, &quot;next&quot;, &quot;hasNext&quot;]\n[[[7, 3, 15, null, null, 9, 20]], [], [], [], [], [], [], [], [], []]\n<strong>Output</strong>\n[null, 3, 7, true, 9, true, 15, true, 20, false]\n\n<strong>Explanation</strong>\nBSTIterator bSTIterator = new BSTIterator([7, 3, 15, null, null, 9, 20]);\nbSTIterator.next();    // return 3\nbSTIterator.next();    // return 7\nbSTIterator.hasNext(); // return True\nbSTIterator.next();    // return 9\nbSTIterator.hasNext(); // return True\nbSTIterator.next();    // return 15\nbSTIterator.hasNext(); // return True\nbSTIterator.next();    // return 20\nbSTIterator.hasNext(); // return False\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>5</sup>]</code>.</li>\n\t<li><code>0 &lt;= Node.val &lt;= 10<sup>6</sup></code></li>\n\t<li>At most <code>10<sup>5</sup></code> calls will be made to <code>hasNext</code>, and <code>next</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong></p>\n\n<ul>\n\t<li>Could you implement <code>next()</code> and <code>hasNext()</code> to run in average <code>O(1)</code> time and use&nbsp;<code>O(h)</code> memory, where <code>h</code> is the height of the tree?</li>\n</ul>\n",
+  "patterns": [
+    "stack",
+    "tree",
+    "design",
+    "binary-search-tree",
+    "binary-tree",
+    "iterator"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1), amortized\n// Space: O(h)\n\n/**\n * Definition for binary tree\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass BSTIterator {\npublic:\n    BSTIterator(TreeNode* root) {\n        traverseLeft(root);\n    }\n    \n    bool hasNext() {\n        return !empty(stk_);\n    }\n    \n    int next() {\n        TreeNode *node = stk_.back(); stk_.pop_back();\n        traverseLeft(node->right);\n        return node->val;\n    }\n\nprivate:\n    void traverseLeft(TreeNode *node) {\n        for (; node != nullptr; node = node->left) {\n            stk_.emplace_back(node);\n        }\n    }\n\n    vector<TreeNode *> stk_;\n};\n\n/**\n * Your BSTIterator will be called like this:\n * BSTIterator i = BSTIterator(root);\n * while (i.hasNext()) cout << i.next();\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(h), h is height of binary tree\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass BSTIterator(object):\n    # @param root, a binary search tree's root node\n    def __init__(self, root):\n        self.__stk = []\n        self.__traversalLeft(root)\n\n    # @return a boolean, whether we have a next smallest number\n    def hasNext(self):\n        return self.__stk\n\n    # @return an integer, the next smallest number\n    def next(self):\n        node = self.__stk.pop()\n        self.__traversalLeft(node.right)\n        return node.val\n    \n    def __traversalLeft(self, node):\n        while node is not None:\n            self.__stk.append(node)\n            node = node.left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

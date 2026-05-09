@@ -1,0 +1,34 @@
+{
+  "id": "a8d4b006-57c3-42ef-a871-b65743cdbfba",
+  "slug": "palindrome-partitioning-iii",
+  "title": "Palindrome Partitioning III",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a string <code>s</code> containing lowercase letters and an integer <code>k</code>. You need to :</p>\n\n<ul>\n\t<li>First, change some characters of <code>s</code> to other lowercase English letters.</li>\n\t<li>Then divide <code>s</code> into <code>k</code> non-empty disjoint substrings such that each substring is a palindrome.</li>\n</ul>\n\n<p>Return <em>the minimal number of characters that you need to change to divide the string</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abc&quot;, k = 2\n<strong>Output:</strong> 1\n<strong>Explanation:</strong>&nbsp;You can split the string into &quot;ab&quot; and &quot;c&quot;, and change 1 character in &quot;ab&quot; to make it palindrome.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aabbc&quot;, k = 3\n<strong>Output:</strong> 0\n<strong>Explanation:</strong>&nbsp;You can split the string into &quot;aa&quot;, &quot;bb&quot; and &quot;c&quot;, all of them are palindrome.</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;leetcode&quot;, k = 8\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= k &lt;= s.length &lt;= 100</code>.</li>\n\t<li><code>s</code> only contains lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(k * n^2)\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    int palindromePartition(string s, int k) {\n        // dp1[i][j]: minimum number of changes to make s[i, j] palindrome\n        vector<vector<int>> dp1(s.length(), vector<int>(s.length()));\n        for (int l = 1; l <= s.length(); ++l) {\n            for (int i = 0; i + l <= s.length(); ++i) {\n                int j = i + l - 1;\n                if (i == j - 1) {\n                    dp1[i][j] = s[i] == s[j] ? 0 : 1;\n                }  else if (i != j) {\n                    dp1[i][j] = s[i] == s[j] ? dp1[i + 1][j - 1] : dp1[i + 1][j - 1] + 1;\n                }\n            }\n        }\n        // dp2[d][i]: minimum number of changes to divide s[0, i] into d palindromes\n        vector<vector<int>> dp2(2, vector<int>(s.length(), numeric_limits<int>::max()));\n        dp2[1] = dp1[0];\n        for (int d = 2; d <= k; ++d) {\n            dp2[d % 2] = vector<int>(s.length(), numeric_limits<int>::max());\n            for (int i = d - 1; i < s.length(); ++i) {\n                for (int j = d - 2; j < i; ++j) {\n                    dp2[d % 2][i] = min(dp2[d % 2][i], dp2[(d - 1) % 2][j] + dp1[j + 1][i]);\n                }\n            }\n        }\n        return dp2[k % 2][s.length() - 1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(k * n^2)\n# Space: O(n^2)\n\nclass Solution(object):\n    def palindromePartition(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: int\n        \"\"\"\n        # dp1[i][j]: minimum number of changes to make s[i, j] palindrome\n        dp1 = [[0]*len(s) for _ in xrange(len(s))]\n        for l in xrange(1, len(s)+1):\n            for i in xrange(len(s)-l+1):\n                j = i+l-1\n                if i == j-1:\n                    dp1[i][j] = 0 if s[i] == s[j] else 1\n                elif i != j:\n                    dp1[i][j] = dp1[i+1][j-1] if s[i] == s[j] else dp1[i+1][j-1]+1\n\n        # dp2[d][i]: minimum number of changes to divide s[0, i] into d palindromes\n        dp2 = [[float(\"inf\")]*len(s) for _ in xrange(2)]\n        dp2[1] = dp1[0][:]\n        for d in xrange(2, k+1):\n            dp2[d%2] = [float(\"inf\")]*len(s)\n            for i in xrange(d-1, len(s)):  \n                for j in xrange(d-2, i):\n                    dp2[d%2][i] = min(dp2[d%2][i], dp2[(d-1)%2][j]+dp1[j+1][i])\n        return dp2[k%2][len(s)-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "0bbb9549-2856-422c-b2b0-784a5322681f",
+  "slug": "maximum-length-of-semi-decreasing-subarrays",
+  "title": "Maximum Length of Semi-Decreasing Subarrays",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "stack",
+    "sorting",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[7,6,5,4,3,2,1,6,10,11]\n[57,55,50,60,61,58,63,59,64,60,63]\n[1,2,3,4]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// mono stack\nclass Solution {\npublic:\n    int maxSubarrayLength(vector<int>& nums) {\n        vector<int> stk;\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            if (empty(stk) || nums[stk.back()] > nums[i]) {\n                stk.emplace_back(i);\n            }\n        }\n        int result = 0;\n        for (int left = 0; left < size(nums); ++left) {\n            while (!empty(stk) && nums[stk.back()] < nums[left]) {\n                result = max(result, stk.back() - left + 1); stk.pop_back();\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// sort\nclass Solution2 {\npublic:\n    int maxSubarrayLength(vector<int>& nums) {\n        vector<int> idxs(size(nums));\n        iota(begin(idxs), end(idxs), 0);\n        sort(rbegin(idxs), rend(idxs), [&](const auto& a, const auto& b) { return nums[a] < nums[b]; });\n        int result = 0;\n        for (int left = 0; left < size(nums); ++left) {\n            while (!empty(idxs) && nums[idxs.back()] < nums[left]) {\n                result = max(result, idxs.back() - left + 1); idxs.pop_back();\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# mono stack\nclass Solution(object):\n    def maxSubarrayLength(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        stk = []\n        for i in reversed(xrange(len(nums))):\n            if not stk or nums[stk[-1]] > nums[i]:\n                stk.append(i)\n        result = 0\n        for left in xrange(len(nums)):\n            while stk and nums[stk[-1]] < nums[left]:\n                result = max(result, stk.pop()-left+1)\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\n# sort\nclass Solution2(object):\n    def maxSubarrayLength(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        idxs = range(len(nums))\n        idxs.sort(key=lambda x: nums[x], reverse=True)\n        result = 0\n        for left in xrange(len(nums)):\n            while idxs and nums[idxs[-1]] < nums[left]:\n                result = max(result, idxs.pop()-left+1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "3e20ae9a-8079-40b1-8cc5-566fa0efc77d",
+  "slug": "one-edit-distance",
+  "title": "One Edit Distance",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"ab\"\n\"acb\"\n\"\"\n\"\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m + n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isOneEditDistance(string s, string t) {\n        const int m = s.length(), n = t.length();\n        if (m > n) {\n            return isOneEditDistance(t, s);\n        }\n        if (n - m > 1) {\n            return false;\n        }\n        \n        int i = 0, shift = n - m;\n        while (i < m && s[i] == t[i]) {\n            ++i;\n        }\n        if (shift == 0) {\n            ++i;\n        }\n        while (i < m && s[i] == t[i + shift]) {\n            ++i;\n        }\n            \n        return i == m;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m + n)\n# Space: O(1)\n\nclass Solution(object):\n    def isOneEditDistance(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        m, n = len(s), len(t)\n        if m > n:\n            return self.isOneEditDistance(t, s)\n        if n - m > 1:\n            return False\n\n        i, shift = 0, n - m\n        while i < m and s[i] == t[i]:\n            i += 1\n        if shift == 0:\n            i += 1\n        while i < m and s[i] == t[i + shift]:\n            i += 1\n\n        return i == m",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "943c0b0d-8b73-4390-aacc-d927fe41386f",
+  "slug": "sort-linked-list-already-sorted-using-absolute-values",
+  "title": "Sort Linked List Already Sorted Using Absolute Values",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list",
+    "two-pointers",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    ListNode* sortLinkedList(ListNode* head) {\n        auto tail = head;\n        auto curr = head->next;\n        head->next = nullptr;\n        while (curr) {\n            auto nxt = curr->next;\n            if (curr->val > 0) {\n                curr->next = nullptr;\n                tail->next = curr;\n                tail = curr;\n                \n            } else {\n                curr->next = head;\n                head = curr;\n            }\n            curr = nxt;\n        }\n        return head;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# Definition for singly-linked list.\nclass ListNode(object):\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\n\nclass Solution(object):\n    def sortLinkedList(self, head):\n        \"\"\"\n        :type head: Optional[ListNode]\n        :rtype: Optional[ListNode]\n        \"\"\"\n        tail, curr, head.next = head, head.next, None\n        while curr:\n            if curr.val > 0:\n                curr.next, tail.next, tail, curr = None, curr, curr, curr.next\n            else:\n                curr.next, head, curr = head, curr, curr.next\n        return head",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

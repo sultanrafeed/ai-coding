@@ -1,0 +1,31 @@
+{
+  "id": "be4383f2-78c2-4248-9648-c349229bdbd5",
+  "slug": "deep-object-filter",
+  "title": "Deep Object Filter",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[-5,-4,-3,-2,-1,0,1]\n(x) => x > 0\n{\"a\":1,\"b\":\"2\",\"c\":3,\"d\":\"4\",\"e\":5,\"f\":6,\"g\":{\"a\":1}}\n(x) => typeof x === \"string\"\n[-1,[-1,-1,5,-1,10],-1,[-1],[-5]]\n(x) => x > 0\n[[[[5]]]]\n(x) => Array.isArray(x)",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// dfs\nfunction deepFilter(obj: Record<string, any>, fn: Function): Record<string, any> | undefined {\n    if (typeof obj !== 'object' || obj === null) {\n        return fn(obj) ? obj : undefined;\n    }\n    if (Array.isArray(obj)) {\n        const result = obj.map(x => deepFilter(x, fn)).filter(x => x !== undefined);\n        return result.length !== 0 ? result : undefined;\n    }\n    const result = {};\n    for (const key in obj) {\n        const value = deepFilter(obj[key], fn);\n        if (value !== undefined) {\n            result[key] = value;\n        }\n    }\n    return Object.keys(result).length !== 0 ? result : undefined;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

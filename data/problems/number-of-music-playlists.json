@@ -1,0 +1,41 @@
+{
+  "id": "abe6f4be-c30c-4e05-aa45-90fa28c58317",
+  "slug": "number-of-music-playlists",
+  "title": "Number of Music Playlists",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Your music player contains <code>n</code> different songs. You want to listen to <code>goal</code> songs (not necessarily different) during your trip. To avoid boredom, you will create a playlist so that:</p>\n\n<ul>\n\t<li>Every song is played <strong>at least once</strong>.</li>\n\t<li>A song can only be played again only if <code>k</code> other songs have been played.</li>\n</ul>\n\n<p>Given <code>n</code>, <code>goal</code>, and <code>k</code>, return <em>the number of possible playlists that you can create</em>. Since the answer can be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 3, goal = 3, k = 1\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> There are 6 possible playlists: [1, 2, 3], [1, 3, 2], [2, 1, 3], [2, 3, 1], [3, 1, 2], and [3, 2, 1].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2, goal = 3, k = 0\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> There are 6 possible playlists: [1, 1, 2], [1, 2, 1], [2, 1, 1], [2, 2, 1], [2, 1, 2], and [1, 2, 2].\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2, goal = 3, k = 1\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> There are 2 possible playlists: [1, 2, 1] and [2, 1, 2].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= k &lt; n &lt;= goal &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n3\n1\n2\n3\n0\n2\n3\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l)\n// Space: O(l)\n\n// Another better solution (generating function), you could refer to \n// https://leetcode.com/problems/number-of-music-playlists/solution/\nclass Solution {\npublic:\n    int numMusicPlaylists(int N, int L, int K) {\n        static const int M = 1000000007;\n        vector<vector<uint64_t>> dp(2, vector<uint64_t>(1 + L, 0ull));\n        dp[0][0] = dp[1][1] = 1;\n        for (int n = 1; n <= N; ++n) {\n            dp[n % 2][n] = (dp[(n - 1) % 2][n - 1] * n) % M;\n            for (int l = n + 1; l <= L; ++l) {\n                dp[n % 2][l] = ((dp[n % 2][l - 1] * max(n - K, 0)) % M +\n                                (dp[(n - 1) % 2][l - 1] * n) % M) % M;\n            }\n        }\n        return dp[N % 2][L];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l)\n# Space: O(l)\n\nclass Solution(object):\n    def numMusicPlaylists(self, N, L, K):\n        \"\"\"\n        :type N: int\n        :type L: int\n        :type K: int\n        :rtype: int\n        \"\"\"\n        M = 10**9+7\n        dp = [[0 for _ in xrange(1+L)] for _ in xrange(2)]\n        dp[0][0] = dp[1][1] = 1\n        for n in xrange(1, N+1):\n            dp[n % 2][n] = (dp[(n-1) % 2][n-1] * n) % M\n            for l in xrange(n+1, L+1):\n                dp[n % 2][l] = ((dp[n % 2][l-1] * max(n-K, 0)) % M + \\\n                                (dp[(n-1) % 2][l-1] * n) % M) % M\n        return dp[N % 2][L]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

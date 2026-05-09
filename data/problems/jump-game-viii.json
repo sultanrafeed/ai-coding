@@ -1,0 +1,44 @@
+{
+  "id": "5f7eb65a-7e8f-4f64-a586-217cd8911603",
+  "slug": "jump-game-viii",
+  "title": "Jump Game VIII",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "stack",
+    "graph",
+    "monotonic-stack",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,2,4,4,1]\n[3,7,6,4,2]\n[0,1,2]\n[1,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// dp, mono stack\nclass Solution {\npublic:\n    long long minCost(vector<int>& nums, vector<int>& costs) {\n        vector<int> stk1, stk2;\n        vector<int64_t> dp(size(nums), numeric_limits<int64_t>::max());\n        dp[0] = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            while (!empty(stk1) && nums[stk1.back()] <= nums[i]) {\n                dp[i] = min(dp[i], dp[stk1.back()] + costs[i]);\n                stk1.pop_back();\n            }\n            stk1.emplace_back(i);\n            while (!empty(stk2) && nums[stk2.back()] > nums[i]) {\n                dp[i] = min(dp[i], dp[stk2.back()] + costs[i]);\n                stk2.pop_back();\n            }\n            stk2.emplace_back(i);\n        }\n        return dp.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# dp, mono stack\nclass Solution(object):\n    def minCost(self, nums, costs):\n        \"\"\"\n        :type nums: List[int]\n        :type costs: List[int]\n        :rtype: int\n        \"\"\"\n        stk1, stk2 = [], []\n        dp = [float(\"inf\")]*len(nums)\n        dp[0] = 0\n        for i in xrange(len(nums)):\n            while stk1 and nums[stk1[-1]] <= nums[i]:\n                dp[i] = min(dp[i], dp[stk1.pop()]+costs[i])\n            stk1.append(i)\n            while stk2 and nums[stk2[-1]] > nums[i]:\n                dp[i] = min(dp[i], dp[stk2.pop()]+costs[i])\n            stk2.append(i)\n        return dp[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

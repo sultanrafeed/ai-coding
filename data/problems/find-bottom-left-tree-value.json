@@ -1,0 +1,36 @@
+{
+  "id": "2f54ef0e-13f4-4601-8c81-ee68c5a0f099",
+  "slug": "find-bottom-left-tree-value",
+  "title": "Find Bottom Left Tree Value",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree, return the leftmost value in the last row of the tree.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/12/14/tree1.jpg\" style=\"width: 302px; height: 182px;\" />\n<pre>\n<strong>Input:</strong> root = [2,1,3]\n<strong>Output:</strong> 1\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/12/14/tree2.jpg\" style=\"width: 432px; height: 421px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,3,4,null,5,6,null,null,7]\n<strong>Output:</strong> 7\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>\n\t<li><code>-2<sup>31</sup> &lt;= Node.val &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\n\nclass Solution {\npublic:\n    int findBottomLeftValue(TreeNode* root) {\n        int result = 0, max_depth = 0;\n        findBottomLeftValueHelper(root, 0, &max_depth, &result);\n        return result;\n    }\n\nprivate:\n    void findBottomLeftValueHelper(TreeNode *root, int curr_depth, int *max_depth, int *bottom_left_value) {\n        if (!root) {\n            return;\n        }\n        if (!root->left && !root->right &&\n            curr_depth + 1 > *max_depth) {\n            *max_depth = curr_depth + 1;\n            *bottom_left_value = root->val;\n            return;\n        }\n\n        findBottomLeftValueHelper(root->left, curr_depth + 1, max_depth, bottom_left_value);\n        findBottomLeftValueHelper(root->right, curr_depth + 1, max_depth, bottom_left_value);\n    }\n};\n\n// Time:  O(n)\n// Space: O(w)\nclass Solution2 {\npublic:\n    int findBottomLeftValue(TreeNode* root) {\n        queue<TreeNode *> q;\n        q.emplace(root);\n        TreeNode *node = nullptr;\n        while (!q.empty()) {\n            node = q.front();\n            q.pop();\n            if (node->right) {\n                q.emplace(node->right);\n            }\n            if (node->left) {\n                q.emplace(node->left);\n            }\n        }\n        return node->val;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def findBottomLeftValue(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        def findBottomLeftValueHelper(root, curr_depth, max_depth, bottom_left_value):\n            if not root:\n                return max_depth, bottom_left_value\n            if not root.left and not root.right and curr_depth+1 > max_depth:\n                return curr_depth+1, root.val\n            max_depth, bottom_left_value = findBottomLeftValueHelper(root.left, curr_depth+1, max_depth, bottom_left_value)\n            max_depth, bottom_left_value = findBottomLeftValueHelper(root.right, curr_depth+1, max_depth, bottom_left_value)\n            return max_depth, bottom_left_value\n\n        result, max_depth = 0, 0\n        return findBottomLeftValueHelper(root, 0, max_depth, result)[1]\n\n\n# Time:  O(n)\n# Space: O()\nimport collections\n\n\nclass Solution2(object):\n    def findBottomLeftValue(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        last_node, q = None, collections.deque([root])\n        while q:\n            last_node = q.popleft()\n            q.extend([n for n in [last_node.right, last_node.left] if n])\n        return last_node.val",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

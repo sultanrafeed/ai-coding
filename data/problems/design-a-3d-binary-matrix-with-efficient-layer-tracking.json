@@ -1,0 +1,44 @@
+{
+  "id": "8e5b1f53-689c-46f3-9418-106742cfbc57",
+  "slug": "design-a-3d-binary-matrix-with-efficient-layer-tracking",
+  "title": "Design a 3D Binary Matrix with Efficient Layer Tracking",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "design",
+    "heap-priority-queue",
+    "matrix",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"Matrix3D\",\"setCell\",\"largestMatrix\",\"setCell\",\"largestMatrix\",\"setCell\",\"largestMatrix\"]\n[[3],[0,0,0],[],[1,1,2],[],[0,0,1],[]]\n[\"Matrix3D\",\"setCell\",\"largestMatrix\",\"unsetCell\",\"largestMatrix\"]\n[[4],[2,1,1],[],[2,1,1],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:          O(1)\n//        setCell:       O(logn)\n//        unsetCell:     O(logn)\n//        largestMatrix: O(logn)\n// Space: O(n^3)\n\n// bst\nclass Matrix3D {\nprivate:\n    int n_;\n    unordered_map<int, unordered_map<int, unordered_set<int>>> matrix_;\n    unordered_map<int, int> cnt_;\n    map<int, set<int>> bst_;\n\npublic:\n    Matrix3D(int n) : n_(n) {\n        bst_[0].emplace(n - 1);\n    }\n    \n    void setCell(int x, int y, int z) {\n        if (matrix_[x][y].count(z)) {\n            return;\n        }\n        matrix_[x][y].emplace(z);\n        if (cnt_[x] || x == n_ - 1) {\n            bst_[cnt_[x]].erase(x);\n            if (empty(bst_[cnt_[x]])) {\n                bst_.erase(cnt_[x]);\n            }\n        }\n        ++cnt_[x];\n        bst_[cnt_[x]].emplace(x);\n    }\n    \n    void unsetCell(int x, int y, int z) {\n        if (!matrix_.count(x) || !matrix_[x].count(y) || !matrix_[x][y].count(z)) {\n            return;\n        }\n        matrix_[x][y].erase(z);\n        if (empty(matrix_[x][y])) {\n            matrix_[x].erase(y);\n            if (empty(matrix_[x])) {\n                matrix_.erase(x);\n            }\n        }\n        bst_[cnt_[x]].erase(x);\n        if (empty(bst_[cnt_[x]])) {\n            bst_.erase(cnt_[x]);\n        }\n        --cnt_[x];\n        if (cnt_[x] || x == n_ - 1) {\n            bst_[cnt_[x]].emplace(x);\n        }\n    }\n    \n    int largestMatrix() {\n        return *rbegin(rbegin(bst_)->second);\n    }\n};\n\n// Time:  ctor:          O(1)\n//        setCell:       O(logn)\n//        unsetCell:     O(logn)\n//        largestMatrix: O(logn) on average\n// Space: O(n^3)\n// heap\nclass Matrix3D_2 {\nprivate:\n    unordered_map<int, unordered_map<int, unordered_set<int>>> matrix_;\n    unordered_map<int, int> cnt_;\n    priority_queue<pair<int, int>> max_heap_;\n\npublic:\n    Matrix3D_2(int n) {\n        max_heap_.emplace(cnt_[n - 1], n - 1);\n    }\n    \n    void setCell(int x, int y, int z) {\n        if (matrix_[x][y].count(z)) {\n            return;\n        }\n        matrix_[x][y].emplace(z);\n        ++cnt_[x];\n        max_heap_.emplace(cnt_[x], x);\n    }\n    \n    void unsetCell(int x, int y, int z) {\n        if (!matrix_.count(x) || !matrix_[x].count(y) || !matrix_[x][y].count(z)) {\n            return;\n        }\n        matrix_[x][y].erase(z);\n        if (empty(matrix_[x][y])) {\n            matrix_[x].erase(y);\n            if (empty(matrix_[x])) {\n                matrix_.erase(x);\n            }\n        }\n        --cnt_[x];\n        max_heap_.emplace(cnt_[x], x);\n    }\n    \n    int largestMatrix() {\n        while (!empty(max_heap_) && max_heap_.top().first != cnt_[max_heap_.top().second]) {\n            max_heap_.pop();\n        }\n        return max_heap_.top().second;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:          O(1)\n#        setCell:       O(logn)\n#        unsetCell:     O(logn)\n#        largestMatrix: O(logn)\n# Space: O(n^3)\n\nimport collections\nfrom sortedcontainers import SortedList\n\n\n# sorted list\nclass Matrix3D(object):\n\n    def __init__(self, n):\n        \"\"\"\n        :type n: int\n        \"\"\"\n        self.__n = n\n        self.__matrix = set()\n        self.__cnt = collections.defaultdict(int)\n        self.__sl = SortedList([0])\n        self.__lookup = collections.defaultdict(SortedList)\n        self.__lookup[0].add(n-1)\n\n    def setCell(self, x, y, z):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :type z: int\n        :rtype: None\n        \"\"\"\n        if (x, y, z) in self.__matrix:\n            return\n        self.__matrix.add((x, y, z))\n        if self.__cnt[x] or x == self.__n-1:\n            self.__lookup[self.__cnt[x]].remove(x)\n            if not self.__lookup[self.__cnt[x]]:\n                del self.__lookup[self.__cnt[x]]\n                self.__sl.remove(self.__cnt[x])\n        self.__cnt[x] += 1\n        if self.__cnt[x] not in self.__lookup:\n            self.__sl.add(self.__cnt[x])\n        self.__lookup[self.__cnt[x]].add(x)\n\n    def unsetCell(self, x, y, z):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :type z: int\n        :rtype: None\n        \"\"\"\n        if (x, y, z) not in self.__matrix:\n            return\n        self.__matrix.remove((x, y, z))\n        self.__lookup[self.__cnt[x]].remove(x)\n        if not self.__lookup[self.__cnt[x]]:\n            del self.__lookup[self.__cnt[x]]\n            self.__sl.remove(self.__cnt[x])\n        self.__cnt[x] -= 1\n        if self.__cnt[x] or x == self.__n-1:\n            if self.__cnt[x] not in self.__lookup:\n                self.__sl.add(self.__cnt[x])\n            self.__lookup[self.__cnt[x]].add(x)\n\n    def largestMatrix(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__lookup[self.__sl[-1]][-1]        \n\n\n# Time:  ctor:          O(1)\n#        setCell:       O(logn)\n#        unsetCell:     O(logn)\n#        largestMatrix: O(logn) on average\n# Space: O(n^3)\nimport collections\nimport heapq\n\n\n# heap\nclass Matrix3D_2(object):\n\n    def __init__(self, n):\n        \"\"\"\n        :type n: int\n        \"\"\"\n        self.__matrix = {}\n        self.__cnt = collections.defaultdict(int)\n        self.__max_heap = [(0, -(n-1))]\n\n    def setCell(self, x, y, z):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :type z: int\n        :rtype: None\n        \"\"\"\n        if (x, y, z) in self.__matrix:\n            return\n        self.__matrix[x, y, z] = 1\n        self.__cnt[x] += 1\n        heapq.heappush(self.__max_heap, (-self.__cnt[x], -x))\n\n    def unsetCell(self, x, y, z):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :type z: int\n        :rtype: None\n        \"\"\"\n        if (x, y, z) not in self.__matrix:\n            return\n        del self.__matrix[x, y, z]\n        self.__cnt[x] -= 1\n        heapq.heappush(self.__max_heap, (-self.__cnt[x], -x))\n\n    def largestMatrix(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        while self.__max_heap and -self.__max_heap[0][0] != self.__cnt[-self.__max_heap[0][1]]:\n            heapq.heappop(self.__max_heap)\n        return -self.__max_heap[0][1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "42845968-91bd-48df-8c85-de01630d3737",
+  "slug": "check-for-contradictions-in-equations",
+  "title": "Check for Contradictions in Equations",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "depth-first-search",
+    "union-find",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[\"a\",\"b\"],[\"b\",\"c\"],[\"a\",\"c\"]]\n[3,0.5,1.5]\n[[\"le\",\"et\"],[\"le\",\"code\"],[\"code\",\"et\"]]\n[2,5,0.5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(e + q)\n// Space: O(n)\n\n// union find\nclass Solution {\npublic:\n    bool checkContradictions(vector<vector<string>>& equations, vector<double>& values) {\n        static const double EPS = 1e-5;\n        UnionFind uf;\n        for (int i = 0; i < size(equations); ++i) {\n            if (!uf.union_set(equations[i][0], equations[i][1], values[i]) &&\n                abs(uf.query_set(equations[i][0], equations[i][1]) - values[i]) > EPS) {\n                return true;\n            }\n        }\n        return false;\n    }\n\nprivate:\n    class UnionFind {\n    public:\n        UnionFind() {\n        }\n                \n        pair<string, double> find_set(const string& x) {\n            if (!set_.count(x)) {\n                set_[x] = pair(x, 1.0);\n            }\n            const auto& [xp, xr] = set_[x];\n            if (x != xp) {\n                const auto& [pp, pr] = find_set(xp);  // Path compression.\n                set_[x] = pair(pp, xr * pr);\n            }\n            return set_[x];\n        }\n\n        bool union_set(const string& x, const string& y, double r) {\n            const auto& [xp, xr] = find_set(x);\n            const auto& [yp, yr] = find_set(y);\n            if (xp == yp) {\n                return false;\n            }\n            if (rank_[xp] < rank_[yp]) {  // Union by rank.\n                set_[xp] = pair(yp, r * yr / xr);\n            } else if (rank_[xp] > rank_[yp]) {\n                set_[yp] = pair(xp, 1.0 / r * xr / yr);\n            } else {\n                set_[yp] = pair(xp, 1.0 / r * xr / yr);\n                ++rank_[xp];\n            }\n            return true;\n        }\n\n        double query_set(const string& x, const string& y) {\n            if (!set_.count(x) || !set_.count(y)) {\n                return -1.0;\n            }\n            const auto& [xp, xr] = find_set(x);\n            const auto& [yp, yr] = find_set(y);\n            return (xp == yp) ? xr / yr : -1.0;\n        }\n\n    private:\n        unordered_map<string, pair<string, double>> set_;\n        unordered_map<string, int> rank_;\n    };\n};\n\n// Time:  O(e + q)\n// Space: O(n)\n// dfs\nclass Solution2 {\npublic:\n    bool checkContradictions(vector<vector<string>>& equations, vector<double>& values) {\n        unordered_map<string, vector<pair<string, double>>> adj;\n        for (int i = 0; i < size(equations); ++i) {\n            adj[equations[i][0]].emplace_back(equations[i][1], 1.0 / values[i]);\n            adj[equations[i][1]].emplace_back(equations[i][0], values[i]);\n        }\n        unordered_map<string, double> lookup;\n        const auto& iter_dfs = [&](const auto& u) {\n            vector<string> stk = {u};\n            lookup[u] = 1.0;\n            while (!empty(stk)) {\n                auto u = stk.back(); stk.pop_back();\n                for (const auto& [v, k] : adj[u]) {\n                    if (lookup.count(v)) {\n                        if (!isclose(lookup[v], lookup[u] * k)) {\n                            return true;\n                        }\n                        continue;\n                    }\n                    lookup[v] = lookup[u] * k;\n                    stk.emplace_back(v);\n                }\n            }\n            return false;\n        };\n        for (const auto& [u, _] : adj) {\n            if (lookup.count(u)) {\n                continue;\n            }\n            if (iter_dfs(u)) {\n                return true;\n            }\n        }\n        return false;\n    }\n\nprivate:\n    bool isclose(double a, double b, double rel_tol = 1e-09, double abs_tol = 0.0) {\n        return abs(a - b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(e + q)\n# Space: O(n)\n\nimport collections\nimport itertools\n\n\nclass UnionFind(object):\n    def __init__(self):\n        self.set = {}\n        self.rank = collections.Counter()\n\n    def find_set(self, x):\n        xp, xr = self.set.setdefault(x, (x, 1.0))\n        if x != xp:\n            pp, pr = self.find_set(xp)  # path compression.\n            self.set[x] = (pp, xr*pr)  # x/pp = xr*pr\n        return self.set[x]\n\n    def union_set(self, x, y, r):\n        (xp, xr), (yp, yr) =  map(self.find_set, (x, y))\n        if xp == yp:\n            return False\n        if self.rank[xp] < self.rank[yp]:  # union by rank\n            # to make x/yp = r*yr and merge xp into yp\n            # => since x/xp = xr, we can merge with xp/yp = r*yr/xr \n            self.set[xp] = (yp, r*yr/xr)\n        elif self.rank[xp] > self.rank[yp]:\n            # to make y/xp = 1/r*xr and merge xp into yp\n            # => since y/yp = yr, we can merge with yp/xp = 1/r*xr/yr \n            self.set[yp] = (xp, 1.0/r*xr/yr)\n        else:\n            # to make y/xp = 1/r*xr and merge xp into yp\n            # => since y/yp = yr, we can merge with yp/xp = 1/r*xr/yr \n            self.set[yp] = (xp, 1.0/r*xr/yr)\n            self.rank[xp] += 1 \n        return True\n\n    def query_set(self, x, y):\n        if x not in self.set or y not in self.set:\n            return -1.0\n        (xp, xr), (yp, yr) = map(self.find_set, (x, y))\n        return xr/yr if xp == yp else -1.0\n\n\n# Time:  O(e + q)\n# Space: O(n)\nimport itertools\n\n\n# union find\nclass Solution(object):\n    def checkContradictions(self, equations, values):\n        \"\"\"\n        :type equations: List[List[str]]\n        :type values: List[float]\n        :rtype: bool\n        \"\"\"\n        EPS = 1e-5\n        uf = UnionFind()\n        return any(not uf.union_set(a, b, k) and abs(uf.query_set(a, b)-k) >= EPS for (a, b), k in itertools.izip(equations, values))\n\n\n# Time:  O(e + q)\n# Space: O(n)\nimport collections\nimport itertools\n\n\n# dfs\nclass Solution2(object):\n    def checkContradictions(self, equations, values):\n        \"\"\"\n        :type equations: List[List[str]]\n        :type values: List[float]\n        :rtype: bool\n        \"\"\"\n        def isclose(a, b, rel_tol=1e-09, abs_tol=0.0):\n            return abs(a-b) <= max(rel_tol * max(abs(a), abs(b)), abs_tol)\n\n        def iter_dfs(adj, u, lookup):\n            stk = [u]\n            lookup[u] = 1.0\n            while stk:\n                u = stk.pop()\n                for v, k in adj[u]:\n                    if v in lookup:\n                        if not isclose(lookup[v], lookup[u]*k):\n                            return True\n                        continue\n                    lookup[v] = lookup[u]*k\n                    stk.append(v)\n            return False\n\n        adj = collections.defaultdict(set)\n        for (a, b), k in itertools.izip(equations, values):\n            adj[a].add((b, 1.0/k))\n            adj[b].add((a, 1.0*k))\n        lookup = {}\n        for u in adj.iterkeys():\n            if u in lookup:\n                continue\n            if iter_dfs(adj, u, lookup):\n                return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

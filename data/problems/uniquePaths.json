@@ -1,0 +1,25 @@
+{
+  "id": "41ab4a31-f0cb-4b5b-a95c-35694b268e7f",
+  "slug": "uniquePaths",
+  "title": "Uniquepaths",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(mn)\n// Space Complexity: O(mn)\n\nclass Solution {\n    public:\n        unordered_map<int, unordered_map<int, int> > hash;\n        int uniquePaths(int m, int n) {\n            if(m == 0 || n == 0)\n                return 0;\n            if(m == 1 || n == 1)\n                return 1;\n            if(hash.find(m) != hash.end() && hash[m].find(n) != hash[m].end())\n                return hash[m][n];\n            return hash[m][n] = uniquePaths(m - 1, n) + uniquePaths(m, n - 1);\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

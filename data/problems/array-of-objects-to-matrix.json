@@ -1,0 +1,31 @@
+{
+  "id": "0230ae3e-616b-494d-ac00-516fc0607f6a",
+  "slug": "array-of-objects-to-matrix",
+  "title": "Array of Objects to Matrix",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[{\"b\":1,\"a\":2},{\"b\":3,\"a\":4}]\n[{\"a\":1,\"b\":2},{\"c\":3,\"d\":4},{}]\n[{\"a\":{\"b\":1,\"c\":2}},{\"a\":{\"b\":3,\"d\":4}}]\n[[{\"a\":null}],[{\"b\":true}],[{\"c\":\"x\"}]]\n[{},{},{}]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(l * mlogm + m * n)\n// Space: O(l * m + m * n)\n\n// iterative dfs\nfunction jsonToMatrix(arr: any[]): (string | number | boolean | null)[][] {\n    let row = new Array(arr.length).fill(null).map(() => new Map());\n    let keys_set = new Set<string>();\n    arr.forEach((x, i) => {\n        const iter_dfs = (u: any, lookup: Map<string, (string | number | boolean | null)>) => {\n            let stk = [[1, u, undefined]];\n            let curr = []\n            while (stk.length) {\n                const [step, u, v] = stk.pop();\n                if (step === 1) {\n                    for (const v in u) {\n                        stk.push([3, u, v]);\n                        stk.push([2, u, v]);\n                    }\n                } else if (step === 2) {\n                    curr.push(v);\n                    if (!(u[v] !== null && (typeof u[v] === 'object' || Array.isArray(u[v])))) {\n                        lookup.set(curr.join('.'), u[v]);\n                    } else {\n                        stk.push([1, u[v], null])\n                    }\n                } else if (step === 3) {\n                    curr.pop();\n                }\n            }\n        }\n\n        iter_dfs(x, row[i]);\n        for (const [k, _] of row[i].entries()) {\n            keys_set.add(k);\n        }\n    });\n    \n    let result = [Array.from(keys_set).sort()];\n    for (let i = 0; i < row.length; ++i) {\n        result.push([])\n        for (let j = 0; j < result[0].length; ++j) {\n            result[i+1].push(row[i].has(result[0][j]) ? row[i].get(result[0][j]) : '');\n        }\n    }\n    return result;\n};\n\n// Time:  O(l * mlogm + m * n)\n// Space: O(l * m + m * n)\n// dfs\nfunction jsonToMatrix2(arr: any[]): (string | number | boolean | null)[][] {\n    let row = new Array(arr.length).fill(null).map(() => new Map());\n    let keys_set = new Set<string>();\n    arr.forEach((x, i) => {\n        const dfs = (u: any, curr: string[], lookup: Map<string, (string | number | boolean | null)>) => {\n            for (const v in u) {\n                curr.push(v);\n                if (!(u[v] !== null && (typeof u[v] === 'object' || Array.isArray(u[v])))) {\n                    lookup.set(curr.join('.'), u[v]);\n                } else {\n                    dfs(u[v], curr, lookup);\n                }\n                curr.pop();\n            }\n        };\n\n        dfs(x, [], row[i]);\n        for (const [k, _] of row[i].entries()) {\n            keys_set.add(k);\n        }\n    });\n    \n    let result = [Array.from(keys_set).sort()];\n    for (let i = 0; i < row.length; ++i) {\n        result.push([])\n        for (let j = 0; j < result[0].length; ++j) {\n            result[i+1].push(row[i].has(result[0][j]) ? row[i].get(result[0][j]) : '');\n        }\n    }\n    return result;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

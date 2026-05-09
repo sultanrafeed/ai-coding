@@ -1,0 +1,34 @@
+{
+  "id": "4225729e-e260-4e10-98aa-21595927dfd2",
+  "slug": "create-target-array-in-the-given-order",
+  "title": "Create Target Array in the Given Order",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two arrays of integers&nbsp;<code>nums</code> and <code>index</code>. Your task is to create <em>target</em> array under the following rules:</p>\n\n<ul>\n\t<li>Initially <em>target</em> array is empty.</li>\n\t<li>From left to right read nums[i] and index[i], insert at index <code>index[i]</code>&nbsp;the value <code>nums[i]</code>&nbsp;in&nbsp;<em>target</em> array.</li>\n\t<li>Repeat the previous step until there are no elements to read in <code>nums</code> and <code>index.</code></li>\n</ul>\n\n<p>Return the <em>target</em> array.</p>\n\n<p>It is guaranteed that the insertion operations will be valid.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,1,2,3,4], index = [0,1,2,2,1]\n<strong>Output:</strong> [0,4,1,3,2]\n<strong>Explanation:</strong>\nnums       index     target\n0            0        [0]\n1            1        [0,1]\n2            2        [0,1,2]\n3            2        [0,1,3,2]\n4            1        [0,4,1,3,2]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4,0], index = [0,1,2,3,0]\n<strong>Output:</strong> [0,1,2,3,4]\n<strong>Explanation:</strong>\nnums       index     target\n1            0        [1]\n2            1        [1,2]\n3            2        [1,2,3]\n4            3        [1,2,3,4]\n0            0        [0,1,2,3,4]\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1], index = [0]\n<strong>Output:</strong> [1]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length, index.length &lt;= 100</code></li>\n\t<li><code>nums.length == index.length</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 100</code></li>\n\t<li><code>0 &lt;= index[i] &lt;= i</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> createTargetArray(vector<int>& nums, vector<int>& index) {\n        for (int i = 0; i < nums.size(); ++i) {\n            for (int j = 0; j < i; ++j) {\n                if (index[j] >= index[i]) {\n                    ++index[j];\n                }\n            }\n        }\n        vector<int> result(nums.size(),0);\n        for (int i = 0; i < nums.size(); ++i){\n            result[index[i]] = nums[i];\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(1)\nclass Solution2 {\npublic:\n    vector<int> createTargetArray(vector<int>& nums, vector<int>& index) {\n        vector<int> result;\n        for (int i = 0; i < nums.size(); i++) {\n            result.insert(begin(result) + index[i], nums[i]);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(1)\n\nclass Solution(object):\n    def createTargetArray(self, nums, index):\n        \"\"\"\n        :type nums: List[int]\n        :type index: List[int]\n        :rtype: List[int]\n        \"\"\"\n        for i in xrange(len(nums)):\n            for j in xrange(i):\n                if index[j] >= index[i]:\n                    index[j] += 1\n        result = [0]*(len(nums))\n        for i in xrange(len(nums)):\n            result[index[i]] = nums[i]\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(1)\nimport itertools\n\n\nclass Solution2(object):\n    def createTargetArray(self, nums, index):\n        \"\"\"\n        :type nums: List[int]\n        :type index: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        for i, x in itertools.izip(index, nums):\n            result.insert(i, x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

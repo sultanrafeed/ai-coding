@@ -1,0 +1,37 @@
+{
+  "id": "5f91a3ad-974e-412f-b7b1-d7fb12602878",
+  "slug": "count-smaller-elements-with-opposite-parity",
+  "title": "Count Smaller Elements With Opposite Parity",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,2,4,1,3]\n[4,4,1]\n[7]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// sort, coordinate compression, fenwick tree\nclass BIT {\npublic:\n    BIT(int n) : bit_(n + 1) {  // 0-indexed\n    }\n    \n    void add(int i, int val) {\n        ++i;\n        for (; i < size(bit_); i += lower_bit(i)) {\n            bit_[i] += val;\n        }\n    }\n\n    int query(int i) const {\n        ++i;\n        int total = 0;\n        for (; i > 0; i -= lower_bit(i)) {\n            total += bit_[i];\n        }\n        return total;\n    }\n\nprivate:\n    inline int lower_bit(int i) const {\n        return i & -i;\n    }\n    \n    vector<int> bit_;\n};\n\nclass Solution {\npublic:\n    vector<int> countSmallerOppositeParity(vector<int>& nums) {\n        vector<int> sorted_nums(nums);\n        ranges::sort(sorted_nums);\n        sorted_nums.erase(unique(begin(sorted_nums), end(sorted_nums)), end(sorted_nums));\n        unordered_map<int, int> val_to_idx;\n        for (int i = 0; i < size(sorted_nums); ++i) {\n            val_to_idx[sorted_nums[i]] = i;\n        }\n        vector<BIT> bit(2, BIT(size(val_to_idx)));\n        vector<int> result(size(nums));\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            const auto& idx = val_to_idx[nums[i]];\n            result[i] = bit[1 ^ (nums[i] % 2)].query(idx - 1);\n            bit[nums[i] % 2].add(idx, 1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\n# sort, coordinate compression, fenwick tree\nclass BIT(object):  # 0-indexed.\n    def __init__(self, n):\n        self.__bit = [0]*(n+1)  # Extra one for dummy node.\n\n    def add(self, i, val):\n        i += 1  # Extra one for dummy node.\n        while i < len(self.__bit):\n            self.__bit[i] += val\n            i += (i & -i)\n\n    def query(self, i):\n        i += 1  # Extra one for dummy node.\n        ret = 0\n        while i > 0:\n            ret += self.__bit[i]\n            i -= (i & -i)\n        return ret\n\n\nclass Solution(object):\n    def countSmallerOppositeParity(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        val_to_idx = {x:i for i, x in enumerate(sorted(set(nums)))}\n        bit = [BIT(len(val_to_idx)) for _ in xrange(2)]\n        result = [0]*len(nums)\n        for i in reversed(xrange(len(nums))):\n            idx = val_to_idx[nums[i]]\n            result[i] = bit[1^(nums[i]%2)].query(idx-1)\n            bit[nums[i]%2].add(idx, 1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

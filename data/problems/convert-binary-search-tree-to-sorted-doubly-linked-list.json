@@ -1,0 +1,45 @@
+{
+  "id": "103e9f61-9fcc-453d-8aa7-9ec09f8e8531",
+  "slug": "convert-binary-search-tree-to-sorted-doubly-linked-list",
+  "title": "Convert Binary Search Tree to Sorted Doubly Linked List",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list",
+    "stack",
+    "tree",
+    "depth-first-search",
+    "binary-search-tree",
+    "binary-tree",
+    "doubly-linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,2,5,1,3]\n[2,1,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/*\n// Definition for a Node.\nclass Node {\npublic:\n    int val;\n    Node* left;\n    Node* right;\n\n    Node() {}\n\n    Node(int _val, Node* _left, Node* _right) {\n        val = _val;\n        left = _left;\n        right = _right;\n    }\n};\n*/\nclass Solution {\npublic:\n    Node* treeToDoublyList(Node* root) {\n        if (!root) {\n            return nullptr;\n        }\n        Node *left_head = root, *left_tail = root;\n        Node *right_head = root, *right_tail = root;\n        if (root->left) {\n            left_head = treeToDoublyList(root->left);\n            left_tail = left_head->left;\n        }\n        if (root->right) {\n            right_head = treeToDoublyList(root->right);\n            right_tail = right_head->left;\n        }\n        left_tail->right = root, right_head->left = root;\n        root->left = left_tail, root->right = right_head;\n        left_head->left = right_tail, right_tail->right = left_head;\n        return left_head;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Node(object):\n    def __init__(self, val, left, right):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\nclass Solution(object):\n    def treeToDoublyList(self, root):\n        \"\"\"\n        :type root: Node\n        :rtype: Node\n        \"\"\"\n        if not root:\n            return None\n        left_head, left_tail, right_head, right_tail = root, root, root, root\n        if root.left:\n            left_head = self.treeToDoublyList(root.left)\n            left_tail = left_head.left\n        if root.right:\n            right_head = self.treeToDoublyList(root.right)\n            right_tail = right_head.left\n        left_tail.right, right_head.left = root, root\n        root.left, root.right = left_tail, right_head\n        left_head.left, right_tail.right = right_tail, left_head\n        return left_head",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "417e0aaf-a799-480e-9962-33c36fa9ff2a",
+  "slug": "find-the-closest-marked-node",
+  "title": "Find the Closest Marked Node",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "graph",
+    "heap-priority-queue",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "4\n[[0,1,1],[1,2,3],[2,3,2],[0,3,4]]\n0\n[2,3]\n5\n[[0,1,2],[0,2,4],[1,3,1],[2,3,3],[3,4,2]]\n1\n[0,4]\n4\n[[0,1,1],[1,2,3],[2,3,2]]\n3\n[0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((|E| + |V|) * log|V|) = O(|E| * log|V|) by using binary heap,\n//        if we can further to use Fibonacci heap, it would be O(|E| + |V| * log|V|)\n// Space: O(|E| + |V|) = O(|E|)\n\n// dijkstra's algorithm\nclass Solution {\npublic:\n    int minimumDistance(int n, vector<vector<int>>& edges, int s, vector<int>& marked) {\n        unordered_set<int> target(cbegin(marked), cend(marked));\n        vector<vector<pair<int, int>>> adj(n);\n        for (const auto& e : edges) {\n            adj[e[0]].emplace_back(e[1], e[2]);\n        }\n        const auto& dijkstra = [&](int start) {\n            vector<int> best(size(adj), numeric_limits<int>::max());\n            best[start] = 0;\n            priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> min_heap;\n            min_heap.emplace(0, start);\n            while (!empty(min_heap)) {\n                const auto [curr, u] = min_heap.top(); min_heap.pop();\n                if (curr > best[u]) {\n                    continue;\n                }\n                if (target.count(u)) {\n                    return curr;\n                }\n                for (auto [v, w] : adj[u]) {\n                    if (best[v] - curr <= w) {\n                        continue;\n                    }\n                    best[v] = curr + w;\n                    min_heap.emplace(curr + w, v);\n                }\n            }\n            return -1;\n        };\n\n        return dijkstra(s);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((|E| + |V|) * log|V|) = O(|E| * log|V|) by using binary heap,\n#        if we can further to use Fibonacci heap, it would be O(|E| + |V| * log|V|)\n# Space: O(|E| + |V|) = O(|E|)\n\nimport heapq\n\n\n# dijkstra's algorithm\nclass Solution(object):\n    def minimumDistance(self, n, edges, s, marked):\n        \"\"\"\n        :type n: int\n        :type edges: List[List[int]]\n        :type s: int\n        :type marked: List[int]\n        :rtype: int\n        \"\"\"\n        def dijkstra(start):\n            best = [float(\"inf\")]*len(adj)\n            best[start] = 0\n            min_heap = [(0, start)]\n            while min_heap:\n                curr, u = heapq.heappop(min_heap)\n                if curr > best[u]:\n                    continue\n                if u in target:\n                    return curr\n                for v, w in adj[u]:     \n                    if curr+w >= best[v]:\n                        continue\n                    best[v] = curr+w\n                    heapq.heappush(min_heap, (best[v], v))\n            return -1\n\n        target = set(marked)\n        adj = [[] for _ in xrange(n)]\n        for u, v, w in edges:\n            adj[u].append((v, w))\n        return dijkstra(s)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

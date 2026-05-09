@@ -1,0 +1,40 @@
+{
+  "id": "9bc1cfb9-5b10-4c51-9286-b269cf51ea43",
+  "slug": "check-if-a-number-is-majority-element-in-a-sorted-array",
+  "title": "Check If a Number Is Majority Element in a Sorted Array",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,4,5,5,5,5,5,6,6]\n5\n[10,100,101,101]\n101",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isMajorityElement(vector<int>& nums, int target) {\n        if (nums.size() % 2) {\n            if (nums[nums.size() / 2] != target) {\n                return false;\n            }\n        } else {\n            if (nums[nums.size() / 2 - 1] != nums[nums.size() / 2] ||\n                nums[nums.size() / 2] != target) {\n                return false;\n            }\n        }\n        const auto& l = lower_bound(nums.cbegin(), nums.cend(), target);\n        const auto& r = upper_bound(nums.cbegin(), nums.cend(), target);\n        return (r - l) * 2 > nums.size();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nimport bisect\n\n\nclass Solution(object):\n    def isMajorityElement(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: bool\n        \"\"\"\n        if len(nums) % 2:\n            if nums[len(nums)//2] != target:\n                return False\n        else:\n            if not (nums[len(nums)//2-1] == nums[len(nums)//2] == target):\n                return False\n\n        left = bisect.bisect_left(nums, target)\n        right= bisect.bisect_right(nums, target)\n        return (right-left)*2 > len(nums)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

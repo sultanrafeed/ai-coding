@@ -1,0 +1,35 @@
+{
+  "id": "cd61e0f5-8043-4d13-9856-9512d1ec4ac5",
+  "slug": "maximum-transactions-without-negative-balance",
+  "title": "Maximum Transactions Without Negative Balance",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// greedy, heap\nclass Solution {\npublic:\n    int maxTransactions(vector<int>& transactions) {\n        priority_queue<int, vector<int>, greater<int>> min_heap;\n        int64_t curr = 0;\n        for (const auto& x : transactions) {\n            min_heap.emplace(x);\n            curr += x;\n            if (curr < 0) {\n                curr -= min_heap.top(); min_heap.pop();\n            }\n        }\n        return size(min_heap);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport heapq\n\n\n# greedy, heap\nclass Solution(object):\n    def maxTransactions(self, transactions):\n        \"\"\"\n        :type transactions: List[int]\n        :rtype: int\n        \"\"\"\n        min_heap = []\n        curr = 0\n        for x in transactions:\n            heapq.heappush(min_heap, x)\n            curr += x\n            if curr < 0:\n                curr -= heapq.heappop(min_heap)\n        return len(min_heap)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "c7b4314d-f6e6-43b0-87d8-ca91736370ac",
+  "slug": "score-after-flipping-matrix",
+  "title": "Score After Flipping Matrix",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an <code>m x n</code> binary matrix <code>grid</code>.</p>\n\n<p>A <strong>move</strong> consists of choosing any row or column and toggling each value in that row or column (i.e., changing all <code>0</code>&#39;s to <code>1</code>&#39;s, and all <code>1</code>&#39;s to <code>0</code>&#39;s).</p>\n\n<p>Every row of the matrix is interpreted as a binary number, and the <strong>score</strong> of the matrix is the sum of these numbers.</p>\n\n<p>Return <em>the highest possible <strong>score</strong> after making any number of <strong>moves</strong> (including zero moves)</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/07/23/lc-toogle1.jpg\" style=\"width: 500px; height: 299px;\" />\n<pre>\n<strong>Input:</strong> grid = [[0,0,1,1],[1,0,1,0],[1,1,0,0]]\n<strong>Output:</strong> 39\n<strong>Explanation:</strong> 0b1111 + 0b1001 + 0b1111 = 15 + 9 + 15 = 39\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[0]]\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 20</code></li>\n\t<li><code>grid[i][j]</code> is either <code>0</code> or <code>1</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "bit-manipulation",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,0,1,1],[1,0,1,0],[1,1,0,0]]\n[[0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(r * c)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int matrixScore(vector<vector<int>>& A) {\n        int R = A.size();\n        int C = A[0].size();\n        int result = 0;\n        for (int c = 0; c < C; ++c) {\n            int col = 0;\n            for (int r = 0; r < R; ++r) {\n                col += A[r][c] ^ A[r][0];\n            }\n            result += max(col, R - col) * (1 << (C - 1 - c));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(r * c)\n# Space: O(1)\n\n\nclass Solution(object):\n    def matrixScore(self, A):\n        \"\"\"\n        :type A: List[List[int]]\n        :rtype: int\n        \"\"\"\n        R, C = len(A), len(A[0])\n        result = 0\n        for c in xrange(C):\n            col = 0\n            for r in xrange(R):\n                col += A[r][c] ^ A[r][0]\n            result += max(col, R-col) * 2**(C-1-c)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

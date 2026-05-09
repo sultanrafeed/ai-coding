@@ -1,0 +1,44 @@
+{
+  "id": "1045333f-38d3-4ac0-a291-a99e231b3335",
+  "slug": "minimize-maximum-value-in-a-grid",
+  "title": "Minimize Maximum Value in a Grid",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "union-find",
+    "graph",
+    "topological-sort",
+    "sorting",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[3,1],[2,5]]\n[[10]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((m * n) * log(m * n))\n// Space: O(m * n)\n\n// sort, greedy\nclass Solution {\npublic:\n    vector<vector<int>> minScore(vector<vector<int>>& grid) {\n        vector<vector<int>> idxs;\n        for (int i = 0; i < size(grid); ++i) {\n            for (int j = 0; j < size(grid[0]); ++j) {\n                idxs.push_back({i, j});\n            }\n        }\n        sort(begin(idxs), end(idxs), [&](const auto& a, const auto& b) {\n            return grid[a[0]][a[1]] < grid[b[0]][b[1]];\n        });\n        vector<int> row_max(size(grid)), col_max(size(grid[0]));\n        for (const auto& idx : idxs) {\n            const int i = idx[0], j = idx[1];\n            grid[i][j] = row_max[i] = col_max[j] = max(row_max[i], col_max[j]) + 1;\n        }\n        return grid;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((m * n) * log(m * n))\n# Space: O(m * n)\n\n# sort, greedy\nclass Solution(object):\n    def minScore(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: List[List[int]]\n        \"\"\"\n        idxs = [(i, j) for i in xrange(len(grid)) for j in xrange(len(grid[0]))]\n        idxs.sort(key=lambda x: grid[x[0]][x[1]])\n        row_max, col_max = [0]*len(grid), [0]*len(grid[0])\n        for i, j in idxs:\n            grid[i][j] = row_max[i] = col_max[j] = max(row_max[i], col_max[j])+1\n        return grid",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

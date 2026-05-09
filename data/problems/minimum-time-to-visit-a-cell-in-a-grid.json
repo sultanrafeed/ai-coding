@@ -1,0 +1,38 @@
+{
+  "id": "e7427c3a-94d1-41ca-832a-51a98fe2d45a",
+  "slug": "minimum-time-to-visit-a-cell-in-a-grid",
+  "title": "Minimum Time to Visit a Cell In a Grid",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <code>m x n</code> matrix <code>grid</code> consisting of <b>non-negative</b> integers where <code>grid[row][col]</code> represents the <strong>minimum</strong> time required to be able to visit the cell <code>(row, col)</code>, which means you can visit the cell <code>(row, col)</code> only when the time you visit it is greater than or equal to <code>grid[row][col]</code>.</p>\n\n<p>You are standing in the <strong>top-left</strong> cell of the matrix in the <code>0<sup>th</sup></code> second, and you must move to <strong>any</strong> adjacent cell in the four directions: up, down, left, and right. Each move you make takes 1 second.</p>\n\n<p>Return <em>the <strong>minimum</strong> time required in which you can visit the bottom-right cell of the matrix</em>. If you cannot visit the bottom-right cell, then return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/02/14/yetgriddrawio-8.png\" /></p>\n\n<pre>\n<strong>Input:</strong> grid = [[0,1,3,2],[5,1,2,5],[4,3,8,6]]\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> One of the paths that we can take is the following:\n- at t = 0, we are on the cell (0,0).\n- at t = 1, we move to the cell (0,1). It is possible because grid[0][1] &lt;= 1.\n- at t = 2, we move to the cell (1,1). It is possible because grid[1][1] &lt;= 2.\n- at t = 3, we move to the cell (1,2). It is possible because grid[1][2] &lt;= 3.\n- at t = 4, we move to the cell (1,1). It is possible because grid[1][1] &lt;= 4.\n- at t = 5, we move to the cell (1,2). It is possible because grid[1][2] &lt;= 5.\n- at t = 6, we move to the cell (1,3). It is possible because grid[1][3] &lt;= 6.\n- at t = 7, we move to the cell (2,3). It is possible because grid[2][3] &lt;= 7.\nThe final time is 7. It can be shown that it is the minimum time possible.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/02/14/yetgriddrawio-9.png\" style=\"width: 151px; height: 151px;\" /></p>\n\n<pre>\n<strong>Input:</strong> grid = [[0,2,4],[3,2,1],[1,0,4]]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> There is no path from the top left to the bottom-right cell.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>2 &lt;= m, n &lt;= 1000</code></li>\n\t<li><code>4 &lt;= m * n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= grid[i][j] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>grid[0][0] == 0</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<style type=\"text/css\">.spoilerbutton {display:block; border:dashed; padding: 0px 0px; margin:10px 0px; font-size:150%; font-weight: bold; color:#000000; background-color:cyan; outline:0; \n}\n.spoiler {overflow:hidden;}\n.spoiler > div {-webkit-transition: all 0s ease;-moz-transition: margin 0s ease;-o-transition: all 0s ease;transition: margin 0s ease;}\n.spoilerbutton[value=\"Show Message\"] + .spoiler > div {margin-top:-500%;}\n.spoilerbutton[value=\"Hide Message\"] + .spoiler {padding:5px;}\n</style>\n",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "graph",
+    "heap-priority-queue",
+    "matrix",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n * log(m * n))\n// Space: O(m * n)\n\n// dijkstra's algorithm\nclass Solution {\npublic:\n    int minimumTime(vector<vector<int>>& grid) {\n        static const vector<pair<int, int>> DIRECTIONS = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};\n        if (min(grid[0][1], grid[1][0]) > 1) {\n            return -1;\n        }\n        const auto& dijkstra = [&](const pair<int, int>& start, const pair<int, int>& target) {\n            vector<vector<int>> best(size(grid), vector<int>(size(grid[0]), numeric_limits<int>::max()));\n            best[start.first][start.second] = 0;\n            using Data = tuple<int, int, int>;\n            priority_queue<Data, vector<Data>, greater<Data>> min_heap;\n            min_heap.emplace(0, start.first, start.second);\n            while (!empty(min_heap)) {\n                const auto [curr, i, j] = min_heap.top(); min_heap.pop();\n                if (best[i][j] < curr) {\n                    continue;\n                }\n                if (pair(i, j) == target) {\n                    break;\n                }\n                for (const auto& [di, dj] : DIRECTIONS) {\n                    const auto ni = i + di, nj = j + dj;\n                    if (!(0 <= ni && ni < size(grid) &&\n                          0 <= nj && nj < size(grid[0]) &&\n                          best[ni][nj] > max(grid[ni][nj] + static_cast<int>(grid[ni][nj] % 2 == curr % 2), curr + 1))) {\n                        continue;\n                    }\n                    best[ni][nj] = max(grid[ni][nj] + static_cast<int>(grid[ni][nj] % 2 == curr % 2), curr + 1);\n                    min_heap.emplace(best[ni][nj], ni, nj);\n                }\n            }\n            return best[target.first][target.second];\n        };\n\n        return dijkstra(pair(0, 0), pair(size(grid) - 1, size(grid[0]) - 1));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n * log(m * n))\n# Space: O(m * n)\n\nimport heapq\n\n\n# dijkstra's algorithm\nclass Solution(object):\n    def minimumTime(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        DIRECTIONS = ((1, 0), (0, 1), (-1, 0), (0, -1))\n        def dijkstra(start, target):\n            best = [[float(\"inf\")]*len(grid[0]) for _ in xrange(len(grid))]\n            best[start[0]][start[1]] = 0\n            min_heap = [(0, start[0], start[1])]\n            while min_heap:\n                curr, i, j = heapq.heappop(min_heap)\n                if best[i][j] < curr:\n                    continue\n                if (i, j) == target:\n                    break\n                for di, dj in DIRECTIONS:  \n                    ni, nj = i+di, j+dj   \n                    if not (0 <= ni < len(grid) and 0 <= nj < len(grid[0]) and best[ni][nj] > max(grid[ni][nj]+int(grid[ni][nj]%2 == best[i][j]%2), curr+1)):\n                        continue\n                    best[ni][nj] = max(grid[ni][nj]+int(grid[ni][nj]%2 == best[i][j]%2), curr+1)\n                    heapq.heappush(min_heap, (best[ni][nj], ni, nj))\n            return best[target[0]][target[1]]\n\n        if min(grid[0][1], grid[1][0]) > 1:\n            return -1\n        return dijkstra((0, 0), (len(grid)-1, len(grid[0])-1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

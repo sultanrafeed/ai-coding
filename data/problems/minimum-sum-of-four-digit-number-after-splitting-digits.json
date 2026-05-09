@@ -1,0 +1,35 @@
+{
+  "id": "8f643c31-e624-4461-a846-c571929ef2c7",
+  "slug": "minimum-sum-of-four-digit-number-after-splitting-digits",
+  "title": "Minimum Sum of Four Digit Number After Splitting Digits",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>positive</strong> integer <code>num</code> consisting of exactly four digits. Split <code>num</code> into two new integers <code>new1</code> and <code>new2</code> by using the <strong>digits</strong> found in <code>num</code>. <strong>Leading zeros</strong> are allowed in <code>new1</code> and <code>new2</code>, and <strong>all</strong> the digits found in <code>num</code> must be used.</p>\n\n<ul>\n\t<li>For example, given <code>num = 2932</code>, you have the following digits: two <code>2</code>&#39;s, one <code>9</code> and one <code>3</code>. Some of the possible pairs <code>[new1, new2]</code> are <code>[22, 93]</code>, <code>[23, 92]</code>, <code>[223, 9]</code> and <code>[2, 329]</code>.</li>\n</ul>\n\n<p>Return <em>the <strong>minimum</strong> possible sum of </em><code>new1</code><em> and </em><code>new2</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 2932\n<strong>Output:</strong> 52\n<strong>Explanation:</strong> Some possible pairs [new1, new2] are [29, 23], [223, 9], etc.\nThe minimum sum can be obtained by the pair [29, 23]: 29 + 23 = 52.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 4009\n<strong>Output:</strong> 13\n<strong>Explanation:</strong> Some possible pairs [new1, new2] are [0, 49], [490, 0], etc. \nThe minimum sum can be obtained by the pair [4, 9]: 4 + 9 = 13.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1000 &lt;= num &lt;= 9999</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(d) = O(1), d is the number of digits\n// Space: O(d) = O(1)\n\n// greedy\nclass Solution {\npublic:\n    int minimumSum(int num) {\n        vector<int> nums;\n        for (; num; num /= 10) {\n            nums.emplace_back(num % 10);\n        }\n        inplace_counting_sort(&nums, false);\n        int a = 0, b = 0;\n        for (const auto& x: nums) {\n            a = a * 10 + x;\n            swap(a, b);\n        }\n        return a + b;\n    }\n\nprivate:\n    void inplace_counting_sort(vector<int> *nums, bool is_reverse) {\n        const int max_num = *max_element(cbegin(*nums), cend(*nums));\n        vector<int> count(max_num + 1);\n        for (const auto& num : *nums) {\n            ++count[num];\n        }\n        for (int i = 1; i < size(count); ++i) {\n            count[i] += count[i - 1];\n        }\n        for (int i = size(*nums) - 1; i >= 0; --i) {  // inplace but unstable sort\n            while ((*nums)[i] >= 0) {\n                --count[(*nums)[i]];\n                const int j = count[(*nums)[i]];\n                tie((*nums)[i], (*nums)[j]) = pair((*nums)[j], ~(*nums)[i]);\n            }\n        }\n        for (auto& num : *nums) {\n            num = ~num;  // restore values\n        }\n        if (is_reverse) {  // unstable sort\n            reverse(begin(*nums), end(*nums));\n        }\n    }\n};\n\n// Time:  O(dlogd) = O(1), d is the number of digits\n// Space: O(d) = O(1)\n// greedy\nclass Solution2 {\npublic:\n    int minimumSum(int num) {\n        vector<int> nums;\n        for (; num; num /= 10) {\n            nums.emplace_back(num % 10);\n        }\n        sort(begin(nums), end(nums));\n        int a = 0, b = 0;\n        for (const auto& x: nums) {\n            a = a * 10 + x;\n            swap(a, b);\n        }\n        return a + b;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(d) = O(1), d is the number of digits\n# Space: O(d) = O(1)\n\n# greedy\nclass Solution(object):\n    def minimumSum(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: int\n        \"\"\"\n        def inplace_counting_sort(nums, reverse=False):  # Time: O(n)\n            count = [0]*(max(nums)+1)\n            for num in nums:\n                count[num] += 1\n            for i in xrange(1, len(count)):\n                count[i] += count[i-1]\n            for i in reversed(xrange(len(nums))):  # inplace but unstable sort\n                while nums[i] >= 0:\n                    count[nums[i]] -= 1\n                    j = count[nums[i]]\n                    nums[i], nums[j] = nums[j], ~nums[i]\n            for i in xrange(len(nums)):\n                nums[i] = ~nums[i]  # restore values\n            if reverse:  # unstable sort\n                nums.reverse()\n    \n        nums = map(int, list(str(num)))\n        inplace_counting_sort(nums)\n        a = b = 0\n        for x in nums:\n            a = a*10+x\n            a, b = b, a\n        return a+b\n\n\n# Time:  O(dlogd) = O(1), d is the number of digits\n# Space: O(d) = O(1)\n# greedy\nclass Solution2(object):\n    def minimumSum(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: int\n        \"\"\"\n        nums = sorted(map(int, list(str(num))))\n        a = b = 0\n        for x in nums:\n            a = a*10+x\n            a, b = b, a\n        return a+b",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

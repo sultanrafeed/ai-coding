@@ -1,0 +1,41 @@
+{
+  "id": "16d8f85b-ed7b-462b-86a5-c16b85707b9f",
+  "slug": "count-numbers-with-unique-digits-ii",
+  "title": "Count Numbers With Unique Digits II",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "math",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "1\n20\n9\n19\n80\n120",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logb)\n// Space: O(1)\n\n// hash table, bitmask, combinatorics\nclass Solution {\npublic:\n    int numberCount(int a, int b) {\n        const auto& count2 = [&](int n) {\n            if (n == 0) {\n                return 0;\n            }\n            int result = 1;\n            for (int i = 0, cnt = 1; i < n - 1; ++i) {\n                cnt *= 9 - i;\n                result += cnt;\n            }\n            return 9 * result;\n        };\n\n        const auto& count = [&](int x) {\n            int n = 1, base = 1;\n            for (; x / (base * 10); base *= 10, ++n);\n            int result = count2(n - 1);\n            int lookup = 0;\n            int cnt = 1;\n            for (int i = 0; i < n - 1; ++i) {\n                cnt *= 9 - i;\n            }\n            for (int i = 0; i < n; ++i, base /= 10) {\n                const int d = (x / base) % 10;\n                const int mask = lookup & (((1 << d) - 1) - (i == 0 ? 1 : 0));\n                result += ((d - (i == 0 ? 1 : 0)) - __builtin_popcount(mask)) * cnt;\n                cnt /= 9 - i;\n                if (lookup & (1 << d)) {\n                    break;\n                }\n                lookup |= 1 << d;\n            }\n            return result;\n        };\n\n        return count(b + 1) - count(a);\n    }\n};\n\n// Time:  O(logb)\n// Space: O(logb)\n// hash table, bitmask, combinatorics\nclass Solution2 {\npublic:\n    int numberCount(int a, int b) {\n        vector<int> fact(2, 1);\n        const auto& nPr = [&](int n, int k) {\n            while (size(fact) <= n) {  // lazy initialization\n                fact.emplace_back(fact.back() * size(fact));\n            }\n            return fact[n] / fact[n - k];\n        };\n\n        const auto& count = [&](int x) {\n            vector<int> digits;\n            for (; x; x /= 10) {\n                digits.emplace_back(x % 10);\n            }\n            reverse(begin(digits), end(digits));\n            int result = 0;\n            for (int i = 0; i < size(digits) - 1; ++i) {\n                result += nPr(9, i);\n            }\n            result *= 9;\n            int lookup = 0;\n            for (int i = 0; i < size(digits); ++i) {\n                const int mask = lookup & (((1 << digits[i]) - 1) - (i == 0 ? 1 : 0));\n                result += ((digits[i] - (i == 0 ? 1 : 0)) - __builtin_popcount(mask)) * nPr(10 - (i + 1), size(digits) - (i + 1));\n                if (lookup & (1 << digits[i])) {\n                    break;\n                }\n                lookup |= 1 << digits[i];\n            }\n            return result;\n        };\n\n        return count(b + 1) - count(a);\n    }\n};\n\n// Time:  O(blogb)\n// Space: O(1)\n// brute force, hash table, bitmask\nclass Solution3 {\npublic:\n    int numberCount(int a, int b) {\n        const auto& check = [](int x) {\n            int lookup = 0;\n            for (; x; x /= 10) {\n                if (lookup & (1 << (x % 10))) {\n                    return false;\n                }\n                lookup |= 1 << (x % 10);\n            }\n            return true;\n        };\n\n        int result = 0;\n        for (; a <= b; ++a) {\n            result += check(a);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logb)\n# Space: O(1)\n\n# hash table, bitmasks, combinatorics\nclass Solution(object):\n    def numberCount(self, a, b):\n        \"\"\"\n        :type a: int\n        :type b: int\n        :rtype: int\n        \"\"\"\n        def popcount(x):\n            return bin(x).count('1')\n\n        def count2(n):\n            if n == 0:\n                return 0\n            result = cnt = 1\n            for i in xrange(n-1):\n                cnt *= 9-i\n                result += cnt\n            return 9*result\n\n        def count(x):\n            n = base = 1\n            while x//(base*10):\n                base *= 10\n                n += 1\n            result = count2(n-1)\n            lookup = 0\n            cnt = reduce(lambda accu, i: accu*(9-i), xrange(n-1), 1)\n            for i in xrange(n):\n                d = (x//base)%10\n                base //= 10\n                mask = lookup&(((1<<d)-1)-int(i == 0))\n                result += ((d-int(i == 0))-popcount(mask))*cnt\n                cnt //= 9-i\n                if lookup&(1<<d):\n                    break\n                lookup |= 1<<d\n            return result\n\n        return count(b+1)-count(a)\n\n\n# Time:  O(logb)\n# Space: O(logb)\n# hash table, bitmasks, combinatorics\nclass Solution2(object):\n    def numberCount(self, a, b):\n        \"\"\"\n        :type a: int\n        :type b: int\n        :rtype: int\n        \"\"\"\n        fact = [1]*2\n        def nPr(n, k):\n            while len(fact) <= n:  # lazy initialization\n                fact.append(fact[-1]*len(fact))\n            return fact[n]//fact[n-k]\n        \n        def popcount(x):\n            return bin(x).count('1')\n\n        def count(x):\n            digits = map(int, str(x))\n            result = 9*sum(nPr(9, i) for i in xrange(len(digits)-1))\n            lookup = 0\n            for i, d in enumerate(digits):\n                mask = lookup&(((1<<d)-1)-int(i == 0))\n                result += ((d-int(i == 0))-popcount(mask))*nPr(10-(i+1), len(digits)-(i+1))\n                if lookup&(1<<d):\n                    break\n                lookup |= 1<<d\n            return result\n\n        return count(b+1)-count(a)\n\n\n# Time:  O(blogb)\n# Space: O(1)\n# brute force, hash table, bitmasks\nclass Solution3(object):\n    def numberCount(self, a, b):\n        \"\"\"\n        :type a: int\n        :type b: int\n        :rtype: int\n        \"\"\"\n        def check(x):\n            lookup = 0\n            while x:\n                if lookup&(1<<(x%10)):\n                    return False\n                lookup |= (1<<(x%10))\n                x //= 10\n            return True\n\n        return sum(check(x) for x in xrange(a, b+1))\n\n\n# Time:  O(blogb)\n# Space: O(logb)\n# brute force, hash table\nclass Solution4(object):\n    def numberCount(self, a, b):\n        \"\"\"\n        :type a: int\n        :type b: int\n        :rtype: int\n        \"\"\"\n        return sum(len(set(str(x))) == len(str(x)) for x in xrange(a, b+1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

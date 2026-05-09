@@ -1,0 +1,25 @@
+{
+  "id": "1e648732-24bc-4c05-bf2d-572c04f01446",
+  "slug": "zigzagLevelOrder",
+  "title": "Zigzaglevelorder",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(n)\n\n/**\n * Definition for binary tree\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        vector<vector<int> > zigzagLevelOrder(TreeNode *root) {\n            bool isLeftToRight = true;\n            vector<vector<int> > ans;\n            queue<TreeNode *> q;\n            TreeNode * n;\n            vector<int> v;\n            int size = 0;\n            int cnt = 0;\n\n            if(!root)\n                return ans;\n\n            q.push(root);\n            size = 1;\n            while(size) {\n                n = q.front();\n                v.push_back(n->val);\n\n                if(n->left) {\n                    q.push(n->left);\n                    cnt++;\n                }\n                if(n->right) {\n                    q.push(n->right);\n                    cnt++;\n                }\n\n                q.pop();\n                size--;\n                if(size == 0) {\n                    if(!isLeftToRight)\n                        reverse(v.begin(), v.end());\n                    isLeftToRight = !isLeftToRight;\n                    size = cnt;\n                    cnt = 0;\n                    ans.push_back(v);\n                    v.clear();\n                }\n            }\n            return ans;\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

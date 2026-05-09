@@ -1,0 +1,34 @@
+{
+  "id": "fa23cbc3-fcce-4950-8eee-eb3b83370c3b",
+  "slug": "find-the-child-who-has-the-ball-after-k-seconds",
+  "title": "Find the Child Who Has the Ball After K Seconds",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given two <strong>positive</strong> integers <code>n</code> and <code>k</code>. There are <code>n</code> children numbered from <code>0</code> to <code>n - 1</code> standing in a queue <em>in order</em> from left to right.</p>\n\n<p>Initially, child 0 holds a ball and the direction of passing the ball is towards the right direction. After each second, the child holding the ball passes it to the child next to them. Once the ball reaches <strong>either</strong> end of the line, i.e. child 0 or child <code>n - 1</code>, the direction of passing is <strong>reversed</strong>.</p>\n\n<p>Return the number of the child who receives the ball after <code>k</code> seconds.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3, k = 5</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<table>\n\t<tbody>\n\t\t<tr>\n\t\t\t<th>Time elapsed</th>\n\t\t\t<th>Children</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>0</code></td>\n\t\t\t<td><code>[<u>0</u>, 1, 2]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>1</code></td>\n\t\t\t<td><code>[0, <u>1</u>, 2]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>2</code></td>\n\t\t\t<td><code>[0, 1, <u>2</u>]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>3</code></td>\n\t\t\t<td><code>[0, <u>1</u>, 2]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>4</code></td>\n\t\t\t<td><code>[<u>0</u>, 1, 2]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>5</code></td>\n\t\t\t<td><code>[0, <u>1</u>, 2]</code></td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 5, k = 6</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<table>\n\t<tbody>\n\t\t<tr>\n\t\t\t<th>Time elapsed</th>\n\t\t\t<th>Children</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>0</code></td>\n\t\t\t<td><code>[<u>0</u>, 1, 2, 3, 4]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>1</code></td>\n\t\t\t<td><code>[0, <u>1</u>, 2, 3, 4]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>2</code></td>\n\t\t\t<td><code>[0, 1, <u>2</u>, 3, 4]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>3</code></td>\n\t\t\t<td><code>[0, 1, 2, <u>3</u>, 4]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>4</code></td>\n\t\t\t<td><code>[0, 1, 2, 3, <u>4</u>]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>5</code></td>\n\t\t\t<td><code>[0, 1, 2, <u>3</u>, 4]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>6</code></td>\n\t\t\t<td><code>[0, 1, <u>2</u>, 3, 4]</code></td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<table>\n\t<tbody>\n\t\t<tr>\n\t\t\t<th>Time elapsed</th>\n\t\t\t<th>Children</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>0</code></td>\n\t\t\t<td><code>[<u>0</u>, 1, 2, 3]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>1</code></td>\n\t\t\t<td><code>[0, <u>1</u>, 2, 3]</code></td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td><code>2</code></td>\n\t\t\t<td><code>[0, 1, <u>2</u>, 3]</code></td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= n &lt;= 50</code></li>\n\t<li><code>1 &lt;= k &lt;= 50</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Note:</strong> This question is the same as <a href=\"https://leetcode.com/problems/pass-the-pillow/description/\" target=\"_blank\"> 2582: Pass the Pillow.</a></p>\n",
+  "patterns": [
+    "math",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    int numberOfChild(int n, int k) {\n        const int q = k / (n - 1), r = k % (n - 1);\n        return (q & 1) == 0 ? r : (n - 1) - r;\n    }\n};\n\n// Time:  O(1)\n// Space: O(1)\n// math\nclass Solution2 {\npublic:\n    int numberOfChild(int n, int k) {\n        const int r = k % (2 * (n - 1));\n        return r <= n - 1 ? r : (n - 1) - (r - (n - 1));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# math\nclass Solution(object):\n    def numberOfChild(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        q, r = divmod(k, n-1)\n        return r if q&1 == 0 else (n-1)-r\n\n\n# Time:  O(1)\n# Space: O(1)\n# math\nclass Solution2(object):\n    def numberOfChild(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        r = k%(2*(n-1))\n        return r if r <= n-1 else (n-1)-(r-(n-1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

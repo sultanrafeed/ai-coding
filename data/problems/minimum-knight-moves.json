@@ -1,0 +1,33 @@
+{
+  "id": "5fa0523a-9bdc-4f12-95c5-17ada1675840",
+  "slug": "minimum-knight-moves",
+  "title": "Minimum Knight Moves",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\nprivate:\n    template <typename T>\n    struct PairHash {\n        size_t operator()(const pair<T, T>& p) const {\n            size_t seed = 0;\n            seed ^= std::hash<T>{}(p.first)  + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            seed ^= std::hash<T>{}(p.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            return seed;\n        }\n    };\n\npublic:\n    int minKnightMoves(int x, int y) {\n        // we can observe from:\n        // [0]\n        // [3, 2]\n        // [2,(1),4]\n        // [3, 2, 3, 2]\n        // [2, 3,(2) 3, 4]\n        // [3, 4, 3, 4, 3, 4]\n        // [4, 3, 4,(3),4, 5, 4]\n        // [5, 4, 5, 4, 5, 4, 5, 6]\n        // [4, 5, 4, 5,(4),5, 6, 5, 6]\n        // [5, 6, 5, 6, 5, 6, 5, 6, 7, 6]\n        // [6, 5, 6, 5, 6,(5),6, 7, 6, 7, 8]\n        // [7, 6, 7, 6, 7, 6, 7, 6, 7, 8, 7, 8]\n        // [6, 7, 6, 7, 6, 7,(6),7, 8, 7, 8, 9, 8]\n        // [7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 9, 8, 9, 10]\n        // [8, 7, 8, 7, 8, 7, 8,(7),8, 9, 8, 9, 10, 9, 10]\n        // [9, 8, 9, 8, 9, 8, 9, 8, 9, 8, 9, 10, 9, 10, 11, 10]\n\n        x = abs(x), y = abs(y);\n        if (x < y) {\n            swap(x, y);\n        }\n        static const unordered_map<pair<int, int>, int, PairHash<int>> lookup =\n            {{{1, 0}, 3}, {{2, 2}, 4}};  // special cases\n        if (lookup.count({x, y})) {\n            return lookup.at({x, y});\n        }\n        const auto& k = x - y;\n        if (y > k) {\n            // if 2y > x, every period 3 of y (or k) with fixed another is increased by 2 (or 1)\n            // and start from (2k, k) with (k) when y = k (diagonal line)\n            // ex. (0, 0) ~ (12, 12) ~ ... : 0 => 2,4(special case),2 => 4,4,4 => 6,6,6 => 8,8,8 => ...\n            // ex. (2, 1) ~ (14, 13) ~ ... : 1 => 3,3,3 => 5,5,5 => 7,7,7 => 9,9,9 => ...\n            return k + 2 * ((y - k - 1) / 3 + 1);\n        }\n        // if 2y <= x, every period 4 of k (or y) with fixed another is increased by 2\n        // and start from (2k, k) with (k) when y = k (vertical line)\n        // ex. (0, 0) ~ (11, 0) ~ ... : 0,3(special case),2,3 => 2,3,4,5 => 4,5,6,7 => ...\n        // ex. (2, 1) ~ (13, 1) ~ ... : 1,2,3,4 => 3,4,5,6 => 5,6,7,8 => ...\n        return k - 2 * ((k - y) / 4);\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n^2)\nclass Solution2 {\npublic:\n    int minKnightMoves(int x, int y) {\n        return dp(x, y);\n    }\n\nprivate:\n    template <typename T>\n    struct PairHash {\n        size_t operator()(const pair<T, T>& p) const {\n            size_t seed = 0;\n            seed ^= std::hash<T>{}(p.first)  + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            seed ^= std::hash<T>{}(p.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            return seed;\n        }\n    };\n\n    int dp(int x, int y) {\n        static unordered_map<pair<int, int>, int, PairHash<int>> lookup =\n            {{{0, 0}, 0}, {{1, 1}, 2}, {{1, 0}, 3}};  // special cases\n        x = abs(x), y = abs(y);\n        if (x < y) {\n            swap(x, y);\n        }\n        if (!lookup.count({x, y})) {  // greedy, smaller x, y is always better if not special cases\n            lookup[{x, y}] = min(dp(x - 1, y - 2), dp(x - 2, y - 1)) + 1;\n        }\n        return lookup[{x, y}];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def minKnightMoves(self, x, y):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :rtype: int\n        \"\"\"\n        # we can observe from:\n        # [0]\n        # [3, 2]\n        # [2,(1),4]\n        # [3, 2, 3, 2]\n        # [2, 3,(2) 3, 4]\n        # [3, 4, 3, 4, 3, 4]\n        # [4, 3, 4,(3),4, 5, 4]\n        # [5, 4, 5, 4, 5, 4, 5, 6]\n        # [4, 5, 4, 5,(4),5, 6, 5, 6]\n        # [5, 6, 5, 6, 5, 6, 5, 6, 7, 6]\n        # [6, 5, 6, 5, 6,(5),6, 7, 6, 7, 8]\n        # [7, 6, 7, 6, 7, 6, 7, 6, 7, 8, 7, 8]\n        # [6, 7, 6, 7, 6, 7,(6),7, 8, 7, 8, 9, 8]\n        # [7, 8, 7, 8, 7, 8, 7, 8, 7, 8, 9, 8, 9, 10]\n        # [8, 7, 8, 7, 8, 7, 8,(7),8, 9, 8, 9, 10, 9, 10]\n        # [9, 8, 9, 8, 9, 8, 9, 8, 9, 8, 9, 10, 9, 10, 11, 10]\n\n        x, y = abs(x), abs(y)\n        if x < y:\n            x, y = y, x\n        lookup = {(1, 0):3, (2, 2):4}  # special cases\n        if (x, y) in lookup:\n            return lookup[(x, y)]\n        k = x-y\n        if y > k:\n            # if 2y > x, every period 3 of y (or k) with fixed another is increased by 2 (or 1)\n            # and start from (2k, k) with (k) when y = k (diagonal line)\n            # ex. (0, 0) ~ (12, 12) ~ ... : 0 => 2,4(special case),2 => 4,4,4 => 6,6,6 => 8,8,8 => ...\n            # ex. (2, 1) ~ (14, 13) ~ ... : 1 => 3,3,3 => 5,5,5 => 7,7,7 => 9,9,9 => ...\n            return k - 2*((k-y)//3)\n        # if 2y <= x, every period 4 of k (or y) with fixed another is increased by 2\n        # and start from (2k, k) with (k) when y = k (vertical line)\n        # ex. (0, 0) ~ (11, 0) ~ ... : 0,3(special case),2,3 => 2,3,4,5 => 4,5,6,7 => ...\n        # ex. (2, 1) ~ (13, 1) ~ ... : 1,2,3,4 => 3,4,5,6 => 5,6,7,8 => ...\n        return k - 2*((k-y)//4)\n\n\n# Time:  O(n^2)\n# Space: O(n^2)\nclass Solution2(object):\n    def __init__(self):\n        self.__lookup = {(0, 0):0, (1, 1):2, (1, 0):3}  # special cases\n\n    def minKnightMoves(self, x, y):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :rtype: int\n        \"\"\"\n        def dp(x, y):\n            x, y = abs(x), abs(y)\n            if x < y:\n                x, y = y, x\n            if (x, y) not in self.__lookup:  # greedy, smaller x, y is always better if not special cases\n                self.__lookup[(x, y)] = min(dp(x-1, y-2), dp(x-2, y-1)) + 1\n            return self.__lookup[(x, y)]\n        return dp(x, y)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

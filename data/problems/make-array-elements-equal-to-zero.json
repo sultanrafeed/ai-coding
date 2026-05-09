@@ -1,0 +1,35 @@
+{
+  "id": "ef024e05-9cbf-4ba4-a346-af4629e86b6e",
+  "slug": "make-array-elements-equal-to-zero",
+  "title": "Make Array Elements Equal to Zero",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Start by selecting a starting position <code>curr</code> such that <code>nums[curr] == 0</code>, and choose a movement <strong>direction</strong> of&nbsp;either left or right.</p>\n\n<p>After that, you repeat the following process:</p>\n\n<ul>\n\t<li>If <code>curr</code> is out of the range <code>[0, n - 1]</code>, this process ends.</li>\n\t<li>If <code>nums[curr] == 0</code>, move in the current direction by <strong>incrementing</strong> <code>curr</code> if you are moving right, or <strong>decrementing</strong> <code>curr</code> if you are moving left.</li>\n\t<li>Else if <code>nums[curr] &gt; 0</code>:\n\t<ul>\n\t\t<li>Decrement <code>nums[curr]</code> by 1.</li>\n\t\t<li><strong>Reverse</strong>&nbsp;your movement direction (left becomes right and vice versa).</li>\n\t\t<li>Take a step in your new direction.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>A selection of the initial position <code>curr</code> and movement direction is considered <strong>valid</strong> if every element in <code>nums</code> becomes 0 by the end of the process.</p>\n\n<p>Return the number of possible <strong>valid</strong> selections.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,0,2,0,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The only possible valid selections are the following:</p>\n\n<ul>\n\t<li>Choose <code>curr = 3</code>, and a movement direction to the left.\n\n\t<ul>\n\t\t<li><code>[1,0,2,<strong><u>0</u></strong>,3] -&gt; [1,0,<strong><u>2</u></strong>,0,3] -&gt; [1,0,1,<strong><u>0</u></strong>,3] -&gt; [1,0,1,0,<strong><u>3</u></strong>] -&gt; [1,0,1,<strong><u>0</u></strong>,2] -&gt; [1,0,<strong><u>1</u></strong>,0,2] -&gt; [1,0,0,<strong><u>0</u></strong>,2] -&gt; [1,0,0,0,<strong><u>2</u></strong>] -&gt; [1,0,0,<strong><u>0</u></strong>,1] -&gt; [1,0,<strong><u>0</u></strong>,0,1] -&gt; [1,<strong><u>0</u></strong>,0,0,1] -&gt; [<strong><u>1</u></strong>,0,0,0,1] -&gt; [0,<strong><u>0</u></strong>,0,0,1] -&gt; [0,0,<strong><u>0</u></strong>,0,1] -&gt; [0,0,0,<strong><u>0</u></strong>,1] -&gt; [0,0,0,0,<strong><u>1</u></strong>] -&gt; [0,0,0,0,0]</code>.</li>\n\t</ul>\n\t</li>\n\t<li>Choose <code>curr = 3</code>, and a movement direction to the right.\n\t<ul>\n\t\t<li><code>[1,0,2,<strong><u>0</u></strong>,3] -&gt; [1,0,2,0,<strong><u>3</u></strong>] -&gt; [1,0,2,<strong><u>0</u></strong>,2] -&gt; [1,0,<strong><u>2</u></strong>,0,2] -&gt; [1,0,1,<strong><u>0</u></strong>,2] -&gt; [1,0,1,0,<strong><u>2</u></strong>] -&gt; [1,0,1,<strong><u>0</u></strong>,1] -&gt; [1,0,<strong><u>1</u></strong>,0,1] -&gt; [1,0,0,<strong><u>0</u></strong>,1] -&gt; [1,0,0,0,<strong><u>1</u></strong>] -&gt; [1,0,0,<strong><u>0</u></strong>,0] -&gt; [1,0,<strong><u>0</u></strong>,0,0] -&gt; [1,<strong><u>0</u></strong>,0,0,0] -&gt; [<strong><u>1</u></strong>,0,0,0,0] -&gt; [0,0,0,0,0].</code></li>\n\t</ul>\n\t</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,3,4,0,4,1,0]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There are no possible valid selections.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 100</code></li>\n\t<li>There is at least one element <code>i</code> where <code>nums[i] == 0</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "simulation",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// prefix sum, CodeChef Starters 146 - Bouncing Ball (https://www.codechef.com/problems/BOUNCE_BALL)\nclass Solution {\npublic:\n    int countValidSelections(vector<int>& nums) {\n        int result = 0;\n        for (int i = 0, curr = 0, total = accumulate(cbegin(nums), cend(nums), 0); i < size(nums); ++i) {\n            if (nums[i] == 0) {\n                result += max(2 - abs(curr - (total - curr)), 0);\n            } else {\n                curr += nums[i];\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// prefix sum, CodeChef Starters 146 - Bouncing Ball (https://www.codechef.com/problems/BOUNCE_BALL)\nclass Solution2 {\npublic:\n    int countValidSelections(vector<int>& nums) {\n        vector<int> prefix(size(nums) + 1);\n        for (int i = 0; i < size(nums); ++i) {\n            prefix[i + 1] = prefix[i] + nums[i];\n        }\n        vector<int> suffix(size(nums) + 1);\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            suffix[i] = suffix[i + 1] + nums[i];\n        }\n        int result = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            if (nums[i] == 0) {\n                result += max(2 - abs(prefix[i] - suffix[i + 1]), 0);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# prefix sum, CodeChef Starters 146 - Bouncing Ball (https://www.codechef.com/problems/BOUNCE_BALL)\nclass Solution(object):\n    def countValidSelections(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        total = sum(nums)\n        result = curr = 0\n        for x in nums:\n            if not x:\n                result += max(2-abs(curr-(total-curr)), 0)\n            else:\n                curr += x\n        return result\n\n\n# Time:  O(n)\n# Space: O(n)\n# prefix sum, CodeChef Starters 146 - Bouncing Ball (https://www.codechef.com/problems/BOUNCE_BALL)\nclass Solution2(object):\n    def countValidSelections(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        prefix = [0]*(len(nums)+1)\n        for i in xrange(len(nums)):\n            prefix[i+1] = prefix[i]+nums[i]\n        suffix = [0]*(len(nums)+1)\n        for i in reversed(xrange(len(nums))):\n            suffix[i] = suffix[i+1]+nums[i]\n        return sum(max(2-abs(prefix[i]-suffix[i+1]), 0) for i in xrange(len(nums)) if nums[i] == 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

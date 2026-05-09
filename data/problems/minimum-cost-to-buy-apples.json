@@ -1,0 +1,36 @@
+{
+  "id": "3d0d8fcb-fa84-4b64-91c7-b978eb66a734",
+  "slug": "minimum-cost-to-buy-apples",
+  "title": "Minimum Cost to Buy Apples",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "graph",
+    "heap-priority-queue",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * rlogn), r = len(roads)\n// Space: O(n)\n\n// dijkstra's algorithm\nclass Solution {\npublic:\n    vector<long long> minCost(int n, vector<vector<int>>& roads, vector<int>& appleCost, int k) {\n        static const int INF = numeric_limits<int>::max();\n\n        vector<vector<pair<int, int>>> adj(n);\n        for (const auto& r : roads) {\n            adj[r[0] - 1].emplace_back(r[1] - 1, r[2]);\n            adj[r[1] - 1].emplace_back(r[0] - 1, r[2]);\n        }\n        const auto& dijkstra = [&](int start) {\n            vector<long long> best(size(adj), INF);\n            best[start] = 0;\n            priority_queue<pair<long long, int>, vector<pair<long long, int>>, greater<pair<long long, int>>> min_heap;\n            min_heap.emplace(0, start);\n            while (!empty(min_heap)) {\n                const auto [curr, u] = min_heap.top(); min_heap.pop();\n                if (best[u] < curr) {\n                    continue;\n                }\n                for (const auto& [v, w] : adj[u]) {\n                    if (best[v] - curr <= w) {\n                        continue;\n                    }\n                    best[v] = curr + w;\n                    min_heap.emplace(curr + w, v);\n                }\n            }\n            return best;\n        };\n\n        vector<long long> result(n, INF);\n        for (int u = 0; u < n; ++u) {\n            const auto& best = dijkstra(u);\n            for (int v = 0; v < n; ++v) {\n                result[u] = min(result[u], appleCost[v] + (k + 1) * best[v]);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * rlogn), r = len(roads)\n# Space: O(n)\n\nimport itertools\nimport heapq\n\n\n# dijkstra's algorithm\nclass Solution(object):\n    def minCost(self, n, roads, appleCost, k):\n        \"\"\"\n        :type n: int\n        :type roads: List[List[int]]\n        :type appleCost: List[int]\n        :type k: int\n        :rtype: List[int]\n        \"\"\"\n        def dijkstra(start):\n            best = [float(\"inf\")]*len(adj)\n            best[start] = 0\n            min_heap = [(0, start)]\n            while min_heap:\n                curr, u = heapq.heappop(min_heap)\n                if best[u] < curr:\n                    continue\n                for v, w in adj[u]:                \n                    if best[v] <= curr+w:\n                        continue\n                    best[v] = curr+w\n                    heapq.heappush(min_heap, (curr+w, v))\n            return best\n\n        adj = [[] for _ in xrange(n)]\n        for a, b, c in roads:\n            adj[a-1].append((b-1, c))\n            adj[b-1].append((a-1, c))\n        return [min(a+d*(k+1) for a, d in itertools.izip(appleCost, dijkstra(u))) for u in xrange(n)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

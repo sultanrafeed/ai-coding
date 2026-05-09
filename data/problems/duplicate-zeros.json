@@ -1,0 +1,34 @@
+{
+  "id": "99aa1100-6277-45be-bb99-50006dfd47d0",
+  "slug": "duplicate-zeros",
+  "title": "Duplicate Zeros",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a fixed-length integer array <code>arr</code>, duplicate each occurrence of zero, shifting the remaining elements to the right.</p>\n\n<p><strong>Note</strong> that elements beyond the length of the original array are not written. Do the above modifications to the input array in place and do not return anything.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,0,2,3,0,4,5,0]\n<strong>Output:</strong> [1,0,0,2,3,0,0,4]\n<strong>Explanation:</strong> After calling your function, the input array is modified to: [1,0,0,2,3,0,0,4]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,2,3]\n<strong>Output:</strong> [1,2,3]\n<strong>Explanation:</strong> After calling your function, the input array is modified to: [1,2,3]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= arr[i] &lt;= 9</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    void duplicateZeros(vector<int>& arr) {\n        int shift = 0, i;\n        for (i = 0; i + shift < arr.size(); ++i) {\n            shift += int(arr[i] == 0);\n        }\n        for (i = i - 1; shift > 0; --i) {\n            if (i + shift < arr.size()) {\n                arr[i + shift] = arr[i];\n            }\n            if (arr[i] == 0) {\n                --shift;\n                arr[i + shift] = arr[i];\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def duplicateZeros(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: None Do not return anything, modify arr in-place instead.\n        \"\"\"\n        shift, i = 0, 0\n        while i+shift < len(arr):\n            shift += int(arr[i] == 0)\n            i += 1\n        i -= 1\n        while shift:\n            if i+shift < len(arr):\n                arr[i+shift] = arr[i]\n            if arr[i] == 0:\n                shift -= 1\n                arr[i+shift] = arr[i]\n            i -= 1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

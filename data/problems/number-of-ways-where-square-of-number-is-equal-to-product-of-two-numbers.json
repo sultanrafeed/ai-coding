@@ -1,0 +1,42 @@
+{
+  "id": "bc3cbcb8-3851-4223-8447-e0f51d908e48",
+  "slug": "number-of-ways-where-square-of-number-is-equal-to-product-of-two-numbers",
+  "title": "Number of Ways Where Square of Number Is Equal to Product of Two Numbers",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two arrays of integers <code>nums1</code> and <code>nums2</code>, return the number of triplets formed (type 1 and type 2) under the following rules:</p>\n\n<ul>\n\t<li>Type 1: Triplet (i, j, k) if <code>nums1[i]<sup>2</sup> == nums2[j] * nums2[k]</code> where <code>0 &lt;= i &lt; nums1.length</code> and <code>0 &lt;= j &lt; k &lt; nums2.length</code>.</li>\n\t<li>Type 2: Triplet (i, j, k) if <code>nums2[i]<sup>2</sup> == nums1[j] * nums1[k]</code> where <code>0 &lt;= i &lt; nums2.length</code> and <code>0 &lt;= j &lt; k &lt; nums1.length</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [7,4], nums2 = [5,2,8,9]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> Type 1: (1, 1, 2), nums1[1]<sup>2</sup> = nums2[1] * nums2[2]. (4<sup>2</sup> = 2 * 8). \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,1], nums2 = [1,1,1]\n<strong>Output:</strong> 9\n<strong>Explanation:</strong> All Triplets are valid, because 1<sup>2</sup> = 1 * 1.\nType 1: (0,0,1), (0,0,2), (0,1,2), (1,0,1), (1,0,2), (1,1,2).  nums1[i]<sup>2</sup> = nums2[j] * nums2[k].\nType 2: (0,0,1), (1,0,1), (2,0,1). nums2[i]<sup>2</sup> = nums1[j] * nums1[k].\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [7,7,8,3], nums2 = [1,2,9,7]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> There are 2 valid triplets.\nType 1: (3,0,2).  nums1[3]<sup>2</sup> = nums2[0] * nums2[2].\nType 2: (3,0,1).  nums2[3]<sup>2</sup> = nums1[0] * nums1[1].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums1.length, nums2.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums1[i], nums2[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "two-pointers"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[7,4]\n[5,2,8,9]\n[1,1]\n[1,1,1]\n[7,7,8,3]\n[1,2,9,7]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m + n)\n\nclass Solution {\npublic:\n    int numTriplets(vector<int>& nums1, vector<int>& nums2) {\n        int result = 0;\n        for (const auto& n : nums1) {\n            result += twoProduct(nums2, static_cast<int64_t>(n) * n);\n        }\n        for (const auto& n : nums2) {\n            result += twoProduct(nums1, static_cast<int64_t>(n) * n);\n        }\n        return result;\n    }\n\nprivate:\n    int twoProduct(const vector<int>& nums, int64_t i) {\n        unordered_map<int, int> lookup;\n        int count = 0;\n        for (const auto& num : nums) {\n            if (i % num) {\n                continue;\n            }\n            count += lookup[i / num];\n            ++lookup[num];\n        }\n        return count;\n    }  \n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m + n)\n\nimport collections\n\n\nclass Solution(object):\n    def numTriplets(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        def two_product(nums, i):\n            count = 0\n            lookup = collections.defaultdict(int)\n            for num in nums:\n                if i%num:\n                    continue\n                count += lookup[i//num]\n                lookup[num] += 1\n            return count\n        \n        result = 0\n        for num in nums1:\n            result += two_product(nums2, num**2)\n        for num in nums2:\n            result += two_product(nums1, num**2)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

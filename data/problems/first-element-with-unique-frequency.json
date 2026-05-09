@@ -1,0 +1,35 @@
+{
+  "id": "efcad74c-427e-407d-a383-9a3dd5358e56",
+  "slug": "first-element-with-unique-frequency",
+  "title": "First Element with Unique Frequency",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Return an integer denoting the <strong>first</strong> element (scanning from left to right) in <code>nums</code> whose <strong>frequency</strong> is <strong>unique</strong>. That is, no other integer appears the same number of times in <code>nums</code>. If there is no such element, return -1.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [20,10,30,30]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">30</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>20 appears once.</li>\n\t<li>10 appears once.</li>\n\t<li>30 appears twice.</li>\n\t<li>The frequency of 30 is unique because no other integer appears exactly twice.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [20,20,10,30,30,30]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">20</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>20 appears twice.</li>\n\t<li>10 appears once.</li>\n\t<li>30 appears 3 times.</li>\n\t<li>The frequency of 20, 10, and 30 are unique. The first element that has unique frequency is 20.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [10,10,20,20]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>10 appears twice.</li>\n\t<li>20 appears twice.</li>\n\t<li>No element has a unique frequency.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table\nclass Solution {\npublic:\n    int firstUniqueFreq(vector<int>& nums) {\n        unordered_map<int, int> cnt;\n        for (const auto & x : nums) {\n            ++cnt[x];\n        }\n        unordered_map<int, int> cnt2;\n        for (const auto& [_, v] : cnt) {\n            ++cnt2[v];\n        }\n        for (const auto& x : nums) {\n            if (cnt2[cnt[x]] == 1) {\n                return x;\n            }\n        }\n        return -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def firstUniqueFreq(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        cnt = collections.defaultdict(int)\n        for x in nums:\n            cnt[x] += 1\n        cnt2 = collections.defaultdict(int)\n        for v in cnt.itervalues():\n            cnt2[v] += 1\n        return next((x for x in nums if cnt2[cnt[x]] == 1), -1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "0d031052-2bb1-46d8-ad20-4872f2cedb9c",
+  "slug": "number-of-distinct-islands-ii",
+  "title": "Number of Distinct Islands II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "depth-first-search",
+    "breadth-first-search",
+    "union-find",
+    "sorting",
+    "matrix",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,1,0,0,0],[1,0,0,0,0],[0,0,0,0,1],[0,0,0,1,1]]\n[[1,1,0,0,0],[1,1,0,0,0],[0,0,0,1,1],[0,0,0,1,1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((m * n) * log(m * n))\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    int numDistinctIslands2(vector<vector<int>>& grid) {\n        unordered_set<vector<pair<int, int>>, VectorHash> islands;\n        for (int i = 0; i < grid.size(); ++i) {\n            for (int j = 0; j < grid[i].size(); ++j) {\n                if (grid[i][j] == 1) {\n                    vector<pair<int, int>> island;\n                    if (dfs(i, j, &grid, &island)) {\n                        islands.emplace(normalize(island));\n                    }\n                }\n            }\n        }\n        return islands.size();\n    }\n\nprivate:\n    struct VectorHash {\n        size_t operator()(const std::vector<pair<int, int>>& v) const {\n            size_t seed = 0;\n            for (const auto& i : v) {\n                seed ^= std::hash<int>{}(i.first)  + 0x9e3779b9 + (seed<<6) + (seed>>2);\n                seed ^= std::hash<int>{}(i.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            }\n            return seed;\n        }\n    };\n\n    bool dfs(const int i, const int j,\n             vector<vector<int>> *grid, vector<pair<int, int>> *island) {\n        \n        static const vector<pair<int, int>> directions{{1, 0}, {-1, 0},\n                                                       {0, 1}, {0, -1}};\n\n        if (i < 0 || i >= grid->size() ||\n            j < 0 || j >= (*grid)[0].size() ||\n            (*grid)[i][j] <= 0) {\n            return false;\n        }\n        (*grid)[i][j] *= -1;\n        island->emplace_back(i, j);\n        for (const auto& direction : directions) {\n            dfs(i + direction.first, j + direction.second, grid, island);\n        }\n        return true;\n    }\n    \n    vector<pair<int,int>> normalize(const vector<pair<int, int>>& island) {\n        vector<vector<pair<int,int>>> shapes(8);\n        for (const auto& p : island) {\n            int x, y;\n            tie(x, y) = p;\n            vector<pair<int, int>> rotations_and_reflections{{ x,  y}, { x, -y}, {-x,  y}, {-x, -y},\n                                                             { y,  x}, { y, -x}, {-y,  x}, {-y, -x}};\n            for (int i = 0; i < rotations_and_reflections.size(); ++i) {\n                shapes[i].emplace_back(rotations_and_reflections[i]);\n            }\n        }\n        for (auto& shape : shapes) {\n            sort(shape.begin(), shape.end());  // Time: O(ilogi), i is the size of the island, the max would be (m * n)\n            const auto origin = shape.front();\n            for (auto& p : shape) {\n                p = {p.first  - origin.first,\n                     p.second - origin.second};\n            }\n        }\n        return *min_element(shapes.begin(), shapes.end());\n    }    \n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((m * n) * log(m * n))\n# Space: O(m * n)\n\nclass Solution(object):\n    def numDistinctIslands2(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]\n\n        def dfs(i, j, grid, island):\n            if not (0 <= i < len(grid) and \\\n                    0 <= j < len(grid[0]) and \\\n                    grid[i][j] > 0):\n                return False\n            grid[i][j] *= -1\n            island.append((i, j))\n            for d in directions:\n                dfs(i+d[0], j+d[1], grid, island)\n            return True\n\n        def normalize(island):\n            shapes = [[] for _ in xrange(8)]\n            for x, y in island:\n                rotations_and_reflections = [[ x,  y], [ x, -y], [-x, y], [-x, -y],\n                                             [ y,  x], [ y, -x], [-y, x], [-y, -x]]\n                for i in xrange(len(rotations_and_reflections)):\n                    shapes[i].append(rotations_and_reflections[i])\n            for shape in shapes:\n                shape.sort()  # Time: O(ilogi), i is the size of the island, the max would be (m * n)\n                origin = list(shape[0])\n                for p in shape:\n                    p[0] -= origin[0]\n                    p[1] -= origin[1]\n            return min(shapes)\n\n        islands = set()\n        for i in xrange(len(grid)):\n            for j in xrange(len(grid[0])):\n                island = []\n                if dfs(i, j, grid, island):\n                    islands.add(str(normalize(island)))\n        return len(islands)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

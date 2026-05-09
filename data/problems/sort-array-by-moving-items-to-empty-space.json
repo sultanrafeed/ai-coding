@@ -1,0 +1,41 @@
+{
+  "id": "b75be1c7-9941-48aa-929d-d8e749dca3dd",
+  "slug": "sort-array-by-moving-items-to-empty-space",
+  "title": "Sort Array by Moving Items to Empty Space",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,2,0,3,1]\n[1,2,3,4,0]\n[1,0,2,4,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// greedy, sort\nclass Solution {\npublic:\n    int sortArray(vector<int>& nums) {\n        const auto& min_moves = [&](int d) {\n            const auto& index = [&](int x) {\n                return (x == 0) ? d * (size(nums) - 1) : x - d;\n            };\n            vector<bool> lookup(size(nums));\n            int result = size(nums);\n            for (int i = 0; i < size(nums); ++i) {\n                if (lookup[nums[i]]) {\n                    continue;\n                }\n                int l = 0;\n                for (; !lookup[nums[i]]; ++l, i = index(nums[i])) {\n                    lookup[nums[i]] = true;\n                }\n                --result;\n                if (l >= 2) {\n                    result += 2;\n                }\n            }\n            return result - 2 * static_cast<int>(nums[d * (size(nums) - 1)] != 0);\n        };\n\n        return min(min_moves(0), min_moves(1));\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// greedy, sort\nclass Solution2 {\npublic:\n    int sortArray(vector<int>& nums) {\n        const auto& min_moves = [&](int d) {\n            const auto& index = [&](int x) {\n                return (x == 0) ? d * (size(nums) - 1) : x - d;\n            };\n            vector<int> a(nums);\n            int result = 0;\n            for (int i = 0; i < size(a); ++i) {\n                int l = 1;\n                bool has_zero = (a[i] == 0);\n                for (; index(a[i]) != i; ++l, has_zero |= (a[i] == 0)) {\n                    swap(a[i], a[index(a[i])]);\n                }\n                if (l >= 2) {\n                    result += has_zero ? l - 1 : l + 1;\n                }\n            }\n            return result;\n        };\n\n        return min(min_moves(0), min_moves(1));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# greedy, sort\nclass Solution(object):\n    def sortArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def min_moves(d):\n            def index(x):\n                return d*(len(nums)-1) if x == 0 else x-d\n\n            lookup = [False]*len(nums)\n            result = len(nums)\n            for i in xrange(len(nums)):\n                if lookup[nums[i]]:\n                    continue\n                l = 0\n                while not lookup[nums[i]]:\n                    lookup[nums[i]] = True\n                    l += 1\n                    i = index(nums[i])\n                result -= 1\n                if l >= 2:\n                    result += 2\n            return result-2*int(nums[d*(len(nums)-1)] != 0)\n\n        return min(min_moves(0), min_moves(1))\n\n\n# Time:  O(n)\n# Space: O(n)\n# greedy, sort\nclass Solution2(object):\n    def sortArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def min_moves(d):\n            def index(x):\n                return d*(len(nums)-1) if x == 0 else x-d\n\n            a = nums[:]\n            result = 0\n            for i in xrange(len(a)):\n                l, has_zero = 1, (a[i] == 0)\n                while index(a[i]) != i:\n                    j = index(a[i])\n                    a[i], a[j] = a[j], a[i]\n                    l += 1\n                    has_zero |= (a[i] == 0)\n                if l >= 2:\n                    result += l-1 if has_zero else l+1\n            return result\n\n        return min(min_moves(0), min_moves(1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

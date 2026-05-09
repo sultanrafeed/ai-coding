@@ -1,0 +1,35 @@
+{
+  "id": "0496e36b-41a7-4b76-81e5-98d52f632e7e",
+  "slug": "set-intersection-size-at-least-two",
+  "title": "Set Intersection Size At Least Two",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a 2D integer array <code>intervals</code> where <code>intervals[i] = [start<sub>i</sub>, end<sub>i</sub>]</code> represents all the integers from <code>start<sub>i</sub></code> to <code>end<sub>i</sub></code> inclusively.</p>\n\n<p>A <strong>containing set</strong> is an array <code>nums</code> where each interval from <code>intervals</code> has <strong>at least two</strong> integers in <code>nums</code>.</p>\n\n<ul>\n\t<li>For example, if <code>intervals = [[1,3], [3,7], [8,9]]</code>, then <code>[1,2,4,7,8,9]</code> and <code>[2,3,4,8,9]</code> are <strong>containing sets</strong>.</li>\n</ul>\n\n<p>Return <em>the minimum possible size of a containing set</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> intervals = [[1,3],[3,7],[8,9]]\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> let nums = [2, 3, 4, 8, 9].\nIt can be shown that there cannot be any containing array of size 4.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> intervals = [[1,3],[1,4],[2,5],[3,5]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> let nums = [2, 3, 4].\nIt can be shown that there cannot be any containing array of size 2.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> intervals = [[1,2],[2,3],[2,4],[4,5]]\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> let nums = [1, 2, 3, 4, 5].\nIt can be shown that there cannot be any containing array of size 4.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= intervals.length &lt;= 3000</code></li>\n\t<li><code>intervals[i].length == 2</code></li>\n\t<li><code>0 &lt;= start<sub>i</sub> &lt; end<sub>i</sub> &lt;= 10<sup>8</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// greedy solution\nclass Solution {\npublic:\n    int intersectionSizeTwo(vector<vector<int>>& intervals) {\n        sort(intervals.begin(), intervals.end(),\n             [](const vector<int>& a, const vector<int>& b) {\n                 return (a[0] != b[0]) ? (a[0] < b[0]) : (b[1] < a[1]);\n             });\n        vector<int> cnts(intervals.size(), 2);\n        int result = 0;\n        while (!intervals.empty()) {\n            auto start = intervals.back()[0]; intervals.pop_back();\n            auto cnt = cnts.back(); cnts.pop_back();\n            for (int s = start; s < start + cnt; ++s) {\n                for (int i = 0; i < intervals.size(); ++i) {\n                    if (cnts[i] && s <= intervals[i][1]) {\n                        --cnts[i];\n                    }\n                }\n            }\n            result += cnt;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass Solution(object):\n    def intersectionSizeTwo(self, intervals):\n        \"\"\"\n        :type intervals: List[List[int]]\n        :rtype: int\n        \"\"\"\n        intervals.sort(key = lambda s_e: (s_e[0], -s_e[1]))\n        cnts = [2] * len(intervals)\n        result = 0\n        while intervals:\n            (start, _), cnt = intervals.pop(), cnts.pop()\n            for s in xrange(start, start+cnt):\n                for i in xrange(len(intervals)):\n                    if cnts[i] and s <= intervals[i][1]:\n                        cnts[i] -= 1\n            result += cnt\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "3ee93a76-b9df-427a-9629-a692aafd4686",
+  "slug": "smallest-all-ones-multiple",
+  "title": "Smallest All-Ones Multiple",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a positive integer <code>k</code>.</p>\n\n<p>Find the <strong>smallest</strong> integer <code>n</code> divisible by <code>k</code> that consists of <strong>only the digit 1</strong> in its decimal representation (e.g., 1, 11, 111, ...).</p>\n\n<p>Return an integer denoting the <strong>number of digits</strong> in the decimal representation of <code>n</code>. If no such <code>n</code> exists, return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><code>n = 111</code> because 111 is divisible by 3, but 1 and 11 are not. The length of <code>n = 111</code> is 3.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">k = 7</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><code>n = 111111</code>. The length of <code>n = 111111</code> is 6.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There does not exist a valid <code>n</code> that is a multiple of 2.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= k &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n7\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(k)\n// Space: O(1)\n\n// math, leetcode #1015\nclass Solution {\npublic:\n    int minAllOneMultiple(int k) {\n        // by observation, k % 2 = 0 or k % 5 = 0, it is impossible\n        if (k % 2 == 0 || k % 5 == 0) {\n            return -1;\n        }\n        // let f(n) is a n-length integer only containing digit 1\n        // given k % 2 != 0 and k % 5 != 0\n        // if there is no n in range (1..k) s.t. f(n) % k = 0\n        // => there must be k remainders of f(n) % k in range (1..k-1) excluding 0\n        // => due to pigeonhole principle, there must be at least 2 same remainders\n        // => there must be some x, y in range (1..k) and x > y s.t. f(x) % k = f(y) % k\n        // => (f(x) - f(y)) % k = 0\n        // => (f(x-y) * 10^y) % k = 0\n        // => due to (x-y) in range (1..k)\n        // => f(x-y) % k != 0\n        // => 10^y % k = 0\n        // => k % 2 = 0 or k % 5 = 0\n        // => -><-\n        // it proves that there must be some n in range (1..k) s.t. f(n) % k = 0\n        int r = 0;\n        for (int n = 1; n <= k; ++n) {\n            r = (r * 10 + 1) % k;\n            if (!r) {\n                return n;\n            }\n        }\n        assert(false);\n        return -1;  // never reach\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(k)\n# Space: O(1)\n\n# math, leetcode #1015\nclass Solution(object):\n    def minAllOneMultiple(self, k):\n        \"\"\"\n        :type k: int\n        :rtype: int\n        \"\"\"\n        # by observation, k % 2 = 0 or k % 5 = 0, it is impossible\n        if k % 2 == 0 or k % 5 == 0:\n            return -1\n\n        # let f(n) is a n-length integer only containing digit 1\n        # if there is no n in range (1..k) s.t. f(n) % k = 0\n        # => there must be k remainders of f(n) % k in range (1..k-1) excluding 0\n        # => due to pigeonhole principle, there must be at least 2 same remainders\n        # => there must be some x, y in range (1..k) and x > y s.t. f(x) % k = f(y) % k\n        # => (f(x) - f(y)) % k = 0\n        # => (f(x-y) * 10^y) % k = 0\n        # => due to (x-y) in range (1..k)\n        # => f(x-y) % k != 0\n        # => 10^y % k = 0\n        # => k % 2 = 0 or k % 5 = 0\n        # => -><-\n        # it proves that there must be some n in range (1..k) s.t. f(n) % k = 0\n        r = 0\n        for n in xrange(1, k+1):\n            r = (r*10+1)%k\n            if not r:\n                return n\n        assert(False)\n        return -1  # never reach",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

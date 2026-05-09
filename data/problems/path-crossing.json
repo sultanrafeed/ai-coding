@@ -1,0 +1,40 @@
+{
+  "id": "66849783-9263-480b-9eb3-9f074165ce9f",
+  "slug": "path-crossing",
+  "title": "Path Crossing",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>path</code>, where <code>path[i] = &#39;N&#39;</code>, <code>&#39;S&#39;</code>, <code>&#39;E&#39;</code> or <code>&#39;W&#39;</code>, each representing moving one unit north, south, east, or west, respectively. You start at the origin <code>(0, 0)</code> on a 2D plane and walk on the path specified by <code>path</code>.</p>\n\n<p>Return <code>true</code> <em>if the path crosses itself at any point, that is, if at any time you are on a location you have previously visited</em>. Return <code>false</code> otherwise.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/06/10/screen-shot-2020-06-10-at-123929-pm.png\" style=\"width: 400px; height: 358px;\" />\n<pre>\n<strong>Input:</strong> path = &quot;NES&quot;\n<strong>Output:</strong> false \n<strong>Explanation:</strong> Notice that the path doesn&#39;t cross any point more than once.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/06/10/screen-shot-2020-06-10-at-123843-pm.png\" style=\"width: 400px; height: 339px;\" />\n<pre>\n<strong>Input:</strong> path = &quot;NESWW&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Notice that the path visits the origin twice.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= path.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>path[i]</code> is either <code>&#39;N&#39;</code>, <code>&#39;S&#39;</code>, <code>&#39;E&#39;</code>, or <code>&#39;W&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"NES\"\n\"NESWW\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool isPathCrossing(string path) {\n        unordered_set<pair<int, int>, PairHash<int>> lookup = {{0, 0}};\n        int x = 0, y = 0;\n        for (const auto& c : path) {\n            switch(c) {\n                case 'E':\n                    ++x;\n                    break;\n                case 'W':\n                    --x;\n                    break;\n                case 'N':\n                    ++y;\n                    break;\n                case 'S':\n                    --y;\n                    break;\n            }\n            if (!lookup.emplace(x, y).second) {\n                return true;\n            }\n        }\n        return false;\n    }\n\nprivate:\n    template <typename T>\n    struct PairHash {\n        size_t operator()(const pair<T, T>& p) const {\n            size_t seed = 0;\n            seed ^= std::hash<T>{}(p.first)  + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            seed ^= std::hash<T>{}(p.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            return seed;\n        }\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def isPathCrossing(self, path):\n        \"\"\"\n        :type path: str\n        :rtype: bool\n        \"\"\"\n        x = y = 0\n        lookup = {(0, 0)}\n        for c in path:\n            if c == 'E':\n                x += 1\n            elif c == 'W':\n                x -= 1\n            elif c == 'N':\n                y += 1\n            elif c == 'S':\n                y -= 1\n            if (x, y) in lookup:\n                return True\n            lookup.add((x, y))\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

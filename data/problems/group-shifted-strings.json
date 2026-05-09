@@ -1,0 +1,41 @@
+{
+  "id": "d80599f6-89e3-4461-91f0-d5787ab2aae9",
+  "slug": "group-shifted-strings",
+  "title": "Group Shifted Strings",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"abc\",\"bcd\",\"acef\",\"xyz\",\"az\",\"ba\",\"a\",\"z\"]\n[\"a\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<vector<string>> groupStrings(vector<string>& strings) {\n        unordered_map<string, multiset<string>> groups;\n        for (const auto& str : strings) {  // Grouping.\n            groups[hashStr(str)].insert(str);\n        }\n        \n        vector<vector<string>> result;\n        for (const auto& kvp : groups) {\n            vector<string> group;\n            for (auto& str : kvp.second) {  // Sorted in a group.\n                group.emplace_back(move(str));\n            }\n            result.emplace_back(move(group));\n        }\n        \n        return result;\n    }\n    \n    string hashStr(string str) {\n        const char base = str[0];\n        for (auto& c : str) {\n            c = 'a' + ((c - base) >= 0 ? c - base : c - base + 26);\n        }\n        return str;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    # @param {string[]} strings\n    # @return {string[][]}\n    def groupStrings(self, strings):\n        groups = collections.defaultdict(list)\n        for s in strings:  # Grouping.\n            groups[self.hashStr(s)].append(s)\n\n        result = []\n        for key, val in groups.iteritems():\n            result.append(sorted(val))\n\n        return result\n\n    def hashStr(self, s):\n        base = ord(s[0])\n        hashcode = \"\"\n        for i in xrange(len(s)):\n            if ord(s[i]) - base >= 0:\n                hashcode += unichr(ord('a') + ord(s[i]) - base)\n            else:\n                hashcode += unichr(ord('a') + ord(s[i]) - base + 26)\n        return hashcode",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

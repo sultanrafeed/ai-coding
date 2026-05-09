@@ -1,0 +1,39 @@
+{
+  "id": "50f63d72-9d21-4f79-b19f-310f2830ed82",
+  "slug": "self-dividing-numbers",
+  "title": "Self Dividing Numbers",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>A <strong>self-dividing number</strong> is a number that is divisible by every digit it contains.</p>\n\n<ul>\n\t<li>For example, <code>128</code> is <strong>a self-dividing number</strong> because <code>128 % 1 == 0</code>, <code>128 % 2 == 0</code>, and <code>128 % 8 == 0</code>.</li>\n</ul>\n\n<p>A <strong>self-dividing number</strong> is not allowed to contain the digit zero.</p>\n\n<p>Given two integers <code>left</code> and <code>right</code>, return <em>a list of all the <strong>self-dividing numbers</strong> in the range</em> <code>[left, right]</code> (both <strong>inclusive</strong>).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> left = 1, right = 22\n<strong>Output:</strong> [1,2,3,4,5,6,7,8,9,11,12,15,22]\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> left = 47, right = 85\n<strong>Output:</strong> [48,55,66,77]\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= left &lt;= right &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "1\n22\n47\n85",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr) = O(n)\n// Space: O(logr) = O(1)\n\nclass Solution {\npublic:\n    vector<int> selfDividingNumbers(int left, int right) {\n        vector<int> result;\n        for (int i = left; i <= right; ++i) {\n            if (isDividingNumber(i)) {\n                result.emplace_back(i);\n            }\n        }\n        return result;\n    }\n\nprivate:\n    bool isDividingNumber(int num) {\n        for (int n = num; n > 0; n /= 10) {\n            if (!(n % 10) || num % (n % 10)) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr) = O(n)\n# Space: O(logr) = O(1)\n\nclass Solution(object):\n    def selfDividingNumbers(self, left, right):\n        \"\"\"\n        :type left: int\n        :type right: int\n        :rtype: List[int]\n        \"\"\"\n        def isDividingNumber(num):\n            n = num\n            while n > 0:\n                n, r = divmod(n, 10)\n                if r == 0 or (num%r) != 0:\n                    return False\n            return True\n        \n        return [num for num in xrange(left, right+1) if isDividingNumber(num)]\n\n\n# Time:  O(nlogr) = O(n)\n# Space: O(logr) = O(1)\nimport itertools\n\n\nclass Solution2(object):\n    def selfDividingNumbers(self, left, right):\n        \"\"\"\n        :type left: int\n        :type right: int\n        :rtype: List[int]\n        \"\"\"\n        return [num for num in xrange(left, right+1) \\\n                if not any(itertools.imap(lambda x: int(x) == 0 or num%int(x) != 0, str(num)))]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

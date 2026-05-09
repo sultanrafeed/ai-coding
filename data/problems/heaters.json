@@ -1,0 +1,36 @@
+{
+  "id": "566df382-7779-443d-9f43-a734b393fe7d",
+  "slug": "heaters",
+  "title": "Heaters",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Winter is coming! During the contest, your first job is to design a standard heater with a fixed warm radius to warm all the houses.</p>\n\n<p>Every house can be warmed, as long as the house is within the heater&#39;s warm radius range.&nbsp;</p>\n\n<p>Given the positions of <code>houses</code> and <code>heaters</code> on a horizontal line, return <em>the minimum radius standard of heaters&nbsp;so that those heaters could cover all houses.</em></p>\n\n<p><strong>Notice</strong> that&nbsp;all the <code>heaters</code> follow your radius standard, and the warm radius will be the same.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> houses = [1,2,3], heaters = [2]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The only heater was placed in the position 2, and if we use the radius 1 standard, then all the houses can be warmed.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> houses = [1,2,3,4], heaters = [1,4]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The two heaters were placed at positions 1 and 4. We need to use a radius 1 standard, then all the houses can be warmed.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> houses = [1,5], heaters = [2]\n<strong>Output:</strong> 3\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= houses.length, heaters.length &lt;= 3 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= houses[i], heaters[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((m + n) * logn), m is the number of the houses, n is the number of the heaters.\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findRadius(vector<int>& houses, vector<int>& heaters) {\n        sort(heaters.begin(), heaters.end());\n        int min_radius = 0;\n        for (const auto& house : houses) {\n        \tauto equal_or_larger = lower_bound(heaters.cbegin(), heaters.cend(), house);\n        \tauto curr_radius = numeric_limits<int>::max();\n        \tif (equal_or_larger != heaters.cend()) {\n        \t    curr_radius = *equal_or_larger - house;\n        \t}\n        \tif (equal_or_larger != heaters.cbegin()) {\n        \t    auto smaller = prev(equal_or_larger);\n        \t    curr_radius = min(curr_radius, house - *smaller);\n        \t}\n        \tmin_radius = max(min_radius, curr_radius);\n        }\n        return min_radius;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((m + n) * logn), m is the number of the houses, n is the number of the heaters.\n# Space: O(1)\n\nimport bisect\n\n\nclass Solution(object):\n    def findRadius(self, houses, heaters):\n        \"\"\"\n        :type houses: List[int]\n        :type heaters: List[int]\n        :rtype: int\n        \"\"\"\n        heaters.sort()\n        min_radius = 0\n        for house in houses:\n        \tequal_or_larger = bisect.bisect_left(heaters, house)\n        \tcurr_radius = float(\"inf\")\n        \tif equal_or_larger != len(heaters):\n        \t    curr_radius = heaters[equal_or_larger] - house\n        \tif equal_or_larger != 0:\n        \t    smaller = equal_or_larger-1\n        \t    curr_radius = min(curr_radius, house - heaters[smaller])\n        \tmin_radius = max(min_radius, curr_radius)\n        return min_radius",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "6a1c87e8-7701-4f07-b428-789b1087420a",
+  "slug": "diet-plan-performance",
+  "title": "Diet Plan Performance",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5]\n1\n3\n3\n[3,2]\n2\n0\n1\n[6,5,0,0]\n2\n1\n5",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int dietPlanPerformance(vector<int>& calories, int k, int lower, int upper) {\n        int total = accumulate(calories.cbegin(), calories.cbegin() + k, 0);\n        int result = int(total > upper) - int(total < lower);\n        for (int i = k; i < calories.size(); ++i) {\n            total += calories[i] - calories[i - k];\n            result += int(total > upper) - int(total < lower);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport itertools\n\n\nclass Solution(object):\n    def dietPlanPerformance(self, calories, k, lower, upper):\n        \"\"\"\n        :type calories: List[int]\n        :type k: int\n        :type lower: int\n        :type upper: int\n        :rtype: int\n        \"\"\"\n        total = sum(itertools.islice(calories, 0, k))\n        result = int(total > upper)-int(total < lower)\n        for i in xrange(k, len(calories)):\n            total += calories[i]-calories[i-k]\n            result += int(total > upper)-int(total < lower)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

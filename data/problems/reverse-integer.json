@@ -1,0 +1,39 @@
+{
+  "id": "8e83f4ad-04c4-4dc6-9004-fcc09dddcd0b",
+  "slug": "reverse-integer",
+  "title": "Reverse Integer",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a signed 32-bit integer <code>x</code>, return <code>x</code><em> with its digits reversed</em>. If reversing <code>x</code> causes the value to go outside the signed 32-bit integer range <code>[-2<sup>31</sup>, 2<sup>31</sup> - 1]</code>, then return <code>0</code>.</p>\n\n<p><strong>Assume the environment does not allow you to store 64-bit integers (signed or unsigned).</strong></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = 123\n<strong>Output:</strong> 321\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = -123\n<strong>Output:</strong> -321\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = 120\n<strong>Output:</strong> 21\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-2<sup>31</sup> &lt;= x &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "123\n-123\n120",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn) = O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int reverse(int x) {\n        int result = 0;\n        while (x) {\n            if (result > numeric_limits<int>::max() / 10 ||\n                (result == numeric_limits<int>::max() / 10 && x % 10 > numeric_limits<int>::max() % 10)) {\n                return 0;\n            }\n            if (result < numeric_limits<int>::min() / 10 ||\n                (result == numeric_limits<int>::min() / 10 && x % 10 < numeric_limits<int>::min() % 10)) {\n                return 0;\n            }\n            result *= 10;\n            result += x % 10;\n            x /= 10;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn) = O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def reverse(self, x):\n        \"\"\"\n        :type x: int\n        :rtype: int\n        \"\"\"\n        if x < 0:\n            return -self.reverse(-x)\n\n        result = 0\n        while x:\n            result = result * 10 + x % 10\n            x //= 10\n        return result if result <= 0x7fffffff else 0  # Handle overflow.\n\n    def reverse2(self, x):\n        \"\"\"\n        :type x: int\n        :rtype: int\n        \"\"\"\n        if x < 0:\n            x = int(str(x)[::-1][-1] + str(x)[::-1][:-1])\n        else:\n            x = int(str(x)[::-1])\n        x = 0 if abs(x) > 0x7FFFFFFF else x\n        return x\n\n    def reverse3(self, x):\n        \"\"\"\n        :type x: int\n        :rtype: int\n        \"\"\"\n        s = cmp(x, 0)\n        r = int(repr(s * x)[::-1])\n        return s * r * (r < 2 ** 31)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

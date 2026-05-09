@@ -1,0 +1,36 @@
+{
+  "id": "f9ff292c-f955-48c8-bb36-76b2e4e8d350",
+  "slug": "design-circular-queue",
+  "title": "Design Circular Queue",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Design your implementation of the circular queue. The circular queue is a linear data structure in which the operations are performed based on FIFO (First In First Out) principle, and the last position is connected back to the first position to make a circle. It is also called &quot;Ring Buffer&quot;.</p>\n\n<p>One of the benefits of the circular queue is that we can make use of the spaces in front of the queue. In a normal queue, once the queue becomes full, we cannot insert the next element even if there is a space in front of the queue. But using the circular queue, we can use the space to store new values.</p>\n\n<p>Implement the <code>MyCircularQueue</code> class:</p>\n\n<ul>\n\t<li><code>MyCircularQueue(k)</code> Initializes the object with the size of the queue to be <code>k</code>.</li>\n\t<li><code>int Front()</code> Gets the front item from the queue. If the queue is empty, return <code>-1</code>.</li>\n\t<li><code>int Rear()</code> Gets the last item from the queue. If the queue is empty, return <code>-1</code>.</li>\n\t<li><code>boolean enQueue(int value)</code> Inserts an element into the circular queue. Return <code>true</code> if the operation is successful.</li>\n\t<li><code>boolean deQueue()</code> Deletes an element from the circular queue. Return <code>true</code> if the operation is successful.</li>\n\t<li><code>boolean isEmpty()</code> Checks whether the circular queue is empty or not.</li>\n\t<li><code>boolean isFull()</code> Checks whether the circular queue is full or not.</li>\n</ul>\n\n<p>You must solve the problem without using the built-in queue data structure in your programming language.&nbsp;</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;MyCircularQueue&quot;, &quot;enQueue&quot;, &quot;enQueue&quot;, &quot;enQueue&quot;, &quot;enQueue&quot;, &quot;Rear&quot;, &quot;isFull&quot;, &quot;deQueue&quot;, &quot;enQueue&quot;, &quot;Rear&quot;]\n[[3], [1], [2], [3], [4], [], [], [], [4], []]\n<strong>Output</strong>\n[null, true, true, true, false, 3, true, true, true, 4]\n\n<strong>Explanation</strong>\nMyCircularQueue myCircularQueue = new MyCircularQueue(3);\nmyCircularQueue.enQueue(1); // return True\nmyCircularQueue.enQueue(2); // return True\nmyCircularQueue.enQueue(3); // return True\nmyCircularQueue.enQueue(4); // return False\nmyCircularQueue.Rear();     // return 3\nmyCircularQueue.isFull();   // return True\nmyCircularQueue.deQueue();  // return True\nmyCircularQueue.enQueue(4); // return True\nmyCircularQueue.Rear();     // return 4\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= k &lt;= 1000</code></li>\n\t<li><code>0 &lt;= value &lt;= 1000</code></li>\n\t<li>At most <code>3000</code> calls will be made to&nbsp;<code>enQueue</code>, <code>deQueue</code>,&nbsp;<code>Front</code>,&nbsp;<code>Rear</code>,&nbsp;<code>isEmpty</code>, and&nbsp;<code>isFull</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "linked-list",
+    "design",
+    "queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(k)\n\nclass MyCircularQueue {\npublic:\n    /** Initialize your data structure here. Set the size of the queue to be k. */\n    MyCircularQueue(int k) :\n        start_(0),\n        size_(0),\n        buffer_(k, 0) {\n        \n    }\n    \n    /** Insert an element into the circular queue. Return true if the operation is successful. */\n    bool enQueue(int value) {\n        if (isFull()) {\n            return false;\n        }\n        buffer_[(start_ + size_) % buffer_.size()] = value;\n        ++size_;\n        return true;\n    }\n    \n    /** Delete an element from the circular queue. Return true if the operation is successful. */\n    bool deQueue() {\n        if (isEmpty()) {\n            return false;\n        }\n        start_ = (start_ + 1) % buffer_.size();\n        --size_;\n        return true;\n    }\n    \n    /** Get the front item from the queue. */\n    int Front() {\n        return isEmpty() ? -1 : buffer_[start_];\n    }\n    \n    /** Get the last item from the queue. */\n    int Rear() {\n        return isEmpty() ? -1 : buffer_[(start_ + size_ - 1) % buffer_.size()];\n    }\n    \n    /** Checks whether the circular queue is empty or not. */\n    bool isEmpty() {\n        return size_ == 0;\n    }\n    \n    /** Checks whether the circular queue is full or not. */\n    bool isFull() {\n        return size_ == buffer_.size();\n    }\n\nprivate:\n    int start_;\n    int size_;\n    vector<int> buffer_;\n};\n\n/**\n * Your MyCircularQueue object will be instantiated and called as such:\n * MyCircularQueue obj = new MyCircularQueue(k);\n * bool param_1 = obj.enQueue(value);\n * bool param_2 = obj.deQueue();\n * int param_3 = obj.Front();\n * int param_4 = obj.Rear();\n * bool param_5 = obj.isEmpty();\n * bool param_6 = obj.isFull();\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(k)\n\nclass MyCircularQueue(object):\n\n    def __init__(self, k):\n        \"\"\"\n        Initialize your data structure here. Set the size of the queue to be k.\n        :type k: int\n        \"\"\"\n        self.__start = 0\n        self.__size = 0\n        self.__buffer = [0] * k\n\n    def enQueue(self, value):\n        \"\"\"\n        Insert an element into the circular queue. Return true if the operation is successful.\n        :type value: int\n        :rtype: bool\n        \"\"\"\n        if self.isFull():\n            return False\n        self.__buffer[(self.__start+self.__size) % len(self.__buffer)] = value\n        self.__size += 1\n        return True\n\n    def deQueue(self):\n        \"\"\"\n        Delete an element from the circular queue. Return true if the operation is successful.\n        :rtype: bool\n        \"\"\"\n        if self.isEmpty():\n            return False\n        self.__start = (self.__start+1) % len(self.__buffer)\n        self.__size -= 1\n        return True\n\n    def Front(self):\n        \"\"\"\n        Get the front item from the queue.\n        :rtype: int\n        \"\"\"\n        return -1 if self.isEmpty() else self.__buffer[self.__start]\n\n    def Rear(self):\n        \"\"\"\n        Get the last item from the queue.\n        :rtype: int\n        \"\"\"\n        return -1 if self.isEmpty() else self.__buffer[(self.__start+self.__size-1) % len(self.__buffer)]\n\n    def isEmpty(self):\n        \"\"\"\n        Checks whether the circular queue is empty or not.\n        :rtype: bool\n        \"\"\"\n        return self.__size == 0\n\n    def isFull(self):\n        \"\"\"\n        Checks whether the circular queue is full or not.\n        :rtype: bool\n        \"\"\"\n        return self.__size == len(self.__buffer)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

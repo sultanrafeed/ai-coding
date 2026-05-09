@@ -1,0 +1,38 @@
+{
+  "id": "16133b84-ab75-4b6a-bc67-9a28e2553a12",
+  "slug": "maximum-total-area-occupied-by-pistons",
+  "title": "Maximum Total Area Occupied by Pistons",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "simulation",
+    "counting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(h)\n// Space: O(h)\n\n// line sweep, difference array\nclass Solution {\npublic:\n    long long maxArea(int height, vector<int>& positions, string directions) {\n        vector<int> diff(2 * height + 1);\n        for (int i = 0; i < size(positions); ++i) {\n            if (directions[i] == 'U') {\n                --diff[height - positions[i]];\n                ++diff[(height - positions[i]) + height];\n            } else {\n                ++diff[positions[i]];\n                --diff[positions[i] + height];\n            }\n        }\n        int64_t total = accumulate(cbegin(positions), cend(positions), 0ll);\n        int64_t result = total;\n        int cnt = count(cbegin(directions), cend(directions), 'U');\n        for (int t = 1; t < size(diff); ++t) {\n            total += -(static_cast<int32_t>(size(directions)) - cnt) + cnt;\n            result = max(result, total);\n            cnt += diff[t];\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// sort, line sweep, difference array\nclass Solution2 {\npublic:\n    long long maxArea(int height, vector<int>& positions, string directions) {\n        unordered_map<int, int> diff;\n        for (int i = 0; i < size(positions); ++i) {\n            if (directions[i] == 'U') {\n                --diff[height - positions[i]];\n                ++diff[(height - positions[i]) + height];\n            } else {\n                ++diff[positions[i]];\n                --diff[positions[i] + height];\n            }\n        }\n        int64_t total = accumulate(cbegin(positions), cend(positions), 0ll);\n        int64_t result = total;\n        int cnt = count(cbegin(directions), cend(directions), 'U');\n        int prev = 0;\n        vector<pair<int, int>> sorted_diff(cbegin(diff), cend(diff));\n        sort(begin(sorted_diff), end(sorted_diff));\n        for (const auto& [t, d] : sorted_diff) {\n            total += static_cast<int64_t>(t - prev) * (-(static_cast<int32_t>(size(directions)) - cnt) + cnt);\n            result = max(result, total);\n            cnt += d;\n            prev = t;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(h)\n# Space: O(h)\n\nimport itertools\n\n\n# line sweep, difference array\nclass Solution(object):\n    def maxArea(self, height, positions, directions):\n        \"\"\"\n        :type height: int\n        :type positions: List[int]\n        :type directions: str\n        :rtype: int\n        \"\"\"\n        diff = [0]*(2*height+1)\n        for d, i in itertools.izip(directions, positions):\n            if d == 'U':\n                diff[height-i] -= 1\n                diff[(height-i)+height] += 1\n            else:\n                diff[i] += 1\n                diff[i+height] -= 1\n        result = total = sum(positions)\n        cnt = directions.count('U')\n        for t in xrange(1, len(diff)):\n            total += -(len(directions)-cnt)+cnt\n            result = max(result, total)\n            cnt += diff[t]\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nimport collections\nimport itertools\n\n\n# sort, line sweep, difference array\nclass Solution2(object):\n    def maxArea(self, height, positions, directions):\n        \"\"\"\n        :type height: int\n        :type positions: List[int]\n        :type directions: str\n        :rtype: int\n        \"\"\"\n        diff = collections.defaultdict(int)\n        for d, i in itertools.izip(directions, positions):\n            if d == 'U':\n                diff[height-i] -= 1\n                diff[(height-i)+height] += 1\n            else:\n                diff[i] += 1\n                diff[i+height] -= 1\n        result = total = sum(positions)\n        cnt = directions.count('U')\n        prev = 0\n        for t, d in sorted(diff.iteritems()):\n            total += (t-prev)*(-(len(directions)-cnt)+cnt)\n            result = max(result, total)\n            cnt += d\n            prev = t\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

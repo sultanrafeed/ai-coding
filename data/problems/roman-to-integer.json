@@ -1,0 +1,41 @@
+{
+  "id": "4d1a3536-c374-4eda-ba60-4b35f25f3189",
+  "slug": "roman-to-integer",
+  "title": "Roman to Integer",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Roman numerals are represented by seven different symbols:&nbsp;<code>I</code>, <code>V</code>, <code>X</code>, <code>L</code>, <code>C</code>, <code>D</code> and <code>M</code>.</p>\n\n<pre>\n<strong>Symbol</strong>       <strong>Value</strong>\nI             1\nV             5\nX             10\nL             50\nC             100\nD             500\nM             1000</pre>\n\n<p>For example,&nbsp;<code>2</code> is written as <code>II</code>&nbsp;in Roman numeral, just two ones added together. <code>12</code> is written as&nbsp;<code>XII</code>, which is simply <code>X + II</code>. The number <code>27</code> is written as <code>XXVII</code>, which is <code>XX + V + II</code>.</p>\n\n<p>Roman numerals are usually written largest to smallest from left to right. However, the numeral for four is not <code>IIII</code>. Instead, the number four is written as <code>IV</code>. Because the one is before the five we subtract it making four. The same principle applies to the number nine, which is written as <code>IX</code>. There are six instances where subtraction is used:</p>\n\n<ul>\n\t<li><code>I</code> can be placed before <code>V</code> (5) and <code>X</code> (10) to make 4 and 9.&nbsp;</li>\n\t<li><code>X</code> can be placed before <code>L</code> (50) and <code>C</code> (100) to make 40 and 90.&nbsp;</li>\n\t<li><code>C</code> can be placed before <code>D</code> (500) and <code>M</code> (1000) to make 400 and 900.</li>\n</ul>\n\n<p>Given a roman numeral, convert it to an integer.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;III&quot;\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> III = 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;LVIII&quot;\n<strong>Output:</strong> 58\n<strong>Explanation:</strong> L = 50, V= 5, III = 3.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;MCMXCIV&quot;\n<strong>Output:</strong> 1994\n<strong>Explanation:</strong> M = 1000, CM = 900, XC = 90 and IV = 4.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 15</code></li>\n\t<li><code>s</code> contains only&nbsp;the characters <code>(&#39;I&#39;, &#39;V&#39;, &#39;X&#39;, &#39;L&#39;, &#39;C&#39;, &#39;D&#39;, &#39;M&#39;)</code>.</li>\n\t<li>It is <strong>guaranteed</strong>&nbsp;that <code>s</code> is a valid roman numeral in the range <code>[1, 3999]</code>.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"III\"\n\"LVIII\"\n\"MCMXCIV\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int romanToInt(string s) {\n        unordered_map<char, int> numeral_map = {{'I',    1}, {'V',   5}, {'X',  10},\n                                                {'L',   50}, {'C', 100}, {'D', 500},\n                                                {'M', 1000}};\n        int decimal = 0;\n        for (int i = 0; i < s.length(); ++i) {\n            if (i > 0 && numeral_map[s[i]] > numeral_map[s[i - 1]]) {\n                decimal += numeral_map[s[i]] - 2 * numeral_map[s[i - 1]];\n            } else {\n                decimal += numeral_map[s[i]];\n            }\n        }\n        return decimal;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int romanToInt(string s) {\n        unordered_map<char, int> numeral_map = {{'I',    1}, {'V',   5}, {'X',  10},\n                                                {'L',   50}, {'C', 100}, {'D', 500},\n                                                {'M', 1000}};\n        return accumulate(s.crbegin(), s.crend(), 0,\n                          [&numeral_map](int sum , char c) {\n                              return sum += ((numeral_map[c] * 5 <= sum) ? \n                                            -numeral_map[c] : numeral_map[c]);\n                          });\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    # @return an integer\n    def romanToInt(self, s):\n        numeral_map = {\"I\": 1, \"V\": 5, \"X\": 10, \"L\": 50, \"C\":100, \"D\": 500, \"M\": 1000}\n        decimal = 0\n        for i in xrange(len(s)):\n            if i > 0 and numeral_map[s[i]] > numeral_map[s[i - 1]]:\n                decimal += numeral_map[s[i]] - 2 * numeral_map[s[i - 1]]\n            else:\n                decimal += numeral_map[s[i]]\n        return decimal",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

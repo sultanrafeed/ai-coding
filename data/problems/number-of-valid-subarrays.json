@@ -1,0 +1,41 @@
+{
+  "id": "f9ca8a53-e926-4985-b4fe-103fea50561f",
+  "slug": "number-of-valid-subarrays",
+  "title": "Number of Valid Subarrays",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "stack",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,4,2,5,3]\n[3,2,1]\n[2,2,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int validSubarrays(vector<int>& nums) {\n        int result = 0;\n        vector<int> s;\n        for (const auto& num : nums) {\n            while (!s.empty() && s.back() > num) {\n                s.pop_back();\n            }\n            s.emplace_back(num);\n            result += s.size();\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def validSubarrays(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = 0\n        s = []\n        for num in nums:\n            while s and s[-1] > num:\n                s.pop()\n            s.append(num)\n            result += len(s)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

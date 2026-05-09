@@ -1,0 +1,36 @@
+{
+  "id": "15f5a25e-5f94-449a-915b-663c3e1bccd8",
+  "slug": "trim-a-binary-search-tree",
+  "title": "Trim a Binary Search Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary search tree and the lowest and highest boundaries as <code>low</code> and <code>high</code>, trim the tree so that all its elements lies in <code>[low, high]</code>. Trimming the tree should <strong>not</strong> change the relative structure of the elements that will remain in the tree (i.e., any node&#39;s descendant should remain a descendant). It can be proven that there is a <strong>unique answer</strong>.</p>\n\n<p>Return <em>the root of the trimmed binary search tree</em>. Note that the root may change depending on the given bounds.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/09/trim1.jpg\" style=\"width: 450px; height: 126px;\" />\n<pre>\n<strong>Input:</strong> root = [1,0,2], low = 1, high = 2\n<strong>Output:</strong> [1,null,2]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/09/trim2.jpg\" style=\"width: 450px; height: 277px;\" />\n<pre>\n<strong>Input:</strong> root = [3,0,4,null,2,null,null,1], low = 1, high = 3\n<strong>Output:</strong> [3,2,null,1]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>\n\t<li><code>0 &lt;= Node.val &lt;= 10<sup>4</sup></code></li>\n\t<li>The value of each node in the tree is <strong>unique</strong>.</li>\n\t<li><code>root</code> is guaranteed to be a valid binary search tree.</li>\n\t<li><code>0 &lt;= low &lt;= high &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* trimBST(TreeNode* root, int L, int R) {\n        if (!root) {\n            return nullptr;\n        }\n        if (root->val < L) {\n            return trimBST(root->right, L, R);\n        }\n        if (root->val > R) {\n            return trimBST(root->left, L, R);\n        }\n        root->left = trimBST(root->left, L, R);\n        root->right = trimBST(root->right, L, R);\n        return root;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def trimBST(self, root, L, R):\n        \"\"\"\n        :type root: TreeNode\n        :type L: int\n        :type R: int\n        :rtype: TreeNode\n        \"\"\"\n        if not root:\n            return None\n        if root.val < L:\n            return self.trimBST(root.right, L, R)\n        if root.val > R:\n            return self.trimBST(root.left, L, R)\n        root.left, root.right = self.trimBST(root.left, L, R), self.trimBST(root.right, L, R)\n        return root",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

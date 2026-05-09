@@ -1,0 +1,36 @@
+{
+  "id": "0a348b67-9a7f-4467-ba57-508c53e4808c",
+  "slug": "find-x-sum-of-all-k-long-subarrays-ii",
+  "title": "Find X-Sum of All K-Long Subarrays II",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an array <code>nums</code> of <code>n</code> integers and two integers <code>k</code> and <code>x</code>.</p>\n\n<p>The <strong>x-sum</strong> of an array is calculated by the following procedure:</p>\n\n<ul>\n\t<li>Count the occurrences of all elements in the array.</li>\n\t<li>Keep only the occurrences of the top <code>x</code> most frequent elements. If two elements have the same number of occurrences, the element with the <strong>bigger</strong> value is considered more frequent.</li>\n\t<li>Calculate the sum of the resulting array.</li>\n</ul>\n\n<p><strong>Note</strong> that if an array has less than <code>x</code> distinct elements, its <strong>x-sum</strong> is the sum of the array.</p>\n\n<p>Return an integer array <code>answer</code> of length <code>n - k + 1</code> where <code>answer[i]</code> is the <strong>x-sum</strong> of the <span data-keyword=\"subarray-nonempty\">subarray</span> <code>nums[i..i + k - 1]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,1,2,2,3,4,2,3], k = 6, x = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[6,10,12]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>For subarray <code>[1, 1, 2, 2, 3, 4]</code>, only elements 1 and 2 will be kept in the resulting array. Hence, <code>answer[0] = 1 + 1 + 2 + 2</code>.</li>\n\t<li>For subarray <code>[1, 2, 2, 3, 4, 2]</code>, only elements 2 and 4 will be kept in the resulting array. Hence, <code>answer[1] = 2 + 2 + 2 + 4</code>. Note that 4 is kept in the array since it is bigger than 3 and 1 which occur the same number of times.</li>\n\t<li>For subarray <code>[2, 2, 3, 4, 2, 3]</code>, only elements 2 and 3 are kept in the resulting array. Hence, <code>answer[2] = 2 + 2 + 2 + 3 + 3</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,8,7,8,7,5], k = 2, x = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[11,15,15,15,12]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Since <code>k == x</code>, <code>answer[i]</code> is equal to the sum of the subarray <code>nums[i..i + k - 1]</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>nums.length == n</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= x &lt;= k &lt;= nums.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sliding-window",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n#include <ext/pb_ds/assoc_container.hpp>\n#include <ext/pb_ds/tree_policy.hpp>\nusing namespace __gnu_pbds;\n\n// freq table, ordered set, two pointers, sliding window\nclass Solution {\npublic:\n    vector<long long> findXSum(vector<int>& nums, int k, int x) {\n        using ordered_set = tree<pair<int, int64_t>, null_type, greater<pair<int, int64_t>>, rb_tree_tag, tree_order_statistics_node_update>;\n        ordered_set os;\n        unordered_map<int, int64_t> cnt;\n        const auto& update = [&](int v, int64_t d, int64_t curr) {\n            if (d == 1) {\n                os.insert({cnt[v], v});\n            }\n            if (os.order_of_key(pair(cnt[v], v)) < x) {\n                curr += d * cnt[v] * v;\n                if (x < size(os)) {\n                    const auto [nc, nv] = *(os.find_by_order(x));\n                    curr -= d * nc * nv;\n                }\n            }\n            if (d != 1) {\n                os.erase(pair(cnt[v], v));\n            }\n            return curr;\n        };\n\n        vector<long long> result;\n        for (int64_t i = 0, curr = 0; i < size(nums); ++i) {\n            if (cnt.count(nums[i])) {\n                curr = update(nums[i], -1, curr);\n            }\n            ++cnt[nums[i]];\n            curr = update(nums[i], +1, curr);\n            if (i < k - 1) {\n                continue;\n            }\n            result.emplace_back(curr);\n            curr = update(nums[i - (k - 1)], -1, curr);\n            --cnt[nums[i - (k - 1)]];\n            if (cnt[nums[i - (k - 1)]]) {\n                curr = update(nums[i - (k - 1)], +1, curr);\n            } else {\n                cnt.erase(nums[i - (k - 1)]);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nfrom sortedcontainers import SortedList\nimport collections\n\n\n# freq table, sorted list, two pointers, sliding window\nclass Solution(object):\n    def findXSum(self, nums, k, x):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :type x: int\n        :rtype: List[int]\n        \"\"\"\n        def update(v, d, curr):\n            if d == 1:\n                sl.add((-cnt[v], -v))\n            if sl.index((-cnt[v], -v)) < x:\n                curr += d*cnt[v]*v\n                if x < len(sl):\n                    nc, nv = sl[x]\n                    curr -= d*nc*nv\n            if d != 1:\n                sl.remove((-cnt[v], -v))\n            return curr\n\n        sl = SortedList()\n        cnt = collections.defaultdict(int)\n        result = []\n        curr = 0\n        for i, v in enumerate(nums):\n            if v in cnt:\n                curr = update(v, -1, curr)\n            cnt[v] += 1\n            curr = update(v, +1, curr)\n            if i < k-1:\n                continue\n            result.append(curr)\n            curr = update(nums[i-(k-1)], -1, curr)\n            cnt[nums[i-(k-1)]] -= 1\n            if cnt[nums[i-(k-1)]]:\n                curr = update(nums[i-(k-1)], +1, curr)\n            else:\n                del cnt[nums[i-(k-1)]]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

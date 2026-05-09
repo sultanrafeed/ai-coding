@@ -1,0 +1,40 @@
+{
+  "id": "cc1423cb-b22a-407a-98d6-ef40d01cbd49",
+  "slug": "largest-subarray-length-k",
+  "title": "Largest Subarray Length K",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,4,5,2,3]\n3\n[1,4,5,2,3]\n4\n[1,4,5,2,3]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> largestSubarray(vector<int>& nums, int k) {\n        int left = 0, right = 1, l = 0;\n        while (right + k - 1 < size(nums) && right + l < size(nums)) {\n            if (nums[left + l] == nums[right + l]) {\n                ++l;\n                continue;\n            }\n            if (nums[left + l] > nums[right + l]) {\n                right += l + 1;\n            } else {\n                left = max(right, min(left + l + 1, int(size(nums)) - k));\n                right = left + 1;\n            }\n            l = 0;\n        }\n        return {cbegin(nums) + left, cbegin(nums) + left + k};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def largestSubarray(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: List[int]\n        \"\"\"\n        left, right, l = 0, 1, 0\n        while right+k-1 < len(nums) and right+l < len(nums):\n            if nums[left+l] == nums[right+l]:\n                l += 1\n                continue\n            if nums[left+l] > nums[right+l]:\n                right += l+1\n            else:\n                left = max(right, min(left+l+1, len(nums)-k))\n                right = left+1\n            l = 0\n        return nums[left:left+k]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

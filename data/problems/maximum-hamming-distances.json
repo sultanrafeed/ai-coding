@@ -1,0 +1,41 @@
+{
+  "id": "4196f585-e408-43be-8874-7fd82dad74e3",
+  "slug": "maximum-hamming-distances",
+  "title": "Maximum Hamming Distances",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "bit-manipulation",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[9,12,9,11]\n4\n[3,4,6,10]\n4",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * 2^m)\n// Space: O(2^m)\n\n// bitmasks, knapsack dp\nclass Solution {\npublic:\n    vector<int> maxHammingDistances(vector<int>& nums, int m) {\n        vector<int> dp(1 << m, -1);\n        for (const auto& x: nums) {\n            dp[x] = 0;\n        }\n        for (int i = 0; i < m; ++i) {\n            vector<int> new_dp(dp);\n            for (int mask = 0; mask < (1 << m); ++mask) {\n                if (dp[mask ^ (1 << i)] != -1) {\n                    new_dp[mask] = max(new_dp[mask], dp[mask ^ (1 << i)] + 1);\n                }\n            }\n            dp = move(new_dp);\n        }\n        vector<int> result(size(nums));\n        for (int i = 0; i < size(nums); ++i) {\n            result[i] = dp[nums[i]];\n        }\n        return result;\n    }\n};\n\n// Time:  O(m * 2^m)\n// Space: O(2^m)\n// bitmasks, bfs\nclass Solution2 {\npublic:\n    vector<int> maxHammingDistances(vector<int>& nums, int m) {\n        vector<int> q;\n        vector<int> dist(1 << m, -1);\n        for (const auto& x : nums) {\n            if (dist[x] != -1) {\n                continue;\n            }\n            dist[x] = 0;\n            q.emplace_back(x);\n        }\n        for (int d = 0; !empty(q);) {\n            ++d;\n            vector<int> new_q;\n            for (const auto& u : q) {\n                for (int i = 0; i < m; ++i) {\n                    if (dist[u ^ (1 << i)] != -1) {\n                        continue;\n                    }\n                    dist[u ^ (1 << i)] = d;\n                    new_q.emplace_back(u ^ (1 << i));\n                }\n            }\n            q = move(new_q);\n        }\n        vector<int> result(size(nums));\n        for (int i = 0; i < size(nums); ++i) {\n            result[i] = m - dist[((1 << m) - 1) ^ nums[i]];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * 2^m)\n# Space: O(2^m)\n\n# bitmasks, knapsack dp\nclass Solution(object):\n    def maxHammingDistances(self, nums, m):\n        \"\"\"\n        :type nums: List[int]\n        :type m: int\n        :rtype: List[int]\n        \"\"\"\n        dp = [float(\"-inf\")]*(1<<m)\n        for x in nums:\n            dp[x] = 0\n        for i in xrange(m):\n            new_dp = dp[:]\n            for mask in xrange(1<<m):\n                new_dp[mask] = max(new_dp[mask], dp[mask^(1<<i)]+1)\n            dp = new_dp\n        return [dp[x] for x in nums]\n\n\n# Time:  O(m * 2^m)\n# Space: O(2^m)\n# bitmasks, bfs\nclass Solution2(object):\n    def maxHammingDistances(self, nums, m):\n        \"\"\"\n        :type nums: List[int]\n        :type m: int\n        :rtype: List[int]\n        \"\"\"\n        q = []\n        dist = [-1]*(1<<m)\n        for x in nums:\n            if dist[x] != -1:\n                continue\n            dist[x] = 0\n            q.append(x)\n        d = 0\n        while q:\n            d += 1\n            new_q = []\n            for u in q:\n                for i in xrange(m):\n                    if dist[u^(1<<i)] != -1:\n                        continue\n                    dist[u^(1<<i)] = d\n                    new_q.append(u^(1<<i))\n            q = new_q\n        return [m-dist[((1<<m)-1)^x] for x in nums]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

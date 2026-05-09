@@ -1,0 +1,36 @@
+{
+  "id": "c45451c0-7e15-46fa-8541-662f0d1169c4",
+  "slug": "find-the-duplicate-number",
+  "title": "Find the Duplicate Number",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers <code>nums</code> containing&nbsp;<code>n + 1</code> integers where each integer is in the range <code>[1, n]</code> inclusive.</p>\n\n<p>There is only <strong>one repeated number</strong> in <code>nums</code>, return <em>this&nbsp;repeated&nbsp;number</em>.</p>\n\n<p>You must solve the problem <strong>without</strong> modifying the array <code>nums</code>&nbsp;and using only constant extra space.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,3,4,2,2]\n<strong>Output:</strong> 2\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,1,3,4,2]\n<strong>Output:</strong> 3\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,3,3,3,3]\n<strong>Output:</strong> 3</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>nums.length == n + 1</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= n</code></li>\n\t<li>All the integers in <code>nums</code> appear only <strong>once</strong> except for <strong>precisely one integer</strong> which appears <strong>two or more</strong> times.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><b>Follow up:</b></p>\n\n<ul>\n\t<li>How can we prove that at least one duplicate number must exist in <code>nums</code>?</li>\n\t<li>Can you solve the problem in linear runtime complexity?</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// Two pointers method, same as Linked List Cycle II.\nclass Solution {\npublic:\n    int findDuplicate(vector<int>& nums) {\n        int slow = nums[0];\n        int fast = nums[nums[0]];\n        while (slow != fast) {\n            slow = nums[slow];\n            fast = nums[nums[fast]];\n        }\n\n        fast = 0;\n        while (slow != fast) {\n            slow = nums[slow];\n            fast = nums[fast];\n        }\n        return slow;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\n// Binary search method.\nclass Solution2 {\npublic:\n    int findDuplicate(vector<int>& nums) {\n        int left = 1, right = nums.size();\n\n        while (left <= right) {\n            const int mid = left + (right - left) / 2;\n            // Get count of num <= mid.\n            int count = 0;\n            for (const auto& num : nums) {\n                if (num <= mid) {\n                    ++count;\n                }\n            }\n            if (count > mid) {\n                right = mid - 1; \n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution3 {\npublic:\n    int findDuplicate(vector<int>& nums) {\n        int duplicate = 0;\n        // Mark the value as visited by negative.\n        for (auto& num : nums) {\n            if (nums[abs(num) - 1] > 0) {\n                nums[abs(num) - 1] *= -1;\n            } else {\n                duplicate = abs(num);\n                break;\n            }\n        }\n        // Rollback the value.\n        for (auto& num : nums) {\n            if (nums[abs(num) - 1] < 0) {\n                nums[abs(num) - 1] *= -1;\n            } else {\n                break;\n            }\n        }\n        return duplicate;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findDuplicate(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        # Treat each (key, value) pair of the array as the (pointer, next) node of the linked list,\n        # thus the duplicated number will be the begin of the cycle in the linked list.\n        # Besides, there is always a cycle in the linked list which\n        # starts from the first element of the array.\n        slow = nums[0]\n        fast = nums[nums[0]]\n        while slow != fast:\n            slow = nums[slow]\n            fast = nums[nums[fast]]\n\n        fast = 0\n        while slow != fast:\n            slow = nums[slow]\n            fast = nums[fast]\n        return slow\n\n\n# Time:  O(nlogn)\n# Space: O(1)\n# Binary search method.\nclass Solution2(object):\n    def findDuplicate(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left, right = 1, len(nums) - 1\n\n        while left <= right:\n            mid = left + (right - left) / 2\n            # Get count of num <= mid.\n            count = 0\n            for num in nums:\n                if num <= mid:\n                    count += 1\n            if count > mid:\n                right = mid - 1\n            else:\n                left = mid + 1\n        return left\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution3(object):\n    def findDuplicate(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        duplicate = 0\n        # Mark the value as visited by negative.\n        for num in nums:\n            if nums[abs(num) - 1] > 0:\n                nums[abs(num) - 1] *= -1\n            else:\n                duplicate = abs(num)\n                break\n        # Rollback the value.\n        for num in nums:\n            if nums[abs(num) - 1] < 0:\n                nums[abs(num) - 1] *= -1\n            else:\n                break\n        return duplicate",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

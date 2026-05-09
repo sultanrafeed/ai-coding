@@ -1,0 +1,42 @@
+{
+  "id": "6b9e1123-943c-4610-93b2-50fb0f507f50",
+  "slug": "analyze-user-website-visit-pattern",
+  "title": "Analyze User Website Visit Pattern",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"joe\",\"joe\",\"joe\",\"james\",\"james\",\"james\",\"james\",\"mary\",\"mary\",\"mary\"]\n[1,2,3,4,5,6,7,8,9,10]\n[\"home\",\"about\",\"career\",\"home\",\"cart\",\"maps\",\"home\",\"home\",\"about\",\"career\"]\n[\"ua\",\"ua\",\"ua\",\"ub\",\"ub\",\"ub\"]\n[1,2,3,4,5,6]\n[\"a\",\"b\",\"a\",\"a\",\"b\",\"c\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^3)\n// Space: O(n^3)\n\nclass Solution {\npublic:\n    vector<string> mostVisitedPattern(vector<string>& username, vector<int>& timestamp, vector<string>& website) {\n        vector<tuple<int, string, string>> A;\n        for (int i = 0; i < username.size(); ++i) {\n            A.emplace_back(timestamp[i], username[i], website[i]);\n        }\n        sort(A.begin(), A.end());\n        unordered_map<string, vector<string>> users;\n        for (const auto& [t, u, w] : A) {\n            users[u].emplace_back(w);\n        }\n\n        vector<string> result;\n        unordered_map<vector<string>, int, VectorHash<string>> count;\n        for (const auto& [u, webs] : users) {\n            unordered_set<vector<string>, VectorHash<string>> lookup;\n            for (int i = 0; i + 2 < webs.size(); ++i) {\n                for (int j = i + 1; j + 1 < webs.size(); ++j) {\n                    for (int k = j + 1; k < webs.size(); ++k) {\n                        vector<string> pattern = {webs[i], webs[j], webs[k]};\n                        if (lookup.count(pattern)) {\n                            continue;\n                        }\n                        lookup.emplace(pattern);\n                        ++count[pattern];\n                        if (result.empty() ||\n                            count[pattern] > count[result] ||\n                            (count[pattern] == count[result] && pattern < result)) {\n                            result = pattern;\n                        }\n                    }\n                }\n            }\n        }\n        return result;\n    }\n\nprivate:\n    template<typename T>\n    struct VectorHash {\n        size_t operator()(const std::vector<T>& v) const {\n            size_t seed = 0;\n            for (const auto& i : v) {\n                seed ^= std::hash<T>{}(i)  + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            }\n            return seed;\n        }\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^3)\n# Space: O(n^3)\n\nimport collections\nimport itertools\n\n\nclass Solution(object):\n    def mostVisitedPattern(self, username, timestamp, website):\n        \"\"\"\n        :type username: List[str]\n        :type timestamp: List[int]\n        :type website: List[str]\n        :rtype: List[str]\n        \"\"\"\n        lookup = collections.defaultdict(list)\n        A = zip(timestamp, username, website)\n        A.sort()\n        for t, u, w in A:\n            lookup[u].append(w)\n        count = sum([collections.Counter(set(itertools.combinations(lookup[u], 3))) for u in lookup], collections.Counter())\n        return list(min(count, key=lambda x: (-count[x], x)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

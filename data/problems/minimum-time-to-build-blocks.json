@@ -1,0 +1,42 @@
+{
+  "id": "40df1775-25fb-4b42-974d-7b5484813a94",
+  "slug": "minimum-time-to-build-blocks",
+  "title": "Minimum Time to Build Blocks",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1]\n1\n[1,2]\n5\n[1,2,3]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int minBuildTime(vector<int>& blocks, int split) {\n        priority_queue<int, vector<int>, greater<int>> min_heap(blocks.cbegin(), blocks.cend());\n        while (min_heap.size() != 1) {\n            min_heap.pop();\n            const auto y = min_heap.top(); min_heap.pop();\n            min_heap.emplace(y + split);\n        }\n        return min_heap.top();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport heapq\n\n\nclass Solution(object):\n    def minBuildTime(self, blocks, split):\n        \"\"\"\n        :type blocks: List[int]\n        :type split: int\n        :rtype: int\n        \"\"\"\n        heapq.heapify(blocks)\n        while len(blocks) != 1:\n            x, y = heapq.heappop(blocks), heapq.heappop(blocks)\n            heapq.heappush(blocks, y+split)\n        return heapq.heappop(blocks)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

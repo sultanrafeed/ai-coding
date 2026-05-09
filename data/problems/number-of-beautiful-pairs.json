@@ -1,0 +1,43 @@
+{
+  "id": "723a4243-8b94-4434-bff3-edbd8120738f",
+  "slug": "number-of-beautiful-pairs",
+  "title": "Number of Beautiful Pairs",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed </strong>integer array <code>nums</code>. A pair of indices <code>i</code>, <code>j</code> where <code>0 &lt;=&nbsp;i &lt; j &lt; nums.length</code> is called beautiful if the <strong>first digit</strong> of <code>nums[i]</code> and the <strong>last digit</strong> of <code>nums[j]</code> are <strong>coprime</strong>.</p>\n\n<p>Return <em>the total number of beautiful pairs in </em><code>nums</code>.</p>\n\n<p>Two integers <code>x</code> and <code>y</code> are <strong>coprime</strong> if there is no integer greater than 1 that divides both of them. In other words, <code>x</code> and <code>y</code> are coprime if <code>gcd(x, y) == 1</code>, where <code>gcd(x, y)</code> is the <strong>greatest common divisor</strong> of <code>x</code> and <code>y</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,5,1,4]\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> There are 5 beautiful pairs in nums:\nWhen i = 0 and j = 1: the first digit of nums[0] is 2, and the last digit of nums[1] is 5. We can confirm that 2 and 5 are coprime, since gcd(2,5) == 1.\nWhen i = 0 and j = 2: the first digit of nums[0] is 2, and the last digit of nums[2] is 1. Indeed, gcd(2,1) == 1.\nWhen i = 1 and j = 2: the first digit of nums[1] is 5, and the last digit of nums[2] is 1. Indeed, gcd(5,1) == 1.\nWhen i = 1 and j = 3: the first digit of nums[1] is 5, and the last digit of nums[3] is 4. Indeed, gcd(5,4) == 1.\nWhen i = 2 and j = 3: the first digit of nums[2] is 1, and the last digit of nums[3] is 4. Indeed, gcd(1,4) == 1.\nThus, we return 5.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [11,21,12]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> There are 2 beautiful pairs:\nWhen i = 0 and j = 1: the first digit of nums[0] is 1, and the last digit of nums[1] is 1. Indeed, gcd(1,1) == 1.\nWhen i = 0 and j = 2: the first digit of nums[0] is 1, and the last digit of nums[2] is 2. Indeed, gcd(1,2) == 1.\nThus, we return 2.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 9999</code></li>\n\t<li><code>nums[i] % 10 != 0</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "counting",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,5,1,4]\n[11,21,12]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr)\n// Space: O(1)\n\n// number theory, freq table\nclass Solution {\npublic:\n    int countBeautifulPairs(vector<int>& nums) {\n        int result = 0;\n        vector<int> cnt(10);\n        for (auto x : nums) {\n            for (int i = 1; i <= 9; ++i) {\n                if (gcd(i, x % 10) == 1) {\n                    result += cnt[i];\n                }\n            }\n            while (x >= 10) {\n                x /= 10;\n            }\n            ++cnt[x];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr)\n# Space: O(1)\n\n# number theory, freq table\nclass Solution(object):\n    def countBeautifulPairs(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def gcd(a, b):\n            while b:\n                a, b = b, a%b\n            return a\n\n        result = 0\n        cnt = [0]*10\n        for x in nums:\n            for i in xrange(1, 10):\n                if gcd(i, x%10) == 1:\n                    result += cnt[i]\n            while x >= 10:\n                x //= 10\n            cnt[x] += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

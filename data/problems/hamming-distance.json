@@ -1,0 +1,33 @@
+{
+  "id": "13825bf9-3b16-4d29-9d32-ec2caf57a5d4",
+  "slug": "hamming-distance",
+  "title": "Hamming Distance",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>The <a href=\"https://en.wikipedia.org/wiki/Hamming_distance\" target=\"_blank\">Hamming distance</a> between two integers is the number of positions at which the corresponding bits are different.</p>\n\n<p>Given two integers <code>x</code> and <code>y</code>, return <em>the <strong>Hamming distance</strong> between them</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = 1, y = 4\n<strong>Output:</strong> 2\n<strong>Explanation:</strong>\n1   (0 0 0 1)\n4   (0 1 0 0)\n       &uarr;   &uarr;\nThe above arrows point to positions where the corresponding bits are different.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = 3, y = 1\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;=&nbsp;x, y &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Note:</strong> This question is the same as <a href=\"https://leetcode.com/problems/minimum-bit-flips-to-convert-number/description/\" target=\"_blank\"> 2220: Minimum Bit Flips to Convert Number.</a></p>\n",
+  "patterns": [
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int hammingDistance(int x, int y) {\n        int distance = 0;\n        for (int z = x ^ y; z; z &= z - 1) {\n            ++distance;\n        }\n        return distance;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def hammingDistance(self, x, y):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :rtype: int\n        \"\"\"\n        distance = 0\n        z = x ^ y\n        while z:\n            distance += 1\n            z &= z - 1\n        return distance\n\n    def hammingDistance2(self, x, y):\n        \"\"\"\n        :type x: int\n        :type y: int\n        :rtype: int\n        \"\"\"\n        return bin(x ^ y).count('1')",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

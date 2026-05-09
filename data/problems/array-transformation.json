@@ -1,0 +1,40 @@
+{
+  "id": "91b72350-7c5b-4a67-9523-7b54578dffd0",
+  "slug": "array-transformation",
+  "title": "Array Transformation",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[6,2,3,4]\r\n[1,6,3,4,3,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> transformArray(vector<int>& arr) {    \n        while (is_changable(arr)) {\n            auto new_arr = arr;\n            for (int i = 1; i + 1 < arr.size(); ++i) {\n                new_arr[i] += int(arr[i - 1] > arr[i] && arr[i] < arr[i + 1]);\n                new_arr[i] -= int(arr[i - 1] < arr[i] && arr[i] > arr[i + 1]);\n            }\n            arr = move(new_arr);\n        }\n        return arr;\n    }\n\nprivate:\n    bool is_changable(const vector<int>& arr) {\n        for (int i = 1; i + 1 < arr.size(); ++i) {\n            if ((arr[i - 1] > arr[i] && arr[i] < arr[i + 1]) ||\n                (arr[i - 1] < arr[i] && arr[i] > arr[i + 1])) {\n                return true;\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def transformArray(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: List[int]\n        \"\"\"\n        def is_changable(arr):\n            return any(arr[i-1] > arr[i] < arr[i+1] or \n                       arr[i-1] < arr[i] > arr[i+1]\n                       for i in xrange(1, len(arr)-1))\n        \n        while is_changable(arr):\n            new_arr = arr[:]\n            for i in xrange(1, len(arr)-1):\n                new_arr[i] += arr[i-1] > arr[i] < arr[i+1]\n                new_arr[i] -= arr[i-1] < arr[i] > arr[i+1]\n            arr = new_arr\n        return arr",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

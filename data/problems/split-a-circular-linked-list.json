@@ -1,0 +1,34 @@
+{
+  "id": "32a8da38-cc5d-45af-9d0c-e8674074f06c",
+  "slug": "split-a-circular-linked-list",
+  "title": "Split a Circular Linked List",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list",
+    "two-pointers"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// two pointers, slow and fast pointers\nclass Solution {\npublic:\n    vector<ListNode*> splitCircularLinkedList(ListNode* list) {\n        auto head1 = list;\n        auto slow = head1, fast = head1->next;\n        while (fast->next != head1) {\n            slow = slow->next,\n            fast = fast->next->next != head1 ? fast->next->next : fast->next;\n        }\n        auto head2 = slow->next;\n        slow->next = head1;\n        fast->next = head2;\n        return {head1, head2};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# Definition for singly-linked list.\nclass ListNode(object):\n    def __init__(self, val=0, next=None):\n        pass\n\n\n# two pointers, slow and fast pointers\nclass Solution(object):\n    def splitCircularLinkedList(self, list):\n        \"\"\"\n        :type list: Optional[ListNode]\n        :rtype: List[Optional[ListNode]]\n        \"\"\"\n        head1 = list\n        slow, fast = head1, head1.next\n        while head1  != fast.next:\n            slow = slow.next\n            fast = fast.next.next if head1 != fast.next.next else fast.next\n        head2 = slow.next\n        slow.next, fast.next = head1, head2\n        return [head1, head2]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

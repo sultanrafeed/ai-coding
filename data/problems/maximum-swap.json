@@ -1,0 +1,34 @@
+{
+  "id": "e315b0ef-74bc-4877-9c2d-360de3ce4898",
+  "slug": "maximum-swap",
+  "title": "Maximum Swap",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer <code>num</code>. You can swap two digits at most once to get the maximum valued number.</p>\n\n<p>Return <em>the maximum valued number you can get</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 2736\n<strong>Output:</strong> 7236\n<strong>Explanation:</strong> Swap the number 2 and the number 7.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 9973\n<strong>Output:</strong> 9973\n<strong>Explanation:</strong> No swap.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= num &lt;= 10<sup>8</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn), logn is the length of the number string\n// Space: O(logn)\n\nclass Solution {\npublic:\n    int maximumSwap(int num) {\n        string digits = to_string(num);\n        int left = 0, right = 0;\n        int max_idx = digits.length() - 1;\n        for (int i = digits.length() - 1; i >= 0; --i) {\n            if (digits[i] > digits[max_idx]) {\n                max_idx = i;\n            } else if (digits[max_idx] > digits[i]) {\n                left = i;\n                right = max_idx;\n            }\n        }\n        swap(digits[left], digits[right]);\n        return stoi(digits);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn), logn is the length of the number string\n# Space: O(logn)\n\nclass Solution(object):\n    def maximumSwap(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: int\n        \"\"\"\n        digits = list(str(num))\n        left, right = 0, 0\n        max_idx = len(digits)-1\n        for i in reversed(xrange(len(digits))):\n            if digits[i] > digits[max_idx]:\n                max_idx = i\n            elif digits[max_idx] > digits[i]:\n                left, right = i, max_idx\n        digits[left], digits[right] = digits[right], digits[left]\n        return int(\"\".join(digits))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

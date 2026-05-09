@@ -1,0 +1,40 @@
+{
+  "id": "99e56d63-172e-432f-aa23-4b4734e3c16c",
+  "slug": "seat-reservation-manager",
+  "title": "Seat Reservation Manager",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Design a system that manages the reservation state of <code>n</code> seats that are numbered from <code>1</code> to <code>n</code>.</p>\n\n<p>Implement the <code>SeatManager</code> class:</p>\n\n<ul>\n\t<li><code>SeatManager(int n)</code> Initializes a <code>SeatManager</code> object that will manage <code>n</code> seats numbered from <code>1</code> to <code>n</code>. All seats are initially available.</li>\n\t<li><code>int reserve()</code> Fetches the <strong>smallest-numbered</strong> unreserved seat, reserves it, and returns its number.</li>\n\t<li><code>void unreserve(int seatNumber)</code> Unreserves the seat with the given <code>seatNumber</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;SeatManager&quot;, &quot;reserve&quot;, &quot;reserve&quot;, &quot;unreserve&quot;, &quot;reserve&quot;, &quot;reserve&quot;, &quot;reserve&quot;, &quot;reserve&quot;, &quot;unreserve&quot;]\n[[5], [], [], [2], [], [], [], [], [5]]\n<strong>Output</strong>\n[null, 1, 2, null, 2, 3, 4, 5, null]\n\n<strong>Explanation</strong>\nSeatManager seatManager = new SeatManager(5); // Initializes a SeatManager with 5 seats.\nseatManager.reserve();    // All seats are available, so return the lowest numbered seat, which is 1.\nseatManager.reserve();    // The available seats are [2,3,4,5], so return the lowest of them, which is 2.\nseatManager.unreserve(2); // Unreserve seat 2, so now the available seats are [2,3,4,5].\nseatManager.reserve();    // The available seats are [2,3,4,5], so return the lowest of them, which is 2.\nseatManager.reserve();    // The available seats are [3,4,5], so return the lowest of them, which is 3.\nseatManager.reserve();    // The available seats are [4,5], so return the lowest of them, which is 4.\nseatManager.reserve();    // The only available seat is seat 5, so return 5.\nseatManager.unreserve(5); // Unreserve seat 5, so now the available seats are [5].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= seatNumber &lt;= n</code></li>\n\t<li>For each call to <code>reserve</code>, it is guaranteed that there will be at least one unreserved seat.</li>\n\t<li>For each call to <code>unreserve</code>, it is guaranteed that <code>seatNumber</code> will be reserved.</li>\n\t<li>At most <code>10<sup>5</sup></code> calls <strong>in total</strong> will be made to <code>reserve</code> and <code>unreserve</code>.</li>\n</ul>\n",
+  "patterns": [
+    "design",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"SeatManager\",\"reserve\",\"reserve\",\"unreserve\",\"reserve\",\"reserve\",\"reserve\",\"reserve\",\"unreserve\"]\n[[5],[],[],[2],[],[],[],[],[5]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:      O(n)\n//        reserve:   O(logn)\n//        unreserve: O(logn)\n// Space: O(n)\n\nclass SeatManager {\npublic:\n    SeatManager(int n) \n     : min_heap_(n) {\n        iota(begin(min_heap_), end(min_heap_), 1);\n        // make_heap(begin(min_heap_), end(min_heap_), greater<>());  // no need for sorted vector\n    }\n    \n    int reserve() {\n        int x = min_heap_.front();\n        pop_heap(begin(min_heap_), end(min_heap_), greater<>()); min_heap_.pop_back();\n        return x;\n    }\n    \n    void unreserve(int seatNumber) {\n        min_heap_.emplace_back(seatNumber); push_heap(begin(min_heap_), end(min_heap_), greater<>());\n    }\n\nprivate:\n    vector<int> min_heap_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:      O(n)\n#        reserve:   O(logn)\n#        unreserve: O(logn)\n# Space: O(n)\n\nimport heapq\n\n\nclass SeatManager(object):\n\n    def __init__(self, n):\n        \"\"\"\n        :type n: int\n        \"\"\"\n        self.__min_heap = range(1, n+1)\n        # heapq.heapify(self.__min_heap)  # no need for sorted list\n\n    def reserve(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return heapq.heappop(self.__min_heap)\n\n    def unreserve(self, seatNumber):\n        \"\"\"\n        :type seatNumber: int\n        :rtype: None\n        \"\"\"\n        heapq.heappush(self.__min_heap, seatNumber)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

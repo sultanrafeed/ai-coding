@@ -1,0 +1,35 @@
+{
+  "id": "96bf9a65-3e5f-4d04-ab6f-c013cbed3de1",
+  "slug": "perform-string-shifts",
+  "title": "Perform String Shifts",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + l)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string stringShift(string s, vector<vector<int>>& shift) {\n        int left_shift = 0;\n        for (const auto& x : shift) {\n            if (!x[0]) {\n                left_shift += x[1];\n            } else {\n                left_shift -= x[1];\n            }\n        }\n        left_shift = ((left_shift) % int(s.length()) + int(s.length())) % int(s.length());\n        reverse(begin(s), begin(s) + left_shift);\n        reverse(begin(s) + left_shift, end(s));\n        reverse(begin(s), end(s));\n        return s;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + l)\n# Space: O(l)\n\nclass Solution(object):\n    def stringShift(self, s, shift):\n        \"\"\"\n        :type s: str\n        :type shift: List[List[int]]\n        :rtype: str\n        \"\"\"\n        left_shifts = 0\n        for direction, amount in shift:\n            if not direction:\n                left_shifts += amount\n            else:\n                left_shifts -= amount\n        left_shifts %= len(s)\n        return s[left_shifts:] + s[:left_shifts]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

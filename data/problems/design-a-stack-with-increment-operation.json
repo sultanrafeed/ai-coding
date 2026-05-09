@@ -1,0 +1,35 @@
+{
+  "id": "19845738-33dd-41db-865c-73acfb91af35",
+  "slug": "design-a-stack-with-increment-operation",
+  "title": "Design a Stack With Increment Operation",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Design a stack that supports increment operations on its elements.</p>\n\n<p>Implement the <code>CustomStack</code> class:</p>\n\n<ul>\n\t<li><code>CustomStack(int maxSize)</code> Initializes the object with <code>maxSize</code> which is the maximum number of elements in the stack.</li>\n\t<li><code>void push(int x)</code> Adds <code>x</code> to the top of the stack if the stack has not reached the <code>maxSize</code>.</li>\n\t<li><code>int pop()</code> Pops and returns the top of the stack or <code>-1</code> if the stack is empty.</li>\n\t<li><code>void inc(int k, int val)</code> Increments the bottom <code>k</code> elements of the stack by <code>val</code>. If there are less than <code>k</code> elements in the stack, increment all the elements in the stack.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;CustomStack&quot;,&quot;push&quot;,&quot;push&quot;,&quot;pop&quot;,&quot;push&quot;,&quot;push&quot;,&quot;push&quot;,&quot;increment&quot;,&quot;increment&quot;,&quot;pop&quot;,&quot;pop&quot;,&quot;pop&quot;,&quot;pop&quot;]\n[[3],[1],[2],[],[2],[3],[4],[5,100],[2,100],[],[],[],[]]\n<strong>Output</strong>\n[null,null,null,2,null,null,null,null,null,103,202,201,-1]\n<strong>Explanation</strong>\nCustomStack stk = new CustomStack(3); // Stack is Empty []\nstk.push(1);                          // stack becomes [1]\nstk.push(2);                          // stack becomes [1, 2]\nstk.pop();                            // return 2 --&gt; Return top of the stack 2, stack becomes [1]\nstk.push(2);                          // stack becomes [1, 2]\nstk.push(3);                          // stack becomes [1, 2, 3]\nstk.push(4);                          // stack still [1, 2, 3], Do not add another elements as size is 4\nstk.increment(5, 100);                // stack becomes [101, 102, 103]\nstk.increment(2, 100);                // stack becomes [201, 202, 103]\nstk.pop();                            // return 103 --&gt; Return top of the stack 103, stack becomes [201, 202]\nstk.pop();                            // return 202 --&gt; Return top of the stack 202, stack becomes [201]\nstk.pop();                            // return 201 --&gt; Return top of the stack 201, stack becomes []\nstk.pop();                            // return -1 --&gt; Stack is empty return -1.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= maxSize, x, k &lt;= 1000</code></li>\n\t<li><code>0 &lt;= val &lt;= 100</code></li>\n\t<li>At most <code>1000</code> calls will be made to each method of <code>increment</code>, <code>push</code> and <code>pop</code> each separately.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "stack",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  cotr:      O(1)\n//        push:      O(1)\n//        pop:       O(1)\n//        increment: O(1)\n// Space: O(n)\n\nclass CustomStack {\npublic:\n    CustomStack(int maxSize)\n      : max_size_(maxSize) {\n        \n    }\n    \n    void push(int x) {\n        if (stk_.size() == max_size_) {\n            return;\n        }\n        stk_.emplace_back(x, 0);\n    }\n    \n    int pop() {\n        if (stk_.empty()) {\n            return -1;\n        }\n        const auto[x, inc] = stk_.back(); stk_.pop_back();\n        if (!stk_.empty()) {\n            stk_.back().second += inc;\n        }\n        return x + inc;\n    }\n    \n    void increment(int k, int val) {\n        const auto& i = min(int(stk_.size()), k) - 1;\n        if (i >= 0) {\n            stk_[i].second += val;\n        }\n    }\n\nprivate:\n    const int max_size_;\n    vector<pair<int, int>> stk_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  cotr:      O(1)\n#        push:      O(1)\n#        pop:       O(1)\n#        increment: O(1)\n# Space: O(n)\n\nclass CustomStack(object):\n\n    def __init__(self, maxSize):\n        \"\"\"\n        :type maxSize: int\n        \"\"\"\n        self.__max_size = maxSize\n        self.__stk = []\n\n    def push(self, x):\n        \"\"\"\n        :type x: int\n        :rtype: None\n        \"\"\"\n        if len(self.__stk) == self.__max_size:\n            return\n        self.__stk.append([x, 0])\n\n    def pop(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        if not self.__stk:\n            return -1\n        x, inc = self.__stk.pop()\n        if self.__stk:\n            self.__stk[-1][1] += inc\n        return x + inc\n\n    def increment(self, k, val):\n        \"\"\"\n        :type k: int\n        :type val: int\n        :rtype: None\n        \"\"\"\n        i = min(len(self.__stk), k)-1\n        if i >= 0:\n            self.__stk[i][1] += val",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

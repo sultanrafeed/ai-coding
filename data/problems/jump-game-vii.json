@@ -1,0 +1,36 @@
+{
+  "id": "307a674a-758b-48dd-9226-49b4557742f4",
+  "slug": "jump-game-vii",
+  "title": "Jump Game VII",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> binary string <code>s</code> and two integers <code>minJump</code> and <code>maxJump</code>. In the beginning, you are standing at index <code>0</code>, which is equal to <code>&#39;0&#39;</code>. You can move from index <code>i</code> to index <code>j</code> if the following conditions are fulfilled:</p>\n\n<ul>\n\t<li><code>i + minJump &lt;= j &lt;= min(i + maxJump, s.length - 1)</code>, and</li>\n\t<li><code>s[j] == &#39;0&#39;</code>.</li>\n</ul>\n\n<p>Return <code>true</code><i> if you can reach index </i><code>s.length - 1</code><i> in </i><code>s</code><em>, or </em><code>false</code><em> otherwise.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;<u>0</u>11<u>0</u>1<u>0</u>&quot;, minJump = 2, maxJump = 3\n<strong>Output:</strong> true\n<strong>Explanation:</strong>\nIn the first step, move from index 0 to index 3. \nIn the second step, move from index 3 to index 5.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;01101110&quot;, minJump = 2, maxJump = 3\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s[i]</code> is either <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li>\n\t<li><code>s[0] == &#39;0&#39;</code></li>\n\t<li><code>1 &lt;= minJump &lt;= maxJump &lt; s.length</code></li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming",
+    "sliding-window",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// dp with line sweep solution\nclass Solution {\npublic:\n    bool canReach(string s, int minJump, int maxJump) {\n        vector<bool> dp(size(s));\n        dp[0] = true;\n        for (int i = 1, cnt = 0; i < size(s); ++i) {\n            if (i >= minJump) {\n                cnt += dp[i - minJump];\n            }\n            if (i > maxJump) {\n                cnt -= dp[i - maxJump - 1];\n            }\n            dp[i] = cnt > 0 && s[i] == '0';\n        }\n        return dp.back();\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n\n// bfs solution\nclass Solution2 {\npublic:\n    bool canReach(string s, int minJump, int maxJump) {\n        queue<int> q({0});\n        int reachable = 0, i = -1;\n        while (!empty(q)) {\n            i = q.front(); q.pop();\n            for (int j = max(i + minJump, reachable + 1); j <= min(i + maxJump, int(size(s)) - 1); ++j) {\n                if (s[j] != '0') {\n                    continue;\n                }\n                q.emplace(j);\n            }\n            reachable = i + maxJump;\n        }\n        return i == size(s) - 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# dp with line sweep solution\nclass Solution(object):\n    def canReach(self, s, minJump, maxJump):\n        \"\"\"\n        :type s: str\n        :type minJump: int\n        :type maxJump: int\n        :rtype: bool\n        \"\"\"\n        dp = [False]*len(s)\n        dp[0] = True\n        cnt = 0\n        for i in xrange(1, len(s)):\n            if i >= minJump:\n                cnt += dp[i-minJump]\n            if i > maxJump:\n                cnt -= dp[i-maxJump-1]\n            dp[i] = cnt > 0 and s[i] == '0'\n        return dp[-1]\n\n\n# Time:  O(n)\n# Space: O(n)\nimport collections\n\n\n# bfs solution\nclass Solution2(object):\n    def canReach(self, s, minJump, maxJump):\n        \"\"\"\n        :type s: str\n        :type minJump: int\n        :type maxJump: int\n        :rtype: bool\n        \"\"\"\n        q = collections.deque([0])\n        reachable = 0\n        while q:\n            i = q.popleft()\n            for j in xrange(max(i+minJump, reachable+1), min(i+maxJump+1, len(s))):\n                if s[j] != '0':\n                    continue\n                q.append(j)\n            reachable = i+maxJump\n        return i == len(s)-1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

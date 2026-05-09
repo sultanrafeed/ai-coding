@@ -1,0 +1,35 @@
+{
+  "id": "6e0f9b5a-1a8c-4a8b-823e-35362e723b42",
+  "slug": "keys-and-rooms",
+  "title": "Keys and Rooms",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There are <code>n</code> rooms labeled from <code>0</code> to <code>n - 1</code>&nbsp;and all the rooms are locked except for room <code>0</code>. Your goal is to visit all the rooms. However, you cannot enter a locked room without having its key.</p>\n\n<p>When you visit a room, you may find a set of <strong>distinct keys</strong> in it. Each key has a number on it, denoting which room it unlocks, and you can take all of them with you to unlock the other rooms.</p>\n\n<p>Given an array <code>rooms</code> where <code>rooms[i]</code> is the set of keys that you can obtain if you visited room <code>i</code>, return <code>true</code> <em>if you can visit <strong>all</strong> the rooms, or</em> <code>false</code> <em>otherwise</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> rooms = [[1],[2],[3],[]]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> \nWe visit room 0 and pick up key 1.\nWe then visit room 1 and pick up key 2.\nWe then visit room 2 and pick up key 3.\nWe then visit room 3.\nSince we were able to visit every room, we return true.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> rooms = [[1,3],[3,0,1],[2],[0]]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> We can not enter room number 2 since the only key that unlocks it is in that room.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == rooms.length</code></li>\n\t<li><code>2 &lt;= n &lt;= 1000</code></li>\n\t<li><code>0 &lt;= rooms[i].length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= sum(rooms[i].length) &lt;= 3000</code></li>\n\t<li><code>0 &lt;= rooms[i][j] &lt; n</code></li>\n\t<li>All the values of <code>rooms[i]</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "depth-first-search",
+    "breadth-first-search",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n!)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool canVisitAllRooms(vector<vector<int>>& rooms) {\n        unordered_set<int> lookup = {0};\n        vector<int> stack = {0};\n        while (!stack.empty()) {\n            auto node = stack.back(); stack.pop_back();\n            for (const auto& nei : rooms[node]) {\n                if (!lookup.count(nei)) {\n                    lookup.emplace(nei);\n                    if (lookup.size() == rooms.size()) {\n                        return true;\n                    }\n                    stack.emplace_back(nei);\n                }\n            }\n        }\n        return lookup.size() == rooms.size();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n!)\n# Space: O(n)\n\nclass Solution(object):\n    def canVisitAllRooms(self, rooms):\n        \"\"\"\n        :type rooms: List[List[int]]\n        :rtype: bool\n        \"\"\"\n        lookup = set([0])\n        stack = [0]\n        while stack:\n            node = stack.pop()\n            for nei in rooms[node]:\n                if nei not in lookup:\n                    lookup.add(nei)\n                    if len(lookup) == len(rooms):\n                        return True\n                    stack.append(nei)\n        return len(lookup) == len(rooms)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

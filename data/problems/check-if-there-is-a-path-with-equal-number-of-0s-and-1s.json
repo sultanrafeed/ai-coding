@@ -1,0 +1,41 @@
+{
+  "id": "aa7f4e96-c436-43c6-8d5a-2c5540bb65e7",
+  "slug": "check-if-there-is-a-path-with-equal-number-of-0s-and-1s",
+  "title": "Check if There is a Path With Equal Number of 0's And 1's",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,1,0,0],[0,1,0,0],[1,0,1,0]]\n[[1,1,0],[0,0,1],[1,0,0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(n)\n\n// dp\nclass Solution {\npublic:\n    bool isThereAPath(vector<vector<int>>& grid) {\n        if ((size(grid) + size(grid[0]) - 1) % 2) {\n            return false;\n        }\n        vector<vector<int>> dp_left(2, vector<int>(size(grid[0]) + 1, numeric_limits<int>::max()));\n        dp_left[0][1] = dp_left[1][0] = 0;\n        vector<vector<int>> dp_right(2, vector<int>(size(grid[0]) + 1, numeric_limits<int>::min()));\n        dp_right[0][1] = dp_right[1][0] = 0;\n        for (int i = 0; i < size(grid); ++i) {\n            for (int j = 0; j < size(grid[0]); ++j) {\n                dp_left[(i + 1) % 2][j + 1] = min(dp_left[i % 2][j + 1], dp_left[(i + 1) % 2][j]) + grid[i][j];\n                dp_right[(i + 1) % 2][j + 1] = max(dp_right[i % 2][j + 1], dp_right[(i + 1) % 2][j]) + grid[i][j];\n            }\n        }\n        return dp_left[size(grid) % 2].back() <= (size(grid) + size(grid[0]) - 1) / 2 &&\n               (size(grid) + size(grid[0]) - 1) / 2 <= dp_right[size(grid) % 2].back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(n)\n\n# dp\nclass Solution(object):\n    def isThereAPath(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: bool\n        \"\"\"\n        if (len(grid)+len(grid[0])-1)%2:\n            return False\n        dp_left = [[float(\"inf\")]*(len(grid[0])+1) for _ in xrange(2)]\n        dp_left[0][1] = dp_left[1][0] = 0\n        dp_right = [[float(\"-inf\")]*(len(grid[0])+1) for _ in xrange(2)]\n        dp_right[0][1] = dp_right[1][0] = 0\n        for i in xrange(len(grid)):\n            for j in xrange(len(grid[0])):\n                dp_left[(i+1)%2][j+1] = min(dp_left[i%2][j+1], dp_left[(i+1)%2][j])+grid[i][j]\n                dp_right[(i+1)%2][j+1] = max(dp_right[i%2][j+1], dp_right[(i+1)%2][j])+grid[i][j]\n        return dp_left[len(grid)%2][-1] <= (len(grid)+len(grid[0])-1)//2 <= dp_right[len(grid)%2][-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

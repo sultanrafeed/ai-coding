@@ -1,0 +1,44 @@
+{
+  "id": "3cb5967c-4b55-4950-a3a0-67aa0da070d5",
+  "slug": "synonymous-sentences",
+  "title": "Synonymous Sentences",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "backtracking",
+    "sort",
+    "union-find"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[\"happy\",\"joy\"],[\"sad\",\"sorrow\"],[\"joy\",\"cheerful\"]]\n\"I am happy today but was sad yesterday\"\n[[\"happy\",\"joy\"],[\"cheerful\",\"glad\"]]\n\"I am happy today but was sad yesterday\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(p*l * log(p*l)), p is the production of all number of synonyms\n//                         , l is the length of a word\n// Space: O(p*l)\n\nclass Solution {\npublic:\n    vector<string> generateSentences(vector<vector<string>>& synonyms, string text) {\n        unordered_map<string, int> lookup;\n        unordered_map<int, string> inv_lookup;\n        for (const auto& synonym : synonyms) {\n            assign_id(synonym[0], &lookup, &inv_lookup);\n            assign_id(synonym[1], &lookup, &inv_lookup);\n        }\n        UnionFind union_find(lookup.size());\n        for (const auto& synonym : synonyms) {\n            union_find.union_set(lookup[synonym[0]], lookup[synonym[1]]);\n        }\n        unordered_map<int, vector<int>> groups;\n        for (int i = 0; i < union_find.set().size(); ++i) {\n            groups[union_find.find_set(i)].emplace_back(i);\n        }\n        vector<vector<string>> result;\n        for (const auto& w : split(text, ' ')) {\n            if (!lookup.count(w)) {\n                result.push_back({w});\n                continue;\n            }\n            result.emplace_back();\n            for (const auto& x : groups[union_find.find_set(lookup[w])]) {\n                result.back().emplace_back(inv_lookup[x]);\n            }\n            sort(result.back().begin(), result.back().end());\n        }\n        return product(result);\n    }\n\nprivate:\n    void assign_id(const string& x,\n                   unordered_map<string, int> *lookup,\n                   unordered_map<int, string> *inv_lookup) {\n        if (lookup->count(x)) {\n            return;\n        }\n        (*lookup)[x] = lookup->size();\n        (*inv_lookup)[(*lookup)[x]] = x;\n    }\n    \n    vector<string> split(const string& s, const char delim) const {\n        vector<string> tokens;\n        stringstream ss(s);\n        string token;\n        while (getline(ss, token, delim)) {\n            if (!token.empty()) {\n                tokens.emplace_back(token);\n            }\n        }\n        return tokens;\n    }\n    \n    vector<string> product(const vector<vector<string>>& options) const {\n        vector<string> result;\n        int total = 1;\n        for (const auto& opt : options) {\n            total *= opt.size();\n        }\n        for (int i = 0; i < total; ++i) {\n            vector<string> tmp;\n            int curr = i;\n            for (int j = options.size() - 1; j >= 0; --j) {\n                tmp.emplace_back(options[j][curr % options[j].size()]);\n                curr /= options[j].size();\n            }\n            reverse(tmp.begin(), tmp.end());\n            result.emplace_back(join(tmp, \" \"));\n        }\n        return result;\n    }\n    \n    string join(const vector<string>& strings, const string& delim) const {\n        if (strings.empty()) {\n            return \"\";\n        }\n        ostringstream imploded;\n        copy(strings.begin(), prev(strings.end()), ostream_iterator<string>(imploded, delim.c_str()));\n        return imploded.str() + *prev(strings.end());\n    }\n    \n    class UnionFind {\n        public:\n            UnionFind(const int n) : set_(n) {\n                iota(set_.begin(), set_.end(), 0);\n            }\n\n            int find_set(const int x) {\n               if (set_[x] != x) {\n                   set_[x] = find_set(set_[x]);  // Path compression.\n               }\n               return set_[x];\n            }\n\n            bool union_set(const int x, const int y) {\n                int x_root = find_set(x), y_root = find_set(y);\n                if (x_root == y_root) {\n                    return false;\n                }\n                set_[min(x_root, y_root)] = max(x_root, y_root);\n                return true;\n            }\n        \n            vector<int> set() const {\n                return set_;\n            }\n\n        private:\n            vector<int> set_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(p*l * log(p*l)), p is the production of all number of synonyms\n#                         , l is the length of a word\n# Space: O(p*l)\n\nimport collections\nimport itertools\n\n\nclass UnionFind(object):\n    def __init__(self, n):\n        self.set = range(n)\n        self.count = n\n\n    def find_set(self, x):\n        if self.set[x] != x:\n            self.set[x] = self.find_set(self.set[x])  # path compression.\n        return self.set[x]\n\n    def union_set(self, x, y):\n        x_root, y_root = map(self.find_set, (x, y))\n        if x_root == y_root:\n            return False\n        self.set[max(x_root, y_root)] = min(x_root, y_root)\n        return True\n\n\nclass Solution(object):\n    def generateSentences(self, synonyms, text):\n        \"\"\"\n        :type synonyms: List[List[str]]\n        :type text: str\n        :rtype: List[str]\n        \"\"\"\n        def assign_id(x, lookup, inv_lookup):\n            if x in lookup:\n                return\n            lookup[x] = len(lookup)\n            inv_lookup[lookup[x]] = x\n        \n        lookup, inv_lookup = {}, {}\n        for u, v in synonyms:\n            assign_id(u, lookup, inv_lookup), assign_id(v, lookup, inv_lookup)\n        union_find = UnionFind(len(lookup))\n        for u, v in synonyms:\n            union_find.union_set(lookup[u], lookup[v])\n        groups = collections.defaultdict(list)\n        for i in xrange(len(union_find.set)):\n            groups[union_find.find_set(i)].append(i)\n        result = []\n        for w in text.split(' '):\n            if w not in lookup:\n                result.append([w])\n                continue\n            result.append(sorted(map(lambda x: inv_lookup[x], \n                                 groups[union_find.find_set(lookup[w])])))\n        return [\" \".join(sentense) for sentense in itertools.product(*result)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

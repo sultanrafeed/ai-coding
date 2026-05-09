@@ -1,0 +1,36 @@
+{
+  "id": "220a1d11-eac0-420b-aa17-164bf1a42a49",
+  "slug": "zigzag-iterator",
+  "title": "Zigzag Iterator",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "design",
+    "queue",
+    "iterator"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(k)\n\nclass ZigzagIterator {\npublic:\n    ZigzagIterator(vector<int>& v1, vector<int>& v2) {\n        if (!v1.empty()) {\n            q.emplace(v1.size(), v1.cbegin());\n        }\n        if (!v2.empty()) {\n            q.emplace(v2.size(), v2.cbegin());\n        }\n    }\n\n    int next() {\n        const auto len = q.front().first;\n        const auto it = q.front().second;\n        q.pop();\n        if (len > 1) {\n            q.emplace(len - 1, it + 1);\n        }\n        return *it;\n    }\n\n    bool hasNext() {\n        return !q.empty();\n    }\n\nprivate:\n    queue<pair<int, vector<int>::const_iterator>> q;\n};\n\n/**\n * Your ZigzagIterator object will be instantiated and called as such:\n * ZigzagIterator i(v1, v2);\n * while (i.hasNext()) cout << i.next();\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(k)\n\nimport collections\n\n\nclass ZigzagIterator(object):\n\n    def __init__(self, v1, v2):\n        \"\"\"\n        Initialize your q structure here.\n        :type v1: List[int]\n        :type v2: List[int]\n        \"\"\"\n        self.q = collections.deque([(len(v), iter(v)) for v in (v1, v2) if v])\n\n    def next(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        len, iter = self.q.popleft()\n        if len > 1:\n            self.q.append((len-1, iter))\n        return next(iter)\n\n    def hasNext(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return bool(self.q)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

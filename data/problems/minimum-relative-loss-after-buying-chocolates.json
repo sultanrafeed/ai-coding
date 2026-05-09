@@ -1,0 +1,42 @@
+{
+  "id": "852439e2-0836-4991-93d6-04aed7cabf05",
+  "slug": "minimum-relative-loss-after-buying-chocolates",
+  "title": "Minimum Relative Loss After Buying Chocolates",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "sorting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,9,22,10,19]\n[[18,4],[5,2]]\n[1,5,4,3,7,11,9]\n[[5,4],[5,7],[7,3],[4,5]]\n[5,6,7]\n[[10,1],[5,3],[3,3]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((n + q) * logn)\n// Space: O(n)\n\n// sort, binary search, greedy, prefix sum\nclass Solution {\npublic:\n    vector<long long> minimumRelativeLosses(vector<int>& prices, vector<vector<int>>& queries) {\n        const auto& binary_search = [&](int left, int right, const auto& check) {\n            while (left <= right) {\n                const auto& mid = left + (right - left) / 2;\n                if (check(mid)) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            }\n            return left;\n        };\n\n        sort(begin(prices), end(prices));\n        vector<long long> prefix(size(prices) + 1);\n        for (int i = 0; i < size(prices); ++i) {\n            prefix[i + 1] = prefix[i] + prices[i];\n        }\n        vector<long long> result(size(queries));\n        for (int i = 0; i < size(queries); ++i) {\n            const auto& k = queries[i][0], &m = queries[i][1];\n            const long long cnt = binary_search(0, m - 1, [&](int x) {\n                return k - (prices[size(prices) - (m - x)] - k) <= prices[(x + 1) - 1] - 0;\n            });\n            const auto& a = prefix[size(prices)] - prefix[size(prices) - (m - cnt)] - (m - cnt) * k;\n            const auto& b = prefix[cnt] + (m - cnt) * k;\n            result[i] = b - a;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((n + q) * logn)\n# Space: O(n)\n\n# sort, binary search, greedy, prefix sum\nclass Solution(object):\n    def minimumRelativeLosses(self, prices, queries):\n        \"\"\"\n        :type prices: List[int]\n        :type queries: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        def binary_search(left, right, check):\n            while left <= right:\n                mid = left + (right-left)//2\n                if check(mid):\n                    right = mid-1\n                else:\n                    left = mid+1\n            return left\n\n        prices.sort()\n        prefix = [0]*(len(prices)+1)\n        for i in xrange(len(prices)):\n            prefix[i+1] = prefix[i]+prices[i]\n        result = []\n        for k, m in queries:\n            cnt = binary_search(0, m-1, lambda x: k-(prices[-(m-x)]-k) <= prices[(x+1)-1]-0)\n            a = prefix[-1]-prefix[-1-(m-cnt)]-(m-cnt)*k\n            b = prefix[cnt]+(m-cnt)*k\n            result.append(b-a)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "7dc38457-8600-4b39-bfa2-6c7734cedc94",
+  "slug": "check-if-a-string-is-a-valid-sequence-from-root-to-leaves-path-in-a-binary-tree",
+  "title": "Check If a String Is a Valid Sequence from Root to Leaves Path in a Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[0,1,0,0,1,0,null,null,1,0,0]\n[0,1,0,1]\n[0,1,0,0,1,0,null,null,1,0,0]\n[0,0,1]\n[0,1,0,0,1,0,null,null,1,0,0]\n[0,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(w)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode() : val(0), left(nullptr), right(nullptr) {}\n *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}\n *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}\n * };\n */\n// bfs solution\nclass Solution {\npublic:\n    bool isValidSequence(TreeNode* root, vector<int>& arr) {\n        vector<TreeNode *> q = {root};\n        for (int depth = 0; depth < arr.size(); ++depth) {\n            vector<TreeNode *> new_q;\n            while (!q.empty()) {\n                const auto node = q.back(); q.pop_back();\n                if (!node || node->val != arr[depth]) {\n                    continue;\n                }\n                if (depth + 1 == arr.size() && node->left == node->right) {\n                    return true;\n                }\n                new_q.emplace_back(node->left);\n                new_q.emplace_back(node->right);            \n            }\n            q = move(new_q);\n        }\n        return false;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\n// dfs solution with stack\nclass Solution2 {\npublic:\n    bool isValidSequence(TreeNode* root, vector<int>& arr) {\n        vector<pair<TreeNode *, int>> s = {{root, 0}};\n        while (!s.empty()) {\n            const auto [node, depth] = s.back(); s.pop_back();\n            if (!node || depth == arr.size() || node->val != arr[depth]) {\n                continue;\n            }\n            if (depth + 1 == arr.size() && node->left == node->right) {\n                return true;\n            }\n            s.emplace_back(node->right, depth + 1);   \n            s.emplace_back(node->left, depth + 1);\n        }\n        return false;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\n// dfs solution with recursion\nclass Solution3 {\npublic:\n    bool isValidSequence(TreeNode* root, vector<int>& arr) {\n        return dfs(root, arr, 0);\n    }\n\nprivate:\n    bool dfs(TreeNode *node, const vector<int>& arr, int depth) {\n        if (!node || depth == arr.size() || node->val != arr[depth]) {\n            return false;\n        }\n        if (depth + 1 == arr.size() && node->left == node->right) {\n            return true;\n        }\n        return dfs(node->left, arr, depth + 1) || dfs(node->right, arr, depth + 1);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(w)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\n# bfs solution\nclass Solution(object):\n    def isValidSequence(self, root, arr):\n        \"\"\"\n        :type root: TreeNode\n        :type arr: List[int]\n        :rtype: bool\n        \"\"\"\n        q = [root]\n        for depth in xrange(len(arr)):\n            new_q = []\n            while q:\n                node = q.pop()\n                if not node or node.val != arr[depth]:\n                    continue\n                if depth+1 == len(arr) and node.left == node.right:\n                    return True\n                new_q.extend(child for child in (node.left, node.right))\n            q = new_q\n        return False\n\n\n# Time:  O(n)\n# Space: O(h)\n# dfs solution with stack\nclass Solution2(object):\n    def isValidSequence(self, root, arr):\n        \"\"\"\n        :type root: TreeNode\n        :type arr: List[int]\n        :rtype: bool\n        \"\"\"\n        s = [(root, 0)]\n        while s:\n            node, depth = s.pop()\n            if not node or depth == len(arr) or node.val != arr[depth]:\n                continue\n            if depth+1 == len(arr) and node.left == node.right:\n                return True\n            s.append((node.right, depth+1))\n            s.append((node.left, depth+1))\n        return False\n\n\n# Time:  O(n)\n# Space: O(h)\n# dfs solution with recursion\nclass Solution3(object):\n    def isValidSequence(self, root, arr):\n        \"\"\"\n        :type root: TreeNode\n        :type arr: List[int]\n        :rtype: bool\n        \"\"\"\n        def dfs(node, arr, depth):\n            if not node or depth == len(arr) or node.val != arr[depth]:\n                return False\n            if depth+1 == len(arr) and node.left == node.right:\n                return True\n            return dfs(node.left, arr, depth+1) or dfs(node.right, arr, depth+1)\n\n        return dfs(root, arr, 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

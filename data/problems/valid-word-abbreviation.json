@@ -1,0 +1,40 @@
+{
+  "id": "f90426a9-9728-41fd-aeb5-b1117801a427",
+  "slug": "valid-word-abbreviation",
+  "title": "Valid Word Abbreviation",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"internationalization\"\n\"i12iz4n\"\n\"apple\"\n\"a2e\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool validWordAbbreviation(string word, string abbr) {\n        int i = 0, digit = 0;\n        for (const auto& c : abbr) {\n            if (isdigit(c)) {\n                if (digit == 0 && c == '0') {\n                    return false;\n                } \n                digit *= 10;\n                digit += c - '0';\n            } else {\n                if (digit) {\n                    i += digit;\n                    digit = 0;\n                }\n                if (i >= word.length() || word[i++] != c) {\n                    return false;\n                }\n            }\n        }\n        if (digit) {\n            i += digit;\n        }\n        return i == word.length();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def validWordAbbreviation(self, word, abbr):\n        \"\"\"\n        :type word: str\n        :type abbr: str\n        :rtype: bool\n        \"\"\"\n        i , digit = 0, 0\n        for c in abbr:\n            if c.isdigit():\n                if digit == 0 and c == '0':\n                    return False\n                digit *= 10\n                digit += int(c)\n            else:\n                if digit:\n                    i += digit\n                    digit = 0\n                if i >= len(word) or word[i] != c:\n                    return False\n                i += 1\n        if digit:\n            i += digit\n\n        return i == len(word)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

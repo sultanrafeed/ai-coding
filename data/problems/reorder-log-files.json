@@ -1,0 +1,31 @@
+{
+  "id": "1149e07d-610c-4864-bc99-bf2f0b858a2d",
+  "slug": "reorder-log-files",
+  "title": "Reorder Log Files",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn * l), n is the length of files, l is the average length of strings\n// Space: O(l)\n\nclass Solution {\npublic:\n    vector<string> reorderLogFiles(vector<string>& logs) {\n        auto pivot = stable_partition(logs.begin(), logs.end(),\n                                      []( const auto& log ) {\n                                          return isalpha(log.back());\n                                      });\n        sort(logs.begin(), pivot,\n             [](const auto& a, const auto& b) {\n                 int i = a.find_first_of(' '), j = b.find_first_of(' ');\n                 return a.substr(i) != b.substr(j) ?\n                            a.substr(i) < b.substr(j) :\n                            a.substr(0, i) < b.substr(0, j);\n             });\n        return logs;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn * l), n is the length of files, l is the average length of strings\n# Space: O(l)\n\nclass Solution(object):\n    def reorderLogFiles(self, logs):\n        \"\"\"\n        :type logs: List[str]\n        :rtype: List[str]\n        \"\"\"\n        def f(log):\n            i, content = log.split(\" \", 1)\n            return (0, content, i) if content[0].isalpha() else (1,)\n\n        logs.sort(key=f)\n        return logs",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

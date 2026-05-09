@@ -1,0 +1,41 @@
+{
+  "id": "b4523f7a-9bd9-4284-b604-fffffcf69927",
+  "slug": "split-a-string-into-the-max-number-of-unique-substrings",
+  "title": "Split a String Into the Max Number of Unique Substrings",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string&nbsp;<code>s</code><var>,</var>&nbsp;return <em>the maximum&nbsp;number of unique substrings that the given string can be split into</em>.</p>\n\n<p>You can split string&nbsp;<code>s</code> into any list of&nbsp;<strong>non-empty substrings</strong>, where the concatenation of the substrings forms the original string.&nbsp;However, you must split the substrings such that all of them are <strong>unique</strong>.</p>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters within a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;ababccc&quot;\n<strong>Output:</strong> 5\n<strong>Explanation</strong>: One way to split maximally is [&#39;a&#39;, &#39;b&#39;, &#39;ab&#39;, &#39;c&#39;, &#39;cc&#39;]. Splitting like [&#39;a&#39;, &#39;b&#39;, &#39;a&#39;, &#39;b&#39;, &#39;c&#39;, &#39;cc&#39;] is not valid as you have &#39;a&#39; and &#39;b&#39; multiple times.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aba&quot;\n<strong>Output:</strong> 2\n<strong>Explanation</strong>: One way to split maximally is [&#39;a&#39;, &#39;ba&#39;].\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aa&quot;\n<strong>Output:</strong> 1\n<strong>Explanation</strong>: It is impossible to split the string any further.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>\n\t<p><code>1 &lt;= s.length&nbsp;&lt;= 16</code></p>\n\t</li>\n\t<li>\n\t<p><code>s</code> contains&nbsp;only lower case English letters.</p>\n\t</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"ababccc\"\n\"aba\"\n\"aa\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^(n - 1))\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxUniqueSplit(string s) {\n        int result = 1;\n        int total = 1 << (size(s) - 1);\n        for (uint32_t mask = 0; mask < total;)  {\n            if(__builtin_popcount(mask) < result) {\n                ++mask;\n                continue;\n            }\n            unordered_set<string> lookup;\n            string curr;\n            bool unique = true;\n            for (uint32_t i = 0, base = total / 2; i < size(s); ++i, base >>= 1) {\n                curr.push_back(s[i]);\n                if ((mask & base) || base == 0) {\n                    if (!lookup.emplace(curr).second) {\n                        unique = false;\n                        mask = base ? (mask | (base - 1)) + 1 : mask + 1;  // pruning, try next mask without base\n                        break;\n                    }\n                    curr.clear();\n                }\n            }\n            if (!unique) {\n                continue;\n            }\n            result = max(result, int(size(lookup)));\n            ++mask;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^(n - 1))\n# Space: O(n)\n\nclass Solution(object):\n    def maxUniqueSplit(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        def popcount(n):\n            count = 0\n            while n:\n                n &= n-1\n                count += 1\n            return count\n    \n        result = 1\n        total = 2**(len(s)-1)\n        mask = 0\n        while mask < total:\n            if popcount(mask) < result:\n                mask += 1\n                continue\n            lookup, curr, base = set(), [], total//2\n            for i in xrange(len(s)):\n                curr.append(s[i])\n                if (mask&base) or base == 0:\n                    if \"\".join(curr) in lookup:\n                        mask = (mask | (base-1)) + 1 if base else mask+1  # pruning, try next mask without base\n                        break\n                    lookup.add(\"\".join(curr))\n                    curr = []\n                base >>= 1\n            else:\n                result = max(result, len(lookup))\n                mask += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

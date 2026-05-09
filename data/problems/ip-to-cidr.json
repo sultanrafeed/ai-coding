@@ -1,0 +1,40 @@
+{
+  "id": "c1e07e40-857d-4c90-80ac-3bf495d402d4",
+  "slug": "ip-to-cidr",
+  "title": "IP to CIDR",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"255.0.0.7\"\n10\n\"117.145.102.62\"\n8",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<string> ipToCIDR(string ip, int range) {\n        auto start = ipToInt(ip);\n        vector<string> result;\n        while (range > 0) {\n            auto mask = max(33 - bitLength(start & ~(start - 1)),\n                            33 - bitLength(range));\n            result.emplace_back(intToIP(start) + \"/\" + to_string(mask));\n            start += 1 << (32 - mask);\n            range -= 1 << (32 - mask);\n        }\n        return result;\n    }\n\nprivate:\n    uint32_t ipToInt(const string& ip) {\n        uint32_t result = 0;\n        for (const auto& n : split(ip, '.')) {\n            result = 256 * result + stoi(n);\n        }\n        return result;\n    }\n\n    string intToIP(uint32_t n) {\n        string ip;\n        for (const auto& i : {24, 16, 8, 0}) {\n            ip += to_string((n >> i) % 256);\n            ip += \".\";\n        }\n        ip.pop_back();\n        return ip;\n    }\n                \n    vector<string> split(const string& s, const char delim) {\n        vector<string> tokens;\n        stringstream ss(s);\n        string token;\n        while (getline(ss, token, delim)) {\n            tokens.emplace_back(token);\n        }\n        return tokens;\n    }\n    \n    uint32_t bitLength(uint32_t n) {\n        uint32_t left = 1, right = 32;\n        while (left <= right) {\n            auto mid = left + (right - left) / 2;\n            if ((1 << mid) > n) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def ipToCIDR(self, ip, n):\n        \"\"\"\n        :type ip: str\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        def ipToInt(ip):\n            result = 0\n            for i in ip.split('.'):\n                result = 256 * result + int(i)\n            return result\n\n        def intToIP(n):\n            return \".\".join(str((n >> i) % 256) \\\n                            for i in (24, 16, 8, 0))\n\n        start = ipToInt(ip)\n        result = []\n        while n:\n            mask = max(33-(start & ~(start-1)).bit_length(), \\\n                       33-n.bit_length())\n            result.append(intToIP(start) + '/' + str(mask))\n            start += 1 << (32-mask)\n            n -= 1 << (32-mask)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

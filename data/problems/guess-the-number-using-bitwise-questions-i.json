@@ -1,0 +1,40 @@
+{
+  "id": "972fc89c-a8b3-4380-9ff1-9a0b9c50d363",
+  "slug": "guess-the-number-using-bitwise-questions-i",
+  "title": "Guess the Number Using Bitwise Questions I",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "bit-manipulation",
+    "interactive"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "31",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn):\n// Space: O(1)\n\n// bit manipulation\nclass Solution {\npublic:\n    int findNumber() {\n        int result = 0;\n        for (int i = 0; i < 30; ++i) {\n            if (commonSetBits(1 << i)) {\n                result |= 1 << i;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn):\n# Space: O(1)\n\n# bit manipulation\nclass Solution(object):\n    def findNumber(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return reduce(lambda accu, x: accu|x, (1<<i for i in xrange(30) if commonSetBits(1<<i)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

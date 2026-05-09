@@ -1,0 +1,41 @@
+{
+  "id": "1544a4e0-091e-48e5-a27d-b88742cc6db5",
+  "slug": "walls-and-gates",
+  "title": "Walls and Gates",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[2147483647,-1,0,2147483647],[2147483647,2147483647,2147483647,-1],[2147483647,-1,2147483647,-1],[0,-1,2147483647,2147483647]]\n[[-1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(g)\n\nclass Solution {\npublic:\n    void wallsAndGates(vector<vector<int>>& rooms) {\n        const int INF = numeric_limits<int>::max();\n        queue<pair<int, int>> q;\n        for (int i = 0; i < rooms.size(); ++i) {\n            for (int j = 0; j < rooms[0].size(); ++j) {\n                if (rooms[i][j] == 0) {\n                    q.emplace(i, j);\n                }\n            }\n        }\n        while (!q.empty()) {\n            int i, j;\n            tie(i, j) = q.front();\n            q.pop();\n            for (const pair<int, int>& d :\n                 vector<pair<int, int>>{{i + 1, j}, {i - 1, j},\n                                        {i, j + 1}, {i, j - 1}}) {\n                int I, J;\n                tie(I, J) = d;\n                if (I >= 0 && I < rooms.size() &&\n                    J >= 0 && J < rooms[0].size() &&\n                    rooms[I][J] == INF) {\n                    rooms[I][J] = rooms[i][j] + 1;\n                    q.emplace(I, J);\n                }\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(g)\n\nfrom collections import deque\n\nclass Solution(object):\n    def wallsAndGates(self, rooms):\n        \"\"\"\n        :type rooms: List[List[int]]\n        :rtype: void Do not return anything, modify rooms in-place instead.\n        \"\"\"\n        INF = 2147483647\n        q = deque([(i, j) for i, row in enumerate(rooms) for j, r in enumerate(row) if not r])\n        while q:\n            (i, j) = q.popleft()\n            for I, J in (i+1, j), (i-1, j), (i, j+1), (i, j-1):\n                if 0 <= I < len(rooms) and 0 <= J < len(rooms[0]) and \\\n                   rooms[I][J] == INF:\n                    rooms[I][J] = rooms[i][j] + 1\n                    q.append((I, J))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

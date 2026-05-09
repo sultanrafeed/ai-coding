@@ -1,0 +1,41 @@
+{
+  "id": "54a64af4-e2a2-4676-b1da-74bf2506f798",
+  "slug": "count-univalue-subtrees",
+  "title": "Count Univalue Subtrees",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,1,5,5,5,null,5]\n[]\n[5,5,5,5,5,null,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    int countUnivalSubtrees(TreeNode* root) {\n        int count = 0;\n        isUnivalSubtrees(root, &count);\n        return count;\n    }\n    \n    bool isUnivalSubtrees(TreeNode* root, int *count) {\n        if (root == nullptr) {\n            return true;\n        }\n        bool left = isUnivalSubtrees(root->left, count);\n        bool right = isUnivalSubtrees(root->right, count);\n        if (isSame(root, root->left, left) &&\n            isSame(root, root->right, right)) {\n                ++(*count);\n                return true;\n        }\n        return false;\n    }\n    \n    bool isSame(TreeNode* root, TreeNode* child, bool is_uni) {\n        return child == nullptr || (is_uni && root->val == child->val);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    # @param {TreeNode} root\n    # @return {integer}\n    def countUnivalSubtrees(self, root):\n        [is_uni, count] = self.isUnivalSubtrees(root, 0)\n        return count\n\n    def isUnivalSubtrees(self, root, count):\n        if not root:\n            return [True, count]\n\n        [left, count] = self.isUnivalSubtrees(root.left, count)\n        [right, count] = self.isUnivalSubtrees(root.right, count)\n        if self.isSame(root, root.left, left) and \\\n           self.isSame(root, root.right, right):\n                count += 1\n                return [True, count]\n\n        return [False, count]\n\n    def isSame(self, root, child, is_uni):\n        return not child or (is_uni and root.val == child.val)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

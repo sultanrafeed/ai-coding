@@ -1,0 +1,31 @@
+{
+  "id": "2960485c-47e3-491d-81ab-65ef9f1b4491",
+  "slug": "date-range-generator",
+  "title": "Date Range Generator",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"2023-04-01\"\n\"2023-04-04\"\n1\n\"2023-04-10\"\n\"2023-04-20\"\n3\n\"2023-04-10\"\n\"2023-04-10\"\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// generator\nfunction* dateRangeGenerator(start: string, end: string, step: number) : Generator<string> {\n    const e = new Date(end);\n    for (let d = new Date(start); d <= e; d.setDate(d.getDate() + step)) {\n        yield d.toISOString().split('T')[0];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

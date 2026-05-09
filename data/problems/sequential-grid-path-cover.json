@@ -1,0 +1,35 @@
+{
+  "id": "8a58625a-03cc-451b-bb1c-c2e2432f7a65",
+  "slug": "sequential-grid-path-cover",
+  "title": "Sequential Grid Path Cover",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "recursion",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n * 3^(m * n))\n// Space: O(m * n)\n\n// backtracking\nclass Solution {\npublic:\n    vector<vector<int>> findPath(vector<vector<int>>& grid, int k) {\n        static const vector<pair<int, int>> DIRECTIONS = {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};\n\n        vector<vector<int>> result;\n        const function<bool (int, int, int)> backtracking = [&](int i, int j, int curr) {\n            const int v = grid[i][j];\n            if (v && v != curr) {\n                return false;\n            }\n            grid[i][j] = -1;\n            result.emplace_back(vector<int>{i, j});\n            if (size(result) == size(grid) * size(grid[0])) {\n                return true;\n            }\n            const int new_curr = v == curr ? curr + 1 : curr;\n            for (const auto& [di, dj] : DIRECTIONS) {\n                const int ni = i + di, nj = j + dj;\n                if (!(0 <= ni && ni < size(grid) && 0 <= nj && nj < size(grid[0]) && grid[ni][nj] != -1)) {\n                    continue;\n                }\n                if (backtracking(ni, nj, new_curr)) {\n                    return true;\n                }\n            }\n            result.pop_back();\n            grid[i][j] = v;\n            return false;\n        };\n\n        for (int i = 0; i < size(grid); ++i) {\n            for (int j = 0; j < size(grid[0]); ++j) {\n                if (backtracking(i, j, 1)) {\n                    return result;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n * 3^(m * n))\n# Space: O(m * n)\n\n# backtracking\nclass Solution(object):\n    def findPath(self, grid, k):\n        \"\"\"\n        :type grid: List[List[int]]\n        :type k: int\n        :rtype: List[List[int]]\n        \"\"\"\n        DIRECTIONS = ((1, 0), (0, 1), (-1, 0), (0, -1))\n        def backtracking(i, j, curr):\n            v = grid[i][j]\n            if v and v != curr:\n                return False\n            grid[i][j] = -1\n            result.append([i, j])\n            if len(result) == len(grid)*len(grid[0]):\n                return True\n            new_curr = curr+1 if v == curr else curr\n            for di, dj in DIRECTIONS:\n                ni, nj = i+di, j+dj\n                if not (0 <= ni < len(grid) and 0 <= nj < len(grid[0]) and grid[ni][nj] != -1):\n                    continue\n                if backtracking(ni, nj, new_curr):\n                    return True\n            result.pop()\n            grid[i][j] = v\n            return False\n\n        result = []\n        for i in xrange(len(grid)):\n            for j in xrange(len(grid[0])):\n                if backtracking(i, j, 1):\n                    return result\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

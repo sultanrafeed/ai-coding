@@ -1,0 +1,36 @@
+{
+  "id": "aaef06d3-c7e9-473f-ac09-6e33abd4d66d",
+  "slug": "maximum-length-of-a-concatenated-string-with-unique-characters",
+  "title": "Maximum Length of a Concatenated String with Unique Characters",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array of strings <code>arr</code>. A string <code>s</code> is formed by the <strong>concatenation</strong> of a <strong>subsequence</strong> of <code>arr</code> that has <strong>unique characters</strong>.</p>\n\n<p>Return <em>the <strong>maximum</strong> possible length</em> of <code>s</code>.</p>\n\n<p>A <strong>subsequence</strong> is an array that can be derived from another array by deleting some or no elements without changing the order of the remaining elements.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [&quot;un&quot;,&quot;iq&quot;,&quot;ue&quot;]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> All the valid concatenations are:\n- &quot;&quot;\n- &quot;un&quot;\n- &quot;iq&quot;\n- &quot;ue&quot;\n- &quot;uniq&quot; (&quot;un&quot; + &quot;iq&quot;)\n- &quot;ique&quot; (&quot;iq&quot; + &quot;ue&quot;)\nMaximum length is 4.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [&quot;cha&quot;,&quot;r&quot;,&quot;act&quot;,&quot;ers&quot;]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> Possible longest valid concatenations are &quot;chaers&quot; (&quot;cha&quot; + &quot;ers&quot;) and &quot;acters&quot; (&quot;act&quot; + &quot;ers&quot;).\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [&quot;abcdefghijklmnopqrstuvwxyz&quot;]\n<strong>Output:</strong> 26\n<strong>Explanation:</strong> The only string in arr has all 26 characters.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 16</code></li>\n\t<li><code>1 &lt;= arr[i].length &lt;= 26</code></li>\n\t<li><code>arr[i]</code> contains only lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string",
+    "backtracking",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n) ~ O(2^n)\n// Space: O(1) ~ O(2^n)\n\nclass Solution {\npublic:\n    int maxLength(vector<string>& arr) {\n        vector<int> dp(1);\n        for (const auto& x : arr) {\n            const auto& x_set = bitset(x);\n            if (!x_set) {\n                continue;\n            }\n            const auto curr_size = dp.size();\n            for (int i = 0; i < curr_size; ++i) {\n                if (dp[i] & x_set) {\n                    continue;\n                }\n                dp.emplace_back(dp[i] | x_set);\n            }\n        }\n        return number_of_one(*max_element(dp.cbegin(), dp.cend(),\n                                          [&](const auto& lhs, const auto& rhs) {\n                                              return number_of_one(lhs) < number_of_one(rhs);\n                                          }));\n    }\n\nprivate:\n    int bitset(const string& s) {\n        int result = 0;\n        for (const auto& c : s) {\n            if (result & (1 << (c - 'a'))) {\n                return 0;\n            }\n            result |= 1 << (c - 'a');\n        }\n        return result;\n    }\n    \n    int number_of_one(int n) {\n    \tint count = 0;\n        for (; n; n &= n - 1) {\n            ++count;\n        }\n        return count;\n    }\n};\n\n// Time:  O(2^n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int maxLength(vector<string>& arr) {\n        vector<int> bitsets;\n        for (const auto& x : arr) {\n            bitsets.emplace_back(bitset(x));\n        }\n        int result = 0;\n        for (int i = 0; i < (1 << arr.size()); ++i) {\n            bool skip = false;\n            int curr_bitset = 0, curr_len = 0;\n            for (int j = 0; j < arr.size(); ++j) {\n                if (!(i & (1 << j))) {\n                    continue;\n                }\n                if (!bitsets[j] || (curr_bitset & bitsets[j])) {\n                    skip = true;\n                    break;\n                }\n                curr_bitset |= bitsets[j];\n                curr_len += arr[j].length();\n            }\n            if (skip) {\n                continue;\n            }\n            result = max(result, curr_len);\n        }\n        return result;\n    }\n\nprivate:\n    int bitset(const string& s) {\n        int result = 0;\n        for (const auto& c : s) {\n            if (result & (1 << (c - 'a'))) {\n                return 0;\n            }\n            result |= 1 << (c - 'a');\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n) ~ O(2^n)\n# Space: O(1) ~ O(2^n)\n\npower = [1]\nlog2 = {1:0}\nfor i in xrange(1, 26):\n    power.append(power[-1]<<1)\n    log2[power[i]] = i\n\n\nclass Solution(object):\n    def maxLength(self, arr):\n        \"\"\"\n        :type arr: List[str]\n        :rtype: int\n        \"\"\"\n        def bitset(s):\n            result = 0\n            for c in s:\n                if result & power[ord(c)-ord('a')]:\n                    return 0\n                result |= power[ord(c)-ord('a')]\n            return result\n        \n        def number_of_one(n):\n            result = 0\n            while n:\n                n &= n-1\n                result += 1\n            return result\n\n        dp = [0]\n        for x in arr:\n            x_set = bitset(x)\n            if not x_set:\n                continue\n            curr_len = len(dp)\n            for i in xrange(curr_len):\n                if dp[i] & x_set:\n                    continue\n                dp.append(dp[i] | x_set)\n        return max(number_of_one(s_set) for s_set in dp)\n\n\n# Time:  O(2^n)\n# Space: O(1)\nclass Solution2(object):\n    def maxLength(self, arr):\n        \"\"\"\n        :type arr: List[str]\n        :rtype: int\n        \"\"\" \n        def bitset(s):\n            result = 0\n            for c in s:\n                if result & power[ord(c)-ord('a')]:\n                    return 0\n                result |= power[ord(c)-ord('a')]\n            return result\n    \n        bitsets = [bitset(x) for x in arr]\n        result = 0\n        for i in xrange(power[len(arr)]):\n            curr_bitset, curr_len = 0, 0\n            while i:\n                j = i & -i  # rightmost bit\n                i ^= j\n                j = log2[j]  # log2(j)\n                if not bitsets[j] or (curr_bitset & bitsets[j]):\n                    break\n                curr_bitset |= bitsets[j]\n                curr_len += len(arr[j])\n            else:\n                result = max(result, curr_len)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

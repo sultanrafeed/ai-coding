@@ -1,0 +1,35 @@
+{
+  "id": "a0086d0b-9fce-4a75-92de-a14b689c1ac8",
+  "slug": "diagonal-traverse",
+  "title": "Diagonal Traverse",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an <code>m x n</code> matrix <code>mat</code>, return <em>an array of all the elements of the array in a diagonal order</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/10/diag1-grid.jpg\" style=\"width: 334px; height: 334px;\" />\n<pre>\n<strong>Input:</strong> mat = [[1,2,3],[4,5,6],[7,8,9]]\n<strong>Output:</strong> [1,2,4,7,5,3,6,8,9]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[1,2],[3,4]]\n<strong>Output:</strong> [1,2,3,4]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == mat.length</code></li>\n\t<li><code>n == mat[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= m * n &lt;= 10<sup>4</sup></code></li>\n\t<li><code>-10<sup>5</sup> &lt;= mat[i][j] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> findDiagonalOrder(vector<vector<int>>& matrix) {\n        if (matrix.empty() || matrix[0].empty()) {\n            return {};\n        }\n        \n        vector<int> result;\n        int row = 0, col = 0, d = 0;\n        vector<vector<int>> dirs = {{-1, 1}, {1, -1}};\n        \n        for (int i = 0; i < matrix.size() * matrix[0].size(); ++i) {\n            result.emplace_back(matrix[row][col]);\n            row += dirs[d][0];\n            col += dirs[d][1];\n\n            if (row >= static_cast<int>(matrix.size())) {\n                row = matrix.size() - 1;\n                col += 2;\n                d = 1 - d;\n            } else if (col >= static_cast<int>(matrix[0].size())) {\n                col = matrix[0].size() - 1;\n                row += 2;\n                d = 1 - d;\n            } else if (row < 0)  {\n                row = 0;\n                d = 1 - d;\n            } else if (col < 0)  {\n                col = 0;\n                d = 1 - d;\n            }\n        }\n        \n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    def findDiagonalOrder(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        if not matrix or not matrix[0]:\n            return []\n\n        result = []\n        row, col, d = 0, 0, 0\n        dirs = [(-1, 1), (1, -1)]\n\n        for i in xrange(len(matrix) * len(matrix[0])):\n            result.append(matrix[row][col])\n            row += dirs[d][0]\n            col += dirs[d][1]\n\n            if row >= len(matrix):\n                row = len(matrix) - 1\n                col += 2\n                d = 1 - d\n            elif col >= len(matrix[0]):\n                col = len(matrix[0]) - 1\n                row += 2\n                d = 1 - d\n            elif row < 0:\n                row = 0\n                d = 1 - d\n            elif col < 0:\n                col = 0\n                d = 1 - d\n\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

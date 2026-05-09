@@ -1,0 +1,37 @@
+{
+  "id": "8280e27c-d55a-4848-9db3-9144006b5021",
+  "slug": "unit-conversion-ii",
+  "title": "Unit Conversion II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "depth-first-search",
+    "breadth-first-search",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + qlogm)\n// Space: O(n)\n\n// bfs, fast exponentiation\nclass Solution {\npublic:\n    vector<int> queryConversions(vector<vector<int>>& conversions, vector<vector<int>>& queries) {\n        static const int MOD = 1e9 + 7;\n\n        const auto& powmod = [&](int a, int b) {\n            a %= MOD;\n            int64_t result = 1;\n            while (b) {\n                if (b & 1) {\n                    result = result * a % MOD;\n                }\n                a = int64_t(a) * a % MOD;\n                b >>= 1;\n            }\n            return result;\n        };\n\n        const auto& divmod = [&](int a, int b) {\n            return (a * powmod(b, MOD - 2)) % MOD;\n        };\n\n        const auto& unit = [&]() {\n            vector<vector<pair<int, int>>> adj(size(conversions) + 1);\n            for (const auto& c : conversions) {\n                adj[c[0]].emplace_back(c[1], c[2]);\n            }\n            vector<int> result(size(adj));\n            result[0] = 1;\n            vector<int> q = {0};\n            while (!empty(q)) {\n                vector<int> new_q;\n                for (const auto& u : q) {\n                    for (const auto& [v, w] : adj[u]) {\n                        result[v] = (static_cast<int64_t>(result[u]) * w) % MOD;\n                        new_q.emplace_back(v);\n                    }\n                }\n                q = move(new_q);\n            }\n            return result;\n        };\n\n        const auto& lookup = unit();\n        vector<int> result(size(queries));\n        for (int i = 0; i < size(queries); ++i) {\n            result[i] = divmod(lookup[queries[i][1]], lookup[queries[i][0]]);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + qlogm)\n# Space: O(n)\n\n# bfs, fast exponentiation\nclass Solution(object):\n    def queryConversions(self, conversions, queries):\n        \"\"\"\n        :type conversions: List[List[int]]\n        :type queries: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        MOD = 10**9+7\n        def divmod(a, b):\n            return (a*pow(b, MOD-2, MOD))%MOD\n\n        def unit():\n            adj = [[] for _ in xrange(len(conversions)+1)]\n            for u, v, w in conversions:\n                adj[u].append((v, w))\n            result = [0]*len(adj)\n            result[0] = 1\n            q = [0]\n            while q:\n                new_q = []\n                for u in q:\n                    for v, w in adj[u]:\n                        result[v] = (result[u]*w)%MOD\n                        new_q.append(v)\n                q = new_q\n            return result\n        \n        lookup = unit()\n        return [divmod(lookup[b], lookup[a]) for a, b in queries]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "b7864707-c3af-4bbe-aa9b-95420112eefa",
+  "slug": "integer-break",
+  "title": "Integer Break",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, break it into the sum of <code>k</code> <strong>positive integers</strong>, where <code>k &gt;= 2</code>, and maximize the product of those integers.</p>\n\n<p>Return <em>the maximum product you can get</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> 2 = 1 + 1, 1 &times; 1 = 1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 10\n<strong>Output:</strong> 36\n<strong>Explanation:</strong> 10 = 3 + 3 + 4, 3 &times; 3 &times; 4 = 36.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= n &lt;= 58</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn), pow is O(logn).\n// Space: O(1)\n\nclass Solution {\npublic:\n    int integerBreak(int n) {\n        if (n < 4) {\n            return n - 1;\n        }\n\n        // Proof.\n        // 1. Let n = a1 + a2 + ... + ak, product = a1 * a2 * ... * ak\n        //     - For each ai >= 4, we can always maximize the product by:\n        //       ai <= 2 * (ai - 2)\n        //     - For each aj >= 5, we can always maximize the product by:\n        //       aj <= 3 * (aj - 3)\n        // \n        //    Conclusion 1:\n        //     - For n >= 4, the max of the product must be in the form of\n        //       3^a * 2^b, s.t. 3a + 2b = n\n        //\n        // 2. To maximize the product = 3^a * 2^b s.t. 3a + 2b = n\n        //     - For each b >= 3, we can always maximize the product by:\n        //       3^a * 2^b <= 3^(a+2) * 2^(b-3) s.t. 3(a+2) + 2(b-3) = n\n        //\n        //    Conclusion 2:\n        //     - For n >= 4, the max of the product must be in the form of\n        //       3^Q * 2^R, 0 <= R < 3 s.t. 3Q + 2R = n\n        //       i.e.\n        //         if n = 3Q + 0,   the max of the product = 3^Q * 2^0\n        //         if n = 3Q + 2,   the max of the product = 3^Q * 2^1\n        //         if n = 3Q + 2*2, the max of the product = 3^Q * 2^2\n\n        int res = 0;\n        if (n % 3 == 0) {         // n = 3Q + 0, the max is 3^Q * 2^0\n            res = pow(3, n / 3);\n        } else if (n % 3 == 2) {  // n = 3Q + 2, the max is 3^Q * 2^1\n            res = pow(3, n / 3) * 2;\n        } else {                  // n = 3Q + 4, the max is 3^Q * 2^2\n            res = pow(3, n / 3 - 1) * 4;\n        }\n        return res;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// DP solution.\nclass Solution2 {\npublic:\n    int integerBreak(int n) {\n        if (n < 4) {\n            return n - 1;\n        }\n\n        // integerBreak(n) = max(integerBreak(n - 2) * 2, integerBreak(n - 3) * 3)\n        vector<int> res{0, 1, 2, 3};\n        for (int i = 4; i <= n; ++i) {\n            res[i % 4] = max(res[(i - 2) % 4] * 2, res[(i - 3) % 4] * 3);\n        }\n        return res[n % 4];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn), pow is O(logn).\n# Space: O(1)\n\nclass Solution(object):\n    def integerBreak(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        if n < 4:\n            return n - 1\n\n        #  Proof.\n        #  1. Let n = a1 + a2 + ... + ak, product = a1 * a2 * ... * ak\n        #      - For each ai >= 4, we can always maximize the product by:\n        #        ai <= 2 * (ai - 2)\n        #      - For each aj >= 5, we can always maximize the product by:\n        #        aj <= 3 * (aj - 3)\n        #\n        #     Conclusion 1:\n        #      - For n >= 4, the max of the product must be in the form of\n        #        3^a * 2^b, s.t. 3a + 2b = n\n        #\n        #  2. To maximize the product = 3^a * 2^b s.t. 3a + 2b = n\n        #      - For each b >= 3, we can always maximize the product by:\n        #        3^a * 2^b <= 3^(a+2) * 2^(b-3) s.t. 3(a+2) + 2(b-3) = n\n        #\n        #     Conclusion 2:\n        #      - For n >= 4, the max of the product must be in the form of\n        #        3^Q * 2^R, 0 <= R < 3 s.t. 3Q + 2R = n\n        #        i.e.\n        #          if n = 3Q + 0,   the max of the product = 3^Q * 2^0\n        #          if n = 3Q + 2,   the max of the product = 3^Q * 2^1\n        #          if n = 3Q + 2*2, the max of the product = 3^Q * 2^2\n\n        res = 0\n        if n % 3 == 0:            #  n = 3Q + 0, the max is 3^Q * 2^0\n            res = 3 ** (n // 3)\n        elif n % 3 == 2:          #  n = 3Q + 2, the max is 3^Q * 2^1\n            res = 3 ** (n // 3) * 2\n        else:                     #  n = 3Q + 4, the max is 3^Q * 2^2\n            res = 3 ** (n // 3 - 1) * 4\n        return res\n\n\n# Time:  O(n)\n# Space: O(1)\n# DP solution.\nclass Solution2(object):\n    def integerBreak(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        if n < 4:\n            return n - 1\n\n        # integerBreak(n) = max(integerBreak(n - 2) * 2, integerBreak(n - 3) * 3)\n        res = [0, 1, 2, 3]\n        for i in xrange(4, n + 1):\n            res[i % 4] = max(res[(i - 2) % 4] * 2, res[(i - 3) % 4] * 3)\n        return res[n % 4]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

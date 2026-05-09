@@ -1,0 +1,37 @@
+{
+  "id": "bcc5f3de-9f3c-4471-9cd1-2c8ecd1a063d",
+  "slug": "two-sum-iii-data-structure-design",
+  "title": "Two Sum III - Data structure design",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "two-pointers",
+    "design",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass TwoSum {\npublic:\n\n    // Add the number to an internal data structure.\n    void add(int number) {\n        ++lookup_[number];\n    }\n\n    // Find if there exists any pair of numbers which sum is equal to the value.\n    bool find(int value) {\n        for (const auto& kvp : lookup_) {\n            const auto num = value - kvp.first;\n            if (lookup_.count(num) && (num != kvp.first || kvp.second > 1)) {\n                return true;\n            }\n        }\n        return false;\n    }\n\nprivate:\n    unordered_map<int, int> lookup_;\n};\n\n\n// Your TwoSum object will be instantiated and called as such:\n// TwoSum twoSum;\n// twoSum.add(number);\n// twoSum.find(value);",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nfrom collections import defaultdict\n\nclass TwoSum(object):\n\n    def __init__(self):\n        \"\"\"\n        initialize your data structure here\n        \"\"\"\n        self.lookup = defaultdict(int)\n\n\n\n    def add(self, number):\n        \"\"\"\n        Add the number to an internal data structure.\n        :rtype: nothing\n        \"\"\"\n        self.lookup[number] += 1\n\n\n    def find(self, value):\n        \"\"\"\n        Find if there exists any pair of numbers which sum is equal to the value.\n        :type value: int\n        :rtype: bool\n        \"\"\"\n        for key in self.lookup:\n            num = value - key\n            if num in self.lookup and (num != key or self.lookup[key] > 1):\n                return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

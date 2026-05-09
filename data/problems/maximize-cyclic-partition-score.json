@@ -1,0 +1,34 @@
+{
+  "id": "4ee98a3f-6bff-4347-85eb-5e9f461c1220",
+  "slug": "maximize-cyclic-partition-score",
+  "title": "Maximize Cyclic Partition Score",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>cyclic</strong> array <code>nums</code> and an integer <code>k</code>.</p>\n\n<p><strong>Partition</strong> <code>nums</code> into <strong>at most</strong> <code>k</code><strong> </strong><span data-keyword=\"subarray-nonempty\">subarrays</span>. As <code>nums</code> is cyclic, these subarrays may wrap around from the end of the array back to the beginning.</p>\n\n<p>The <strong>range</strong> of a subarray is the difference between its <strong>maximum</strong> and <strong>minimum</strong> values. The <strong>score</strong> of a partition is the sum of subarray <strong>ranges</strong>.</p>\n\n<p>Return the <strong>maximum</strong> possible <strong>score</strong> among all cyclic partitions.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3,3], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Partition <code>nums</code> into <code>[2, 3]</code> and <code>[3, 1]</code> (wrapped around).</li>\n\t<li>The range of <code>[2, 3]</code> is <code>max(2, 3) - min(2, 3) = 3 - 2 = 1</code>.</li>\n\t<li>The range of <code>[3, 1]</code> is <code>max(3, 1) - min(3, 1) = 3 - 1 = 2</code>.</li>\n\t<li>The score is <code>1 + 2 = 3</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3,3], k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Partition <code>nums</code> into <code>[1, 2, 3, 3]</code>.</li>\n\t<li>The range of <code>[1, 2, 3, 3]</code> is <code>max(1, 2, 3, 3) - min(1, 2, 3, 3) = 3 - 1 = 2</code>.</li>\n\t<li>The score is 2.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3,3], k = 4</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Identical to Example 1, we partition <code>nums</code> into <code>[2, 3]</code> and <code>[3, 1]</code>. Note that <code>nums</code> may be partitioned into fewer than <code>k</code> subarrays.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= nums.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k)\n// Space: O(k)\n\n// dp\nclass Solution {\npublic:\n    long long maximumScore(vector<int>& nums, int k) {\n        const auto& best_time_to_buy_and_sell_stock_v = [&](int base) {\n            static const int64_t NEG_INF = numeric_limits<int64_t>::min();\n\n            vector<int64_t> dp(size(nums) + 1);\n            int64_t result = 0;\n            for (int i = 0; i < k; ++i) {\n                vector<int64_t> new_dp(size(nums) + 1, NEG_INF);\n                int64_t x = NEG_INF, y = NEG_INF;\n                for (int j = i; j < size(nums); ++j) {\n                    x = max(x, dp[j] - nums[(base + j) % size(nums)]);\n                    y = max(y, dp[j] + nums[(base + j) % size(nums)]);\n                    new_dp[j + 1] = max({new_dp[j], x + nums[(base + j) % size(nums)], y - nums[(base + j) % size(nums)]});\n                }\n                dp = move(new_dp);\n                result = max(result, dp.back());\n            }\n            return result;\n        };\n\n        const int i = distance(cbegin(nums), min_element(cbegin(nums), cend(nums)));\n        return max(best_time_to_buy_and_sell_stock_v(i), best_time_to_buy_and_sell_stock_v(i + 1));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k)\n# Space: O(k)\n\n# dp\nclass Solution(object):\n    def maximumScore(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def best_time_to_buy_and_sell_stock_v(base):\n            dp = [0]*(len(nums)+1)\n            result = 0\n            for i in xrange(k):\n                x, y = float(\"-inf\"), float(\"-inf\")\n                new_dp = [float(\"-inf\")]*(len(nums)+1)\n                for j in xrange(i, len(nums)):\n                    x, y = max(x, dp[j]-nums[(base+j)%len(nums)]), max(y, dp[j]+nums[(base+j)%len(nums)])\n                    new_dp[j+1] = max(new_dp[j], x+nums[(base+j)%len(nums)], y-nums[(base+j)%len(nums)])\n                dp = new_dp\n                result = max(result, dp[-1])\n            return result\n    \n        i = min(xrange(len(nums)), key=lambda x: nums[x])\n        return max(best_time_to_buy_and_sell_stock_v(i), best_time_to_buy_and_sell_stock_v(i+1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

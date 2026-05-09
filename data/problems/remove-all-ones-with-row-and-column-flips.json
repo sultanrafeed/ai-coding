@@ -1,0 +1,42 @@
+{
+  "id": "cca96960-93c7-4182-aabb-0410db5df69c",
+  "slug": "remove-all-ones-with-row-and-column-flips",
+  "title": "Remove All Ones With Row and Column Flips",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "bit-manipulation",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,1,0],[1,0,1],[0,1,0]]\n[[1,1,0],[0,0,0],[0,0,0]]\n[[0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool removeOnes(vector<vector<int>>& grid) {\n        for (int i = 1; i < size(grid); ++i) {\n            if (grid[i] == grid[0]) {\n                continue;\n            }\n            for (int j = 0; j < size(grid[0]); ++j) {\n                if (grid[i][j] == grid[0][j]) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    def removeOnes(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: bool\n        \"\"\"\n        return all(grid[i] == grid[0] or all(grid[i][j] != grid[0][j] for j in xrange(len(grid[0]))) for i in xrange(1, len(grid)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

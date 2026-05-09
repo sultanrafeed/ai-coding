@@ -1,0 +1,35 @@
+{
+  "id": "e9b61e0d-90df-4552-9edc-77132a64f74e",
+  "slug": "search-in-a-binary-search-tree",
+  "title": "Search in a Binary Search Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given the <code>root</code> of a binary search tree (BST) and an integer <code>val</code>.</p>\n\n<p>Find the node in the BST that the node&#39;s value equals <code>val</code> and return the subtree rooted with that node. If such a node does not exist, return <code>null</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/01/12/tree1.jpg\" style=\"width: 422px; height: 302px;\" />\n<pre>\n<strong>Input:</strong> root = [4,2,7,1,3], val = 2\n<strong>Output:</strong> [2,1,3]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/01/12/tree2.jpg\" style=\"width: 422px; height: 302px;\" />\n<pre>\n<strong>Input:</strong> root = [4,2,7,1,3], val = 5\n<strong>Output:</strong> []\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 5000]</code>.</li>\n\t<li><code>1 &lt;= Node.val &lt;= 10<sup>7</sup></code></li>\n\t<li><code>root</code> is a binary search tree.</li>\n\t<li><code>1 &lt;= val &lt;= 10<sup>7</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(h)\n// Space: O(1)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* searchBST(TreeNode* root, int val) {\n        while (root && val != root->val) {\n            if (val < root->val) {\n                root = root->left;\n            } else {\n                root = root->right;\n            }\n        }\n        return root;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(h)\n# Space: O(1)\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def searchBST(self, root, val):\n        \"\"\"\n        :type root: TreeNode\n        :type val: int\n        :rtype: TreeNode\n        \"\"\"\n        while root and val != root.val:\n            if val < root.val:\n                root = root.left\n            else:\n                root = root.right\n        return root",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

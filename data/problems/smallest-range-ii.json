@@ -1,0 +1,36 @@
+{
+  "id": "7d4ed0c2-e17a-4776-aab4-c5170323af2e",
+  "slug": "smallest-range-ii",
+  "title": "Smallest Range II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> and an integer <code>k</code>.</p>\n\n<p>For each index <code>i</code> where <code>0 &lt;= i &lt; nums.length</code>, change <code>nums[i]</code> to be either <code>nums[i] + k</code> or <code>nums[i] - k</code>.</p>\n\n<p>The <strong>score</strong> of <code>nums</code> is the difference between the maximum and minimum elements in <code>nums</code>.</p>\n\n<p>Return <em>the minimum <strong>score</strong> of </em><code>nums</code><em> after changing the values at each index</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1], k = 0\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The score is max(nums) - min(nums) = 1 - 1 = 0.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,10], k = 2\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> Change nums to be [2, 8]. The score is max(nums) - min(nums) = 8 - 2 = 6.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,3,6], k = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> Change nums to be [4, 6, 3]. The score is max(nums) - min(nums) = 6 - 3 = 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= k &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int smallestRangeII(vector<int>& A, int K) {\n        sort(A.begin(), A.end());\n        int result = A.back() - A.front();\n        for (int i = 0; i < A.size() - 1; ++i) {\n            result = min(result,\n                         max(A.back() - K, A[i] + K) - \n                         min(A.front() + K, A[i + 1] - K));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def smallestRangeII(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        A.sort()\n        result = A[-1]-A[0]\n        for i in xrange(len(A)-1):\n            result = min(result,\n                         max(A[-1]-K, A[i]+K) -\n                         min(A[0]+K, A[i+1]-K))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "9e8a0741-9d22-48cf-9e0d-a278d22b49c5",
+  "slug": "number-of-subsequences-with-odd-sum",
+  "title": "Number of Subsequences with Odd Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,1]\n[1,2,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// combinatorics, fast exponentiation\nclass Solution {\npublic:\n    int subsequenceCount(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        // 2^(odd-1)*2^even = 2^(len(nums)-1)\n        return any_of(cbegin(nums), cend(nums), [](const auto& x) {\n            return x % 2 == 1;\n        }) ? powmod(2, size(nums) - 1, MOD) : 0;\n    }\n\nprivate:\n    uint32_t powmod(uint32_t a, uint32_t b, uint32_t mod) {\n        a %= mod;\n        uint64_t result = 1;\n        while (b) {\n            if (b & 1) {\n                result = result * a % mod;\n            }\n            a = uint64_t(a) * a % mod;\n            b >>= 1;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// dp\nclass Solution2 {\npublic:\n    int subsequenceCount(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        vector<int> dp(2);\n        for (const auto& x : nums) {\n            vector<int> new_dp(2);\n            for (int i = 0; i < 2; ++i) {\n                new_dp[i] = (dp[i] + dp[i ^ (x % 2)] + (x % 2 == i ? 1 : 0)) % MOD;\n            }\n            dp = move(new_dp);\n        }\n        return dp[1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# combinatorics, fast exponentiation\nclass Solution(object):\n    def subsequenceCount(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        # 2^(odd-1)*2^even = 2^(len(nums)-1)\n        return pow(2, len(nums)-1, MOD) if any(x%2 for x in nums) else 0\n\n\n# Time:  O(n)\n# Space: O(1)\n# dp\nclass Solution2(object):\n    def subsequenceCount(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        dp = [0]*2\n        for x in nums:\n            dp = [(dp[i]+dp[i^(x%2)]+int(x%2 == i))%MOD for i in xrange(2)]\n        return dp[1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

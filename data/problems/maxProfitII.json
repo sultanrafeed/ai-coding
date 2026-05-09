@@ -1,0 +1,25 @@
+{
+  "id": "2450912a-ddac-4814-ac77-8224428d8437",
+  "slug": "maxProfitII",
+  "title": "Maxprofitii",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(1)\n\nclass Solution {\n    public:\n        int maxProfit(vector<int> &prices) {\n            const int n = prices.size();\n            int ans = 0;\n\n            for(int i = 1; i < n; ++i) {\n                int diff = prices[i] - prices[i - 1];\n                if(diff > 0)\n                    ans += diff;\n            }\n\n            return ans;\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

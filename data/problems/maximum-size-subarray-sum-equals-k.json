@@ -1,0 +1,41 @@
+{
+  "id": "8952ee33-9066-4bfc-b4b9-2841a61c5a62",
+  "slug": "maximum-size-subarray-sum-equals-k",
+  "title": "Maximum Size Subarray Sum Equals k",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,-1,5,-2,3]\n3\n[-2,-1,2,1]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxSubArrayLen(vector<int>& nums, int k) {\n        unordered_map<int, int> sums;\n        int cur_sum = 0, max_len = 0;\n        for (int i = 0; i < nums.size(); ++i) {\n            cur_sum += nums[i];\n            if (cur_sum == k) {\n                max_len = i + 1;\n            } else if (sums.find(cur_sum - k) != sums.end()) {\n                max_len = max(max_len, i - sums[cur_sum - k]);\n            }\n            if (sums.find(cur_sum) == sums.end()) {\n                sums[cur_sum] = i;  // Only keep the smallest index.\n            }\n        }\n        return max_len;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def maxSubArrayLen(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        sums = {}\n        cur_sum, max_len = 0, 0\n        for i in xrange(len(nums)):\n            cur_sum += nums[i]\n            if cur_sum == k:\n                max_len = i + 1\n            elif cur_sum - k in sums:\n                max_len = max(max_len, i - sums[cur_sum - k])\n            if cur_sum not in sums:\n                sums[cur_sum] = i  # Only keep the smallest index.\n        return max_len",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

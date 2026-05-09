@@ -1,0 +1,44 @@
+{
+  "id": "1a5e245e-bd13-4358-9988-f48099a7a217",
+  "slug": "stone-game-vi",
+  "title": "Stone Game VI",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Alice and Bob take turns playing a game, with Alice starting first.</p>\n\n<p>There are <code>n</code> stones in a pile. On each player&#39;s turn, they can <strong>remove</strong> a stone from the pile and receive points based on the stone&#39;s value. Alice and Bob may <strong>value the stones differently</strong>.</p>\n\n<p>You are given two integer arrays of length <code>n</code>, <code>aliceValues</code> and <code>bobValues</code>. Each <code>aliceValues[i]</code> and <code>bobValues[i]</code> represents how Alice and Bob, respectively, value the <code>i<sup>th</sup></code> stone.</p>\n\n<p>The winner is the person with the most points after all the stones are chosen. If both players have the same amount of points, the game results in a draw. Both players will play <strong>optimally</strong>.&nbsp;Both players know the other&#39;s values.</p>\n\n<p>Determine the result of the game, and:</p>\n\n<ul>\n\t<li>If Alice wins, return <code>1</code>.</li>\n\t<li>If Bob wins, return <code>-1</code>.</li>\n\t<li>If the game results in a draw, return <code>0</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> aliceValues = [1,3], bobValues = [2,1]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong>\nIf Alice takes stone 1 (0-indexed) first, Alice will receive 3 points.\nBob can only choose stone 0, and will only receive 2 points.\nAlice wins.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> aliceValues = [1,2], bobValues = [3,1]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong>\nIf Alice takes stone 0, and Bob takes stone 1, they will both have 1 point.\nDraw.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> aliceValues = [2,4,3], bobValues = [1,6,7]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong>\nRegardless of how Alice plays, Bob will be able to have more points than Alice.\nFor example, if Alice takes stone 1, Bob can take stone 2, and Alice takes stone 0, Alice will have 6 points to Bob&#39;s 7.\nBob wins.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == aliceValues.length == bobValues.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= aliceValues[i], bobValues[i] &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "greedy",
+    "sorting",
+    "heap-priority-queue",
+    "game-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,3]\n[2,1]\n[1,2]\n[3,1]\n[2,4,3]\n[1,6,7]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int stoneGameVI(vector<int>& aliceValues, vector<int>& bobValues) {\n        vector<vector<int>> sorted_vals;\n        vector<int> result(2);\n        for (int i = 0; i < size(aliceValues); ++i) {\n            sorted_vals.push_back({aliceValues[i] + bobValues[i],\n                                   aliceValues[i], bobValues[i]});\n        }\n        sort(begin(sorted_vals), end(sorted_vals), greater<vector<int>>());\n        for (int i = 0; i < size(sorted_vals); ++i) {\n            result[i % 2] += sorted_vals[i][1 + i % 2];\n        }\n        return (result[0] == result[1]) ? 0 : (result[0] > result[1]) ? 1 : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass Solution(object):\n    def stoneGameVI(self, aliceValues, bobValues):\n        \"\"\"\n        :type aliceValues: List[int]\n        :type bobValues: List[int]\n        :rtype: int\n        \"\"\"\n        sorted_vals = sorted(((a, b) for a, b in zip(aliceValues, bobValues)), key=sum, reverse=True)\n        return cmp(sum(a for a, _ in sorted_vals[::2]), sum(b for _, b in sorted_vals[1::2]))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

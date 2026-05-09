@@ -1,0 +1,35 @@
+{
+  "id": "b332692d-d04e-4cfc-a3e7-91f703b30ad2",
+  "slug": "maximize-consecutive-elements-in-an-array-after-modification",
+  "title": "Maximize Consecutive Elements in an Array After Modification",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> array <code>nums</code> consisting of <strong>positive</strong> integers.</p>\n\n<p>Initially, you can increase the value of <strong>any</strong> element in the array by <strong>at most</strong> <code>1</code>.</p>\n\n<p>After that, you need to select <strong>one or more</strong> elements from the final array such that those elements are <strong>consecutive</strong> when sorted in increasing order. For example, the elements <code>[3, 4, 5]</code> are consecutive while <code>[3, 4, 6]</code> and <code>[1, 1, 2, 3]</code> are not.<!-- notionvc: 312f8c5d-40d0-4cd1-96cc-9e96a846735b --></p>\n\n<p>Return <em>the <strong>maximum</strong> number of elements that you can select</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,5,1,1]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We can increase the elements at indices 0 and 3. The resulting array is nums = [3,1,5,2,1].\nWe select the elements [<u><strong>3</strong></u>,<u><strong>1</strong></u>,5,<u><strong>2</strong></u>,1] and we sort them to obtain [1,2,3], which are consecutive.\nIt can be shown that we cannot select more than 3 consecutive elements.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,4,7,10]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The maximum consecutive elements that we can select is 1.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// sort, dp\nclass Solution {\npublic:\n    int maxSelectedElements(vector<int>& nums) {\n        sort(begin(nums), end(nums));\n        int result = 1;\n        vector<int> dp(2, 1);  // dp[i]: the maximum length of a consecutive sequence ending with x+i, where x is the last visited value\n        for (int i = 1; i < size(nums); ++i) {\n            if (nums[i] == nums[i - 1]) {\n                dp[1] = dp[0] + 1;\n            } else if (nums[i] == nums[i - 1] + 1) {\n                ++dp[0];\n                ++dp[1];\n            } else if (nums[i] == nums[i - 1] + 2) {\n                dp[0] = dp[1] + 1;\n                dp[1] = 1;\n            } else {\n                dp[0] = dp[1] = 1;\n            }\n            result = max({result, dp[0], dp[1]});\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// sort, dp\nclass Solution2 {\npublic:\n    int maxSelectedElements(vector<int>& nums) {\n        sort(begin(nums), end(nums));\n        unordered_map<int, int> dp;\n        dp[nums[0]] = dp[nums[0] + 1] = 1;\n        for (int i = 1; i < size(nums); ++i) {\n            if (nums[i] == nums[i - 1]) {\n                dp[nums[i] + 1] = dp[nums[i]] + 1;\n            } else if (nums[i] == nums[i - 1] + 1) {\n                dp[nums[i] + 1] = dp[nums[i]] + 1;\n                dp[nums[i]] = dp[nums[i] - 1] + 1;\n            } else if (nums[i] == nums[i - 1] + 2) {\n                dp[nums[i]] = dp[nums[i] - 1] + 1;\n                dp[nums[i] + 1] = 1;\n            } else {\n                dp[nums[i]] = dp[nums[i] + 1] = 1;\n            }\n        }\n        return max_element(cbegin(dp), cend(dp), [](const auto& a, const auto& b) { return a.second < b.second; })->second;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// sort, dp\nclass Solution3 {\npublic:\n    int maxSelectedElements(vector<int>& nums) {\n        sort(begin(nums), end(nums));\n        unordered_map<int, int> dp;\n        for (const auto& x : nums) {\n            dp[x + 1] = dp[x] + 1;\n            dp[x] = dp[x - 1] + 1;\n        }\n        return max_element(cbegin(dp), cend(dp), [](const auto& a, const auto& b) { return a.second < b.second; })->second;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# sort, dp\nclass Solution(object):\n    def maxSelectedElements(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        nums.sort()\n        result = 1\n        dp = [1]*2  # dp[i]: the maximum length of a consecutive sequence ending with x+i, where x is the last visited value\n        for i in xrange(1, len(nums)):\n            if nums[i] == nums[i-1]:\n                dp[1] = dp[0]+1\n            elif nums[i] == nums[i-1]+1:\n                dp[0] += 1\n                dp[1] += 1\n            elif nums[i] == nums[i-1]+2:\n                dp[0] = dp[1]+1\n                dp[1] = 1\n            else:\n                dp[0] = dp[1] = 1\n            result = max(result, dp[0], dp[1])\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nimport collections\n\n\n# sort, dp\nclass Solution2(object):\n    def maxSelectedElements(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        nums.sort()\n        dp = collections.defaultdict(int)\n        dp[nums[0]] = dp[nums[0]+1] = 1\n        for i in xrange(1, len(nums)):\n            if nums[i] == nums[i-1]:\n                dp[nums[i]+1] = dp[nums[i]]+1\n            elif nums[i] == nums[i-1]+1:\n                dp[nums[i]+1] = dp[nums[i]]+1\n                dp[nums[i]] = dp[nums[i]-1]+1\n            elif nums[i] == nums[i-1]+2:\n                dp[nums[i]] = dp[nums[i]-1]+1\n                dp[nums[i]+1] = 1\n            else:\n                dp[nums[i]] = dp[nums[i]+1] = 1\n        return max(dp.itervalues())\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nimport collections\n\n\n# sort, dp\nclass Solution3(object):\n    def maxSelectedElements(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        nums.sort()\n        dp = collections.defaultdict(int)\n        for x in nums:\n            dp[x+1] = dp[x]+1\n            dp[x] = dp[x-1]+1\n        return max(dp.itervalues())",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

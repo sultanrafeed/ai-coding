@@ -1,0 +1,41 @@
+{
+  "id": "21e7d5fd-d8c1-4cde-8e51-0728aac0d66e",
+  "slug": "n-ary-tree-preorder-traversal",
+  "title": "N-ary Tree Preorder Traversal",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the <code>root</code> of an n-ary tree, return <em>the preorder traversal of its nodes&#39; values</em>.</p>\n\n<p>Nary-Tree input serialization is represented in their level order traversal. Each group of children is separated by the null value (See examples)</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><img src=\"https://assets.leetcode.com/uploads/2018/10/12/narytreeexample.png\" style=\"width: 100%; max-width: 300px;\" /></p>\n\n<pre>\n<strong>Input:</strong> root = [1,null,3,2,4,null,5,6]\n<strong>Output:</strong> [1,3,5,6,2,4]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/11/08/sample_4_964.png\" style=\"width: 296px; height: 241px;\" /></p>\n\n<pre>\n<strong>Input:</strong> root = [1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]\n<strong>Output:</strong> [1,2,3,6,7,11,14,4,8,12,5,9,13,10]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[0, 10<sup>4</sup>]</code>.</li>\n\t<li><code>0 &lt;= Node.val &lt;= 10<sup>4</sup></code></li>\n\t<li>The height of the n-ary tree is less than or equal to <code>1000</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong> Recursive solution is trivial, could you do it iteratively?</p>\n",
+  "patterns": [
+    "stack",
+    "tree",
+    "depth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,null,3,2,4,null,5,6]\n[1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/*\n// Definition for a Node.\nclass Node {\npublic:\n    int val;\n    vector<Node*> children;\n\n    Node() {}\n\n    Node(int _val, vector<Node*> _children) {\n        val = _val;\n        children = _children;\n    }\n};\n*/\nclass Solution {\npublic:\n    vector<int> preorder(Node* root) {\n        if (!root) {\n            return {};\n        }\n        vector<int> result;\n        vector<Node*> stack{root};\n        while (!stack.empty()) {\n            auto node = stack.back(); stack.pop_back();\n            result.emplace_back(node->val);\n            for (auto rit = node->children.rbegin();\n                 rit != node->children.rend();\n                 ++rit) {\n                if (*rit) {\n                    stack.emplace_back(*rit);\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Node(object):\n    def __init__(self, val, children):\n        self.val = val\n        self.children = children\n\n\nclass Solution(object):\n    def preorder(self, root):\n        \"\"\"\n        :type root: Node\n        :rtype: List[int]\n        \"\"\"\n        if not root:\n            return []\n        result, stack = [], [root]\n        while stack:\n            node = stack.pop()\n            result.append(node.val)\n            for child in reversed(node.children):\n                if child:\n                    stack.append(child)\n        return result\n\n\nclass Solution2(object):\n    def preorder(self, root):\n        \"\"\"\n        :type root: Node\n        :rtype: List[int]\n        \"\"\"\n        def dfs(root, result):\n            result.append(root.val)\n            for child in root.children:\n                if child:\n                    dfs(child, result)\n        \n        result = []\n        if root:\n            dfs(root, result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

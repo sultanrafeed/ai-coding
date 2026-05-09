@@ -1,0 +1,34 @@
+{
+  "id": "65394ec9-fe60-443a-a790-9dc3a8d2b3cc",
+  "slug": "minimum-distance-between-three-equal-elements-i",
+  "title": "Minimum Distance Between Three Equal Elements I",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>A tuple <code>(i, j, k)</code> of 3 <strong>distinct</strong> indices is <strong>good</strong> if <code>nums[i] == nums[j] == nums[k]</code>.</p>\n\n<p>The <strong>distance</strong> of a <strong>good</strong> tuple is <code>abs(i - j) + abs(j - k) + abs(k - i)</code>, where <code>abs(x)</code> denotes the <strong>absolute value</strong> of <code>x</code>.</p>\n\n<p>Return an integer denoting the <strong>minimum</strong> possible <strong>distance</strong> of a <strong>good</strong> tuple. If no <strong>good</strong> tuples exist, return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,1,1,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The minimum distance is achieved by the good tuple <code>(0, 2, 3)</code>.</p>\n\n<p><code>(0, 2, 3)</code> is a good tuple because <code>nums[0] == nums[2] == nums[3] == 1</code>. Its distance is <code>abs(0 - 2) + abs(2 - 3) + abs(3 - 0) = 2 + 1 + 3 = 6</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,1,2,3,2,1,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">8</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The minimum distance is achieved by the good tuple <code>(2, 4, 6)</code>.</p>\n\n<p><code>(2, 4, 6)</code> is a good tuple because <code>nums[2] == nums[4] == nums[6] == 2</code>. Its distance is <code>abs(2 - 4) + abs(4 - 6) + abs(6 - 2) = 2 + 2 + 4 = 8</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There are no good tuples. Therefore, the answer is -1.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n == nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= n</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// hash table, sliding window\nclass Solution {\npublic:\n    int minimumDistance(vector<int>& nums) {\n        static const int INF = numeric_limits<int>::max();\n\n        int result = INF;\n        unordered_map<int, vector<int>> lookup;\n        for (int i = 0; i < size(nums); ++i) {\n            lookup[nums[i]].emplace_back(i);\n            if (size(lookup[nums[i]]) < 3) {\n                continue;\n            }\n            result = min(result, 2 * (i - lookup[nums[i]][size(lookup[nums[i]]) - 3]));  // k, j, i = lookup[x][:-3], (i-j)+(j-k)+(i-k) = 2*(i-k)\n        }\n        return result != INF ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# hash table, sliding window\nclass Solution(object):\n    def minimumDistance(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        INF = float(\"inf\")\n        result = INF\n        lookup = collections.defaultdict(list)\n        for i, x in enumerate(nums):\n            lookup[x].append(i)\n            if len(lookup[x]) < 3:\n                continue\n            result = min(result, 2*(i-lookup[x][-3]))  # k, j, i = lookup[x][:-3], (i-j)+(j-k)+(i-k) = 2*(i-k)\n        return result if result != INF else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

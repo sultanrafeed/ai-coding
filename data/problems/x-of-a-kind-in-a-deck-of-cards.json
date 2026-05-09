@@ -1,0 +1,37 @@
+{
+  "id": "661762b5-03bc-49bb-abc2-5d501da823c3",
+  "slug": "x-of-a-kind-in-a-deck-of-cards",
+  "title": "X of a Kind in a Deck of Cards",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>deck</code> where <code>deck[i]</code> represents the number written on the <code>i<sup>th</sup></code> card.</p>\n\n<p>Partition the cards into <strong>one or more groups</strong> such that:</p>\n\n<ul>\n\t<li>Each group has <strong>exactly</strong> <code>x</code> cards where <code>x &gt; 1</code>, and</li>\n\t<li>All the cards in one group have the same integer written on them.</li>\n</ul>\n\n<p>Return <code>true</code><em> if such partition is possible, or </em><code>false</code><em> otherwise</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> deck = [1,2,3,4,4,3,2,1]\n<strong>Output:</strong> true\n<strong>Explanation</strong>: Possible partition [1,1],[2,2],[3,3],[4,4].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> deck = [1,1,1,2,2,2,3,3]\n<strong>Output:</strong> false\n<strong>Explanation</strong>: No possible partition.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= deck.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= deck[i] &lt; 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "counting",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * (logn)^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool hasGroupsSizeX(vector<int>& deck) {\n        unordered_map<int, int> count;\n        for (const auto& i : deck) {\n            ++count[i];\n        }\n        int result = 0;\n        for (const auto& kvp : count) {\n            result = gcd(result, kvp.second);\n        }\n        return result > 1;\n    }\n\nprivate:\n    int gcd(int a, int b) {\n        while (b != 0) {\n            int tmp = b;\n            b = a % b;\n            a = tmp;\n        }\n        return a;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * (logn)^2)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def hasGroupsSizeX(self, deck):\n        \"\"\"\n        :type deck: List[int]\n        :rtype: bool\n        \"\"\"\n        def gcd(a, b):  # Time: O((logn)^2)\n            while b:\n                a, b = b, a % b\n            return a\n\n        vals = collections.Counter(deck).values()\n        return reduce(gcd, vals) >= 2",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "db90685d-d264-4b90-b66d-1a221ba1aaa4",
+  "slug": "armstrong-number",
+  "title": "Armstrong Number",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "153\n123",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(klogk)\n// Space: O(k)\n\nclass Solution {\npublic:\n    bool isArmstrong(int N) {\n        const auto& n_str = to_string(N);\n        return accumulate(n_str.cbegin(), n_str.cend(), 0,\n                          [&](const auto& x, const auto& y) {\n                              return x + pow(y - '0', n_str.length());\n                          }) == N;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(klogk)\n# Space: O(k)\n\nclass Solution(object):\n    def isArmstrong(self, N):\n        \"\"\"\n        :type N: int\n        :rtype: bool\n        \"\"\"\n        n_str = str(N)\n        return sum(int(i)**len(n_str) for i in n_str) == N",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

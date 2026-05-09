@@ -1,0 +1,43 @@
+{
+  "id": "5064d7f4-9869-4dcf-a415-bce3a13d87b8",
+  "slug": "range-sum-of-sorted-subarray-sums",
+  "title": "Range Sum of Sorted Subarray Sums",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given the array <code>nums</code> consisting of <code>n</code> positive integers. You computed the sum of all non-empty continuous subarrays from the array and then sorted them in non-decreasing order, creating a new array of <code>n * (n + 1) / 2</code> numbers.</p>\n\n<p><em>Return the sum of the numbers from index </em><code>left</code><em> to index </em><code>right</code> (<strong>indexed from 1</strong>)<em>, inclusive, in the new array. </em>Since the answer can be a huge number return it modulo <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4], n = 4, left = 1, right = 5\n<strong>Output:</strong> 13 \n<strong>Explanation:</strong> All subarray sums are 1, 3, 6, 10, 2, 5, 9, 3, 7, 4. After sorting them in non-decreasing order we have the new array [1, 2, 3, 3, 4, 5, 6, 7, 9, 10]. The sum of the numbers from index le = 1 to ri = 5 is 1 + 2 + 3 + 3 + 4 = 13. \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4], n = 4, left = 3, right = 4\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The given array is the same as example 1. We have the new array [1, 2, 3, 3, 4, 5, 6, 7, 9, 10]. The sum of the numbers from index le = 3 to ri = 4 is 3 + 3 = 6.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4], n = 4, left = 1, right = 10\n<strong>Output:</strong> 50\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums.length</code></li>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 100</code></li>\n\t<li><code>1 &lt;= left &lt;= right &lt;= n * (n + 1) / 2</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "sorting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4]\n4\n1\n5\n[1,2,3,4]\n4\n3\n4\n[1,2,3,4]\n4\n1\n10",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlog(sum(nums)))\n// Space: O(n)\n\n// binary search + sliding window solution\nclass Solution {\npublic:\n    int rangeSum(vector<int>& nums, int n, int left, int right) {\n        static const int MOD = 1e9 + 7;\n        vector<uint64_t> prefix(cbegin(nums), cend(nums));\n        for (uint64_t i = 0; i + 1 < nums.size(); ++i) {\n            prefix[i + 1] += prefix[i];\n        }\n        const uint64_t min = *min_element(cbegin(nums), cend(nums));\n        const uint64_t& max = accumulate(cbegin(nums), cend(nums), 0ull);\n        return (sumLessOrEqualTo(prefix, nums, min, max, right) -\n                sumLessOrEqualTo(prefix, nums, min, max, left - 1)) % MOD;\n    }\n    \nprivate:\n    uint64_t sumLessOrEqualTo(const vector<uint64_t>& prefix,\n                              const vector<int>& nums,\n                              uint64_t left, uint64_t right,\n                              uint64_t target) {\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (countUntil(nums, mid) >= target) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return sumUntil(nums, prefix, left) - left * (countUntil(nums, left) - target);\n    }\n    \n    uint64_t countUntil(const vector<int>& nums,\n                        uint64_t target) {\n        uint64_t result = 0, curr = 0;\n        for (int left = 0, right = 0; right < nums.size(); ++right) {\n            curr += nums[right];\n            for (; curr > target; ++left) {\n                curr -= nums[left];\n            }\n            result += right - left + 1;\n        }\n        return result;\n    }\n    \n    uint64_t sumUntil(const vector<int>& nums,\n                      const vector<uint64_t>& prefix,\n                      uint64_t target) {\n        uint64_t result = 0, curr = 0, total = 0;\n        for (int left = 0, right = 0; right < nums.size(); ++right) {\n            curr += nums[right];\n            total += nums[right] * (right - left + 1);\n            for (; curr > target; ++left) {\n                curr -= nums[left];\n                total -= prefix[right] - (left - 1 >= 0 ? prefix[left - 1] : 0);\n            }\n            result += total;\n        }\n        return result;\n    }\n};\n\n// Time:  O(rlogr), worst: O(n^2 * logn)\n// Space: O(n)\n// heap solution\nclass Solution2 {\npublic:\n    int rangeSum(vector<int>& nums, int n, int left, int right) {\n        static const int MOD = 1e9 + 7;\n        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> min_heap;\n        for (int i = 0; i < n; ++i) {\n            min_heap.emplace(nums[i], i + 1);\n        }\n        int result = 0;\n        for (int i = 1; i <= right; ++i) {\n            auto [total, j] = min_heap.top(); min_heap.pop();\n            if (i >= left) {\n                result = (result + total) % MOD;\n            }\n            if (j + 1 <= n) {\n                min_heap.emplace(total + nums[j], j + 1);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlog(sum(nums)))\n# Space: O(n)\n\n# binary search + sliding window solution\nclass Solution(object):\n    def rangeSum(self, nums, n, left, right):\n        \"\"\"\n        :type nums: List[int]\n        :type n: int\n        :type left: int\n        :type right: int\n        :rtype: int\n        \"\"\"\n        def countUntil(nums, target):\n            result, curr, left = 0, 0, 0\n            for right in xrange(len(nums)):\n                curr += nums[right]\n                while curr > target:\n                    curr -= nums[left]\n                    left += 1\n                result += right-left+1\n            return result\n        \n        def sumUntil(nums, prefix, target):\n            result, curr, total, left = 0, 0, 0, 0\n            for right in xrange(len(nums)):\n                curr += nums[right]\n                total += nums[right]*(right-left+1)\n                while curr > target:\n                    curr -= nums[left]\n                    total -= prefix[right+1]-prefix[(left-1)+1]\n                    left += 1\n                result += total\n            return result\n            \n        def sumLessOrEqualTo(prefix, nums, left, right, count):\n            while left <= right:\n                mid = left + (right-left)//2\n                if countUntil(nums, mid)-count >= 0:\n                    right = mid-1\n                else:\n                    left = mid+1\n            return sumUntil(nums, prefix, left)-left*(countUntil(nums, left)-count)\n    \n        MOD = 10**9+7\n        prefix = [0]*(len(nums)+1)\n        for i in xrange(len(nums)):\n            prefix[i+1] = prefix[i]+nums[i]\n        m, M = min(nums), sum(nums)\n        return (sumLessOrEqualTo(prefix, nums, m, M, right) -\n                sumLessOrEqualTo(prefix, nums, m, M, left-1))%MOD\n    \n\n    \n# Time:  O(rlogr), worst: O(n^2 * logn)\n# Space: O(n)\nimport heapq\n\n\n# heap solution\nclass Solution2(object):\n    def rangeSum(self, nums, n, left, right):\n        \"\"\"\n        :type nums: List[int]\n        :type n: int\n        :type left: int\n        :type right: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        min_heap = []\n        for i, num in enumerate(nums, 1):\n            heapq.heappush(min_heap, (num, i))\n        result = 0\n        for i in xrange(1, right+1):\n            total, j = heapq.heappop(min_heap)\n            if i >= left:\n                result = (result+total)%MOD\n            if j+1 <= n:\n                heapq.heappush(min_heap, (total+nums[j], j+1))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

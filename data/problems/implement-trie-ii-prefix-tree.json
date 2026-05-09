@@ -1,0 +1,42 @@
+{
+  "id": "b672d6a2-9e57-4f78-8440-84ddd1a1bc73",
+  "slug": "implement-trie-ii-prefix-tree",
+  "title": "Implement Trie II (Prefix Tree)",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "design",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"Trie\",\"insert\",\"insert\",\"countWordsEqualTo\",\"countWordsStartingWith\",\"erase\",\"countWordsEqualTo\",\"countWordsStartingWith\",\"erase\",\"countWordsStartingWith\"]\n[[],[\"apple\"],[\"apple\"],[\"apple\"],[\"app\"],[\"apple\"],[\"apple\"],[\"app\"],[\"apple\"],[\"app\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:         O(1)\n//        insert:       O(n)\n//        count_word:   O(n)\n//        count_prefix: O(n)\n//        erase:        O(n)\n// Space: O(t), t is the number of nodes in trie\n\nclass TrieNode { \npublic:\n    TrieNode() : children(26) {}\n    vector<unique_ptr<TrieNode>> children;\n    int pcnt = 0;\n    int cnt = 0;\n};\n\nclass Trie {\npublic:\n    Trie() {\n        trie_ = make_unique<TrieNode>();\n    }\n    \n    void insert(string word) {\n        auto curr = trie_.get();\n        ++curr->pcnt;\n        for (const auto& c : word) {\n            if (curr->children[c - 'a'] == nullptr) {\n                curr->children[c - 'a'] = make_unique<TrieNode>();\n            }\n            curr = curr->children[c - 'a'].get();\n            ++curr->pcnt;\n        }\n        ++curr->cnt;\n    }\n    \n    int countWordsEqualTo(string word) {\n        auto curr = trie_.get();\n        for (const auto& c : word) {\n            if (curr->children[c - 'a'] == nullptr) {\n                return 0;\n            }\n            curr = curr->children[c - 'a'].get();\n        }\n        return curr->cnt;\n    }\n    \n    int countWordsStartingWith(string prefix) {\n        auto curr = trie_.get();\n        for (const auto& c : prefix) {\n            if (curr->children[c - 'a'] == nullptr) {\n                return 0;\n            }\n            curr = curr->children[c - 'a'].get();\n        }\n        return curr->pcnt;\n    }\n    \n    void erase(string word) {\n        int cnt = countWordsEqualTo(word);\n        if (!cnt) {\n            return;\n        }\n        auto curr = trie_.get();\n        --curr->pcnt;\n        for (const auto& c : word) {\n            if (curr->children[c - 'a']->pcnt == 1) {\n                curr->children[c - 'a'].reset();  // delete all unused nodes\n                return;\n            }\n            curr = curr->children[c - 'a'].get();\n            --curr->pcnt;\n        }\n        --curr->cnt;\n    }\n\nprivate:\n    unique_ptr<TrieNode> trie_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:         O(1)\n#        insert:       O(n)\n#        count_word:   O(n)\n#        count_prefix: O(n)\n#        erase:        O(n)\n# Space: O(t), t is the number of nodes in trie\n\nclass Node:\n    def __init__(self):\n        self.children = [None]*26\n        self.pcnt = 0\n        self.cnt = 0\n\nclass Trie(object):\n\n    def __init__(self):\n        self.__trie = Node()\n\n    def insert(self, word):\n        \"\"\"\n        :type word: str\n        :rtype: None\n        \"\"\"\n        curr = self.__trie\n        curr.pcnt += 1\n        for c in word:\n            if curr.children[ord(c)-ord('a')] is None:\n                curr.children[ord(c)-ord('a')] = Node()\n            curr = curr.children[ord(c)-ord('a')]\n            curr.pcnt += 1\n        curr.cnt += 1\n\n    def countWordsEqualTo(self, word):\n        \"\"\"\n        :type word: str\n        :rtype: int\n        \"\"\"\n        curr = self.__trie\n        for c in word:\n            if curr.children[ord(c)-ord('a')] is None:\n                return 0\n            curr = curr.children[ord(c)-ord('a')]\n        return curr.cnt\n\n    def countWordsStartingWith(self, prefix):\n        \"\"\"\n        :type prefix: str\n        :rtype: int\n        \"\"\"\n        curr = self.__trie\n        for c in prefix:\n            if curr.children[ord(c)-ord('a')] is None:\n                return 0\n            curr = curr.children[ord(c)-ord('a')]\n        return curr.pcnt\n\n    def erase(self, word):\n        \"\"\"\n        :type word: str\n        :rtype: None\n        \"\"\"\n        cnt = self.countWordsEqualTo(word)\n        if not cnt:\n            return\n        curr = self.__trie\n        curr.pcnt -= 1\n        for c in word:\n            if curr.children[ord(c)-ord('a')].pcnt == 1:\n                curr.children[ord(c)-ord('a')] = None  # delete all unused nodes\n                return\n            curr = curr.children[ord(c)-ord('a')]\n            curr.pcnt -= 1\n        curr.cnt -= 1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

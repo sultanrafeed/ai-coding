@@ -1,0 +1,42 @@
+{
+  "id": "47fb0451-d606-4d6a-b065-b4164396db8b",
+  "slug": "find-root-of-n-ary-tree",
+  "title": "Find Root of N-Ary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "bit-manipulation",
+    "tree",
+    "depth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,null,3,2,4,null,5,6]\n[1,null,2,3,4,5,null,null,6,7,null,8,null,9,10,null,null,11,null,12,null,13,null,null,14]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    Node* findRoot(vector<Node*> tree) {\n        uint64_t root = 0;\n        for (const auto& node : tree) {\n            root ^= reinterpret_cast<uint64_t>(node);\n            for (const auto& child : node->children) {\n                root ^= reinterpret_cast<uint64_t>(child);\n            }\n        }\n        return reinterpret_cast<Node *>(root);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# Definition for a Node.\nclass Node(object):\n    def __init__(self, val=None, children=None):\n        pass\n\n\nclass Solution(object):\n    def findRoot(self, tree):\n        \"\"\"\n        :type tree: List['Node']\n        :rtype: 'Node'\n        \"\"\"\n        root = 0\n        for node in tree:\n            root ^= id(node)\n            for child in node.children:\n                root ^= id(child)\n        for node in tree:\n            if id(node) == root:\n                return node\n        return None\n\n\nclass Solution2(object):\n    def findRoot(self, tree):\n        \"\"\"\n        :type tree: List['Node']\n        :rtype: 'Node'\n        \"\"\"\n        root = 0\n        for node in tree:\n            root ^= node.val\n            for child in node.children:\n                root ^= child.val\n        for node in tree:\n            if node.val == root:\n                return node\n        return None\n\n\nclass Solution3(object):\n    def findRoot(self, tree):\n        \"\"\"\n        :type tree: List['Node']\n        :rtype: 'Node'\n        \"\"\"\n        root = 0\n        for node in tree:\n            root += node.val-sum(child.val for child in node.children)\n        for node in tree:\n            if node.val == root:\n                return node\n        return None",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

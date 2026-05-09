@@ -1,0 +1,43 @@
+{
+  "id": "38f4a6b0-3c6c-4351-acd4-26c0b75b011e",
+  "slug": "minimum-number-of-coins-for-fruits-ii",
+  "title": "Minimum Number of Coins for Fruits II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "queue",
+    "heap-priority-queue",
+    "monotonic-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,1,2]\n[1,10,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// dp, mono deque\nclass Solution {\npublic:\n    int minimumCoins(vector<int>& prices) {\n        vector<int> dp(size(prices) + 1, numeric_limits<int>::max());\n        dp[0] = 0;\n        deque<int> dq;\n        for (int i = 0, j = 0; i < size(prices); ++i) {\n            while (!empty(dq) && dp[dq.back()] + prices[dq.back()] >= dp[i] + prices[i]) {\n                dq.pop_back();\n            }\n            dq.emplace_back(i);\n            for (; j + (j + 1) < i; ++j) {\n                assert(!empty(dq));\n                if (dq.front() == j) {\n                    dq.pop_front();\n                }\n            }\n            dp[i + 1] = dp[dq.front()] + prices[dq.front()];\n        }\n        return dp.back();\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// dp, bst\nclass Solution2 {\npublic:\n    int minimumCoins(vector<int>& prices) {\n        vector<int> dp(size(prices) + 1, numeric_limits<int>::max());\n        dp[0] = 0;\n        set<pair<int, int>> bst;\n        for (int i = 0, j = 0; i < size(prices); ++i) {\n            bst.emplace(dp[i] + prices[i], i);\n            for (; j + (j + 1) < i; ++j) {\n                bst.erase(pair(dp[j] + prices[j], j));\n            }\n            dp[i + 1] = dp[cbegin(bst)->second] + prices[cbegin(bst)->second];\n        }\n        return dp.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# dp, mono deque\nclass Solution(object):\n    def minimumCoins(self, prices):\n        \"\"\"\n        :type prices: List[int]\n        :rtype: int\n        \"\"\"\n        dp = [float(\"inf\")]*(len(prices)+1)\n        dp[0] = 0\n        dq = collections.deque()\n        j = 0\n        for i in xrange(len(prices)):\n            while dq and dp[dq[-1]]+prices[dq[-1]] >= dp[i]+prices[i]:\n                dq.pop()\n            dq.append(i)\n            while j+(j+1) < i:\n                assert(len(dq) != 0)\n                if dq[0] == j:\n                    dq.popleft()\n                j += 1\n            dp[i+1] = dp[dq[0]]+prices[dq[0]]\n        return dp[-1]\n\n\n# Time:  O(nlogn)\n# Space: O(n)\n# dp, sorted list\nfrom sortedcontainers import SortedList\n\n\nclass Solution2(object):\n    def minimumCoins(self, prices):\n        \"\"\"\n        :type prices: List[int]\n        :rtype: int\n        \"\"\"\n        dp = [float(\"inf\")]*(len(prices)+1)\n        dp[0] = 0\n        sl = SortedList()\n        j = 0\n        for i in xrange(len(prices)):\n            sl.add((dp[i]+prices[i], i))\n            while j+(j+1) < i:\n                sl.remove(((dp[j]+prices[j], j)))\n                j += 1\n            dp[i+1] = sl[0][0]\n        return dp[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

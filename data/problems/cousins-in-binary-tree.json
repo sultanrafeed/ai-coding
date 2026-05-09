@@ -1,0 +1,36 @@
+{
+  "id": "a3b957fc-b0d1-4a15-8bc9-ec44945e2cd9",
+  "slug": "cousins-in-binary-tree",
+  "title": "Cousins in Binary Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree with unique values and the values of two different nodes of the tree <code>x</code> and <code>y</code>, return <code>true</code> <em>if the nodes corresponding to the values </em><code>x</code><em> and </em><code>y</code><em> in the tree are <strong>cousins</strong>, or </em><code>false</code><em> otherwise.</em></p>\n\n<p>Two nodes of a binary tree are <strong>cousins</strong> if they have the same depth with different parents.</p>\n\n<p>Note that in a binary tree, the root node is at the depth <code>0</code>, and children of each depth <code>k</code> node are at the depth <code>k + 1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/02/12/q1248-01.png\" style=\"width: 304px; height: 270px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,3,4], x = 4, y = 3\n<strong>Output:</strong> false\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/02/12/q1248-02.png\" style=\"width: 334px; height: 266px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,3,null,4,null,5], x = 5, y = 4\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/02/13/q1248-03.png\" style=\"width: 267px; height: 258px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,3,null,4], x = 2, y = 3\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[2, 100]</code>.</li>\n\t<li><code>1 &lt;= Node.val &lt;= 100</code></li>\n\t<li>Each node has a <strong>unique</strong> value.</li>\n\t<li><code>x != y</code></li>\n\t<li><code>x</code> and <code>y</code> are exist in the tree.</li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    bool isCousins(TreeNode* root, int x, int y) {\n        int depth_x = 0, depth_y = 0;\n        TreeNode *parent_x = nullptr, *parent_y = nullptr;\n        return dfs(root, x, &depth_x, &parent_x) &&\n               dfs(root, y, &depth_y, &parent_y) &&\n               depth_x == depth_y &&\n               parent_x != parent_y;\n    }\n    \nprivate:\n    bool dfs(TreeNode *root, int x, int *depth, TreeNode **parent) {\n        if (!root) {\n            return false;\n        }\n        if (root->val == x) {\n            return true;\n        }\n        ++(*depth);\n        auto prev_parent = (*parent);\n        (*parent) = root;\n        if (dfs(root->left, x, depth, parent)) {\n            return true;\n        }\n        (*parent) = root;\n        if (dfs(root->right, x, depth, parent)) {\n            return true;\n        }\n        (*parent) = prev_parent;\n        --(*depth);\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def isCousins(self, root, x, y):\n        \"\"\"\n        :type root: TreeNode\n        :type x: int\n        :type y: int\n        :rtype: bool\n        \"\"\"\n        def dfs(root, x, depth, parent):\n            if not root:\n                return False\n            if root.val == x:\n                return True\n            depth[0] += 1\n            prev_parent, parent[0] = parent[0], root\n            if dfs(root.left, x, depth, parent):\n                return True\n            parent[0] = root\n            if dfs(root.right, x, depth, parent):\n                return True\n            parent[0] = prev_parent\n            depth[0] -= 1\n            return False\n        \n        depth_x, depth_y = [0], [0]\n        parent_x, parent_y = [None], [None]\n        return dfs(root, x, depth_x, parent_x) and \\\n               dfs(root, y, depth_y, parent_y) and \\\n               depth_x[0] == depth_y[0] and \\\n               parent_x[0] != parent_y[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

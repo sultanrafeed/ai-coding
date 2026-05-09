@@ -1,0 +1,37 @@
+{
+  "id": "f51d4fea-974f-4b5b-b9b9-e626bd5615e6",
+  "slug": "word-search",
+  "title": "Word Search",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an <code>m x n</code> grid of characters <code>board</code> and a string <code>word</code>, return <code>true</code> <em>if</em> <code>word</code> <em>exists in the grid</em>.</p>\n\n<p>The word can be constructed from letters of sequentially adjacent cells, where adjacent cells are horizontally or vertically neighboring. The same letter cell may not be used more than once.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/11/04/word2.jpg\" style=\"width: 322px; height: 242px;\" />\n<pre>\n<strong>Input:</strong> board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCCED&quot;\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/11/04/word-1.jpg\" style=\"width: 322px; height: 242px;\" />\n<pre>\n<strong>Input:</strong> board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;SEE&quot;\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/15/word3.jpg\" style=\"width: 322px; height: 242px;\" />\n<pre>\n<strong>Input:</strong> board = [[&quot;A&quot;,&quot;B&quot;,&quot;C&quot;,&quot;E&quot;],[&quot;S&quot;,&quot;F&quot;,&quot;C&quot;,&quot;S&quot;],[&quot;A&quot;,&quot;D&quot;,&quot;E&quot;,&quot;E&quot;]], word = &quot;ABCB&quot;\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == board.length</code></li>\n\t<li><code>n = board[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 6</code></li>\n\t<li><code>1 &lt;= word.length &lt;= 15</code></li>\n\t<li><code>board</code> and <code>word</code> consists of only lowercase and uppercase English letters.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong> Could you use search pruning to make your solution faster with a larger <code>board</code>?</p>\n",
+  "patterns": [
+    "array",
+    "string",
+    "backtracking",
+    "depth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n * 4 * 3^(l - 1)) ~= O(m * n * 3^l), l is the length of the word\n// Space: O(l)\n\nclass Solution {\n    public:\n        bool exist(vector<vector<char> > &board, string word) {\n            const int m = board.size();\n            const int n = board.front().size();\n            vector<vector<bool> > visited(m, vector<bool> (n, false) );\n            for(int i = 0; i < m; ++i) {\n                for(int j = 0; j < n; ++j) {\n                    if(dfs(board, word, 0,  i, j, visited))\n                        return true;\n                }\n            }\n\n            return false;\n        }\n    private:\n        bool dfs(vector<vector<char> > &board, string word, int index, int i, int j,  vector<vector<bool> > &visited) {\n            if(index == word.size()) return true; // terminated condition\n\n            if(i < 0 || j < 0 || i >= board.size() || j >= board.front().size()  // pruning\n                    || visited[i][j] || board[i][j] != word[index])\n                return false;\n\n            visited[i][j] = true;  // set value\n            bool ret = dfs(board, word, index + 1,  i + 1, j, visited) \n                || dfs(board, word, index + 1,  i, j + 1, visited) \n                || dfs(board, word, index + 1,  i - 1, j, visited) \n                || dfs(board, word, index + 1,  i, j - 1, visited);\n            visited[i][j] = false; // recover value\n\n            return ret;\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n * 4 * 3^(l - 1)) ~= O(m * n * 3^l), l is the length of the word\n# Space: O(l)\n\nclass Solution(object):\n    # @param board, a list of lists of 1 length string\n    # @param word, a string\n    # @return a boolean\n    def exist(self, board, word):\n        visited = [[False for j in xrange(len(board[0]))] for i in xrange(len(board))]\n\n        for i in xrange(len(board)):\n            for j in xrange(len(board[0])):\n                if self.existRecu(board, word, 0, i, j, visited):\n                    return True\n\n        return False\n\n    def existRecu(self, board, word, cur, i, j, visited):\n        if cur == len(word):\n            return True\n\n        if i < 0 or i >= len(board) or j < 0 or j >= len(board[0]) or visited[i][j] or board[i][j] != word[cur]:\n            return False\n\n        visited[i][j] = True\n        result = self.existRecu(board, word, cur + 1, i + 1, j, visited) or\\\n                 self.existRecu(board, word, cur + 1, i - 1, j, visited) or\\\n                 self.existRecu(board, word, cur + 1, i, j + 1, visited) or\\\n                 self.existRecu(board, word, cur + 1, i, j - 1, visited)\n        visited[i][j] = False\n\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

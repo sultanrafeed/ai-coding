@@ -1,0 +1,34 @@
+{
+  "id": "cbd8d3e3-5099-4367-9c30-6344a9c91407",
+  "slug": "longest-non-decreasing-subarray-after-replacing-at-most-one-element",
+  "title": "Longest Non-Decreasing Subarray After Replacing at Most One Element",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>You are allowed to replace <strong>at most</strong> one element in the array with any other integer value of your choice.</p>\n\n<p>Return the length of the <strong>longest non-decreasing <span data-keyword=\"subarray\">subarray</span></strong> that can be obtained after performing at most one replacement.</p>\n\n<p>An array is said to be <strong>non-decreasing</strong> if each element is greater than or equal to its previous one (if it exists).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3,1,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Replacing <code>nums[3] = 1</code> with 3 gives the array [1, 2, 3, 3, 2].</p>\n\n<p>The longest non-decreasing subarray is [1, 2, 3, 3], which has a length of 4.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,2,2,2,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>All elements in <code>nums</code> are equal, so it is already non-decreasing and the entire <code>nums</code> forms a subarray of length 5.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code>​​​​​​​</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// prefix sum\nclass Solution {\npublic:\n    int longestSubarray(vector<int>& nums) {\n        vector<int> right(size(nums), 1);\n        for (int i = size(nums) - 2; i >= 0; --i) {\n            if (nums[i] <= nums[i + 1]) {\n                right[i] = right[i + 1] + 1;\n            }\n        }\n        int result = min(ranges::max(right) + 1, static_cast<int>(size(nums)));\n        for (int i = 1, left = 1; i + 1 < size(nums); ++i) {\n            if (nums[i - 1] <= nums[i + 1]) {\n                result = max(result, left + 1 + right[i + 1]);\n            }\n            if (nums[i - 1] <= nums[i]) {\n                ++left;\n            } else {\n                left = 1;\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// prefix sum\nclass Solution2 {\npublic:\n    int longestSubarray(vector<int>& nums) {\n        vector<int> left(size(nums), 1);\n        for (int i = 0; i + 1 < size(nums); ++i) {\n            if (nums[i] <= nums[i + 1]) {\n                left[i + 1] = left[i] + 1;\n            }\n        }\n        vector<int> right(size(nums), 1);\n        for (int i = size(nums) - 2; i >= 0; --i) {\n            if (nums[i] <= nums[i + 1]) {\n                right[i] = right[i + 1] + 1;\n            }\n        }\n        int result = min(ranges::max(left) + 1, static_cast<int>(size(nums)));\n        for (int i = 1; i + 1 < size(nums); ++i) {\n            if (nums[i - 1] <= nums[i + 1]) {\n                result = max(result, left[i - 1] + 1 + right[i + 1]);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# prefix sum\nclass Solution(object):\n    def longestSubarray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        right = [1]*len(nums)\n        for i in reversed(xrange(len(nums)-1)):\n            if nums[i] <= nums[i+1]:\n                right[i] = right[i+1]+1\n        result = min(max(right)+1, len(nums))\n        left = 1\n        for i in xrange(1, len(nums)-1):\n            if nums[i-1] <= nums[i+1]:\n                result = max(result, left+1+right[i+1])\n            if nums[i-1] <= nums[i]:\n                left += 1\n            else:\n                left = 1\n        return result\n\n\n# Time:  O(n)\n# Space: O(n)\n# prefix sum\nclass Solution2(object):\n    def longestSubarray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left = [1]*len(nums)\n        for i in xrange(len(nums)-1):\n            if nums[i] <= nums[i+1]:\n                left[i+1] = left[i]+1\n        right = [1]*len(nums)\n        for i in reversed(xrange(len(nums)-1)):\n            if nums[i] <= nums[i+1]:\n                right[i] = right[i+1]+1\n        result = min(max(left)+1, len(nums))\n        for i in xrange(1, len(nums)-1):\n            if nums[i-1] <= nums[i+1]:\n                result = max(result, left[i-1]+1+right[i+1])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

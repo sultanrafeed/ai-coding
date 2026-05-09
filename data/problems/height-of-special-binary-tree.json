@@ -1,0 +1,42 @@
+{
+  "id": "ce39472c-09fb-4e68-ba1d-34980cff1efd",
+  "slug": "height-of-special-binary-tree",
+  "title": "Height of Special Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,null,null,4,5]\n[1,2]\n[1,2,3,null,null,4,null,5,6]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// dfs\nclass Solution {\npublic:\n    int heightOfTree(TreeNode* root) {\n        int result = -1;\n        vector<pair<TreeNode *, int>> stk = {{root, 0}};\n        while (!empty(stk)) {\n            const auto [u, d] = stk.back(); stk.pop_back();\n            result = max(result, d);\n            if (u->right && u->right->left != u) {\n                stk.emplace_back(u->right, d + 1);\n            }\n            if (u->left && u->left->right != u) {\n                stk.emplace_back(u->left, d + 1);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(w)\n// bfs\nclass Solution2 {\npublic:\n    int heightOfTree(TreeNode* root) {\n        int result = -1;\n        vector<TreeNode *> q = {root};\n        while (!empty(q)) {\n            vector<TreeNode *> new_q;\n            for (const auto& u : q) {\n                if (u->left && u->left->right != u) {\n                    new_q.emplace_back(u->left);\n                }\n                if (u->right && u->right->left != u) {\n                    new_q.emplace_back(u->right);\n                }\n            }\n            q = move(new_q);\n            ++result;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        pass\n\n\n# dfs\nclass Solution(object):\n    def heightOfTree(self, root):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :rtype: int\n        \"\"\"\n        result = -1\n        stk = [(root, 0)]\n        while stk:\n            u, d = stk.pop()\n            result = max(result, d)\n            if u.right and u.right.left != u:\n                stk.append((u.right, d+1))\n            if u.left and u.left.right != u:\n                stk.append((u.left, d+1))\n        return result\n\n\n# Time:  O(n)\n# Space: O(w)\n# bfs\nclass Solution2(object):\n    def heightOfTree(self, root):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :rtype: int\n        \"\"\"\n        result = -1\n        q = [root]\n        while q:\n            new_q = []\n            for u in q:\n                if u.left and u.left.right != u:\n                    new_q.append(u.left)\n                if u.right and u.right.left != u:\n                    new_q.append(u.right)\n            q = new_q\n            result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

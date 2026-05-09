@@ -1,0 +1,38 @@
+{
+  "id": "c7eae20f-eec9-4f35-903f-cfb712a95787",
+  "slug": "the-wording-game",
+  "title": "The Wording Game",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "two-pointers",
+    "string",
+    "greedy",
+    "game-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m + n), m = sum(len(w) for w in a), n = sum(len(w) for w in b)\n// Space: O(1)\n\n// game, greedy\nclass Solution {\npublic:\n    bool canAliceWin(vector<string>& a, vector<string>& b) {\n        const auto& is_closely_greater = [](const auto& a, const auto& b) {\n            return a[0] - b[0] <= 1 && a > b;\n        };\n\n        bool result = true;\n        int i = 0, j = -1;\n        unordered_set<char> alphabet1;\n        for (const auto& w : a) {\n            alphabet1.emplace(w[0]);\n        }\n        unordered_set<char> alphabet2;\n        for (const auto& w : b) {\n            alphabet2.emplace(w[0]);\n        }\n        const int turn = size(alphabet1) + size(alphabet2);\n        for (int _ = 0; _ < turn; ++_) {  // each player takes turns using a word with a different first letter than the last word he played\n            for (++j; j < size(b); ++j) {\n                if (is_closely_greater(b[j], a[i])) {\n                    break;\n                }\n            }\n            if (j == size(b)) {\n                break;\n            }\n            while (j + 1 < size(b) && b[j + 1][0] == b[j][0]) {  // play the lexicographically greatest word with the same first letter\n                ++j;\n            }\n            swap(a, b);\n            swap(i, j);\n            result = !result;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m + n), m = sum(len(w) for w in a), n = sum(len(w) for w in b)\n# Space: O(1)\n\n# game, greedy\nclass Solution(object):\n    def canAliceWin(self, a, b):\n        \"\"\"\n        :type a: List[str]\n        :type b: List[str]\n        :rtype: bool\n        \"\"\"\n        def is_closely_greater(a, b):\n            return ord(a[0])-ord(b[0]) <= 1 and a > b\n\n        result = True\n        i, j = 0, -1\n        for _ in xrange(len({w[0] for w in a})+len({w[0] for w in b})):  # each player takes turns using a word with a different first letter than the last word he played\n            j = next((j for j in xrange(j+1, len(b)) if is_closely_greater(b[j], a[i])), len(b))\n            if j == len(b):\n                break\n            while j+1 < len(b) and b[j+1][0] == b[j][0]:  # play the lexicographically greatest word with the same first letter\n                j += 1\n            a, b, i, j, result = b, a, j, i, not result\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

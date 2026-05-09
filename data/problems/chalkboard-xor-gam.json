@@ -1,0 +1,25 @@
+{
+  "id": "c45fa842-3f45-47a7-94a7-266dee5ac6fe",
+  "slug": "chalkboard-xor-gam",
+  "title": "Chalkboard Xor Gam",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool xorGame(vector<int>& nums) {\n        return accumulate(nums.cbegin(), nums.cend(),\n                          0, std::bit_xor<int>()) == 0 ||\n               nums.size() % 2 == 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

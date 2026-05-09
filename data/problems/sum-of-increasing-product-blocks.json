@@ -1,0 +1,34 @@
+{
+  "id": "29bff5fa-3f5d-4475-9132-27cf0d42dcae",
+  "slug": "sum-of-increasing-product-blocks",
+  "title": "Sum of Increasing Product Blocks",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n^2)\n\n// simulation, math\nconst int MOD = 1e9 + 7;\nvector<int> FACT = {1, 1};\nvector<int> INV = {1, 1};\nvector<int> INV_FACT = {1, 1};\nconst auto& lazy_init = [](int n) {\n    while (size(INV) <= n) {  // lazy initialization\n        FACT.emplace_back((static_cast<int64_t>(FACT.back()) * size(INV)) % MOD);\n        INV.emplace_back((static_cast<int64_t>(INV[MOD % size(INV)]) * (MOD - MOD / size(INV))) % MOD);  // https://cp-algorithms.com/algebra/module-inverse.html\n        INV_FACT.emplace_back((static_cast<int64_t>(INV_FACT.back()) * INV.back()) % MOD);\n    }\n};\n\nconst auto& factorial = [](int n) {\n    lazy_init(n);\n    return FACT[n];\n};\n\nconst auto& inv_factorial = [](int n) {\n    lazy_init(n);\n    return INV_FACT[n];\n};\n\nclass Solution {\npublic:\n    int sumOfBlocks(int n) {\n        int result = 0;\n        for (int l = 0, left = 1, right; l < n; ++l) {\n            right = left + l;\n            result = (result + ((static_cast<int64_t>(factorial(right)) * inv_factorial(left - 1)) % MOD)) % MOD;\n            left = right + 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n^2)\n\n# simulation, math\nMOD = 10**9+7\nFACT, INV, INV_FACT = [[1]*2 for _ in range(3)]\ndef lazy_init(n):\n    while len(INV) <= n:  # lazy initialization\n        FACT.append(FACT[-1]*len(INV) % MOD)\n        INV.append(INV[MOD%len(INV)]*(MOD-MOD//len(INV)) % MOD)  # https://cp-algorithms.com/algebra/module-inverse.html\n        INV_FACT.append(INV_FACT[-1]*INV[-1] % MOD)\n\ndef factorial(n):\n    lazy_init(n)\n    return FACT[n]\n\ndef inv_factorial(n):\n    lazy_init(n)\n    return INV_FACT[n]\n\nclass Solution(object):\n    def sumOfBlocks(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"        \n        result, left = 0, 1\n        for l in xrange(n):\n            right = left+l\n            result = (result+(factorial(right)*inv_factorial(left-1)))%MOD\n            left = right+1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

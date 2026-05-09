@@ -1,0 +1,31 @@
+{
+  "id": "8d4d57b5-1512-4815-a519-4eb3e2a6fd11",
+  "slug": "make-object-immutable",
+  "title": "Make Object Immutable",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"x\":5}\n(obj) => { obj.x = 5; return obj.x; }\n[1,2,3]\n(arr) => { arr[1] = {}; return arr[2]; }\n{\"arr\":[1,2,3]}\n(obj) => { obj.arr.push(4); return 42; }\n{\"x\":2,\"y\":2}\n(obj) => { return Object.keys(obj); }",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// proxy\ntype Obj = Array<any> | Record<any, any>;\n\nconst forbiddenMethods = new Set([\"pop\", \"push\", \"shift\", \"unshift\", \"splice\", \"sort\", \"reverse\"]);\n\nfunction makeImmutable(obj: Obj): Obj {\n    return new Proxy(obj, {\n        set(target, prop) {\n            if (Array.isArray(target) && typeof prop === \"string\") {\n                if (Number(prop) !== undefined) {\n                    throw `Error Modifying Index: ${prop}`;\n                }\n            }\n            throw `Error Modifying: ${prop.toString()}`;\n        },\n        get(target, prop) {\n            if (typeof obj[prop] === 'object' && obj[prop] !== null) {\n                return makeImmutable(obj[prop]);\n            }\n            if (forbiddenMethods.has(prop.toString())) {\n                return () => {\n                    throw `Error Calling Method: ${prop.toString()}`;\n                }\n            }\n            return Reflect.get(target, prop);\n        }\n    });\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

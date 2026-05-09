@@ -1,0 +1,39 @@
+{
+  "id": "b5cda817-bc21-4578-b1a2-312555a8f29c",
+  "slug": "palindrome-number",
+  "title": "Palindrome Number",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer <code>x</code>, return <code>true</code><em> if </em><code>x</code><em> is a </em><span data-keyword=\"palindrome-integer\"><em><strong>palindrome</strong></em></span><em>, and </em><code>false</code><em> otherwise</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = 121\n<strong>Output:</strong> true\n<strong>Explanation:</strong> 121 reads as 121 from left to right and from right to left.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = -121\n<strong>Output:</strong> false\n<strong>Explanation:</strong> From left to right, it reads -121. From right to left, it becomes 121-. Therefore it is not a palindrome.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> x = 10\n<strong>Output:</strong> false\n<strong>Explanation:</strong> Reads 01 from right to left. Therefore it is not a palindrome.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-2<sup>31</sup>&nbsp;&lt;= x &lt;= 2<sup>31</sup>&nbsp;- 1</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Could you solve it without converting the integer to a string?",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "121\n-121\n10",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logx) = O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isPalindrome(int x) {\n        if (x < 0) {\n            return false;\n        }\n        int temp = x;\n        int reversed = 0;\n        while (temp != 0) {\n            if (isOverflow(reversed, temp % 10)) {\n                return false;\n            }\n            reversed = reversed * 10 + temp % 10;\n            temp = temp / 10;\n        }\n        return reversed == x;\n    }\n\nprivate:\n    bool isOverflow(int q, int r) {\n        static const int max_q = numeric_limits<int>::max() / 10;\n        static const int max_r = numeric_limits<int>::max() % 10;\n        return (q > max_q) || (q == max_q && r > max_r);\n    }\n};\n\n// Time:  O(logx) = O(1)\n// Space: O(1)\nclass Solution2 {\npublic:\n    bool isPalindrome(int x) {\n        if(x < 0) {\n            return false;\n        }\n\n        int divisor = 1;\n        while (x / divisor >= 10) {\n            divisor *= 10;\n        }\n\n        for (; x > 0; x = (x % divisor) / 10, divisor /= 100) {\n            int left = x / divisor;\n            int right = x % 10;\n            if (left != right) {\n                return false;\n            }\n        }\n\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    # @return a boolean\n    def isPalindrome(self, x):\n        if x < 0:\n            return False\n        copy, reverse = x, 0\n\n        while copy:\n            reverse *= 10\n            reverse += copy % 10\n            copy //= 10\n\n        return x == reverse",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

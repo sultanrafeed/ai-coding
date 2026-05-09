@@ -1,0 +1,35 @@
+{
+  "id": "781a1eee-451d-4c00-a3d1-891ffcbee01d",
+  "slug": "make-the-prefix-sum-non-negative",
+  "title": "Make the Prefix Sum Non-negative",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// prefix sum, greedy, heap\nclass Solution {\npublic:\n    int makePrefSumNonNegative(vector<int>& nums) {\n        priority_queue<int, vector<int>, greater<int>> min_heap;\n        int result = 0;\n        int64_t prefix = 0;\n        for (const auto& x: nums) {\n            min_heap.emplace(x);\n            prefix += x;\n            if (prefix < 0) {\n                prefix -= min_heap.top(); min_heap.pop();\n                ++result;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport heapq\n\n\n# prefix sum, greedy, heap\nclass Solution(object):\n    def makePrefSumNonNegative(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = prefix = 0\n        min_heap = []\n        for x in nums:\n            heapq.heappush(min_heap, x)\n            prefix += x\n            if prefix < 0:\n                prefix -= heapq.heappop(min_heap)\n                result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

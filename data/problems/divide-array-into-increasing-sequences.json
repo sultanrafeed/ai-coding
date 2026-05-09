@@ -1,0 +1,40 @@
+{
+  "id": "71508d6a-89da-4851-868a-9d7c838841b8",
+  "slug": "divide-array-into-increasing-sequences",
+  "title": "Divide Array Into Increasing Sequences",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,2,3,3,4,4]\n3\n[5,6,6,7,8]\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool canDivideIntoSubsequences(vector<int>& nums, int K) {\n        int curr = 1, max_count = 1;\n        for (int i = 1; i < nums.size(); ++i) {\n            curr = (nums[i - 1] <  nums[i]) ? 1 : curr + 1;\n            max_count = max(max_count, curr);\n        }\n        return K * max_count <= nums.size(); \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def canDivideIntoSubsequences(self, nums, K):\n        \"\"\"\n        :type nums: List[int]\n        :type K: int\n        :rtype: bool\n        \"\"\"\n        curr, max_count = 1, 1\n        for i in xrange(1, len(nums)):\n            curr = 1 if nums[i-1] < nums[i] else curr+1\n            max_count = max(max_count, curr)\n        return K*max_count <= len(nums)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "d3a371ea-38d8-41ed-83eb-c2c0a4ee094c",
+  "slug": "nested-list-weight-sum",
+  "title": "Nested List Weight Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "depth-first-search",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,1],2,[1,1]]\n[1,[4,[6]]]\n[0]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * // This is the interface that allows for creating nested lists.\n * // You should not implement it, or speculate about its implementation\n * class NestedInteger {\n *   public:\n *     // Return true if this NestedInteger holds a single integer, rather than a nested list.\n *     bool isInteger() const;\n *\n *     // Return the single integer that this NestedInteger holds, if it holds a single integer\n *     // The result is undefined if this NestedInteger holds a nested list\n *     int getInteger() const;\n *\n *     // Return the nested list that this NestedInteger holds, if it holds a nested list\n *     // The result is undefined if this NestedInteger holds a single integer\n *     const vector<NestedInteger> &getList() const;\n * };\n */\nclass Solution {\npublic:\n    int depthSum(vector<NestedInteger>& nestedList) {\n        return depthSumHelper(nestedList, 1);\n    }\n\nprivate:\n    int depthSumHelper(const vector<NestedInteger>& nestedList, int depth) {\n        int sum = 0;\n        for (const auto& list : nestedList) {\n            if (list.isInteger()) {\n                sum += list.getInteger() * depth;\n            } else {\n                sum += depthSumHelper(list.getList(), depth + 1);\n            }\n        }\n        return sum;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def depthSum(self, nestedList):\n        \"\"\"\n        :type nestedList: List[NestedInteger]\n        :rtype: int\n        \"\"\"\n        def depthSumHelper(nestedList, depth):\n            res = 0\n            for l in nestedList:\n                if l.isInteger():\n                    res += l.getInteger() * depth\n                else:\n                    res += depthSumHelper(l.getList(), depth + 1)\n            return res\n        return depthSumHelper(nestedList, 1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

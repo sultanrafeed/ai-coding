@@ -1,0 +1,40 @@
+{
+  "id": "41c338df-bf1b-4774-9f2a-46c494e585ae",
+  "slug": "fixed-point",
+  "title": "Fixed Point",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[-10,-5,0,3,7]\n[0,2,5,8,17]\n[-10,-5,3,4,7,9]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int fixedPoint(vector<int>& A) {\n        int left = 0, right = A.size() - 1;\n        while (left <= right) {\n            const auto& mid = left + (right - left) / 2;\n            if (A[mid] >= mid) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return A[left] == left ? left : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def fixedPoint(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        left, right = 0, len(A)-1\n        while left <= right:\n            mid = left + (right-left)//2\n            if A[mid] >= mid:\n                right = mid-1\n            else:\n                left = mid+1\n        return left if A[left] == left else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

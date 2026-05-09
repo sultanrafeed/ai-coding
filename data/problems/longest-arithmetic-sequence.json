@@ -1,0 +1,31 @@
+{
+  "id": "6dfde5fd-2664-445a-b891-0154c7292242",
+  "slug": "longest-arithmetic-sequence",
+  "title": "Longest Arithmetic Sequence",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    int longestArithSeqLength(vector<int>& A) {\n        unordered_map<int, unordered_map<int, int>> dp;\n        int result = 2;\n        for (int i = 0; i < A.size(); ++i) {\n            for (int j = i + 1; j < A.size(); ++j)  {\n                int v = A[j] - A[i];\n                dp[v][j] = max(dp[v][j], dp[v][i] + 1);\n                result = max(result, dp[v][j] + 1);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n^2)\n\nimport collections\n\nclass Solution(object):\n    def longestArithSeqLength(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        dp = collections.defaultdict(int)\n        for i in xrange(len(A)-1):\n            for j in xrange(i+1, len(A)):\n                v =  A[j]-A[i]\n                dp[v, j] = max(dp[v, j], dp[v, i]+1)\n        return max(dp.values())+1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

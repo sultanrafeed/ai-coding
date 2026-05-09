@@ -1,0 +1,41 @@
+{
+  "id": "ef305a27-e041-4d40-86f2-ca8144a4356b",
+  "slug": "find-leaves-of-binary-tree",
+  "title": "Find Leaves of Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5]\n[1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<vector<int>> findLeaves(TreeNode* root) {\n        vector<vector<int>> result;\n        findLeavesHelper(root, &result);\n        return result;\n    }\n\nprivate:\n    int findLeavesHelper(TreeNode *node, vector<vector<int>> *result) {\n        if (node == nullptr) {\n            return -1;\n        }\n        const int level = 1 + max(findLeavesHelper(node->left, result),\n                                  findLeavesHelper(node->right, result));\n        if (result->size() < level + 1){\n            result->emplace_back();\n        }\n        (*result)[level].emplace_back(node->val);\n        return level;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def findLeaves(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[List[int]]\n        \"\"\"\n        def findLeavesHelper(node, result):\n            if not node:\n                return -1\n            level = 1 + max(findLeavesHelper(node.left, result), \\\n                            findLeavesHelper(node.right, result))\n            if len(result) < level + 1:\n                result.append([])\n            result[level].append(node.val)\n            return level\n\n        result = []\n        findLeavesHelper(root, result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

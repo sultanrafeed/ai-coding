@@ -1,0 +1,25 @@
+{
+  "id": "992e169a-2f0d-45b7-ba7b-3ae088a06e29",
+  "slug": "searchMatrix2",
+  "title": "Searchmatrix2",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(log(mn))\n// Space Complexity: O(1)\n\nclass Solution {\n    public:\n        bool searchMatrix(vector<vector<int> > &matrix, int target) {\n            if(matrix.empty()) return false;\n\n            const size_t m = matrix.size();\n            const size_t n = matrix.front().size();\n\n            int start = 0, end = m * n;\n\n            while(start < end) {\n                int mid = (start + end) / 2;\n                int value = matrix[mid / n][mid % n];\n                if(target == value)\n                    return true;\n                else if (value < target)\n                    start = mid + 1;\n                else\n                    end = mid;\n            }\n            return false;\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

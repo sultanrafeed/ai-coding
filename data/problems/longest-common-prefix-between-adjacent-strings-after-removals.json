@@ -1,0 +1,34 @@
+{
+  "id": "dc8859b3-805a-4c5f-a309-941ae30888b0",
+  "slug": "longest-common-prefix-between-adjacent-strings-after-removals",
+  "title": "Longest Common Prefix Between Adjacent Strings After Removals",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array of strings <code>words</code>. For each index <code>i</code> in the range <code>[0, words.length - 1]</code>, perform the following steps:</p>\n\n<ul>\n\t<li>Remove the element at index <code>i</code> from the <code>words</code> array.</li>\n\t<li>Compute the <strong>length</strong> of the <strong>longest common <span data-keyword=\"string-prefix\">prefix</span></strong> among all <strong>adjacent</strong> pairs in the modified array.</li>\n</ul>\n\n<p>Return an array <code>answer</code>, where <code>answer[i]</code> is the length of the longest common prefix between the adjacent pairs after removing the element at index <code>i</code>. If <strong>no</strong> adjacent pairs remain or if <strong>none</strong> share a common prefix, then <code>answer[i]</code> should be 0.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;jump&quot;,&quot;run&quot;,&quot;run&quot;,&quot;jump&quot;,&quot;run&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[3,0,0,3,3]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Removing index 0:\n\t<ul>\n\t\t<li><code>words</code> becomes <code>[&quot;run&quot;, &quot;run&quot;, &quot;jump&quot;, &quot;run&quot;]</code></li>\n\t\t<li>Longest adjacent pair is <code>[&quot;run&quot;, &quot;run&quot;]</code> having a common prefix <code>&quot;run&quot;</code> (length 3)</li>\n\t</ul>\n\t</li>\n\t<li>Removing index 1:\n\t<ul>\n\t\t<li><code>words</code> becomes <code>[&quot;jump&quot;, &quot;run&quot;, &quot;jump&quot;, &quot;run&quot;]</code></li>\n\t\t<li>No adjacent pairs share a common prefix (length 0)</li>\n\t</ul>\n\t</li>\n\t<li>Removing index 2:\n\t<ul>\n\t\t<li><code>words</code> becomes <code>[&quot;jump&quot;, &quot;run&quot;, &quot;jump&quot;, &quot;run&quot;]</code></li>\n\t\t<li>No adjacent pairs share a common prefix (length 0)</li>\n\t</ul>\n\t</li>\n\t<li>Removing index 3:\n\t<ul>\n\t\t<li><code>words</code> becomes <code>[&quot;jump&quot;, &quot;run&quot;, &quot;run&quot;, &quot;run&quot;]</code></li>\n\t\t<li>Longest adjacent pair is <code>[&quot;run&quot;, &quot;run&quot;]</code> having a common prefix <code>&quot;run&quot;</code> (length 3)</li>\n\t</ul>\n\t</li>\n\t<li>Removing index 4:\n\t<ul>\n\t\t<li>words becomes <code>[&quot;jump&quot;, &quot;run&quot;, &quot;run&quot;, &quot;jump&quot;]</code></li>\n\t\t<li>Longest adjacent pair is <code>[&quot;run&quot;, &quot;run&quot;]</code> having a common prefix <code>&quot;run&quot;</code> (length 3)</li>\n\t</ul>\n\t</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;dog&quot;,&quot;racer&quot;,&quot;car&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[0,0,0]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Removing any index results in an answer of 0.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>words[i]</code> consists of lowercase English letters.</li>\n\t<li>The sum of <code>words[i].length</code> is smaller than or equal <code>10<sup>5</sup></code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l)\n// Space: O(n)\n\n// prefix sum\nclass Solution {\npublic:\n    vector<int> longestCommonPrefix(vector<string>& words) {\n        const auto& lcp = [&](int i, int j) {\n            if (i < 0 || j >= size(words)) {\n                return 0;\n            }\n            const auto& s1 = words[i], &s2 = words[j];\n            const int l = min(size(s1), size(s2));\n            for (int k = 0; k < l; ++k) {\n                if (s1[k] != s2[k]) {\n                    return k;\n                }\n            }\n            return l;\n        };\n\n        vector<int> lcps(size(words) - 1);\n        for (int i = 0; i < size(lcps); ++i) {\n            lcps[i] = lcp(i, i + 1);\n        }\n        vector<int> right(size(lcps) + 2);\n        for (int i = size(lcps) - 1; i >= 0; --i) {\n            right[i] = max(right[i + 1], lcps[i]);\n        }\n        vector<int> result(size(words));\n        for (int i = 0, left = 0; i < size(words); ++i) {\n            if (i - 2 >= 0) {\n                left = max(left, lcps[i - 2]);\n            }\n            result[i] = max({left, right[i + 1], lcp(i - 1, i + 1)});\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l)\n# Space: O(n)\n\n# prefix sum\nclass Solution(object):\n    def longestCommonPrefix(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: List[int]\n        \"\"\"\n        def lcp(i, j):\n            if i < 0 or j >= len(words):\n                return 0\n            s1, s2 = words[i], words[j]\n            for k in xrange(min(len(s1), len(s2))):\n                if s1[k] != s2[k]:\n                    return k\n            return k+1\n    \n        lcps = [lcp(i, i+1) for i in xrange(len(words)-1)]\n        right = [0]*(len(lcps)+2)\n        for i in reversed(xrange(len(lcps))):\n            right[i] = max(right[i+1], lcps[i])\n        result = [0]*len(words)\n        left = 0\n        for i in xrange(len(words)):\n            if i-2 >= 0:\n                left = max(left, lcps[i-2])\n            result[i] = max(left, right[i+1], lcp(i-1, i+1))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

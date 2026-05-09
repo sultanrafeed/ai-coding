@@ -1,0 +1,41 @@
+{
+  "id": "9698ef3f-1758-4ef7-86bd-c2ea84f5e5a1",
+  "slug": "longest-common-subsequence-between-sorted-arrays",
+  "title": "Longest Common Subsequence Between Sorted Arrays",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,3,4],[1,4,7,9]]\n[[2,3,6,8],[1,2,3,5,6,7,10],[2,3,4,6,9]]\n[[1,2,3,4,5],[6,7,8]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(l), l is min(len(arr) for arr in arrays)\n\nclass Solution {\npublic:\n    vector<int> longestCommomSubsequence(vector<vector<int>>& arrays) {\n        const auto min_cit = min_element(cbegin(arrays), cend(arrays),\n                                         [](const auto& a, const auto& b) {\n                                             return size(a) < size(b);\n                                         });\n        vector<int> result = *min_cit;\n        for (auto cit = cbegin(arrays); cit != cend(arrays); ++cit) {\n            if (cit == min_cit) {\n                continue;\n            }\n            vector<int> new_result;\n            for (int i = 0, j = 0; i != size(result) && j != size(*cit);) {\n                if (result[i] < (*cit)[j]) {\n                    ++i;\n                } else if (result[i] > (*cit)[j]) {\n                    ++j;\n                } else {\n                    new_result.emplace_back(result[i]);\n                    ++i;\n                    ++j;\n                }\n            }\n            result = move(new_result);\n        }\n        return result;\n    }\n};\n\n// Time:  O(m * n)\n// Space: O(k), k is min(m * n, max(x for arr in arrays for x in arr))\nclass Solution2 {\npublic:\n    vector<int> longestCommomSubsequence(vector<vector<int>>& arrays) {\n        unordered_map<int, int> lookup;\n        for (const auto& arr : arrays) {\n            for (const auto& x : arr) {\n                ++lookup[x];\n            }\n        }\n        vector<int> result;\n        for (const auto& x : arrays[0]) {\n            if (lookup[x] == size(arrays)) {\n                result.emplace_back(x);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(l), l is min(len(arr) for arr in arrays)\n\nclass Solution(object):\n    def longestCommomSubsequence(self, arrays):\n        \"\"\"\n        :type arrays: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        result = min(arrays, key=lambda x: len(x))\n        for arr in arrays:\n            new_result = []\n            i, j = 0, 0\n            while i != len(result) and j != len(arr):\n                if result[i] < arr[j]:\n                    i += 1\n                elif result[i] > arr[j]:\n                    j += 1\n                else:\n                    new_result.append(result[i])\n                    i += 1\n                    j += 1\n            result = new_result\n        return result\n\n\n# Time:  O(m * n)\n# Space: O(k), k is min(m * n, max(x for arr in arrays for x in arr))\nimport collections\n\n\nclass Solution2(object):\n    def longestCommomSubsequence(self, arrays):\n        \"\"\"\n        :type arrays: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        return [num for num, cnt in collections.Counter(x for arr in arrays for x in arr).iteritems() if cnt == len(arrays)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

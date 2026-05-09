@@ -1,0 +1,44 @@
+{
+  "id": "e6303998-136f-4862-8a68-1cb96ea6daa0",
+  "slug": "design-an-expression-tree-with-evaluate-function",
+  "title": "Design an Expression Tree With Evaluate Function",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "stack",
+    "tree",
+    "design",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"3\",\"4\",\"+\",\"2\",\"*\",\"7\",\"/\"]\n[\"4\",\"5\",\"2\",\"7\",\"+\",\"-\",\"*\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n#define ITER\n\nclass Node {\npublic:\n    virtual ~Node () {};\n    virtual int evaluate() const = 0;\nprotected:\n};\n\nclass NodeIter : public Node {\npublic:\n    NodeIter (int val) : val(val) {};\n    NodeIter (char op, NodeIter *left, NodeIter *right) : op(op), left(left), right(right) {};\n    virtual ~NodeIter () {};\n    virtual int evaluate() const {\n        int result = 0;\n        vector<tuple<int, NodeIter *, unique_ptr<int>, unique_ptr<int>, int*>> stk;\n        stk.emplace_back(1, const_cast<NodeIter *>(this), nullptr, nullptr, &result);\n        while (!empty(stk)) {\n            const auto [step, node, ret1, ret2, ret] = move(stk.back()); stk.pop_back();\n            if (step == 1) {\n                if (node->op == 0) {\n                    *ret = node->val;\n                    continue;\n                }\n                auto ret1 = make_unique<int>(), ret2 = make_unique<int>();\n                auto p1 = ret1.get(), p2 = ret2.get();\n                stk.emplace_back(2, node, move(ret1), move(ret2), ret);\n                stk.emplace_back(1, node->right, nullptr, nullptr, p2);\n                stk.emplace_back(1, node->left, nullptr, nullptr, p1);\n            } else if (step == 2) {\n                int l = *ret1, r = *ret2;\n                *ret = (node->op == '+') ? l + r :\n                       (node->op == '-') ? l - r :\n                       (node->op == '*') ? l * r :\n                       (node->op == '/') ? l / r : 0;\n            }\n        }\n        return result;\n    }\n    \npublic:\n    int val;\n    char op = 0;\n    NodeIter *left = nullptr;\n    NodeIter *right = nullptr;\n};\n\nclass NodeRecu : public Node {\npublic:\n    NodeRecu (int val) : val(val) {};\n    NodeRecu (char op, NodeRecu *left, NodeRecu *right) : op(op), left(left), right(right) {};\n    virtual ~NodeRecu () {};\n    virtual int evaluate() const {\n        if (op == 0) {\n            return val;\n        }\n        int l = left->evaluate(), r = right->evaluate();\n        return (op == '+') ? l + r :\n               (op == '-') ? l - r :\n               (op == '*') ? l * r :\n               (op == '/') ? l / r : 0;\n    }\n    \npublic:\n    int val;\n    char op = 0;\n    NodeRecu *left = nullptr;\n    NodeRecu *right = nullptr;\n};\n\nclass TreeBuilder {\npublic:\n    Node* buildTree(vector<string>& postfix) {\n#ifdef ITER\n    using TreeNode = NodeIter;\n#else\n    using TreeNode = NodeRecu;\n#endif\n        vector<Node *> stk;\n        for (const auto& s : postfix) {\n            if (isdigit(s[0])) {\n                stk.emplace_back(new TreeNode(stoi(s)));\n            } else {\n                auto right = dynamic_cast<TreeNode*>(stk.back()); stk.pop_back();\n                auto left = dynamic_cast<TreeNode*>(stk.back()); stk.pop_back();\n                stk.emplace_back(new TreeNode(s[0], left, right));\n            } \n        }\n        return stk.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nimport abc \nfrom abc import ABCMeta, abstractmethod \n\n\nclass Node:\n    __metaclass__ = ABCMeta\n    # define your fields here\n    @abstractmethod\n    def evaluate(self):\n        pass\n\n\nimport operator\n\n\nclass NodeIter(Node):\n    ops = {'+':operator.add, '-':operator.sub, '*':operator.mul, '/':operator.div}\n    \n    def __init__(self, val):\n        self.val = val\n        self.left = None \n        self.right = None\n    \n    def evaluate(self):\n        result = [0]\n        stk = [(1, (self, result))]\n        while stk:\n            step, args = stk.pop()\n            if step == 1:\n                node, ret = args\n                if node.val.isdigit():\n                    ret[0] = int(node.val)\n                    continue\n                ret1, ret2 = [0], [0]\n                stk.append((2, (node, ret1, ret2, ret)))\n                stk.append((1, (node.right, ret2)))\n                stk.append((1, (node.left, ret1)))\n            elif step == 2:\n                node, ret1, ret2, ret = args\n                ret[0] = NodeIter.ops[node.val](ret1[0], ret2[0])\n        return result[0]\n\n\nclass TreeBuilder(object):\n    def buildTree(self, postfix):\n        \"\"\"\n        :type s: List[str]\n        :rtype: int\n        \"\"\"\n        stk = []\n        for c in postfix:\n            if c.isdigit():\n                stk.append(NodeIter(c))\n            else:\n                node = NodeIter(c)\n                node.right = stk.pop()\n                node.left = stk.pop()\n                stk.append(node)                \n        return stk.pop()\n\n\n# Time:  O(n)\n# Space: O(h)\nclass NodeRecu(Node):\n    ops = {'+':operator.add, '-':operator.sub, '*':operator.mul, '/':operator.div}\n    \n    def __init__(self, val):\n        self.val = val\n        self.left = None \n        self.right = None\n\n    def evaluate(self):\n        if self.val.isdigit():\n            return int(self.val)\n        return NodeRecu.ops[self.val](self.left.evaluate(), self.right.evaluate())\n        \n\nclass TreeBuilder2(object):\n    def buildTree(self, postfix):\n        \"\"\"\n        :type s: List[str]\n        :rtype: int\n        \"\"\"\n        stk = []\n        for c in postfix:\n            if c.isdigit():\n                stk.append(NodeRecu(c))\n            else:\n                node = NodeRecu(c)\n                node.right = stk.pop()\n                node.left = stk.pop()\n                stk.append(node)\n        return stk.pop()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

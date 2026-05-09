@@ -1,0 +1,35 @@
+{
+  "id": "1fbc039a-2bea-4dcb-a022-90f0ebe842a0",
+  "slug": "shortest-distance-from-all-buildings",
+  "title": "Shortest Distance from All Buildings",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(k * m * n), k is the number of the buildings\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    int shortestDistance(vector<vector<int>>& grid) {\n        int m = grid.size(), n = grid[0].size(), cnt = 0;\n        vector<vector<int>> dists(m, vector<int>(n)), cnts(m, vector<int>(n));\n        for (int i = 0; i < m; ++i) {\n            for (int j = 0; j < n; ++j) {\n                if (grid[i][j] == 1) {\n                    ++cnt;\n                    BFS(grid, i, j, &dists, &cnts);\n                }\n            }\n        }\n\n        int shortest = numeric_limits<int>::max();\n        for (int i = 0; i < m; ++i) {\n            for (int j = 0; j < n; ++j) {\n                if (dists[i][j] < shortest && cnts[i][j] == cnt) {\n                    shortest = dists[i][j];\n                }\n            }\n        }\n\n        return shortest != numeric_limits<int>::max() ? shortest : -1;\n    }\n\n    void BFS(const vector<vector<int>>& grid, int x, int y,\n             vector<vector<int>> *dists, vector<vector<int>> *cnts) {\n        int dist = 0, m = grid.size(), n = grid[0].size();\n        vector<vector<bool>> visited(m, vector<bool>(n));\n\n        vector<pair<int, int>> pre_level{{x, y}}, cur_level;\n        visited[x][y] = true;\n        while (!pre_level.empty()) {\n            ++dist;\n            cur_level.clear();\n            for (const auto& p : pre_level) {\n                int i, j;\n                tie(i, j) = p;\n                const vector<pair<int, int>> directions{{0, -1}, {0, 1},\n                                                        {-1, 0}, {1, 0}};\n                for (const auto& d : directions) {\n                    const int I = i + d.first, J = j + d.second;\n                    if (0 <= I && I < m && 0 <= J && J < n &&\n                        grid[I][J] == 0 && !visited[I][J]) {\n                        (*dists)[I][J] += dist;\n                        ++(*cnts)[I][J];\n                        cur_level.push_back({I, J});\n                        visited[I][J] = true;\n                    }\n                }\n            }\n            swap(pre_level, cur_level);\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(k * m * n), k is the number of the buildings\n# Space: O(m * n)\n\nclass Solution(object):\n    def shortestDistance(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def bfs(grid, dists, cnts, x, y):\n            dist, m, n = 0, len(grid), len(grid[0])\n            visited = [[False for _ in xrange(n)] for _ in xrange(m)]\n\n            pre_level = [(x, y)]\n            visited[x][y] = True\n            while pre_level:\n                dist += 1\n                cur_level = []\n                for i, j in pre_level:\n                    for dir in [(-1, 0), (1, 0), (0, -1), (0, 1)]:\n                        I, J = i+dir[0], j+dir[1]\n                        if 0 <= I < m and 0 <= J < n and grid[I][J] == 0 and not visited[I][J]:\n                            cnts[I][J] += 1\n                            dists[I][J] += dist\n                            cur_level.append((I, J))\n                            visited[I][J] = True\n\n                pre_level = cur_level\n\n\n        m, n, cnt = len(grid),  len(grid[0]), 0\n        dists = [[0 for _ in xrange(n)] for _ in xrange(m)]\n        cnts = [[0 for _ in xrange(n)] for _ in xrange(m)]\n        for i in xrange(m):\n            for j in xrange(n):\n                if grid[i][j] == 1:\n                    cnt += 1\n                    bfs(grid, dists, cnts, i, j)\n\n        shortest = float(\"inf\")\n        for i in xrange(m):\n            for j in xrange(n):\n                if dists[i][j] < shortest and cnts[i][j] == cnt:\n                    shortest = dists[i][j]\n\n        return shortest if shortest != float(\"inf\") else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

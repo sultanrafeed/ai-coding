@@ -1,0 +1,25 @@
+{
+  "id": "ca46ba5d-e3c6-4fe7-9fba-f1bd7d3d77f4",
+  "slug": "uniquePathWithObstacles",
+  "title": "Uniquepathwithobstacles",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(m * n)\n// Space Complexity: O(m + n)\n\nclass Solution {\n    public:\n        int uniquePathsWithObstacles(vector<vector<int> > &obstacleGrid) {\n            const int m = obstacleGrid.size();\n            const int n = obstacleGrid[0].size();\n            vector<int> v(n, 0);\n\n            v[0] = 1;\n            for(int i = 0; i < m; ++i) {\n                if(obstacleGrid[i][0] != 0)\n                    v[0] = 0;\n                for(int j = 1; j < n; ++j) {\n                    if(obstacleGrid[i][j] == 0)\n                        v[j] += v[j - 1];\n                    else\n                        v[j] = 0;\n                }\n            }\n\n            return v[n - 1];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

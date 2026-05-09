@@ -1,0 +1,39 @@
+{
+  "id": "d5cd8f62-39ae-4287-9e5c-edf54e9e3975",
+  "slug": "reconstruct-itinerary",
+  "title": "Reconstruct Itinerary",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a list of airline <code>tickets</code> where <code>tickets[i] = [from<sub>i</sub>, to<sub>i</sub>]</code> represent the departure and the arrival airports of one flight. Reconstruct the itinerary in order and return it.</p>\n\n<p>All of the tickets belong to a man who departs from <code>&quot;JFK&quot;</code>, thus, the itinerary must begin with <code>&quot;JFK&quot;</code>. If there are multiple valid itineraries, you should return the itinerary that has the smallest lexical order when read as a single string.</p>\n\n<ul>\n\t<li>For example, the itinerary <code>[&quot;JFK&quot;, &quot;LGA&quot;]</code> has a smaller lexical order than <code>[&quot;JFK&quot;, &quot;LGB&quot;]</code>.</li>\n</ul>\n\n<p>You may assume all tickets form at least one valid itinerary. You must use all the tickets once and only once.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/14/itinerary1-graph.jpg\" style=\"width: 382px; height: 222px;\" />\n<pre>\n<strong>Input:</strong> tickets = [[&quot;MUC&quot;,&quot;LHR&quot;],[&quot;JFK&quot;,&quot;MUC&quot;],[&quot;SFO&quot;,&quot;SJC&quot;],[&quot;LHR&quot;,&quot;SFO&quot;]]\n<strong>Output:</strong> [&quot;JFK&quot;,&quot;MUC&quot;,&quot;LHR&quot;,&quot;SFO&quot;,&quot;SJC&quot;]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/14/itinerary2-graph.jpg\" style=\"width: 222px; height: 230px;\" />\n<pre>\n<strong>Input:</strong> tickets = [[&quot;JFK&quot;,&quot;SFO&quot;],[&quot;JFK&quot;,&quot;ATL&quot;],[&quot;SFO&quot;,&quot;ATL&quot;],[&quot;ATL&quot;,&quot;JFK&quot;],[&quot;ATL&quot;,&quot;SFO&quot;]]\n<strong>Output:</strong> [&quot;JFK&quot;,&quot;ATL&quot;,&quot;JFK&quot;,&quot;SFO&quot;,&quot;ATL&quot;,&quot;SFO&quot;]\n<strong>Explanation:</strong> Another possible reconstruction is [&quot;JFK&quot;,&quot;SFO&quot;,&quot;ATL&quot;,&quot;JFK&quot;,&quot;ATL&quot;,&quot;SFO&quot;] but it is larger in lexical order.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= tickets.length &lt;= 300</code></li>\n\t<li><code>tickets[i].length == 2</code></li>\n\t<li><code>from<sub>i</sub>.length == 3</code></li>\n\t<li><code>to<sub>i</sub>.length == 3</code></li>\n\t<li><code>from<sub>i</sub></code> and <code>to<sub>i</sub></code> consist of uppercase English letters.</li>\n\t<li><code>from<sub>i</sub> != to<sub>i</sub></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string",
+    "depth-first-search",
+    "graph",
+    "sorting",
+    "heap-priority-queue",
+    "eulerian-circuit"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(|V| + |E|log|V|)\n// Space: O(|V| + |E|)\n\n// Hierholzer Algorithm\nclass Solution {\npublic:\n    vector<string> findItinerary(vector<vector<string>>& tickets) {\n        static const string origin{\"JFK\"};\n\n        unordered_map<string, vector<string>> adj;\n        for (const auto& ticket : tickets) {\n            adj[ticket[0]].emplace_back(ticket[1]);\n        }\n        for (auto& [k, v] : adj) {\n            sort(rbegin(v), rend(v));\n        }\n        \n        vector<string> result;\n        vector<string> stk = {origin};\n        while (!empty(stk)) {\n            while (!empty(adj[stk.back()])) { \n                auto x = adj[stk.back()].back();\n                adj[stk.back()].pop_back();\n                stk.emplace_back(x);\n                \n            }\n            result.emplace_back(stk.back());\n            stk.pop_back();\n        }\n        reverse(begin(result), end(result));\n        return result;\n    }\n};\n\n// Time:  O(t! / (n1! * n2! * ... nk!)), t is the total number of tickets, \n//                                       ni is the number of the ticket which from is city i,\n//                                       k is the total number of cities.\n// Space: O(t)\nclass Solution2 {\npublic:\n   vector<string> findItinerary(vector<vector<string>>& tickets) {\n        unordered_map<string, map<string, int>> graph;\n        for (const auto& ticket : tickets) {\n            ++graph[ticket[0]][ticket[1]];\n        }\n        const string from{\"JFK\"};\n        vector<string> ans{from};\n        routeHelper(from, tickets.size(), &graph, &ans);\n        return ans;\n    }\n\nprivate:\n    bool routeHelper(const string& from, const int ticket_cnt,\n                     unordered_map<string, map<string, int>> *graph, vector<string> *ans) {\n\n        if (ticket_cnt == 0) {\n            return true;\n        }\n\n        for (auto& to : (*graph)[from]) {\n            if (to.second) {\n                --to.second;\n                ans->emplace_back(to.first);\n                if (routeHelper(to.first, ticket_cnt - 1, graph, ans)) {\n                    return true;\n                }\n                ans->pop_back();\n                ++to.second;\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(|V| + |E|log|V|)\n# Space: O(|V| + |E|)\n\n# Hierholzer Algorithm\nimport collections\n\n\nclass Solution(object):\n    def findItinerary(self, tickets):\n        \"\"\"\n        :type tickets: List[List[str]]\n        :rtype: List[str]\n        \"\"\"\n        adj = collections.defaultdict(list)\n        for ticket in tickets:\n            adj[ticket[0]].append(ticket[1])\n        for x in adj.itervalues():\n            x.sort(reverse=True)\n        origin = \"JFK\"\n        result = []\n        stk = [origin]\n        while stk:\n            while adj[stk[-1]]: \n                stk.append(adj[stk[-1]].pop())\n            result.append(stk.pop())\n        result.reverse()\n        return result\n\n\n# Time:  O(t! / (n1! * n2! * ... nk!)), t is the total number of tickets,\n#                                       ni is the number of the ticket which from is city i,\n#                                       k is the total number of cities.\n# Space: O(t)\nimport collections\n\n\nclass Solution2(object):\n    def findItinerary(self, tickets):\n        \"\"\"\n        :type tickets: List[List[str]]\n        :rtype: List[str]\n        \"\"\"\n        def route_helper(origin, ticket_cnt, graph, ans):\n            if ticket_cnt == 0:\n                return True\n\n            for i, (dest, valid)  in enumerate(graph[origin]):\n                if valid:\n                    graph[origin][i][1] = False\n                    ans.append(dest)\n                    if route_helper(dest, ticket_cnt - 1, graph, ans):\n                        return ans\n                    ans.pop()\n                    graph[origin][i][1] = True\n            return False\n\n        graph = collections.defaultdict(list)\n        for ticket in tickets:\n            graph[ticket[0]].append([ticket[1], True])\n        for k in graph.keys():\n            graph[k].sort()\n\n        origin = \"JFK\"\n        ans = [origin]\n        route_helper(origin, len(tickets), graph, ans)\n        return ans",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

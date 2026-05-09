@@ -1,0 +1,35 @@
+{
+  "id": "80170e26-b9d3-45b1-a378-52721a855881",
+  "slug": "set-matrix-zeroes",
+  "title": "Set Matrix Zeroes",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an <code>m x n</code> integer matrix <code>matrix</code>, if an element is <code>0</code>, set its entire row and column to <code>0</code>&#39;s.</p>\n\n<p>You must do it <a href=\"https://en.wikipedia.org/wiki/In-place_algorithm\" target=\"_blank\">in place</a>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/08/17/mat1.jpg\" style=\"width: 450px; height: 169px;\" />\n<pre>\n<strong>Input:</strong> matrix = [[1,1,1],[1,0,1],[1,1,1]]\n<strong>Output:</strong> [[1,0,1],[0,0,0],[1,0,1]]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/08/17/mat2.jpg\" style=\"width: 450px; height: 137px;\" />\n<pre>\n<strong>Input:</strong> matrix = [[0,1,2,0],[3,4,5,2],[1,3,1,5]]\n<strong>Output:</strong> [[0,0,0,0],[0,4,5,0],[0,3,1,0]]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == matrix.length</code></li>\n\t<li><code>n == matrix[0].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 200</code></li>\n\t<li><code>-2<sup>31</sup> &lt;= matrix[i][j] &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong></p>\n\n<ul>\n\t<li>A straightforward solution using <code>O(mn)</code> space is probably a bad idea.</li>\n\t<li>A simple improvement uses <code>O(m + n)</code> space, but still not the best solution.</li>\n\t<li>Could you devise a constant space solution?</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    void setZeroes(vector<vector<int>>& matrix) {\n        if (matrix.empty()) {\n            return;\n        }\n\n        bool has_zero = false;\n        int zero_i = -1, zero_j = -1;\n\n        for (int i = 0; i < matrix.size(); ++i) {\n            for (int j = 0; j < matrix[0].size(); ++j) {\n                if (matrix[i][j] == 0) {\n                    if (!has_zero) {\n                        zero_i = i;\n                        zero_j = j;\n                        has_zero = true;\n                    }\n                    matrix[zero_i][j] = 0;\n                    matrix[i][zero_j] = 0;\n                }\n            }\n        }\n\n        if (has_zero) {\n            for (int i = 0; i < matrix.size(); ++i) {\n                if (i == zero_i) {\n                    continue;\n                }\n                for (int j = 0; j < matrix[0].size(); ++j) {\n                    if (j == zero_j) {\n                        continue;\n                    }\n                    if (matrix[zero_i][j] == 0 || matrix[i][zero_j] == 0) {\n                        matrix[i][j] = 0;\n                    }\n                }\n            }\n            for (int i = 0; i < matrix.size(); ++i) {\n                matrix[i][zero_j] = 0;\n            }\n            for (int j = 0; j < matrix[0].size(); ++j) {\n                matrix[zero_i][j] = 0;\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "from functools import reduce\n# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    # @param matrix, a list of lists of integers\n    # RETURN NOTHING, MODIFY matrix IN PLACE.\n    def setZeroes(self, matrix):\n        first_col = reduce(lambda acc, i: acc or matrix[i][0] == 0, xrange(len(matrix)), False)\n        first_row = reduce(lambda acc, j: acc or matrix[0][j] == 0, xrange(len(matrix[0])), False)\n\n        for i in xrange(1, len(matrix)):\n            for j in xrange(1, len(matrix[0])):\n                if matrix[i][j] == 0:\n                    matrix[i][0], matrix[0][j] = 0, 0\n\n        for i in xrange(1, len(matrix)):\n            for j in xrange(1, len(matrix[0])):\n                if matrix[i][0] == 0 or matrix[0][j] == 0:\n                    matrix[i][j] = 0\n\n        if first_col:\n            for i in xrange(len(matrix)):\n                matrix[i][0] = 0\n\n        if first_row:\n            for j in xrange(len(matrix[0])):\n                matrix[0][j] = 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

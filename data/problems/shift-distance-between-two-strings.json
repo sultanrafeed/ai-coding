@@ -1,0 +1,41 @@
+{
+  "id": "956638ef-1d63-474c-a9b8-4fb239ce99f4",
+  "slug": "shift-distance-between-two-strings",
+  "title": "Shift Distance Between Two Strings",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two strings <code>s</code> and <code>t</code> of the same length, and two integer arrays <code>nextCost</code> and <code>previousCost</code>.</p>\n\n<p>In one operation, you can pick any index <code>i</code> of <code>s</code>, and perform <strong>either one</strong> of the following actions:</p>\n\n<ul>\n\t<li>Shift <code>s[i]</code> to the next letter in the alphabet. If <code>s[i] == &#39;z&#39;</code>, you should replace it with <code>&#39;a&#39;</code>. This operation costs <code>nextCost[j]</code> where <code>j</code> is the index of <code>s[i]</code> in the alphabet.</li>\n\t<li>Shift <code>s[i]</code> to the previous letter in the alphabet. If <code>s[i] == &#39;a&#39;</code>, you should replace it with <code>&#39;z&#39;</code>. This operation costs <code>previousCost[j]</code> where <code>j</code> is the index of <code>s[i]</code> in the alphabet.</li>\n</ul>\n\n<p>The <strong>shift distance</strong> is the <strong>minimum</strong> total cost of operations required to transform <code>s</code> into <code>t</code>.</p>\n\n<p>Return the <strong>shift distance</strong> from <code>s</code> to <code>t</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abab&quot;, t = &quot;baba&quot;, nextCost = [100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0], previousCost = [1,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>We choose index <code>i = 0</code> and shift <code>s[0]</code> 25 times to the previous character for a total cost of 1.</li>\n\t<li>We choose index <code>i = 1</code> and shift <code>s[1]</code> 25 times to the next character for a total cost of 0.</li>\n\t<li>We choose index <code>i = 2</code> and shift <code>s[2]</code> 25 times to the previous character for a total cost of 1.</li>\n\t<li>We choose index <code>i = 3</code> and shift <code>s[3]</code> 25 times to the next character for a total cost of 0.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;leet&quot;, t = &quot;code&quot;, nextCost = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1], previousCost = [1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">31</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>We choose index <code>i = 0</code> and shift <code>s[0]</code> 9 times to the previous character for a total cost of 9.</li>\n\t<li>We choose index <code>i = 1</code> and shift <code>s[1]</code> 10 times to the next character for a total cost of 10.</li>\n\t<li>We choose index <code>i = 2</code> and shift <code>s[2]</code> 1 time to the previous character for a total cost of 1.</li>\n\t<li>We choose index <code>i = 3</code> and shift <code>s[3]</code> 11 times to the next character for a total cost of 11.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length == t.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> and <code>t</code> consist only of lowercase English letters.</li>\n\t<li><code>nextCost.length == previousCost.length == 26</code></li>\n\t<li><code>0 &lt;= nextCost[i], previousCost[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abab\"\n\"baba\"\n[100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]\n[1,100,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0]\n\"leet\"\n\"code\"\n[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]\n[1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// prefix sum\nclass Solution {\npublic:\n    long long shiftDistance(string s, string t, vector<int>& nextCost, vector<int>& previousCost) {\n        vector<int64_t> prefix1(size(nextCost) + 1);\n        for (int i = 0; i < size(nextCost); ++i) {\n            prefix1[i + 1] = prefix1[i] + nextCost[i];\n        }\n        vector<int64_t> prefix2(size(previousCost) + 1);\n        for (int i = 0; i < size(previousCost); ++i) {\n            prefix2[i + 1] = prefix2[i] + previousCost[i];\n        }\n        int64_t result = 0;\n        for (int i = 0; i < size(s); ++i) {\n            if (s[i] == t[i]) {\n                continue;\n            }\n            const int left = s[i] - 'a';\n            const int right = t[i] - 'a';\n            if (left <= right) {\n                result += min(prefix1[right] - prefix1[left], prefix2.back() - (prefix2[right + 1] - prefix2[left + 1]));\n            } else {\n                result += min(prefix2[left + 1] - prefix2[right + 1], prefix1.back() - (prefix1[left] - prefix1[right]));\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# prefix sum\nclass Solution(object):\n    def shiftDistance(self, s, t, nextCost, previousCost):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :type nextCost: List[int]\n        :type previousCost: List[int]\n        :rtype: int\n        \"\"\"\n        prefix1 = [0]*(len(nextCost)+1)\n        for i in xrange(len(nextCost)):\n            prefix1[i+1] = prefix1[i]+nextCost[i]\n        prefix2 = [0]*(len(previousCost)+1)\n        for i in xrange(len(previousCost)):\n            prefix2[i+1] = prefix2[i]+previousCost[i]\n        result = 0\n        for i in xrange(len(s)):\n            if s[i] == t[i]:\n                continue\n            left = ord(s[i])-ord('a')\n            right = ord(t[i])-ord('a')\n            if left <= right:\n                result += min(prefix1[right]-prefix1[left], prefix2[-1]-(prefix2[right+1]-prefix2[left+1]))\n            else:\n                result += min(prefix2[left+1]-prefix2[right+1], prefix1[-1]-(prefix1[left]-prefix1[right]))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

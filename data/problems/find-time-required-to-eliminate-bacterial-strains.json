@@ -1,0 +1,42 @@
+{
+  "id": "a77ec8bd-80c3-442f-9046-9784ae4b5cea",
+  "slug": "find-time-required-to-eliminate-bacterial-strains",
+  "title": "Find Time Required to Eliminate Bacterial Strains",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[10,4,5]\n2\n[10,4]\n5",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// heap, greedy\nclass Solution {\npublic:\n    long long minEliminationTime(vector<int>& timeReq, int splitTime) {\n        priority_queue<int64_t, vector<int64_t>, greater<int64_t>> min_heap(cbegin(timeReq), cend(timeReq));\n        for (int i = 0; i < size(timeReq) - 1; ++i) {\n            const auto a = min_heap.top(); min_heap.pop();\n            const auto b = min_heap.top(); min_heap.pop();\n            min_heap.emplace(max(a, b) + splitTime);\n        }\n        return min_heap.top();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nimport heapq\n\n\n# heap, greedy\nclass Solution(object):\n    def minEliminationTime(self, timeReq, splitTime):\n        \"\"\"\n        :type timeReq: List[int]\n        :type splitTime: int\n        :rtype: int\n        \"\"\"\n        heapq.heapify(timeReq)\n        for _ in xrange(len(timeReq)-1):\n            heapq.heappush(timeReq, max(heapq.heappop(timeReq), heapq.heappop(timeReq))+splitTime)\n        return timeReq[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

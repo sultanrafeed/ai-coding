@@ -1,0 +1,31 @@
+{
+  "id": "ea79a3cb-cf4e-4e99-bf69-45087cdea180",
+  "slug": "immutability-helper",
+  "title": "Immutability Helper",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"val\":10}\n[proxy => { proxy.val += 1; }, proxy => { proxy.val -= 1; }]\n{\"arr\":[1,2,3]}\n[proxy => { proxy.arr[0] = 5; proxy.newVal = proxy.arr[0] + proxy.arr[1]; }]\n{\"obj\":{\"val\":{\"x\":10,\"y\":20}}}\n[proxy => { let data = proxy.obj.val; let temp = data.x; data.x = data.y; data.y = temp; }]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// proxy\ntype InputObj = Record<any, any> | Array<any>;\n\nvar makeMutations = (obj, lookup) => {\n    return new Proxy(obj, {\n        set(_, prop, value) {\n            lookup[prop] = value;\n            return true;\n        },\n        get(target, prop) {\n            if (typeof obj[prop] === 'object' && obj[prop] !== null) {\n                if (lookup[prop] === undefined) {\n                    lookup[prop] = {};\n                }\n                return makeMutations(obj[prop], lookup[prop]);\n            }\n            return lookup[prop] !== undefined ? lookup[prop] : Reflect.get(target, prop);\n        }\n    });\n};\n\nclass ImmutableHelper {\n    #obj: InputObj;\n    constructor(obj: InputObj) {\n        this.#obj = obj;\n    }\n    \n    produce(mutator: (obj: InputObj) => void) {\n        var lookup = {};\n        mutator(makeMutations(this.#obj, lookup));\n        return lookup;\n    }\n}",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "fc20e3b4-c8b9-4e6a-82f0-8e3bd0da9f73",
+  "slug": "maximum-score-of-a-good-subarray",
+  "title": "Maximum Score of a Good Subarray",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an array of integers <code>nums</code> <strong>(0-indexed)</strong> and an integer <code>k</code>.</p>\n\n<p>The <strong>score</strong> of a subarray <code>(i, j)</code> is defined as <code>min(nums[i], nums[i+1], ..., nums[j]) * (j - i + 1)</code>. A <strong>good</strong> subarray is a subarray where <code>i &lt;= k &lt;= j</code>.</p>\n\n<p>Return <em>the maximum possible <strong>score</strong> of a <strong>good</strong> subarray.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,4,3,7,4,5], k = 3\n<strong>Output:</strong> 15\n<strong>Explanation:</strong> The optimal subarray is (1, 5) with a score of min(4,3,7,4,5) * (5-1+1) = 3 * 5 = 15. \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,5,4,5,4,1,1,1], k = 0\n<strong>Output:</strong> 20\n<strong>Explanation:</strong> The optimal subarray is (0, 4) with a score of min(5,5,4,5,4) * (4-0+1) = 4 * 5 = 20.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= k &lt; nums.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "stack",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,4,3,7,4,5]\n3\n[5,5,4,5,4,1,1,1]\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maximumScore(vector<int>& nums, int k) {\n        int result = nums[k], curr = nums[k];\n        int left = k, right = k;\n        while (left - 1 >= 0 || right + 1 < size(nums)) {\n            int l = (left - 1 >= 0 ? nums[left - 1] : 0);\n            int r = (right + 1 < size(nums) ? nums[right + 1] : 0);\n            if (l < r) { // choosing larger one to expand is always better than or equal to choosing smaller one\n                ++right;\n            } else {\n                --left;\n            }\n            curr = min({curr, nums[left], nums[right]});\n            result = max(result, curr * (right - left + 1));\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int maximumScore(vector<int>& nums, int k) {\n        int result = score(nums, k);\n        reverse(begin(nums), end(nums));\n        return max(result, score(nums, size(nums) - k - 1));\n    }\n\nprivate:\n    int score(const vector<int>& nums, int k) {\n        vector<int> prefix(k + 1, nums[k]);\n        for (int i = k - 1; i >= 0; --i) {\n            prefix[i] = min(prefix[i + 1], nums[i]);\n        }\n        int result = nums[k], right = nums[k];\n        for (int j = k; j < size(nums); ++j) {\n            right = min(right, nums[j]);\n            const int i = distance(cbegin(prefix), lower_bound(cbegin(prefix), cend(prefix), right));\n            if (i != size(prefix)) {\n                result = max(result, right * (j - i + 1));\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def maximumScore(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = curr = nums[k]\n        left = right = k\n        while left-1 >= 0 or right+1 < len(nums):\n            # choosing larger one to expand is always better than or equal to choosing smaller one\n            if (nums[left-1] if left-1 >= 0 else 0) <= (nums[right+1] if right+1 < len(nums) else 0):\n                right += 1\n            else:\n                left -= 1\n            curr = min(curr, nums[left], nums[right])\n            result = max(result, curr*(right-left+1))\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nimport bisect\n\n\nclass Solution2(object):\n    def maximumScore(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def score(nums, k):\n            prefix = [nums[k]]*(k+1)\n            for i in reversed(xrange(k)):\n                prefix[i] = min(prefix[i+1], nums[i])\n            result = right = nums[k]\n            for j in xrange(k+1, len(nums)):\n                right = min(right, nums[j])\n                i = bisect.bisect_left(prefix, right)\n                if i >= 0:\n                    result = max(result, right*(j-i+1))\n            return result\n\n        return max(score(nums, k), score(nums[::-1], len(nums)-1-k))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

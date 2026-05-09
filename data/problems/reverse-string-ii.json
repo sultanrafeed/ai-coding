@@ -1,0 +1,34 @@
+{
+  "id": "a782b332-8bf0-46ad-b669-d081828260a7",
+  "slug": "reverse-string-ii",
+  "title": "Reverse String II",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code> and an integer <code>k</code>, reverse the first <code>k</code> characters for every <code>2k</code> characters counting from the start of the string.</p>\n\n<p>If there are fewer than <code>k</code> characters left, reverse all of them. If there are less than <code>2k</code> but greater than or equal to <code>k</code> characters, then reverse the first <code>k</code> characters and leave the other as original.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> s = \"abcdefg\", k = 2\n<strong>Output:</strong> \"bacdfeg\"\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> s = \"abcd\", k = 2\n<strong>Output:</strong> \"bacd\"\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>s</code> consists of only lowercase English letters.</li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string reverseStr(string s, int k) {\n        for (int left = 0; left < s.size(); left += 2 * k) {\n            for (int i = left, j = min(left + k - 1, static_cast<int>(s.size()) - 1);\n                 i < j; ++i, --j) {\n                swap(s[i], s[j]);\n            }\n        }\n        return s;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def reverseStr(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: str\n        \"\"\"\n        s = list(s)\n        for i in xrange(0, len(s), 2*k):\n            s[i:i+k] = reversed(s[i:i+k])\n        return \"\".join(s)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

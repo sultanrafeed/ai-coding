@@ -1,0 +1,31 @@
+{
+  "id": "df08db3b-597b-4ab0-a2b4-9e0fa84b998c",
+  "slug": "generate-fibonacci-sequence",
+  "title": "Generate Fibonacci Sequence",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Write a generator function that returns a generator object which yields the&nbsp;<strong>fibonacci sequence</strong>.</p>\n\n<p>The&nbsp;<strong>fibonacci sequence</strong>&nbsp;is defined by the relation <code>X<sub>n</sub>&nbsp;= X<sub>n-1</sub>&nbsp;+ X<sub>n-2</sub></code>.</p>\n\n<p>The first few numbers&nbsp;of the series are <code>0, 1, 1, 2, 3, 5, 8, 13</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> callCount = 5\n<strong>Output:</strong> [0,1,1,2,3]\n<strong>Explanation:</strong>\nconst gen = fibGenerator();\ngen.next().value; // 0\ngen.next().value; // 1\ngen.next().value; // 1\ngen.next().value; // 2\ngen.next().value; // 3\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> callCount = 0\n<strong>Output:</strong> []\n<strong>Explanation:</strong> gen.next() is never called so nothing is outputted\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= callCount &lt;= 50</code></li>\n</ul>\n",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "5\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// dp\nfunction* fibGenerator(): Generator<number, any, number> {\n    let a = 0, b = 1;\n    for (; true; [a, b] = [b, a+b]) {\n        yield a;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "9b6e39a6-aac6-41db-9fbd-9c2a9187e1d1",
+  "slug": "number-of-distinct-roll-sequences",
+  "title": "Number of Distinct Roll Sequences",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer <code>n</code>. You roll a fair 6-sided dice <code>n</code> times. Determine the total number of <strong>distinct</strong> sequences of rolls possible such that the following conditions are satisfied:</p>\n\n<ol>\n\t<li>The <strong>greatest common divisor</strong> of any <strong>adjacent</strong> values in the sequence is equal to <code>1</code>.</li>\n\t<li>There is <strong>at least</strong> a gap of <code>2</code> rolls between <strong>equal</strong> valued rolls. More formally, if the value of the <code>i<sup>th</sup></code> roll is <strong>equal</strong> to the value of the <code>j<sup>th</sup></code> roll, then <code>abs(i - j) &gt; 2</code>.</li>\n</ol>\n\n<p>Return <em>the<strong> total number</strong> of distinct sequences possible</em>. Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>Two sequences are considered distinct if at least one element is different.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 4\n<strong>Output:</strong> 184\n<strong>Explanation:</strong> Some of the possible sequences are (1, 2, 3, 4), (6, 1, 2, 3), (1, 2, 3, 1), etc.\nSome invalid sequences are (1, 2, 1, 3), (1, 2, 3, 6).\n(1, 2, 1, 3) is invalid since the first and third roll have an equal value and abs(1 - 3) = 2 (i and j are 1-indexed).\n(1, 2, 3, 6) is invalid since the greatest common divisor of 3 and 6 = 3.\nThere are a total of 184 distinct sequences possible, so we return 184.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2\n<strong>Output:</strong> 22\n<strong>Explanation:</strong> Some of the possible sequences are (1, 2), (2, 1), (3, 2).\nSome invalid sequences are (3, 6), (2, 4) since the greatest common divisor is not equal to 1.\nThere are a total of 22 distinct sequences possible, so we return 22.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "dynamic-programming",
+    "memoization"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(6^3 * n)\n// Space: O(6^2)\n\n// dp\nclass Solution {\npublic:\n    int distinctSequences(int n) {\n        static const int MOD = 1e9 + 7;\n        if (n == 1) {\n            return 6;\n        }\n        vector<vector<int>> dp(6, vector<int>(6));\n        for (int i = 0; i < 6; ++i) {\n            for (int j = 0; j < 6; ++j) {\n                if (i != j && gcd(i + 1, j + 1) == 1) {\n                    dp[i][j] = 1;\n                }\n            }\n        }\n        for (int _ = 0; _ < n - 2; ++_) {\n            vector<vector<int>> new_dp(6, vector<int>(6));\n            for (int i = 0; i < 6; ++i) {\n                for (int j = 0; j < 6; ++j) {\n                    if (!dp[i][j]) {\n                        continue;\n                    }\n                    for (int k = 0; k < 6; ++k) {\n                        if (!dp[j][k]) {\n                            continue;\n                        }\n                        if (k != i) {\n                            new_dp[i][j] = (new_dp[i][j] + dp[j][k]) % MOD;\n                        }\n                    }\n                }\n            }\n            dp = move(new_dp);\n        }\n        return accumulate(cbegin(dp), cend(dp), 0,\n                          [&](int total, const auto& x) {\n                              return (total + accumulate(cbegin(x), cend(x), 0,\n                                                         [&](int total, int x) {\n                                                             return (total + x) % MOD;\n                                                         })) % MOD;\n                          });\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(6^3 * n)\n# Space: O(6^2)\n\nimport collections\n\n\n# dp\nclass Solution(object):\n    def distinctSequences(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        def gcd(a, b):\n            while b:\n                a, b = b, a%b\n            return a\n\n        if n == 1:\n            return 6\n        MOD = 10**9 + 7\n        dp = [[0]*6 for _ in xrange(6)]\n        for i in xrange(6):\n            for j in xrange(6):\n                if i != j and gcd(i+1, j+1) == 1:\n                    dp[i][j] = 1\n        for _ in xrange(n-2):\n            new_dp = [[0]*6 for _ in xrange(6)]\n            for i in xrange(6):\n                for j in xrange(6):\n                    if not dp[i][j]:\n                        continue\n                    for k in xrange(6):\n                        if not dp[j][k]:\n                            continue\n                        if k != i:\n                            new_dp[i][j] = (new_dp[i][j]+dp[j][k]) % MOD\n            dp = new_dp\n        return sum(dp[i][j] for i in xrange(6) for j in xrange(6)) % MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

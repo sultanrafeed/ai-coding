@@ -1,0 +1,42 @@
+{
+  "id": "2ac00e8a-5664-4426-88a1-c4e7dcaa45e1",
+  "slug": "merge-k-sorted-lists",
+  "title": "Merge k Sorted Lists",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an array of <code>k</code> linked-lists <code>lists</code>, each linked-list is sorted in ascending order.</p>\n\n<p><em>Merge all the linked-lists into one sorted linked-list and return it.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> lists = [[1,4,5],[1,3,4],[2,6]]\n<strong>Output:</strong> [1,1,2,3,4,4,5,6]\n<strong>Explanation:</strong> The linked-lists are:\n[\n  1-&gt;4-&gt;5,\n  1-&gt;3-&gt;4,\n  2-&gt;6\n]\nmerging them into one sorted linked list:\n1-&gt;1-&gt;2-&gt;3-&gt;4-&gt;4-&gt;5-&gt;6\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> lists = []\n<strong>Output:</strong> []\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> lists = [[]]\n<strong>Output:</strong> []\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>k == lists.length</code></li>\n\t<li><code>0 &lt;= k &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= lists[i].length &lt;= 500</code></li>\n\t<li><code>-10<sup>4</sup> &lt;= lists[i][j] &lt;= 10<sup>4</sup></code></li>\n\t<li><code>lists[i]</code> is sorted in <strong>ascending order</strong>.</li>\n\t<li>The sum of <code>lists[i].length</code> will not exceed <code>10<sup>4</sup></code>.</li>\n</ul>\n",
+  "patterns": [
+    "linked-list",
+    "divide-and-conquer",
+    "heap-priority-queue",
+    "merge-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,4,5],[1,3,4],[2,6]]\n[]\n[[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * logk), n is the length of the result list.\n// Space: O(1)\n\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\n \n// Merge two by two solution.\nclass Solution {\npublic:\n    ListNode *mergeKLists(vector<ListNode *> &lists) {\n        if (lists.empty()) {\n            return nullptr;\n        }\n\n        int left = 0, right = lists.size() - 1;\n        while (right > 0) {\n            lists[left] = mergeTwoLists(lists[left], lists[right]);\n            ++left;\n            --right;\n            if (left >= right) {\n                left = 0;\n            }\n        }\n        return lists[0];\n    }\n    \nprivate:\n    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {\n        ListNode dummy{0};\n        auto curr = &dummy;\n\n        while (l1 && l2) {\n            if (l1->val <= l2->val) {\n                curr->next = l1;\n                l1 = l1->next;\n            } else {\n                curr->next = l2;\n                l2 = l2->next;\n            }\n            curr = curr->next;\n        }\n        curr->next = l1 ? l1 : l2;\n\n        return dummy.next;\n    }\n};\n\n\n// Time:  O(n * logk)\n// Space: O(logk)\n// Divide and Conquer solution.\nclass Solution2 {\npublic:\n    ListNode *mergeKLists(vector<ListNode *> &lists) {\n        return mergeKListsHelper(lists, 0, lists.size() - 1);\n    }\n\nprivate:\n    ListNode *mergeKListsHelper(const vector<ListNode *> &lists, int begin, int end) {\n        if (begin > end) {\n            return nullptr;\n        }\n        if (begin == end) {\n            return lists[begin];\n        }\n        return mergeTwoLists(mergeKListsHelper(lists, begin, (begin + end) / 2),\n                             mergeKListsHelper(lists, (begin + end) / 2 + 1, end));\n    }\n\n    ListNode *mergeTwoLists(ListNode *l1, ListNode *l2) {\n        ListNode dummy{0};\n        auto curr = &dummy;\n\n        while (l1 && l2) {\n            if (l1->val <= l2->val) {\n                curr->next = l1;\n                l1 = l1->next;\n            } else {\n                curr->next = l2;\n                l2 = l2->next;\n            }\n            curr = curr->next;\n        }\n        curr->next = l1 ? l1 : l2;\n\n        return dummy.next;\n    }\n};\n\n\n// Time:  O(n * logk)\n// Space: O(k)\n// Heap solution.\nclass Solution3 {\npublic:\n    ListNode* mergeKLists(vector<ListNode*>& lists) {\n        ListNode dummy(0);\n        auto *cur = &dummy;\n\n        struct Compare {\n            bool operator() (const ListNode *a, const ListNode *b) {\n                return a->val > b->val;\n            }\n        };\n\n        // Use min heap to keep the smallest node of each list\n        priority_queue<ListNode *, vector<ListNode *>, Compare> min_heap;\n        for (const auto& n : lists) {\n            if (n) {\n                min_heap.emplace(n);\n            }\n        }\n\n        while (!min_heap.empty()) {\n            // Get min of k lists.\n            auto *node = min_heap.top();\n            min_heap.pop();\n            cur->next = node;\n            cur = cur->next;\n            if (node->next) {\n                min_heap.emplace(node->next);\n            }\n        }\n\n        return dummy.next;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogk)\n# Space: O(1)\n\nclass ListNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.next = None\n\n    def __repr__(self):\t\t\n        if self:\t\t\n            return \"{} -> {}\".format(self.val, self.next)\n\n\n# Merge two by two solution.\nclass Solution(object):\n    def mergeKLists(self, lists):\n        \"\"\"\n        :type lists: List[ListNode]\n        :rtype: ListNode\n        \"\"\"\n        def mergeTwoLists(l1, l2):\n            curr = dummy = ListNode(0)\n            while l1 and l2:\n                if l1.val < l2.val:\n                    curr.next = l1\n                    l1 = l1.next\n                else:\n                    curr.next = l2\n                    l2 = l2.next\n                curr = curr.next\n            curr.next = l1 or l2\n            return dummy.next\n\n        if not lists:\n            return None\n        left, right = 0, len(lists) - 1\n        while right > 0:\n            lists[left] = mergeTwoLists(lists[left], lists[right])\n            left += 1\n            right -= 1\n            if left >= right:\n                left = 0\n        return lists[0]\n\n\n# Time:  O(nlogk)\n# Space: O(logk)\n# Divide and Conquer solution.\nclass Solution2(object):\n    # @param a list of ListNode\n    # @return a ListNode\n    def mergeKLists(self, lists):\n        def mergeTwoLists(l1, l2):\n            curr = dummy = ListNode(0)\n            while l1 and l2:\n                if l1.val < l2.val:\n                    curr.next = l1\n                    l1 = l1.next\n                else:\n                    curr.next = l2\n                    l2 = l2.next\n                curr = curr.next\n            curr.next = l1 or l2\n            return dummy.next\n\n        def mergeKListsHelper(lists, begin, end):\n            if begin > end:\n                return None\n            if begin == end:\n                return lists[begin]\n            return mergeTwoLists(mergeKListsHelper(lists, begin, (begin + end) / 2), \\\n                                 mergeKListsHelper(lists, (begin + end) / 2 + 1, end))\n\n        return mergeKListsHelper(lists, 0, len(lists) - 1)\n\n\n# Time:  O(nlogk)\n# Space: O(k)\n# Heap solution.\nimport heapq\nclass Solution3(object):\n    # @param a list of ListNode\n    # @return a ListNode\n    def mergeKLists(self, lists):\n        dummy = ListNode(0)\n        current = dummy\n\n        heap = []\n        for sorted_list in lists:\n            if sorted_list:\n                heapq.heappush(heap, (sorted_list.val, sorted_list))\n\n        while heap:\n            smallest = heapq.heappop(heap)[1]\n            current.next = smallest\n            current = current.next\n            if smallest.next:\n                heapq.heappush(heap, (smallest.next.val, smallest.next))\n\n        return dummy.next",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

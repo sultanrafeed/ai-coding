@@ -1,0 +1,34 @@
+{
+  "id": "0acd3e49-56ce-4994-aa9b-df10aceef580",
+  "slug": "merge-strings-alternately",
+  "title": "Merge Strings Alternately",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given two strings <code>word1</code> and <code>word2</code>. Merge the strings by adding letters in alternating order, starting with <code>word1</code>. If a string is longer than the other, append the additional letters onto the end of the merged string.</p>\r\n\r\n<p>Return <em>the merged string.</em></p>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong class=\"example\">Example 1:</strong></p>\r\n\r\n<pre>\r\n<strong>Input:</strong> word1 = &quot;abc&quot;, word2 = &quot;pqr&quot;\r\n<strong>Output:</strong> &quot;apbqcr&quot;\r\n<strong>Explanation:</strong>&nbsp;The merged string will be merged as so:\r\nword1:  a   b   c\r\nword2:    p   q   r\r\nmerged: a p b q c r\r\n</pre>\r\n\r\n<p><strong class=\"example\">Example 2:</strong></p>\r\n\r\n<pre>\r\n<strong>Input:</strong> word1 = &quot;ab&quot;, word2 = &quot;pqrs&quot;\r\n<strong>Output:</strong> &quot;apbqrs&quot;\r\n<strong>Explanation:</strong>&nbsp;Notice that as word2 is longer, &quot;rs&quot; is appended to the end.\r\nword1:  a   b \r\nword2:    p   q   r   s\r\nmerged: a p b q   r   s\r\n</pre>\r\n\r\n<p><strong class=\"example\">Example 3:</strong></p>\r\n\r\n<pre>\r\n<strong>Input:</strong> word1 = &quot;abcd&quot;, word2 = &quot;pq&quot;\r\n<strong>Output:</strong> &quot;apbqcd&quot;\r\n<strong>Explanation:</strong>&nbsp;Notice that as word1 is longer, &quot;cd&quot; is appended to the end.\r\nword1:  a   b   c   d\r\nword2:    p   q \r\nmerged: a p b q c   d\r\n</pre>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong>Constraints:</strong></p>\r\n\r\n<ul>\r\n\t<li><code>1 &lt;= word1.length, word2.length &lt;= 100</code></li>\r\n\t<li><code>word1</code> and <code>word2</code> consist of lowercase English letters.</li>\r\n</ul>",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m + n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string mergeAlternately(string word1, string word2) {\n        string result;\n        for (int i = 0; i < size(word1) || i < size(word2); ++i) {\n            if (i < size(word1)) {\n                result.push_back(word1[i]);\n            }\n            if (i < size(word2)) {\n                result.push_back(word2[i]);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m + n)\n# Space: O(1)\n\nclass Solution(object):\n    def mergeAlternately(self, word1, word2):\n        \"\"\"\n        :type word1: str\n        :type word2: str\n        :rtype: str\n        \"\"\"\n        result = []\n        i = 0\n        while i < len(word1) or i < len(word2):\n            if i < len(word1):\n                result.append(word1[i])\n            if i < len(word2):\n                result.append(word2[i])\n            i += 1\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "9ea9935d-821d-416d-adea-097afa705550",
+  "slug": "number-of-sets-of-k-non-overlapping-line-segments",
+  "title": "Number of Sets of K Non-Overlapping Line Segments",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given <code>n</code> points on a 1-D plane, where the <code>i<sup>th</sup></code> point (from <code>0</code> to <code>n-1</code>) is at <code>x = i</code>, find the number of ways we can draw <strong>exactly</strong> <code>k</code> <strong>non-overlapping</strong> line segments such that each segment covers two or more points. The endpoints of each segment must have <strong>integral coordinates</strong>. The <code>k</code> line segments <strong>do not</strong> have to cover all <code>n</code> points, and they are <strong>allowed</strong> to share endpoints.</p>\n\n<p>Return <em>the number of ways we can draw </em><code>k</code><em> non-overlapping line segments</em><em>.</em> Since this number can be huge, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/07/ex1.png\" style=\"width: 179px; height: 222px;\" />\n<pre>\n<strong>Input:</strong> n = 4, k = 2\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The two line segments are shown in red and blue.\nThe image above shows the 5 different ways {(0,2),(2,3)}, {(0,1),(1,3)}, {(0,1),(2,3)}, {(1,2),(2,3)}, {(0,1),(1,2)}.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 3, k = 1\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The 3 ways are {(0,1)}, {(0,2)}, {(1,2)}.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 30, k = 7\n<strong>Output:</strong> 796297179\n<strong>Explanation:</strong> The total number of possible ways to draw 7 line segments is 3796297200. Taking this number modulo 10<sup>9</sup> + 7 gives us 796297179.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= n &lt;= 1000</code></li>\n\t<li><code>1 &lt;= k &lt;= n-1</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "combinatorics",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "4\n2\n3\n1\n30\n7",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1), excluding precomputation time\n// Space: O(n)\n\nclass Solution {\npublic:\n    Solution()\n     : fact_(2 * MAX_N - 1 + 1)\n     , inv_(2 * MAX_N - 1 + 1)\n     , inv_fact_(2 * MAX_N - 1 + 1) {\n\n        fact_[0] = inv_fact_[0] = fact_[1] = inv_fact_[1] = inv_[1] = 1;\n        for (int i = 2; i < size(fact_); ++i) {\n            fact_[i] = mulmod(fact_[i - 1], i, MOD);\n            inv_[i] = mulmod(inv_[MOD % i], MOD - MOD / i, MOD);  // https://cp-algorithms.com/algebra/module-inverse.html\n            inv_fact_[i] = mulmod(inv_fact_[i - 1], inv_[i], MOD);\n        }\n    }\n\n    int numberOfSets(int n, int k) {\n        // find k segments with 1+ length and (k+1) spaces with 0+ length s.t. total length is n-1\n        // => find k segments with 0+ length and (k+1) spaces with 0+ length s.t. total length is n-k-1\n        // => find the number of combinations of 2k+1 variables with total sum n-k-1\n        // => H(2k+1, n-k-1)\n        // => C((2k+1) + (n-k-1) - 1, n-k-1)\n        // => C(n+k-1, n-k-1) = C(n+k-1, 2k)\n        return nCr(n + k - 1, 2 * k, MOD);\n    }\n\nprivate:\n    int nCr(int n, int k, uint32_t mod) {\n        return mulmod(mulmod(fact_[n], inv_fact_[n - k], mod), inv_fact_[k], mod);\n    }\n\n    uint32_t addmod(uint32_t a, uint32_t b, uint32_t mod) {  // avoid overflow\n        a %= mod, b %= mod;\n        if (mod - a <= b) {\n            b -= mod;  // relied on unsigned integer overflow in order to give the expected results\n        }\n        return a + b;\n    }\n\n    // reference: https://stackoverflow.com/questions/12168348/ways-to-do-modulo-multiplication-with-primitive-types\n    uint32_t mulmod(uint32_t a, uint32_t b, uint32_t mod)  {  // avoid overflow\n        a %= mod, b %= mod;\n        uint32_t result = 0;\n        if (a < b) {\n            swap(a, b);\n        }\n        while (b > 0)  { \n            if (b % 2 == 1) {\n                result = addmod(result, a, mod);\n            }\n            a = addmod(a, a, mod);\n            b /= 2; \n        } \n        return result; \n    }\n    \n    static const int MOD = 1e9 + 7;\n    static const int MAX_N = 1000;\n    vector<int> fact_;\n    vector<int> inv_;\n    vector<int> inv_fact_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1), excluding precomputation time\n# Space: O(n)\n\n# precompute\nMOD = 10**9+7\nMAX_N = 1000\nfact = [0]*(2*MAX_N-1+1)\ninv = [0]*(2*MAX_N-1+1)\ninv_fact = [0]*(2*MAX_N-1+1)\nfact[0] = inv_fact[0] = fact[1] = inv_fact[1] = inv[1] = 1\nfor i in xrange(2, len(fact)):\n    fact[i] = fact[i-1]*i % MOD\n    inv[i] = inv[MOD%i]*(MOD-MOD//i) % MOD  # https://cp-algorithms.com/algebra/module-inverse.html\n    inv_fact[i] = inv_fact[i-1]*inv[i] % MOD\n\nclass Solution(object):\n    def numberOfSets(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def nCr(n, k, mod):\n            return (fact[n]*inv_fact[n-k] % mod) * inv_fact[k] % mod\n    \n        # find k segments with 1+ length and (k+1) spaces with 0+ length s.t. total length is n-1\n        # => find k segments with 0+ length and (k+1) spaces with 0+ length s.t. total length is n-k-1\n        # => find the number of combinations of 2k+1 variables with total sum n-k-1\n        # => H(2k+1, n-k-1)\n        # => C((2k+1) + (n-k-1) - 1, n-k-1)\n        # => C(n+k-1, n-k-1) = C(n+k-1, 2k)\n        return nCr(n+k-1, 2*k, MOD)\n\n\n# Time:  O(min(k, min(n - k)))\n# Space: O(1)\nclass Solution2(object):\n    def numberOfSets(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def nCr(n, r):  # Time: O(n), Space: O(1)\n            if n-r < r:\n                return nCr(n, n-r)\n            c = 1\n            for k in xrange(1, r+1):\n                c *= n-k+1\n                c //= k\n            return c\n        \n        # find k segments with 1+ length and (k+1) spaces with 0+ length s.t. total length is n-1\n        # => find k segments with 0+ length and (k+1) spaces with 0+ length s.t. total length is n-k-1\n        # => find the number of combinations of 2k+1 variables with total sum n-k-1\n        # => H(2k+1, n-k-1)\n        # => C((2k+1) + (n-k-1) - 1, n-k-1)\n        # => C(n+k-1, n-k-1) = C(n+k-1, 2k)\n        return nCr(n+k-1, 2*k) % MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "31d0a660-d2c1-4f91-96b3-1b0b39f45efc",
+  "slug": "student-attendance-record-ii",
+  "title": "Student Attendance Record II",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>An attendance record for a student can be represented as a string where each character signifies whether the student was absent, late, or present on that day. The record only contains the following three characters:</p>\n\n<ul>\n\t<li><code>&#39;A&#39;</code>: Absent.</li>\n\t<li><code>&#39;L&#39;</code>: Late.</li>\n\t<li><code>&#39;P&#39;</code>: Present.</li>\n</ul>\n\n<p>Any student is eligible for an attendance award if they meet <strong>both</strong> of the following criteria:</p>\n\n<ul>\n\t<li>The student was absent (<code>&#39;A&#39;</code>) for <strong>strictly</strong> fewer than 2 days <strong>total</strong>.</li>\n\t<li>The student was <strong>never</strong> late (<code>&#39;L&#39;</code>) for 3 or more <strong>consecutive</strong> days.</li>\n</ul>\n\n<p>Given an integer <code>n</code>, return <em>the <strong>number</strong> of possible attendance records of length</em> <code>n</code><em> that make a student eligible for an attendance award. The answer may be very large, so return it <strong>modulo</strong> </em><code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> There are 8 records with length 2 that are eligible for an award:\n&quot;PP&quot;, &quot;AP&quot;, &quot;PA&quot;, &quot;LP&quot;, &quot;PL&quot;, &quot;AL&quot;, &quot;LA&quot;, &quot;LL&quot;\nOnly &quot;AA&quot; is not eligible because there are 2 absences (there need to be fewer than 2).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 1\n<strong>Output:</strong> 3\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 10101\n<strong>Output:</strong> 183236316\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int checkRecord(int n) {\n        static const long long M = 1000000007;\n        long long a0l0 = 1, a0l1 = 0, a0l2 = 0, a1l0 = 0, a1l1 = 0, a1l2 = 0;\n        for (int i = 0; i <= n; ++i) {\n            auto new_a0l0 = (a0l0 + a0l1 + a0l2) % M;\n            a0l2 = a0l1;\n            a0l1 = a0l0;\n            a0l0 = new_a0l0;\n            auto new_a1l0 = (a0l0 + a1l0 + a1l1 + a1l2) % M;\n            a1l2 = a1l1;\n            a1l1 = a1l0;\n            a1l0 = new_a1l0;\n        }\n        return static_cast<int>(a1l0);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def checkRecord(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        M = 1000000007\n        a0l0, a0l1, a0l2, a1l0, a1l1, a1l2 = 1, 0, 0, 0, 0, 0\n        for i in xrange(n+1):\n            a0l2, a0l1, a0l0 = a0l1, a0l0, (a0l0 + a0l1 + a0l2) % M\n            a1l2, a1l1, a1l0 = a1l1, a1l0, (a0l0 + a1l0 + a1l1 + a1l2) % M\n        return a1l0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

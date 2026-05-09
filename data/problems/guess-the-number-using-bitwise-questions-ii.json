@@ -1,0 +1,40 @@
+{
+  "id": "64328f37-6008-4575-b628-c490be714457",
+  "slug": "guess-the-number-using-bitwise-questions-ii",
+  "title": "Guess the Number Using Bitwise Questions II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "bit-manipulation",
+    "interactive"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "31",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logr)\n// Space: O(1)\n\n// bit manipulation\nclass Solution {\npublic:\n    int findNumber() {\n        static const int BIT_COUNT = 30;\n\n        int result = 0;\n        for (int i = 0, prev = commonBits(0); i < BIT_COUNT; ++i) {\n            int curr = commonBits(1 << i);\n            if (curr - prev == 1) {\n                result |= 1 << i;\n            }\n            prev = curr;\n        }\n        return result;\n    }\n};\n\n// Time:  O(logr)\n// Space: O(1)\n// bit manipulation\nclass Solution2 {\npublic:\n    int findNumber() {\n        static const int BIT_COUNT = 30;\n\n        int result = 0;\n        for (int i = 0; i < BIT_COUNT; ++i) {\n            if (commonBits(1 << i) - commonBits(1 << i) == 1) {\n                result |= 1 << i;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logr)\n# Space: O(1)\n\n# bit manipulation\nclass Solution(object):\n    def findNumber(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        BIT_COUNT = 30\n        result = 0\n        prev = commonBits(0)\n        for i in xrange(BIT_COUNT):\n            curr = commonBits(1<<i)\n            if curr-prev == 1:\n                result |= 1<<i\n            prev = curr\n        return result\n\n\n# Time:  O(logr)\n# Space: O(1)\n# bit manipulation\nclass Solution2(object):\n    def findNumber(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        BIT_COUNT = 30\n        return reduce(lambda accu, i: accu|(1<<i if commonBits(1<<i)-commonBits(1<<i) == 1 else 0), xrange(BIT_COUNT), 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

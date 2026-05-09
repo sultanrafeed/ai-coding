@@ -1,0 +1,31 @@
+{
+  "id": "8b020b15-192a-42e7-aa08-c0517b3d7a1a",
+  "slug": "parallel-execution-of-promises-for-individual-results-retrieval",
+  "title": "Parallel Execution of Promises for Individual Results Retrieval",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[() => new Promise(resolve => setTimeout(() => resolve(15), 100))]\n[() => new Promise(resolve => setTimeout(() => resolve(20), 100)), () => new Promise(resolve => setTimeout(() => resolve(15), 100))]\n[() => new Promise(resolve => setTimeout(() => resolve(30), 200)), () => new Promise((resolve, reject) => setTimeout(() => reject(\"Error\"), 100))]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// promise\ntype FulfilledObj = {\n    status: 'fulfilled';\n    value: string;\n}\ntype RejectedObj = {\n    status: 'rejected';\n    reason: string;\n}\ntype Obj = FulfilledObj | RejectedObj;\n\nfunction promiseAllSettled(functions: Function[]): Promise<Obj[]> {\n    return new Promise((resolve, _) => {\n        const result: Obj[] = [];\n        let cnt = 0;\n        functions.forEach((fn, i) => {\n            fn()\n                .then((res) => {\n                    result[i] = {\n                        status: 'fulfilled',\n                        value: res\n                    };\n                })\n                .catch((err) => {\n                    result[i] = {\n                        status: 'rejected',\n                        reason: err\n                    };\n                })\n                .finally(() => {\n                    if (++cnt === functions.length) {\n                        resolve(result);\n                    }\n                });\n        });\n    });\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

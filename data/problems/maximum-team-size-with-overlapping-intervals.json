@@ -1,0 +1,31 @@
+{
+  "id": "bb3b1cf1-6e71-46b1-8a9b-3fe6cd6f7198",
+  "slug": "maximum-team-size-with-overlapping-intervals",
+  "title": "Maximum Team Size with Overlapping Intervals",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// sort, binary search\nclass Solution {\npublic:\n    int maximumTeamSize(vector<int>& startTime, vector<int>& endTime) {\n        vector<int> sorted_start(startTime);\n        ranges::sort(sorted_start);\n        vector<int> sorted_end(endTime);\n        ranges::sort(sorted_end);\n        int result = 0;\n        for (int i = 0; i < size(startTime); ++i) {\n            const int left = distance(cbegin(sorted_end), lower_bound(cbegin(sorted_end), cend(sorted_end), startTime[i]));\n            const int right = distance(cbegin(sorted_start), upper_bound(cbegin(sorted_start), cend(sorted_start), endTime[i]));\n            result = max(result, right - left);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport bisect\n\n\n# sort, binary search\nclass Solution(object):\n    def maximumTeamSize(self, startTime, endTime):\n        \"\"\"\n        :type startTime: List[int]\n        :type endTime: List[int]\n        :rtype: int\n        \"\"\"\n        sorted_start = sorted(startTime)\n        sorted_end = sorted(endTime)\n        return max(bisect.bisect_right(sorted_start, endTime[i])-bisect.bisect_left(sorted_end, startTime[i]) for i in xrange(len(startTime)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

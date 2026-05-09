@@ -1,0 +1,25 @@
+{
+  "id": "19aae6b6-4625-4f86-b3dc-20b6cbdd9d33",
+  "slug": "convert",
+  "title": "Convert",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(n)\n\nclass Solution {\n    public:\n        string convert(string s, int nRows) {\n            vector<string> row(nRows);\n            string ans;\n            int cnt = 0;\n\n            if(nRows == 1)\n                return s;\n\n            for(auto c : s) {\n                if(cnt < nRows) {\n                    row[cnt].push_back(c);\n                }\n                else {\n                    row[2 * nRows - 2 - cnt].push_back(c);\n                }\n\n                cnt = (cnt + 1) % (2 * nRows - 2);\n            }\n\n            for(auto s : row) {\n                ans.append(s);\n            }\n\n            return ans;\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

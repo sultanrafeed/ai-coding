@@ -1,0 +1,41 @@
+{
+  "id": "69bf0f8a-bac4-439d-ae8a-f09f748e7696",
+  "slug": "most-frequent-even-element",
+  "title": "Most Frequent Even Element",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, return <em>the most frequent even element</em>.</p>\n\n<p>If there is a tie, return the <strong>smallest</strong> one. If there is no such element, return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,1,2,2,4,4,1]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong>\nThe even elements are 0, 2, and 4. Of these, 2 and 4 appear the most.\nWe return the smallest one, which is 2.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [4,4,4,9,2,4]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> 4 is the even element appears the most.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [29,47,21,41,13,37,25,7]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> There is no even element.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 2000</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[0,1,2,2,4,4,1]\n[4,4,4,9,2,4]\n[29,47,21,41,13,37,25,7]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table\nclass Solution {\npublic:\n    int mostFrequentEven(vector<int>& nums) {\n        unordered_map<int, int> cnt;\n        int mx = 0, result = -1;\n        for (const auto& x : nums) {\n            if (x % 2) {\n                continue;\n            }\n            ++cnt[x];\n            if (mx == 0 || mx < cnt[x] || (mx == cnt[x] && x < result)) {\n                mx = cnt[x];\n                result = x;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def mostFrequentEven(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        cnt = collections.Counter(x for x in nums if x%2 == 0)\n        return max(cnt.iterkeys(), key=lambda x: (cnt[x], -x)) if cnt else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

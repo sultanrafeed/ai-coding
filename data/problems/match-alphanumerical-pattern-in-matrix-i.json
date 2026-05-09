@@ -1,0 +1,42 @@
+{
+  "id": "f03cc63b-82f0-44ee-b0bc-0c1c49538761",
+  "slug": "match-alphanumerical-pattern-in-matrix-i",
+  "title": "Match Alphanumerical Pattern in Matrix I",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,2,2],[2,2,3],[2,3,3]]\n[\"ab\",\"bb\"]\n[[1,1,2],[3,3,4],[6,6,6]]\n[\"ab\",\"66\"]\n[[1,2],[2,1]]\n[\"xx\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * m * r * c)\n// Space: O(1)\n\n// brute force, hash table\nclass Solution {\npublic:\n    vector<int> findPattern(vector<vector<int>>& board, vector<string>& pattern) {\n        const auto& check = [&](int i, int j) {\n            vector<int> lookup(26, -1);\n            vector<bool> lookup2(10);\n            for (int r = 0; r < size(pattern); ++r) {\n                for (int c = 0; c < size(pattern[0]); ++c) {\n                    const int y = board[i + r][j + c];\n                    if (isdigit(pattern[r][c])) {\n                        if (pattern[r][c] - '0' != y) {\n                            return false;\n                        }\n                        continue;\n                    }\n                    const int x = pattern[r][c] - 'a';\n                    if (lookup[x] == -1) {\n                        if (lookup2[y]) {\n                            return false;\n                        }\n                        lookup2[y] = true;\n                        lookup[x] = y;\n                        continue;\n                    }\n                    if (lookup[x] != y) {\n                        return false;\n                    }\n                }\n            }\n            return true;\n        };\n    \n        for (int i = 0; i + size(pattern) - 1 < size(board); ++i) {\n            for (int j = 0; j + size(pattern[0]) - 1 < size(board[0]); ++j) {\n                if (check(i, j)) {\n                    return {i, j};\n                }\n            }\n        }\n        return {-1, -1};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * m * r * c)\n# Space: O(1)\n\n# brute force, hash table\nclass Solution(object):\n    def findPattern(self, board, pattern):\n        \"\"\"\n        :type board: List[List[int]]\n        :type pattern: List[str]\n        :rtype: List[int]\n        \"\"\"\n        def check(i, j):\n            lookup = [-1]*26\n            lookup2 = [False]*10\n            for r in xrange(len(pattern)):\n                for c in xrange(len(pattern[0])):\n                    y = board[i+r][j+c]\n                    if pattern[r][c].isdigit():\n                        if int(pattern[r][c]) != y:\n                            return False\n                        continue\n                    x = ord(pattern[r][c])-ord('a')\n                    if lookup[x] == -1:\n                        if lookup2[y]:\n                            return False\n                        lookup2[y] = True\n                        lookup[x] = y\n                        continue\n                    if lookup[x] != y:\n                        return False\n            return True\n                    \n        return next(([i, j] for i in xrange(len(board)-len(pattern)+1) for j in xrange(len(board[0])-len(pattern[0])+1) if check(i, j)), [-1, -1])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "4e621501-8571-4329-a66e-81cf3eae49cf",
+  "slug": "maximum-candies-you-can-get-from-boxes",
+  "title": "Maximum Candies You Can Get from Boxes",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You have <code>n</code> boxes labeled from <code>0</code> to <code>n - 1</code>. You are given four arrays: <code>status</code>, <code>candies</code>, <code>keys</code>, and <code>containedBoxes</code> where:</p>\n\n<ul>\n\t<li><code>status[i]</code> is <code>1</code> if the <code>i<sup>th</sup></code> box is open and <code>0</code> if the <code>i<sup>th</sup></code> box is closed,</li>\n\t<li><code>candies[i]</code> is the number of candies in the <code>i<sup>th</sup></code> box,</li>\n\t<li><code>keys[i]</code> is a list of the labels of the boxes you can open after opening the <code>i<sup>th</sup></code> box.</li>\n\t<li><code>containedBoxes[i]</code> is a list of the boxes you found inside the <code>i<sup>th</sup></code> box.</li>\n</ul>\n\n<p>You are given an integer array <code>initialBoxes</code> that contains the labels of the boxes you initially have. You can take all the candies in <strong>any open box</strong> and you can use the keys in it to open new boxes and you also can use the boxes you find in it.</p>\n\n<p>Return <em>the maximum number of candies you can get following the rules above</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> status = [1,0,1,0], candies = [7,5,4,100], keys = [[],[],[1],[]], containedBoxes = [[1,2],[3],[],[]], initialBoxes = [0]\n<strong>Output:</strong> 16\n<strong>Explanation:</strong> You will be initially given box 0. You will find 7 candies in it and boxes 1 and 2.\nBox 1 is closed and you do not have a key for it so you will open box 2. You will find 4 candies and a key to box 1 in box 2.\nIn box 1, you will find 5 candies and box 3 but you will not find a key to box 3 so box 3 will remain closed.\nTotal number of candies collected = 7 + 4 + 5 = 16 candy.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> status = [1,0,0,0,0,0], candies = [1,1,1,1,1,1], keys = [[1,2,3,4,5],[],[],[],[],[]], containedBoxes = [[1,2,3,4,5],[],[],[],[],[]], initialBoxes = [0]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> You have initially box 0. Opening it you can find boxes 1,2,3,4 and 5 and their keys.\nThe total number of candies will be 6.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == status.length == candies.length == keys.length == containedBoxes.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 1000</code></li>\n\t<li><code>status[i]</code> is either <code>0</code> or <code>1</code>.</li>\n\t<li><code>1 &lt;= candies[i] &lt;= 1000</code></li>\n\t<li><code>0 &lt;= keys[i].length &lt;= n</code></li>\n\t<li><code>0 &lt;= keys[i][j] &lt; n</code></li>\n\t<li>All values of <code>keys[i]</code> are <strong>unique</strong>.</li>\n\t<li><code>0 &lt;= containedBoxes[i].length &lt;= n</code></li>\n\t<li><code>0 &lt;= containedBoxes[i][j] &lt; n</code></li>\n\t<li>All values of <code>containedBoxes[i]</code> are unique.</li>\n\t<li>Each box is contained in one box at most.</li>\n\t<li><code>0 &lt;= initialBoxes.length &lt;= n</code></li>\n\t<li><code>0 &lt;= initialBoxes[i] &lt; n</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxCandies(vector<int>& status, vector<int>& candies, vector<vector<int>>& keys, vector<vector<int>>& containedBoxes, vector<int>& initialBoxes) {\n        int result = 0;\n        queue<int> q;\n        for (const auto& box : initialBoxes) {\n            q.emplace(box);\n        }\n        while (!q.empty()) {\n            bool changed = false;\n            for (int i = q.size() - 1; i >= 0; --i) {\n                const auto box = q.front(); q.pop();\n                if (!status[box]) {\n                    q.emplace(box);\n                    continue;\n                }\n                changed = true;\n                result += candies[box];\n                for (const auto& contained_key : keys[box]) {\n                    status[contained_key] = 1;\n                }\n                for (const auto& contained_box : containedBoxes[box]) {\n                    q.emplace(contained_box);\n                }\n            }\n            if (!changed) {\n                break;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def maxCandies(self, status, candies, keys, containedBoxes, initialBoxes):\n        \"\"\"\n        :type status: List[int]\n        :type candies: List[int]\n        :type keys: List[List[int]]\n        :type containedBoxes: List[List[int]]\n        :type initialBoxes: List[int]\n        :rtype: int\n        \"\"\"\n        result = 0\n        q = collections.deque(initialBoxes)\n        while q:\n            changed = False\n            for _ in xrange(len(q)):\n                box = q.popleft()\n                if not status[box]:\n                    q.append(box)\n                    continue\n                changed = True\n                result += candies[box]\n                for contained_key in keys[box]:\n                    status[contained_key] = 1\n                for contained_box in containedBoxes[box]:\n                    q.append(contained_box)\n            if not changed:\n                break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

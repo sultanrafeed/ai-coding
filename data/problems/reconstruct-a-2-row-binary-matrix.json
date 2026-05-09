@@ -1,0 +1,41 @@
+{
+  "id": "ab87d791-e837-4498-8693-9314ff70829f",
+  "slug": "reconstruct-a-2-row-binary-matrix",
+  "title": "Reconstruct a 2-Row Binary Matrix",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the following details of a matrix with <code>n</code> columns and <code>2</code> rows :</p>\n\n<ul>\n\t<li>The matrix is a binary matrix, which means each element in the matrix can be <code>0</code> or <code>1</code>.</li>\n\t<li>The sum of elements of the 0-th(upper) row is given as <code>upper</code>.</li>\n\t<li>The sum of elements of the 1-st(lower) row is given as <code>lower</code>.</li>\n\t<li>The sum of elements in the i-th column(0-indexed) is <code>colsum[i]</code>, where <code>colsum</code> is given as an integer array with length <code>n</code>.</li>\n</ul>\n\n<p>Your task is to reconstruct the matrix with <code>upper</code>, <code>lower</code> and <code>colsum</code>.</p>\n\n<p>Return it as a 2-D integer array.</p>\n\n<p>If there are more than one valid solution, any of them will be accepted.</p>\n\n<p>If no valid solution exists, return an empty 2-D array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> upper = 2, lower = 1, colsum = [1,1,1]\n<strong>Output:</strong> [[1,1,0],[0,0,1]]\n<strong>Explanation: </strong>[[1,0,1],[0,1,0]], and [[0,1,1],[1,0,0]] are also correct answers.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> upper = 2, lower = 3, colsum = [2,2,1,1]\n<strong>Output:</strong> []\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> upper = 5, lower = 5, colsum = [2,1,2,0,1,0,1,2,0,1]\n<strong>Output:</strong> [[1,1,1,0,1,0,0,1,0,0],[1,0,1,0,0,0,1,1,0,1]]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= colsum.length &lt;= 10^5</code></li>\n\t<li><code>0 &lt;= upper, lower &lt;= colsum.length</code></li>\n\t<li><code>0 &lt;= colsum[i] &lt;= 2</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "2\n1\n[1,1,1]\n2\n3\n[2,2,1,1]\n5\n5\n[2,1,2,0,1,0,1,2,0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<vector<int>> reconstructMatrix(int upper, int lower, vector<int>& colsum) {\n        vector<int> upper_matrix(colsum.size());\n        vector<int> lower_matrix(colsum.size());\n        for (int i = 0; i < colsum.size(); ++i) {\n            upper_matrix[i] = int(upper > 0 && colsum[i] > 0);\n            lower_matrix[i] = colsum[i] - upper_matrix[i];\n            upper -= upper_matrix[i];\n            lower -= lower_matrix[i];\n        }\n        if (upper != 0 || lower != 0) {\n            return {};\n        }\n        return {upper_matrix, lower_matrix};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def reconstructMatrix(self, upper, lower, colsum):\n        \"\"\"\n        :type upper: int\n        :type lower: int\n        :type colsum: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        upper_matrix, lower_matrix = [0]*len(colsum), [0]*len(colsum)\n        for i in xrange(len(colsum)):\n            upper_matrix[i] = int(upper > 0 and colsum[i] != 0)\n            lower_matrix[i] = colsum[i]-upper_matrix[i]\n            upper -= upper_matrix[i]\n            lower -= lower_matrix[i]\n        return [upper_matrix, lower_matrix] if upper == lower == 0 else []",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

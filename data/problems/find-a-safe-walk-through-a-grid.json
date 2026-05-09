@@ -1,0 +1,38 @@
+{
+  "id": "7e5f473c-1ba9-42e0-ba08-081286464885",
+  "slug": "find-a-safe-walk-through-a-grid",
+  "title": "Find a Safe Walk Through a Grid",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an <code>m x n</code> binary matrix <code>grid</code> and an integer <code>health</code>.</p>\n\n<p>You start on the upper-left corner <code>(0, 0)</code> and would like to get to the lower-right corner <code>(m - 1, n - 1)</code>.</p>\n\n<p>You can move up, down, left, or right from one cell to another adjacent cell as long as your health <em>remains</em> <strong>positive</strong>.</p>\n\n<p>Cells <code>(i, j)</code> with <code>grid[i][j] = 1</code> are considered <strong>unsafe</strong> and reduce your health by 1.</p>\n\n<p>Return <code>true</code> if you can reach the final cell with a health value of 1 or more, and <code>false</code> otherwise.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[0,1,0,0,0],[0,1,0,1,0],[0,0,0,1,0]], health = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The final cell can be reached safely by walking along the gray cells below.</p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/08/04/3868_examples_1drawio.png\" style=\"width: 301px; height: 121px;\" /></div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[0,1,1,0,0,0],[1,0,1,0,0,0],[0,1,1,1,0,1],[0,0,1,0,1,0]], health = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>A minimum of 4 health points is needed to reach the final cell safely.</p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/08/04/3868_examples_2drawio.png\" style=\"width: 361px; height: 161px;\" /></div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[1,1,1],[1,0,1],[1,1,1]], health = 5</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The final cell can be reached safely by walking along the gray cells below.</p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/08/04/3868_examples_3drawio.png\" style=\"width: 181px; height: 121px;\" /></p>\n\n<p>Any path that does not go through the cell <code>(1, 1)</code> is unsafe since your health will drop to 0 when reaching the final cell.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 50</code></li>\n\t<li><code><font face=\"monospace\">2 &lt;= m * n</font></code></li>\n\t<li><code>1 &lt;= health &lt;= m + n</code></li>\n\t<li><code>grid[i][j]</code> is either 0 or 1.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "graph",
+    "heap-priority-queue",
+    "matrix",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\n// 0-1 bfs, deque\nclass Solution {\npublic:\n    bool findSafeWalk(vector<vector<int>>& grid, int health) {\n        static const vector<pair<int, int>> directions = {{0, 1}, {0, -1},\n                                                          {1, 0}, {-1, 0}};\n        const pair<int, int> b = {0, 0}, t = {size(grid) - 1, size(grid[0]) - 1};\n        if (!(0 + grid[0][0] < health)) {\n            return false;\n        }\n        deque<pair<pair<int, int>, int>> dq = {{b, grid[0][0]}};\n        unordered_set<int> lookup;\n        while (!empty(dq)) {\n            const auto [b, d] = dq.front(); dq.pop_front();\n            if (b == t) {\n                return true;\n            }\n            if (lookup.count(b.first * size(grid[0]) + b.second)) {\n                continue;\n            }\n            lookup.emplace(b.first * size(grid[0]) + b.second);\n            for (const auto& [dr, dc] : directions) {\n                const auto& nb = make_pair(b.first + dr, b.second + dc);\n                if (!(0 <= nb.first && nb.first < size(grid) &&\n                      0 <= nb.second && nb.second < size(grid[0]) &&\n                      !lookup.count(nb.first * size(grid[0]) + nb.second))) {\n                    continue;\n                }\n                if (!grid[nb.first][nb.second]) {\n                    dq.emplace_front(nb, d);\n                } else if (d + 1 < health) {\n                    dq.emplace_back(nb, d + 1);\n                }\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\nimport collections\n\n\n# 0-1 bfs, deque\nclass Solution(object):\n    def findSafeWalk(self, grid, health):\n        \"\"\"\n        :type grid: List[List[int]]\n        :type health: int\n        :rtype: bool\n        \"\"\"\n        directions = [(0, 1), (0, -1), (1, 0), (-1, 0)]\n        b, t = (0, 0), (len(grid)-1, len(grid[0])-1)\n        if not 0+grid[0][0] < health:\n            return False\n        dq = collections.deque([(b, grid[0][0])])\n        lookup = set()\n        while dq:\n            b, d = dq.popleft()\n            if b in lookup:\n                continue\n            lookup.add(b)\n            if b == t:\n                return True\n            for dr, dc in directions:\n                nb = (b[0]+dr, b[1]+dc)\n                if not (0 <= nb[0] < len(grid) and 0 <= nb[1] < len(grid[0]) and nb not in lookup):\n                    continue\n                if not grid[nb[0]][nb[1]]:\n                    dq.appendleft((nb, d))\n                elif d+1 < health:\n                    dq.append((nb, d+1))\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

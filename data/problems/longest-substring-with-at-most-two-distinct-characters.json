@@ -1,0 +1,35 @@
+{
+  "id": "b392e081-9405-4605-9b96-635a76df8034",
+  "slug": "longest-substring-with-at-most-two-distinct-characters",
+  "title": "Longest Substring with At Most Two Distinct Characters",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int lengthOfLongestSubstringTwoDistinct(string s) {\n        const int k = 2;\n        int longest = 0, start = 0, distinct_count = 0;\n        array<int, 256> visited = {0};\n        for (int i = 0; i < s.length(); ++i) {\n            if (visited[s[i]] == 0) {\n                ++distinct_count;\n            }\n            ++visited[s[i]];\n            while (distinct_count > k) {\n                --visited[s[start]];\n                if (visited[s[start]] == 0) {\n                    --distinct_count;\n                }\n                ++start;\n            }\n            longest = max(longest, i - start + 1);\n        }\n        return longest;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    # @param s, a string\n    # @return an integer\n    def lengthOfLongestSubstringTwoDistinct(self, s):\n        longest, start, distinct_count, visited = 0, 0, 0, [0 for _ in xrange(256)]\n        for i, char in enumerate(s):\n            if visited[ord(char)] == 0:\n                distinct_count += 1\n            visited[ord(char)] += 1\n            while distinct_count > 2:\n                visited[ord(s[start])] -= 1\n                if visited[ord(s[start])] == 0:\n                    distinct_count -= 1\n                start += 1\n            longest = max(longest, i - start + 1)\n        return longest\n\n\n# Time:  O(n)\n# Space: O(1)\nfrom collections import Counter\n\n\nclass Solution2(object):\n    def lengthOfLongestSubstringTwoDistinct(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        counter = Counter()\n        left, max_length = 0, 0\n        for right, char in enumerate(s):\n            counter[char] += 1\n            while len(counter) > 2:\n                counter[s[left]] -= 1\n                if counter[s[left]] == 0:\n                    del counter[s[left]]\n                left += 1\n            max_length = max(max_length, right-left+1)\n        return max_length",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

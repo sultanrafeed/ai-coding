@@ -1,0 +1,41 @@
+{
+  "id": "99af0a18-7762-47d8-a753-0cd931328c66",
+  "slug": "filter-characters-by-frequency",
+  "title": "Filter Characters by Frequency",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"aadbbcccca\"\n3\n\"xyz\"\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// freq table\nclass Solution {\npublic:\n    string filterCharacters(string s, int k) {\n        vector<int> cnt(26);\n        for (const auto& x : s) {\n            ++cnt[x - 'a'];\n        }\n        string result;\n        for (const auto& x : s) {\n            if (cnt[x - 'a'] < k) {\n                result.push_back(x);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# freq table\nclass Solution(object):\n    def filterCharacters(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: str\n        \"\"\"\n        cnt = [0]*26\n        for x in s:\n            cnt[ord(x)-ord('a')] += 1\n        return \"\".join(x for x in s if cnt[ord(x)-ord('a')] < k)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "96f5ea5c-969c-4503-a349-c77e435a0bea",
+  "slug": "number-of-substrings-with-fixed-ratio",
+  "title": "Number of Substrings With Fixed Ratio",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "math",
+    "string",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table, prefix sum\nclass Solution {\npublic:\n    long long fixedRatio(string s, int num1, int num2) {\n        unordered_map<int, int> lookup;\n        lookup[0] = 1;\n        int64_t result = 0, curr = 0;\n        for (const auto& c : s) {\n            curr += c == '0' ? -num2 : +num1;\n            result += lookup[curr];\n            ++lookup[curr];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# freq table, prefix sum\nclass Solution(object):\n    def fixedRatio(self, s, num1, num2):\n        \"\"\"\n        :type s: str\n        :type num1: int\n        :type num2: int\n        :rtype: int\n        \"\"\"\n        lookup = collections.Counter()\n        lookup[0] = 1\n        result = curr = 0\n        for c in s:\n            curr += -num2 if c == '0' else +num1\n            result += lookup[curr]\n            lookup[curr] += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

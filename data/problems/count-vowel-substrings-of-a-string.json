@@ -1,0 +1,34 @@
+{
+  "id": "8f61a27a-fc78-440a-adf8-e44ee2709d1b",
+  "slug": "count-vowel-substrings-of-a-string",
+  "title": "Count Vowel Substrings of a String",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>A <strong>substring</strong> is a contiguous (non-empty) sequence of characters within a string.</p>\n\n<p>A <strong>vowel substring</strong> is a substring that <strong>only</strong> consists of vowels (<code>&#39;a&#39;</code>, <code>&#39;e&#39;</code>, <code>&#39;i&#39;</code>, <code>&#39;o&#39;</code>, and <code>&#39;u&#39;</code>) and has <strong>all five</strong> vowels present in it.</p>\n\n<p>Given a string <code>word</code>, return <em>the number of <strong>vowel substrings</strong> in</em> <code>word</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> word = &quot;aeiouu&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The vowel substrings of word are as follows (underlined):\n- &quot;<strong><u>aeiou</u></strong>u&quot;\n- &quot;<strong><u>aeiouu</u></strong>&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> word = &quot;unicornarihan&quot;\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Not all 5 vowels are present, so there are no vowel substrings.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> word = &quot;cuaieuouac&quot;\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> The vowel substrings of word are as follows (underlined):\n- &quot;c<strong><u>uaieuo</u></strong>uac&quot;\n- &quot;c<strong><u>uaieuou</u></strong>ac&quot;\n- &quot;c<strong><u>uaieuoua</u></strong>c&quot;\n- &quot;cu<strong><u>aieuo</u></strong>uac&quot;\n- &quot;cu<strong><u>aieuou</u></strong>ac&quot;\n- &quot;cu<strong><u>aieuoua</u></strong>c&quot;\n- &quot;cua<strong><u>ieuoua</u></strong>c&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= word.length &lt;= 100</code></li>\n\t<li><code>word</code> consists of lowercase English letters only.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countVowelSubstrings(string word) {\n        static const int k = 5;\n        return atLeastK(word, k);\n    }\n\nprivate:\n    int atLeastK(const string& word, int k) {\n        static const unordered_set<int> VOWELS = {'a', 'e', 'i', 'o', 'u'};\n\n        unordered_map<int, int> cnt;\n        int result = 0;\n        for (int i = 0, left = 0, right = 0; i < size(word); ++i) {\n            if (!VOWELS.count(word[i])) {\n                cnt.clear();\n                left = right = i + 1;\n                continue;\n            }\n            ++cnt[word[i]];\n            for (; size(cnt) > k - 1; ++right) {\n                if (!--cnt[word[right]]) {\n                    cnt.erase(word[right]);\n                }\n            }\n            result += right - left;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int countVowelSubstrings(string word) {\n        static const int k = 5;\n\n        return atMostK(word, k) - atMostK(word, k - 1);\n    }\n\nprivate:\n    int atMostK(const string& word, int k) {\n        static const unordered_set<int> VOWELS = {'a', 'e', 'i', 'o', 'u'};\n\n        unordered_map<int, int> cnt;\n        int result = 0, left = 0;\n        for (int right = 0; right < size(word); ++right) {\n            if (!VOWELS.count(word[right])) {\n                cnt.clear();\n                left = right + 1;\n                continue;\n            }\n            ++cnt[word[right]];\n            for (; size(cnt) > k; ++left) {\n                if (!--cnt[word[left]]) {\n                    cnt.erase(word[left]);\n                }\n            }\n            result += right - left + 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def countVowelSubstrings(self, word):\n        \"\"\"\n        :type word: str\n        :rtype: int\n        \"\"\"\n        VOWELS = set(\"aeiou\")\n        k = 5\n        def atLeastK(word, k):\n            cnt = collections.Counter()\n            result = left = right = 0\n            for i, c in enumerate(word):\n                if c not in VOWELS:\n                    cnt = collections.Counter()\n                    left = right = i+1\n                    continue\n                cnt[c] += 1\n                while len(cnt) > k-1:\n                    cnt[word[right]] -= 1\n                    if not cnt[word[right]]:\n                        del cnt[word[right]]\n                    right += 1\n                result += right-left\n            return result\n\n        return atLeastK(word, k)\n\n\n# Time:  O(n)\n# Space: O(1)\nimport collections\n\n\nclass Solution2(object):\n    def countVowelSubstrings(self, word):\n        \"\"\"\n        :type word: str\n        :rtype: int\n        \"\"\"\n        VOWELS = set(\"aeiou\")\n        k = 5\n        def atMostK(word, k):\n            cnt = collections.Counter()\n            result = left = 0\n            for right, c in enumerate(word):\n                if c not in VOWELS:\n                    cnt = collections.Counter()\n                    left = right+1\n                    continue\n                cnt[c] += 1\n                while len(cnt) > k:\n                    cnt[word[left]] -=1\n                    if not cnt[word[left]]:\n                        del cnt[word[left]]\n                    left += 1\n                result += right-left+1\n            return result\n\n        return atMostK(word, k) - atMostK(word, k-1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "af6dbbde-8e2a-4a83-bf0d-23e882cd243a",
+  "slug": "orderly-queue",
+  "title": "Orderly Queue",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a string <code>s</code> and an integer <code>k</code>. You can choose one of the first <code>k</code> letters of <code>s</code> and append it at the end of the string.</p>\n\n<p>Return <em>the lexicographically smallest string you could have after applying the mentioned step any number of moves</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;cba&quot;, k = 1\n<strong>Output:</strong> &quot;acb&quot;\n<strong>Explanation:</strong> \nIn the first move, we move the 1<sup>st</sup> character &#39;c&#39; to the end, obtaining the string &quot;bac&quot;.\nIn the second move, we move the 1<sup>st</sup> character &#39;b&#39; to the end, obtaining the final result &quot;acb&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;baaca&quot;, k = 3\n<strong>Output:</strong> &quot;aaabc&quot;\n<strong>Explanation:</strong> \nIn the first move, we move the 1<sup>st</sup> character &#39;b&#39; to the end, obtaining the string &quot;aacab&quot;.\nIn the second move, we move the 3<sup>rd</sup> character &#39;c&#39; to the end, obtaining the final result &quot;aaabc&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= k &lt;= s.length &lt;= 1000</code></li>\n\t<li><code>s</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    string orderlyQueue(string S, int K) {\n        if (K == 1) {\n            auto result{S};\n            for (int i = 1; i < S.length(); ++i) {\n                result = min(result, S.substr(i) + S.substr(0, i));\n            }\n            return result;\n        }\n        sort(S.begin(), S.end());\n        return S;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def orderlyQueue(self, S, K):\n        \"\"\"\n        :type S: str\n        :type K: int\n        :rtype: str\n        \"\"\"\n        if K == 1:\n            return min(S[i:] + S[:i] for i in xrange(len(S)))\n        return \"\".join(sorted(S))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

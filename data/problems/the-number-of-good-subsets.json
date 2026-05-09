@@ -1,0 +1,40 @@
+{
+  "id": "69da2d62-16dd-49c6-8da3-8164819f9ba1",
+  "slug": "the-number-of-good-subsets",
+  "title": "The Number of Good Subsets",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>. We call a subset of <code>nums</code> <strong>good</strong> if its product can be represented as a product of one or more <strong>distinct prime</strong> numbers.</p>\n\n<ul>\n\t<li>For example, if <code>nums = [1, 2, 3, 4]</code>:\n\n\t<ul>\n\t\t<li><code>[2, 3]</code>, <code>[1, 2, 3]</code>, and <code>[1, 3]</code> are <strong>good</strong> subsets with products <code>6 = 2*3</code>, <code>6 = 2*3</code>, and <code>3 = 3</code> respectively.</li>\n\t\t<li><code>[1, 4]</code> and <code>[4]</code> are not <strong>good</strong> subsets with products <code>4 = 2*2</code> and <code>4 = 2*2</code> respectively.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>Return <em>the number of different <strong>good</strong> subsets in </em><code>nums</code><em> <strong>modulo</strong> </em><code>10<sup>9</sup> + 7</code>.</p>\n\n<p>A <strong>subset</strong> of <code>nums</code> is any array that can be obtained by deleting some (possibly none or all) elements from <code>nums</code>. Two subsets are different if and only if the chosen indices to delete are different.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The good subsets are:\n- [1,2]: product is 2, which is the product of distinct prime 2.\n- [1,2,3]: product is 6, which is the product of distinct primes 2 and 3.\n- [1,3]: product is 3, which is the product of distinct prime 3.\n- [2]: product is 2, which is the product of distinct prime 2.\n- [2,3]: product is 6, which is the product of distinct primes 2 and 3.\n- [3]: product is 3, which is the product of distinct prime 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [4,2,3,15]\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The good subsets are:\n- [2]: product is 2, which is the product of distinct prime 2.\n- [2,3]: product is 6, which is the product of distinct primes 2 and 3.\n- [2,15]: product is 30, which is the product of distinct primes 2, 3, and 5.\n- [3]: product is 3, which is the product of distinct prime 3.\n- [15]: product is 15, which is the product of distinct primes 3 and 5.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 30</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "dynamic-programming",
+    "bit-manipulation",
+    "counting",
+    "number-theory",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^p), p is the number of primes in [1, n]\n// Space: O(2^p)\n\nclass Solution {\npublic:\n    int numberOfGoodSubsets(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n        const auto& primes = sieve_of_eratosthenes(*max_element(cbegin(nums), cend(nums)));\n        vector<int> dp(1 << size(primes));  // dp[i] = the number of different good subsets of which the total product equals to the product of the primes in bitset i\n        dp[0] = 1;\n        unordered_map<int, int> cnts;\n        for (const auto& x : nums) {\n            ++cnts[x];\n        }\n        for (const auto& [x, cnt] : cnts) {\n            if (x == 1 || any_of(cbegin(primes), cend(primes), [&x=x](const auto& p) { return p * p <= x && x % (p * p) == 0;} )) {  // [&x=x] is to avoid the problem that lambda function captures variables declared from structured binding\n                continue;\n            }\n            const uint32_t mask = to_mask(primes, x);\n            for (int i = 0; i < size(dp) - 1; ++i) {\n                if (i & mask) {\n                    continue;\n                }\n                dp[i | mask] = (dp[i | mask] + static_cast<uint64_t>(cnt) * dp[i]) % MOD;\n            }\n        }\n        return powmod(2, cnts[1], MOD) * (accumulate(cbegin(dp), cend(dp), 0ull,\n                                                     [](const auto& total, const auto& x) {\n                                                         return (total + x) % MOD;\n                                                     }) - 1) % MOD;\n    }\n\nprivate:\n    vector<int> sieve_of_eratosthenes(int n) {  // Time: O(n * log(logn)), Space: O(n)\n        if (n < 2) {\n            return {};\n        }\n        vector<int> primes = {2};\n        vector<bool> is_prime((n + 1) / 2, true);\n        for (int i = 1; i < size(is_prime); ++i) {\n            if (!is_prime[i]) {\n                continue;\n            }\n            primes.emplace_back(2 * i + 1);\n            for (int j = 2 * i * (i + 1); j < size(is_prime); j += (2 * i + 1)) {\n                is_prime[j] = false;\n            }\n        }\n        return primes;\n    }\n\n    uint32_t to_mask(const vector<int>& primes, int x) {\n        uint32_t mask = 0, basis = 1;\n        for (const auto& p : primes) {\n            if (x % p == 0) {\n                mask |= basis;\n            }\n            basis <<= 1;\n        }\n        return mask;\n    }\n\n    uint32_t powmod(uint32_t a, uint32_t b, uint32_t mod) {\n        a %= mod;\n        uint64_t result = 1;\n        while (b) {\n            if (b & 1) {\n                result = result * a % mod;\n            }\n            a = uint64_t(a) * a % mod;\n            b >>= 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^p), p is the number of primes in [1, n]\n# Space: O(2^p)\n\nimport collections\n\n\nclass Solution(object):\n    def numberOfGoodSubsets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def sieve_of_eratosthenes(n):  # Time: O(n * log(logn)), Space: O(n)\n            if n < 2:\n                return []\n            primes = [2]\n            is_prime = [True]*((n+1)//2)\n            for i in xrange(1, len(is_prime)):\n                if not is_prime[i]:\n                    continue\n                primes.append(2*i+1)\n                for j in xrange(2*i*(i+1), len(is_prime), (2*i+1)):\n                    is_prime[j] = False\n            return primes\n\n        def to_mask(primes, x):\n            mask, basis = 0, 1\n            for p in primes:\n                if x%p == 0:\n                    mask |= basis\n                basis <<= 1\n            return mask\n\n        MOD = 10**9+7\n        primes = sieve_of_eratosthenes(max(nums))\n        dp = [0]*(1<<len(primes))  # dp[i] = the number of different good subsets of which the total product equals to the product of the primes in bitset i\n        dp[0] = 1\n        cnts = collections.Counter(nums)\n        for x, cnt in cnts.iteritems():\n            if x == 1 or any(x%(p*p) == 0 for p in primes if p*p <= x):\n                continue\n            mask = to_mask(primes, x)\n            for i in xrange(len(dp)-1):\n                if i&mask:\n                    continue\n                dp[i|mask] = (dp[i|mask]+cnt*dp[i])%MOD\n        return (pow(2, cnts[1], MOD))*(reduce(lambda total, x: (total+x)%MOD, dp, 0)-1)%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

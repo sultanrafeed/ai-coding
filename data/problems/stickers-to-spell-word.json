@@ -1,0 +1,40 @@
+{
+  "id": "a54b0fd8-3cc0-4492-9c32-f9bd22c1a4a2",
+  "slug": "stickers-to-spell-word",
+  "title": "Stickers to Spell Word",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>We are given <code>n</code> different types of <code>stickers</code>. Each sticker has a lowercase English word on it.</p>\n\n<p>You would like to spell out the given string <code>target</code> by cutting individual letters from your collection of stickers and rearranging them. You can use each sticker more than once if you want, and you have infinite quantities of each sticker.</p>\n\n<p>Return <em>the minimum number of stickers that you need to spell out </em><code>target</code>. If the task is impossible, return <code>-1</code>.</p>\n\n<p><strong>Note:</strong> In all test cases, all words were chosen randomly from the <code>1000</code> most common US English words, and <code>target</code> was chosen as a concatenation of two random words.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> stickers = [&quot;with&quot;,&quot;example&quot;,&quot;science&quot;], target = &quot;thehat&quot;\n<strong>Output:</strong> 3\n<strong>Explanation:</strong>\nWe can use 2 &quot;with&quot; stickers, and 1 &quot;example&quot; sticker.\nAfter cutting and rearrange the letters of those stickers, we can form the target &quot;thehat&quot;.\nAlso, this is the minimum number of stickers necessary to form the target string.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> stickers = [&quot;notice&quot;,&quot;possible&quot;], target = &quot;basicbasic&quot;\n<strong>Output:</strong> -1\nExplanation:\nWe cannot form the target &quot;basicbasic&quot; from cutting letters from the given stickers.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == stickers.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 50</code></li>\n\t<li><code>1 &lt;= stickers[i].length &lt;= 10</code></li>\n\t<li><code>1 &lt;= target.length &lt;= 15</code></li>\n\t<li><code>stickers[i]</code> and <code>target</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "dynamic-programming",
+    "backtracking",
+    "bit-manipulation",
+    "memoization",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(T * S^T)\n// Space: O(T * S^T)\n\nclass Solution {\npublic:\n    int minStickers(vector<string>& stickers, string target) {\n        vector<vector<int>> sticker_counts(stickers.size(), vector<int>(26));\n        unordered_map<string, int> dp;\n        for (int i = 0; i < stickers.size(); ++i) {\n            for (const auto& c : stickers[i]) {\n                ++sticker_counts[i][c - 'a'];\n            }\n        }\n        dp[\"\"] = 0;\n        return minStickersHelper(sticker_counts, target, &dp);\n    }\n    \nprivate:\n    int minStickersHelper(const vector<vector<int>>& sticker_counts, const string& target,\n                          unordered_map<string, int> *dp) {\n        if (dp->count(target)) {\n            return (*dp)[target];\n        }\n        int result = numeric_limits<int>::max();\n        vector<int> target_count(26);\n        for (const auto& c : target) {\n            ++target_count[c - 'a'];\n        }\n        for (const auto& sticker_count : sticker_counts) {\n            if (sticker_count[target[0] - 'a'] == 0) {\n                continue; \n            }\n            string new_target;\n            for (int i = 0; i < target_count.size(); ++i) {\n                if (target_count[i] - sticker_count[i] > 0) {\n                    new_target += string(target_count[i] - sticker_count[i], 'a' + i);\n                }\n            }\n            if (new_target.length() != target.length()) {\n                int num = minStickersHelper(sticker_counts, new_target, dp);\n                if (num != -1) {\n                    result = min(result, 1 + num);\n                }\n            }\n        }\n        (*dp)[target] = (result == numeric_limits<int>::max()) ? -1 : result;\n        return (*dp)[target];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(T * S^T)\n# Space: O(T * S^T)\n\nimport collections\n\n\nclass Solution(object):\n    def minStickers(self, stickers, target):\n        \"\"\"\n        :type stickers: List[str]\n        :type target: str\n        :rtype: int\n        \"\"\"\n        def minStickersHelper(sticker_counts, target, dp):\n            if \"\".join(target) in dp:\n                return dp[\"\".join(target)]\n            target_count = collections.Counter(target)\n            result = float(\"inf\")\n            for sticker_count in sticker_counts:\n                if sticker_count[target[0]] == 0:\n                    continue\n                new_target = []\n                for k in target_count.keys():\n                    if target_count[k] > sticker_count[k]:\n                       new_target += [k]*(target_count[k] - sticker_count[k])\n                if len(new_target) != len(target):\n                    num = minStickersHelper(sticker_counts, new_target, dp)\n                    if num != -1:\n                        result = min(result, 1+num)\n            dp[\"\".join(target)] = -1 if result == float(\"inf\") else result\n            return dp[\"\".join(target)]\n\n        sticker_counts = map(collections.Counter, stickers)\n        dp = { \"\":0 }\n        return minStickersHelper(sticker_counts, target, dp)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

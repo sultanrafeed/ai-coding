@@ -1,0 +1,46 @@
+{
+  "id": "b3787c51-c3dc-4caf-a354-96dbfcaecbe7",
+  "slug": "maximum-strictly-increasing-cells-in-a-matrix",
+  "title": "Maximum Strictly Increasing Cells in a Matrix",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a <strong>1-indexed</strong>&nbsp;<code>m x n</code> integer matrix <code>mat</code>, you can select any cell in the matrix as your <strong>starting cell</strong>.</p>\n\n<p>From the starting cell, you can move to any other cell <strong>in the</strong> <strong>same row or column</strong>, but only if the value of the destination cell is <strong>strictly greater</strong> than the value of the current cell. You can repeat this process as many times as possible, moving from cell to cell until you can no longer make any moves.</p>\n\n<p>Your task is to find the <strong>maximum number of cells</strong> that you can visit in the matrix by starting from some cell.</p>\n\n<p>Return <em>an integer denoting the maximum number of cells that can be visited.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><strong class=\"example\"><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/04/23/diag1drawio.png\" style=\"width: 200px; height: 176px;\" /></strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[3,1],[3,4]]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The image shows how we can visit 2 cells starting from row 1, column 2. It can be shown that we cannot visit more than 2 cells no matter where we start from, so the answer is 2. \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><strong class=\"example\"><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/04/23/diag3drawio.png\" style=\"width: 200px; height: 176px;\" /></strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[1,1],[1,1]]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> Since the cells must be strictly increasing, we can only visit one cell in this example. \n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<p><strong class=\"example\"><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/04/23/diag4drawio.png\" style=\"width: 350px; height: 250px;\" /></strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[3,1,6],[-9,5,7]]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The image above shows how we can visit 4 cells starting from row 2, column 1. It can be shown that we cannot visit more than 4 cells no matter where we start from, so the answer is 4. \n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == mat.length&nbsp;</code></li>\n\t<li><code>n == mat[i].length&nbsp;</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= m * n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>5</sup>&nbsp;&lt;= mat[i][j] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "binary-search",
+    "dynamic-programming",
+    "memoization",
+    "sorting",
+    "matrix",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[3,1],[3,4]]\n[[1,1],[1,1]]\n[[3,1,6],[-9,5,7]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n * log(m * n))\n// Space: O(m * n)\n\n// sort, dp\nclass Solution {\npublic:\n    int maxIncreasingCells(vector<vector<int>>& mat) {\n        map<int, vector<pair<int, int>>> lookup;\n        for (int i = 0; i < size(mat); ++i) {\n            for (int j = 0; j < size(mat[0]); ++j) {\n                lookup[mat[i][j]].emplace_back(i, j);\n            }\n        }\n        vector<vector<int>> dp(size(mat), vector<int>(size(mat[0])));\n        vector<int> row(size(mat)), col(size(mat[0]));\n        for (const auto& [_, pairs] : lookup) {\n            for (const auto& [i, j] : pairs) {\n                dp[i][j] = max(row[i], col[j]) + 1;\n            }\n            for (const auto& [i, j] : pairs) {\n                row[i] = max(row[i], dp[i][j]);\n                col[j] = max(col[j], dp[i][j]);\n            }\n        }\n        return *max_element(cbegin(row), cend(row));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n * log(m * n))\n# Space: O(m * n)\n\nimport collections\n\n\n# sort, dp\nclass Solution(object):\n    def maxIncreasingCells(self, mat):\n        \"\"\"\n        :type mat: List[List[int]]\n        :rtype: int\n        \"\"\"\n        lookup = collections.defaultdict(list)\n        for i in xrange(len(mat)):\n            for j in xrange(len(mat[0])):\n                lookup[mat[i][j]].append((i, j))\n        dp = [[0]*len(mat[0]) for _ in xrange(len(mat))]\n        row, col = [0]*len(mat), [0]*len(mat[0])\n        for x in sorted(lookup.iterkeys()):\n            for i, j in lookup[x]:\n                dp[i][j] = max(row[i], col[j])+1\n            for i, j in lookup[x]:\n                row[i] = max(row[i], dp[i][j])\n                col[j] = max(col[j], dp[i][j])\n        return max(row)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

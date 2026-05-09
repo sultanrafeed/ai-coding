@@ -1,0 +1,37 @@
+{
+  "id": "85693620-a193-4529-bcf4-b1ce820a4e22",
+  "slug": "reduce-array-size-to-the-half",
+  "title": "Reduce Array Size to The Half",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>arr</code>. You can choose a set of integers and remove all the occurrences of these integers in the array.</p>\n\n<p>Return <em>the minimum size of the set so that <strong>at least</strong> half of the integers of the array are removed</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [3,3,3,3,5,5,5,2,2,7]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> Choosing {3,7} will make the new array [5,5,5,2,2] which has size 5 (i.e equal to half of the size of the old array).\nPossible sets of size 2 are {3,5},{3,2},{5,2}.\nChoosing set {2,7} is not possible as it will make the new array [3,3,3,3,5,5,5] which has a size greater than half of the size of the old array.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [7,7,7,7,7,7]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The only possible set you can choose is {7}. This will make the new array empty.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= arr.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>arr.length</code> is even.</li>\n\t<li><code>1 &lt;= arr[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "sorting",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int minSetSize(vector<int>& arr) {\n        vector<int> counting_sort(arr.size());\n        unordered_map<int, int> count;\n        for (const auto& x : arr) {\n            ++count[x];\n        }\n        for (const auto& [_, c] : count) {\n            ++counting_sort[c - 1];\n        }\n        int result = 0, total = 0;\n        for (int c = arr.size() - 1; c >= 0; --c) {\n            if (!counting_sort[c]) {\n                continue;\n            }\n            int count = min(counting_sort[c],\n                            ((int(arr.size()) + 1) / 2 - total - 1) / (c + 1) + 1);\n            result += count;\n            total += count * (c + 1);\n            if (total >= (arr.size() + 1) / 2) {\n                break;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n        \nclass Solution(object):\n    def minSetSize(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        counting_sort = [0]*len(arr)\n        count = collections.Counter(arr)\n        for c in count.itervalues():\n            counting_sort[c-1] += 1\n        result, total = 0, 0\n        for c in reversed(xrange(len(arr))):\n            if not counting_sort[c]:\n                continue\n            count = min(counting_sort[c],\n                        ((len(arr)+1)//2 - total - 1)//(c+1) + 1)\n            result += count\n            total += count*(c+1)\n            if total >= (len(arr)+1)//2:\n                break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

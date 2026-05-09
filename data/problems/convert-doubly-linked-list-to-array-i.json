@@ -1,0 +1,41 @@
+{
+  "id": "09634ff5-bd17-48e4-bc10-2c41c558a261",
+  "slug": "convert-doubly-linked-list-to-array-i",
+  "title": "Convert Doubly Linked List to Array I",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "linked-list",
+    "doubly-linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,3,2,1]\n[2,2,2,2,2]\n[3,2,3,2,3,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// linked list\nclass Solution {\npublic:\n    vector<int> toArray(Node *head){\n        vector<int> result;\n        for (; head; head = head->next) {\n            result.emplace_back(head->val);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# linked list\nclass Solution:\n    def toArray(self, head):\n        \"\"\"\n        :type head: Node\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        while head:\n            result.append(head.val)\n            head = head.next\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "2122d9e6-f604-4cfd-ab6a-a628517021cb",
+  "slug": "single-element-in-a-sorted-array",
+  "title": "Single Element in a Sorted Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a sorted array consisting of only integers where every element appears exactly twice, except for one element which appears exactly once.</p>\n\n<p>Return <em>the single element that appears only once</em>.</p>\n\n<p>Your solution must run in <code>O(log n)</code> time and <code>O(1)</code> space.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> nums = [1,1,2,3,3,4,4,8,8]\n<strong>Output:</strong> 2\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> nums = [3,3,7,7,10,11,11]\n<strong>Output:</strong> 10\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int singleNonDuplicate(vector<int>& nums) {\n        int left = 0, right = nums.size() - 1;\n        while (left <= right) {\n            auto mid = left + (right - left) / 2;\n            if (!(mid % 2 == 0 && mid + 1 < nums.size() &&\n                  nums[mid] == nums[mid + 1]) &&\n                !(mid % 2 == 1 && nums[mid] == nums[mid - 1])) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return nums[left];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def singleNonDuplicate(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left, right = 0, len(nums)-1\n        while left <= right:\n            mid = left + (right - left) / 2\n            if not (mid%2 == 0 and mid+1 < len(nums) and \\\n                    nums[mid] == nums[mid+1]) and \\\n               not (mid%2 == 1 and nums[mid] == nums[mid-1]):\n                right = mid-1\n            else:\n                left = mid+1\n        return nums[left]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

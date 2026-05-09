@@ -1,0 +1,45 @@
+{
+  "id": "66c202aa-bc32-4d99-a43f-716ba8c83b85",
+  "slug": "count-the-number-of-k-big-indices",
+  "title": "Count the Number of K-Big Indices",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "divide-and-conquer",
+    "binary-indexed-tree",
+    "segment-tree",
+    "merge-sort",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,3,6,5,2,3]\n2\n[1,1,1]\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogk)\n// Space: O(n)\n\n// heap\nclass Solution {\npublic:\n    int kBigIndices(vector<int>& nums, int k) {\n        vector<bool> right(size(nums));\n        priority_queue<int> max_heap1;\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            if (size(max_heap1) == k && nums[i] > max_heap1.top()) {\n                right[i] = true;\n            } \n            max_heap1.emplace(nums[i]);\n            if (size(max_heap1) == k + 1) {\n                max_heap1.pop();\n            }\n        }\n        int result = 0;\n        priority_queue<int> max_heap2;\n        for (int i = 0; i < size(nums); ++i) {\n            if (size(max_heap2) == k && nums[i] > max_heap2.top() && right[i]) {\n                ++result;\n            } \n            max_heap2.emplace(nums[i]);\n            if (size(max_heap2) == k + 1) {\n                max_heap2.pop();\n            }\n        }\n        return result;\n    }\n};\n\n\n// Time:  O(nlogn)\n// Space: O(n)\n#include <ext/pb_ds/assoc_container.hpp>\n#include <ext/pb_ds/tree_policy.hpp>\nusing namespace __gnu_pbds;\n\n// ordered set\nclass Solution2 {\npublic:\n    int kBigIndices(vector<int>& nums, int k) {\n        using ordered_set = tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update>;\n        ordered_set os1, os2;\n        for (int i = 0; i < size(nums); ++i) {\n            os2.insert({nums[i], i});\n        }\n        int result = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            os2.erase({nums[i], i});  \n            if (os1.order_of_key({nums[i], 0}) >= k && os2.order_of_key({nums[i], 0}) >= k) {\n                ++result;\n            }\n            os1.insert({nums[i], i});\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogk)\n# Space: O(n)\n\nimport heapq\n\n\n# heap\nclass Solution(object):\n    def kBigIndices(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        right = [False]*len(nums)\n        max_heap1 = []\n        for i in reversed(xrange(len(nums))):\n            if len(max_heap1) == k and nums[i] > -max_heap1[0]:\n                right[i] = True\n            heapq.heappush(max_heap1, -nums[i])\n            if len(max_heap1) == k+1:\n                heapq.heappop(max_heap1)\n        result = 0\n        max_heap2 = []\n        for i in xrange(len(nums)):\n            if len(max_heap2) == k and nums[i] > -max_heap2[0] and right[i]:\n                result += 1\n            heapq.heappush(max_heap2, -nums[i])\n            if len(max_heap2) == k+1:\n                heapq.heappop(max_heap2)\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nfrom sortedcontainers import SortedList\n\n\n# sorted list\nclass Solution2(object):\n    def kBigIndices(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        sl1, sl2 = SortedList(), SortedList(nums)\n        result = 0\n        for x in nums:\n            sl2.remove(x)\n            if sl1.bisect_left(x) >= k and sl2.bisect_left(x) >= k:\n                result += 1\n            sl1.add(x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

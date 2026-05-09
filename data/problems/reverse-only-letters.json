@@ -1,0 +1,40 @@
+{
+  "id": "6f32ef94-0478-49e2-9a5d-94e18d0368aa",
+  "slug": "reverse-only-letters",
+  "title": "Reverse Only Letters",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code>, reverse the string according to the following rules:</p>\n\n<ul>\n\t<li>All the characters that are not English letters remain in the same position.</li>\n\t<li>All the English letters (lowercase or uppercase) should be reversed.</li>\n</ul>\n\n<p>Return <code>s</code><em> after reversing it</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> s = \"ab-cd\"\n<strong>Output:</strong> \"dc-ba\"\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> s = \"a-bC-dEf-ghIj\"\n<strong>Output:</strong> \"j-Ih-gfE-dCba\"\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> s = \"Test1ng-Leet=code-Q!\"\n<strong>Output:</strong> \"Qedo1ct-eeLg=ntse-T!\"\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>s</code> consists of characters with ASCII values in the range <code>[33, 122]</code>.</li>\n\t<li><code>s</code> does not contain <code>&#39;\\&quot;&#39;</code> or <code>&#39;\\\\&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"ab-cd\"\n\"a-bC-dEf-ghIj\"\n\"Test1ng-Leet=code-Q!\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string reverseOnlyLetters(string S) {\n        string result;\n        int i = S.length() - 1;\n        for (const auto& c : S) {\n            if (isalpha(c)) {\n                while (!isalpha(S[i])) {\n                    --i;\n                }\n                result.push_back(S[i]);\n                --i;\n            } else {\n                result.push_back(c);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def reverseOnlyLetters(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: str\n        \"\"\"\n        def getNext(S):\n            for i in reversed(xrange(len(S))):\n                if S[i].isalpha():\n                    yield S[i]\n\n        result = []\n        letter = getNext(S)\n        for i in xrange(len(S)):\n            if S[i].isalpha():\n                result.append(letter.next())\n            else:\n                result.append(S[i])\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

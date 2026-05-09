@@ -1,0 +1,40 @@
+{
+  "id": "2c6ad2b0-74f4-456b-89a3-1756b805385c",
+  "slug": "most-visited-sector-in-a-circular-track",
+  "title": "Most Visited Sector in  a Circular Track",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer <code>n</code> and an integer array <code>rounds</code>. We have a circular track which consists of <code>n</code> sectors labeled from <code>1</code> to <code>n</code>. A marathon will be held on this track, the marathon consists of <code>m</code> rounds. The <code>i<sup>th</sup></code> round starts at sector <code>rounds[i - 1]</code> and ends at sector <code>rounds[i]</code>. For example, round 1 starts at sector <code>rounds[0]</code> and ends at sector <code>rounds[1]</code></p>\n\n<p>Return <em>an array of the most visited sectors</em> sorted in <strong>ascending</strong> order.</p>\n\n<p>Notice that you circulate the track in ascending order of sector numbers in the counter-clockwise direction (See the first example).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/08/14/tmp.jpg\" style=\"width: 433px; height: 341px;\" />\n<pre>\n<strong>Input:</strong> n = 4, rounds = [1,3,1,2]\n<strong>Output:</strong> [1,2]\n<strong>Explanation:</strong> The marathon starts at sector 1. The order of the visited sectors is as follows:\n1 --&gt; 2 --&gt; 3 (end of round 1) --&gt; 4 --&gt; 1 (end of round 2) --&gt; 2 (end of round 3 and the marathon)\nWe can see that both sectors 1 and 2 are visited twice and they are the most visited sectors. Sectors 3 and 4 are visited only once.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2, rounds = [2,1,2,1,2,1,2,1,2]\n<strong>Output:</strong> [2]\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 7, rounds = [1,3,5,7]\n<strong>Output:</strong> [1,2,3,4,5,6,7]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= n &lt;= 100</code></li>\n\t<li><code>1 &lt;= m &lt;= 100</code></li>\n\t<li><code>rounds.length == m + 1</code></li>\n\t<li><code>1 &lt;= rounds[i] &lt;= n</code></li>\n\t<li><code>rounds[i] != rounds[i + 1]</code> for <code>0 &lt;= i &lt; m</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "4\n[1,3,1,2]\n2\n[2,1,2,1,2,1,2,1,2]\n7\n[1,3,5,7]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> mostVisited(int n, vector<int>& rounds) {\n        vector<int> result;\n        if (rounds.front() <= rounds.back()) {\n            for (int i = rounds.front(); i <= rounds.back(); ++i) {\n                result.emplace_back(i);\n            }\n        } else {\n            for (int i = 1; i <= rounds.back(); ++i) {\n                result.emplace_back(i);\n            }\n            for (int i = rounds.front(); i <= n; ++i) {\n                result.emplace_back(i);\n            }\n        }\n        return result;  \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def mostVisited(self, n, rounds):\n        \"\"\"\n        :type n: int\n        :type rounds: List[int]\n        :rtype: List[int]\n        \"\"\"\n        return range(rounds[0], rounds[-1]+1) or \\\n               range(1, rounds[-1]+1) + range(rounds[0], n+1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

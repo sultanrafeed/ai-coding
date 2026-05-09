@@ -1,0 +1,29 @@
+{
+  "id": "4f47790e-ea0c-4a47-bdbe-fa74eb6841ed",
+  "slug": "balanced-binary-tree",
+  "title": "Balanced Binary Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a binary tree, determine if it is <span data-keyword=\"height-balanced\"><strong>height-balanced</strong></span>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/06/balance_1.jpg\" style=\"width: 342px; height: 221px;\" />\n<pre>\n<strong>Input:</strong> root = [3,9,20,null,null,15,7]\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/06/balance_2.jpg\" style=\"width: 452px; height: 301px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,2,3,3,null,null,4,4]\n<strong>Output:</strong> false\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> root = []\n<strong>Output:</strong> true\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[0, 5000]</code>.</li>\n\t<li><code>-10<sup>4</sup> &lt;= Node.val &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h), h is height of binary tree\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    # @param root, a tree node\n    # @return a boolean\n    def isBalanced(self, root):\n        def getHeight(root):\n            if root is None:\n                return 0\n            left_height, right_height = \\\n                getHeight(root.left), getHeight(root.right)\n            if left_height < 0 or right_height < 0 or \\\n               abs(left_height - right_height) > 1:\n                return -1\n            return max(left_height, right_height) + 1\n        return (getHeight(root) >= 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

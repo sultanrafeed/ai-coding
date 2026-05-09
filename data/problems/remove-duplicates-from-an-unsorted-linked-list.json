@@ -1,0 +1,40 @@
+{
+  "id": "c9784d6d-67fa-4ec0-a935-24af83b663d9",
+  "slug": "remove-duplicates-from-an-unsorted-linked-list",
+  "title": "Remove Duplicates From an Unsorted Linked List",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,2]\n[2,1,1,2]\n[3,2,2,1,3,2,4]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    ListNode* deleteDuplicatesUnsorted(ListNode* head) {\n        unordered_map<int, int> count;\n        for (auto curr = head; curr; curr = curr->next) {\n            ++count[curr->val];\n        }\n        ListNode dummy(0, head);\n        for (auto curr = &dummy; curr->next;) {\n            if (count[curr->next->val] == 1) {\n                curr = curr->next;\n            } else {\n                curr->next = curr->next->next;\n            }\n        }\n        return dummy.next;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# Definition for singly-linked list.\nclass ListNode(object):\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\n\nclass Solution(object):\n    def deleteDuplicatesUnsorted(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        count = collections.defaultdict(int)\n        curr = head\n        while curr:\n            count[curr.val] += 1\n            curr = curr.next\n        curr = dummy = ListNode(0, head)\n        while curr.next:\n            if count[curr.next.val] == 1:\n                curr = curr.next\n            else:\n                curr.next = curr.next.next\n        return dummy.next",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

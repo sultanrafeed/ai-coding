@@ -1,0 +1,34 @@
+{
+  "id": "37eaea3b-1ec4-43c3-9046-467d6b19ff9c",
+  "slug": "valid-palindrome-iii",
+  "title": "Valid Palindrome III",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool isValidPalindrome(string s, int k) {\n        if (s == string(s.rbegin(), s.rend())) {  // optional, to optimize special case\n            return true;\n        }\n        \n        vector<vector<int>> dp(2, vector<int>(s.size(), 1));\n        for (int i = s.length() - 2; i >= 0; --i) {\n            for (int j = i + 1; j < s.length(); ++j) {\n                if (s[i] == s[j]) {\n                    dp[i % 2][j] = (i + 1 <= j - 1) ? 2 + dp[(i + 1) % 2][j - 1] : 2;\n                } else {\n                    dp[i % 2][j] = max(dp[(i + 1) % 2][j], dp[i % 2][j - 1]);\n                }\n            }\n        }\n        return s.length() <= k +dp[0][s.length() - 1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def isValidPalindrome(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: bool\n        \"\"\"\n        if s == s[::-1]:  # optional, to optimize special case\n            return True\n\n        dp = [[1] * len(s) for _ in xrange(2)]\n        for i in reversed(xrange(len(s))):\n            for j in xrange(i+1, len(s)):\n                if s[i] == s[j]:\n                    dp[i%2][j] = 2 + dp[(i+1)%2][j-1] if i+1 <= j-1 else 2\n                else:\n                    dp[i%2][j] = max(dp[(i+1)%2][j], dp[i%2][j-1])\n        return len(s) <= k + dp[0][-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

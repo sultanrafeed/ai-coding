@@ -1,0 +1,43 @@
+{
+  "id": "0d0a5e2b-5766-4e85-9403-f446d7ff2936",
+  "slug": "power-of-heroes",
+  "title": "Power of Heroes",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> representing the strength of some heroes. The<b> power</b> of a group of heroes is defined as follows:</p>\n\n<ul>\n\t<li>Let <code>i<sub>0</sub></code>, <code>i<sub>1</sub></code>, ... ,<code>i<sub>k</sub></code> be the indices of the heroes in a group. Then, the power of this group is <code>max(nums[i<sub>0</sub>], nums[i<sub>1</sub>], ... ,nums[i<sub>k</sub>])<sup>2</sup> * min(nums[i<sub>0</sub>], nums[i<sub>1</sub>], ... ,nums[i<sub>k</sub>])</code>.</li>\n</ul>\n\n<p>Return <em>the sum of the <strong>power</strong> of all <strong>non-empty</strong> groups of heroes possible.</em> Since the sum could be very large, return it <strong>modulo</strong> <code>10<sup>9 </sup>+ 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,4]\n<strong>Output:</strong> 141\n<strong>Explanation:</strong> \n1<sup>st</sup>&nbsp;group: [2] has power = 2<sup>2</sup>&nbsp;* 2 = 8.\n2<sup>nd</sup>&nbsp;group: [1] has power = 1<sup>2</sup> * 1 = 1. \n3<sup>rd</sup>&nbsp;group: [4] has power = 4<sup>2</sup> * 4 = 64. \n4<sup>th</sup>&nbsp;group: [2,1] has power = 2<sup>2</sup> * 1 = 4. \n5<sup>th</sup>&nbsp;group: [2,4] has power = 4<sup>2</sup> * 2 = 32. \n6<sup>th</sup>&nbsp;group: [1,4] has power = 4<sup>2</sup> * 1 = 16. \n​​​​​​​7<sup>th</sup>&nbsp;group: [2,1,4] has power = 4<sup>2</sup>​​​​​​​ * 1 = 16. \nThe sum of powers of all groups is 8 + 1 + 64 + 4 + 32 + 16 + 16 = 141.\n\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,1]\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> A total of 7 groups are possible, and the power of each group will be 1. Therefore, the sum of the powers of all groups is 7.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "sorting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,1,4]\n[1,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// sort, combinatorics, dp\nclass Solution {\npublic:\n    int sumOfPower(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        int result = 0, dp = 0;\n        sort(begin(nums), end(nums));\n        for (const int64_t x : nums) {\n            result = (result + (((x * x) % MOD) * (dp + x) % MOD)) % MOD;\n            dp = (dp + (dp + x)) % MOD;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# sort, combinatorics, dp\nclass Solution(object):\n    def sumOfPower(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        nums.sort()\n        result = dp = 0\n        for x in nums:\n            result = (result+(x**2)*(dp+x))%MOD\n            dp = (dp+(dp+x))%MOD\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

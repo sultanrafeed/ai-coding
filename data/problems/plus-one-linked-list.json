@@ -1,0 +1,40 @@
+{
+  "id": "78fd3819-e345-4fbb-97bd-8b8f1de06d98",
+  "slug": "plus-one-linked-list",
+  "title": "Plus One Linked List",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3]\n[0]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\n // Two pointers solution.\nclass Solution {\npublic:\n    ListNode* plusOne(ListNode* head) {\n        if (!head) {\n            return nullptr;\n        }\n\n        auto dummy = new ListNode{0};\n        dummy->next = head;\n\n        auto left = dummy, right = head;\n        while (right->next) {\n            if (right->val != 9) {\n                left = right;\n            }\n            right = right->next;\n        }\n\n        if (right->val != 9) {\n            ++right->val;\n        } else {\n            ++left->val;\n            right = left->next;\n            while (right) {\n                right->val = 0;\n                right = right->next;\n            }\n        }\n\n        if (dummy->val == 0) {\n            head = dummy->next;\n            delete dummy;\n            return head;\n        }\n\n        return dummy;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    ListNode* plusOne(ListNode* head) {\n        auto rev_head = reverseList(head);\n\n        auto curr = rev_head;\n        int carry = 1;\n        while (curr && carry) {\n            curr->val += carry;\n            carry = curr->val / 10;\n            curr->val %= 10;\n            if (carry && !curr->next) {\n                curr->next = new ListNode(0);\n            }\n            curr = curr->next;\n        }\n\n        return reverseList(rev_head);\n    }\n\nprivate:\n    ListNode* reverseList(ListNode* head) {\n        ListNode dummy{0};\n        auto curr = head;\n\n        while (curr) {\n            auto tmp = curr->next;\n            curr->next = dummy.next;\n            dummy.next = curr;\n            curr = tmp;\n        }\n\n        return dummy.next;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass ListNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.next = None\n\n\n# Two pointers solution.\nclass Solution(object):\n    def plusOne(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        if not head:\n            return None\n\n        dummy = ListNode(0)\n        dummy.next = head\n\n        left, right = dummy, head\n        while right.next:\n            if right.val != 9:\n                left = right\n            right = right.next\n\n        if right.val != 9:\n            right.val += 1\n        else:\n            left.val += 1\n            right = left.next\n            while right:\n                right.val = 0\n                right = right.next\n\n        return dummy if dummy.val else dummy.next\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def plusOne(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        def reverseList(head):\n            dummy = ListNode(0)\n            curr = head\n            while curr:\n                dummy.next, curr.next, curr = curr, dummy.next, curr.next\n            return dummy.next\n\n        rev_head = reverseList(head)\n        curr, carry = rev_head, 1\n        while curr and carry:\n            curr.val += carry\n            carry = curr.val / 10\n            curr.val %= 10\n            if carry and curr.next is None:\n                curr.next = ListNode(0)\n            curr = curr.next\n\n        return reverseList(rev_head)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

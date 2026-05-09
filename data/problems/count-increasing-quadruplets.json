@@ -1,0 +1,37 @@
+{
+  "id": "9f4d4484-dbce-4829-9266-c0d4a37bc299",
+  "slug": "count-increasing-quadruplets",
+  "title": "Count Increasing Quadruplets",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a <strong>0-indexed</strong> integer array <code>nums</code> of size <code>n</code> containing all numbers from <code>1</code> to <code>n</code>, return <em>the number of increasing quadruplets</em>.</p>\n\n<p>A quadruplet <code>(i, j, k, l)</code> is increasing if:</p>\n\n<ul>\n\t<li><code>0 &lt;= i &lt; j &lt; k &lt; l &lt; n</code>, and</li>\n\t<li><code>nums[i] &lt; nums[k] &lt; nums[j] &lt; nums[l]</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,3,2,4,5]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> \n- When i = 0, j = 1, k = 2, and l = 3, nums[i] &lt; nums[k] &lt; nums[j] &lt; nums[l].\n- When i = 0, j = 1, k = 2, and l = 4, nums[i] &lt; nums[k] &lt; nums[j] &lt; nums[l]. \nThere are no other quadruplets, so we return 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> There exists only one quadruplet with i = 0, j = 1, k = 2, l = 3, but since nums[j] &lt; nums[k], we return 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>4 &lt;= nums.length &lt;= 4000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= nums.length</code></li>\n\t<li>All the integers of <code>nums</code> are <strong>unique</strong>. <code>nums</code> is a permutation.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "binary-indexed-tree",
+    "enumeration",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\n// dp\nclass Solution {\npublic:\n    long long countQuadruplets(vector<int>& nums) {\n        vector<int64_t> dp(size(nums));  // dp[j] at l: # of tuple (i, j, k) s.t. i < j < k < l and nums[i] < nums[k] < nums[j]\n        int64_t result = 0;\n        for (int l = 0; l < size(nums); ++l) {\n            int cnt = 0;\n            for (int j = 0; j < l; ++j) {\n                if (nums[j] < nums[l]) {\n                    ++cnt;\n                    result += dp[j];\n                } else if (nums[j] > nums[l]) {\n                    dp[j] += cnt;\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n^2)\n// prefix sum\nclass Solution2 {\npublic:\n    long long countQuadruplets(vector<int>& nums) {\n        vector<vector<int64_t>> right(size(nums), vector<int64_t>(size(nums) + 1));\n        for (int j = 0; j < size(nums); ++j) {\n            for (int i = size(nums) - 1; i > j; --i) {\n                right[j][i] = right[j][i + 1] + static_cast<int64_t>(nums[i] > nums[j]);\n            }\n        }\n        int64_t result = 0;\n        for (int k = 0; k < size(nums); ++k) {\n            int64_t left = 0;\n            for (int j = 0; j < k; ++j) {\n                if (nums[k] < nums[j]) {\n                    result += left * right[j][k + 1];\n                }\n                left += static_cast<int64_t>(nums[k] > nums[j]);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n^2)\n// prefix sum\nclass Solution3 {\npublic:\n    long long countQuadruplets(vector<int>& nums) {\n        vector<vector<int64_t>> left(size(nums), vector<int64_t>(size(nums) + 1));\n        for (int j = 0; j < size(nums); ++j) {\n            for (int i = 0; i < j; ++i) {\n                left[j][i + 1] = left[j][i] + static_cast<int64_t>(nums[i] < nums[j]);\n            }\n        }\n        vector<vector<int64_t>> right(size(nums), vector<int64_t>(size(nums) + 1));\n        for (int j = 0; j < size(nums); ++j) {\n            for (int i = size(nums) - 1; i > j; --i) {\n                right[j][i] = right[j][i + 1] + static_cast<int64_t>(nums[i] > nums[j]);\n            }\n        }\n        int64_t result = 0;\n        for (int k = 0; k < size(nums); ++k) {\n            for (int j = 0; j < k; ++j) {\n                if (nums[k] < nums[j]) {\n                    result += left[k][j] * right[j][k + 1];\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\n# dp\nclass Solution(object):\n    def countQuadruplets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        dp = [0]*len(nums)  # dp[j] at l: # of tuple (i, j, k) s.t. i < j < k < l and nums[i] < nums[k] < nums[j]\n        result = 0\n        for l in xrange(len(nums)):\n            cnt = 0\n            for j in xrange(l):\n                if nums[j] < nums[l]:\n                    cnt += 1\n                    result += dp[j]\n                elif nums[j] > nums[l]:\n                    dp[j] += cnt\n        return result\n\n    \n# Time:  O(n^2)\n# Space: O(n^2)\n# prefix sum\nclass Solution2(object):\n    def countQuadruplets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        right = [[0]*(len(nums)+1) for _ in xrange(len(nums))]\n        for j in xrange(len(nums)):\n            for i in reversed(xrange(j+1, len(nums))):\n                right[j][i] = right[j][i+1] + int(nums[i] > nums[j])\n        result = 0\n        for k in xrange(len(nums)):\n            left = 0\n            for j in xrange(k):\n                if nums[k] < nums[j]:\n                    result += left*right[j][k+1]\n                left += int(nums[k] > nums[j])\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(n^2)\n# prefix sum\nclass Solution3(object):\n    def countQuadruplets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left = [[0]*(len(nums)+1) for _ in xrange(len(nums))]\n        for j in xrange(len(nums)):\n            for i in xrange(j):\n                left[j][i+1] = left[j][i] + int(nums[i] < nums[j])\n        right = [[0]*(len(nums)+1) for _ in xrange(len(nums))]\n        for j in xrange(len(nums)):\n            for i in reversed(xrange(j+1, len(nums))):\n                right[j][i] = right[j][i+1] + int(nums[i] > nums[j])\n        result = 0\n        for k in xrange(len(nums)):\n            for j in xrange(k):\n                if nums[k] < nums[j]:\n                    result += left[k][j]*right[j][k+1]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

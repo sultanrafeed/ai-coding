@@ -1,0 +1,40 @@
+{
+  "id": "50144b34-54c4-4330-828a-1af9f0e8728c",
+  "slug": "maximum-score-words-formed-by-letters",
+  "title": "Maximum Score Words Formed by Letters",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a list of <code>words</code>, list of&nbsp; single&nbsp;<code>letters</code> (might be repeating)&nbsp;and <code>score</code>&nbsp;of every character.</p>\n\n<p>Return the maximum score of <strong>any</strong> valid set of words formed by using the given letters (<code>words[i]</code> cannot be used two&nbsp;or more times).</p>\n\n<p>It is not necessary to use all characters in <code>letters</code> and each letter can only be used once. Score of letters&nbsp;<code>&#39;a&#39;</code>, <code>&#39;b&#39;</code>, <code>&#39;c&#39;</code>, ... ,<code>&#39;z&#39;</code> is given by&nbsp;<code>score[0]</code>, <code>score[1]</code>, ... , <code>score[25]</code> respectively.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;dog&quot;,&quot;cat&quot;,&quot;dad&quot;,&quot;good&quot;], letters = [&quot;a&quot;,&quot;a&quot;,&quot;c&quot;,&quot;d&quot;,&quot;d&quot;,&quot;d&quot;,&quot;g&quot;,&quot;o&quot;,&quot;o&quot;], score = [1,0,9,5,0,0,3,0,0,0,0,0,0,0,2,0,0,0,0,0,0,0,0,0,0,0]\n<strong>Output:</strong> 23\n<strong>Explanation:</strong>\nScore  a=1, c=9, d=5, g=3, o=2\nGiven letters, we can form the words &quot;dad&quot; (5+1+5) and &quot;good&quot; (3+2+2+5) with a score of 23.\nWords &quot;dad&quot; and &quot;dog&quot; only get a score of 21.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;xxxz&quot;,&quot;ax&quot;,&quot;bx&quot;,&quot;cx&quot;], letters = [&quot;z&quot;,&quot;a&quot;,&quot;b&quot;,&quot;c&quot;,&quot;x&quot;,&quot;x&quot;,&quot;x&quot;], score = [4,4,4,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,0,5,0,10]\n<strong>Output:</strong> 27\n<strong>Explanation:</strong>\nScore  a=4, b=4, c=4, x=5, z=10\nGiven letters, we can form the words &quot;ax&quot; (4+5), &quot;bx&quot; (4+5) and &quot;cx&quot; (4+5) with a score of 27.\nWord &quot;xxxz&quot; only get a score of 25.</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;leetcode&quot;], letters = [&quot;l&quot;,&quot;e&quot;,&quot;t&quot;,&quot;c&quot;,&quot;o&quot;,&quot;d&quot;], score = [0,0,1,1,1,0,0,0,0,0,0,1,0,0,1,0,0,0,0,1,0,0,0,0,0,0]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong>\nLetter &quot;e&quot; can only be used once.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 14</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 15</code></li>\n\t<li><code>1 &lt;= letters.length &lt;= 100</code></li>\n\t<li><code>letters[i].length == 1</code></li>\n\t<li><code>score.length ==&nbsp;26</code></li>\n\t<li><code>0 &lt;= score[i] &lt;= 10</code></li>\n\t<li><code>words[i]</code>, <code>letters[i]</code>&nbsp;contains only lower case English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "dynamic-programming",
+    "backtracking",
+    "bit-manipulation",
+    "counting",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxScoreWords(vector<string>& words, vector<char>& letters, vector<int>& score) {\n        unordered_map<char, int> letter_count;\n        vector<unordered_map<char, int>> word_counts(words.size());\n        vector<int> word_scores(words.size());\n        for (const auto& c : letters) {\n            ++letter_count[c];\n        }\n        for (int i = 0; i < words.size(); ++i) {\n            for (const auto& c : words[i]) {\n                ++word_counts[i][c];\n                word_scores[i] += score[c - 'a'];\n            }\n        }\n        int result = 0;\n        backtracking(words, word_scores, word_counts, 0, 0, &letter_count, &result);\n        return result;\n    }\n\nprivate:\n    void backtracking(const vector<string>& words,\n                      const vector<int>& word_scores,\n                      const vector<unordered_map<char, int>>& word_counts,\n                      int curr,\n                      int curr_score,\n                      unordered_map<char, int> *letter_count,\n                      int *result) {\n        *result = max(*result, curr_score);\n        for (int i = curr; i < words.size(); ++i) {\n            if (any_of(word_counts[i].cbegin(), word_counts[i].cend(),\n                       [&letter_count](const auto& x) {\n                           return (*letter_count)[x.first] < x.second;\n                       })) {\n                continue;\n            }\n            for (const auto& [k, v] : word_counts[i]) {\n                (*letter_count)[k] -= v;\n            }\n            backtracking(words, word_scores, word_counts,\n                         i + 1, curr_score + word_scores[i], letter_count, result);\n            for (const auto& [k, v] : word_counts[i]) {\n                (*letter_count)[k] += v;\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def maxScoreWords(self, words, letters, score):\n        \"\"\"\n        :type words: List[str]\n        :type letters: List[str]\n        :type score: List[int]\n        :rtype: int\n        \"\"\"\n        def backtracking(words, word_scores, word_counts, curr, curr_score, letter_count, result):\n            result[0] = max(result[0], curr_score) \n            for i in xrange(curr, len(words)):\n                if any(letter_count[c] < word_counts[i][c] for c in word_counts[i]):\n                    continue\n                backtracking(words, word_scores, word_counts, i+1,\n                             curr_score+word_scores[i], letter_count-word_counts[i],\n                             result)\n\n        letter_count = collections.Counter(letters)    \n        word_counts = map(collections.Counter, words)\n        word_scores = [sum(score[ord(c)-ord('a')] for c in words[i])\n                       for i in xrange(len(words))]\n        result = [0]\n        backtracking(words, word_scores, word_counts, 0, 0, letter_count, result)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

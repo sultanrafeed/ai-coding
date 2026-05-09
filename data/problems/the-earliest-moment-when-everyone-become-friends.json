@@ -1,0 +1,41 @@
+{
+  "id": "c0df69b2-31aa-436a-8039-cc4c4e477878",
+  "slug": "the-earliest-moment-when-everyone-become-friends",
+  "title": "The Earliest Moment When Everyone Become Friends",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "union-find",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[20190101,0,1],[20190104,3,4],[20190107,2,3],[20190211,1,5],[20190224,2,4],[20190301,0,3],[20190312,1,2],[20190322,4,5]]\n6\n[[0,2,0],[1,0,1],[3,0,3],[4,1,2],[7,3,1]]\n4",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int earliestAcq(vector<vector<int>>& logs, int N) {\n        sort(logs.begin(), logs.end());\n        UnionFind union_find(N);\n        for (const auto& log : logs) {\n            union_find.union_set(log[1], log[2]);\n            if (union_find.count() == 1) {\n                return log[0];\n            }\n        }\n        return -1;\n    }\n\nprivate:\n    class UnionFind {\n    public:\n        UnionFind(const int n) : set_(n), count_(n) {\n            iota(set_.begin(), set_.end(), 0);\n        }\n\n        int find_set(const int x) {\n           if (set_[x] != x) {\n               set_[x] = find_set(set_[x]);  // Path compression.\n           }\n           return set_[x];\n        }\n\n        bool union_set(const int x, const int y) {\n            int x_root = find_set(x), y_root = find_set(y);\n            if (x_root == y_root) {\n                return false;\n            }\n            set_[min(x_root, y_root)] = max(x_root, y_root);\n            --count_;\n            return true;\n        }\n        \n        int count() const {\n            return count_;\n        }\n\n    private:\n        vector<int> set_;\n        int count_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass UnionFind(object):\n    def __init__(self, n):\n        self.set = range(n)\n        self.count = n\n\n    def find_set(self, x):\n        if self.set[x] != x:\n            self.set[x] = self.find_set(self.set[x])  # path compression.\n        return self.set[x]\n\n    def union_set(self, x, y):\n        x_root, y_root = map(self.find_set, (x, y))\n        if x_root == y_root:\n            return False\n        self.set[max(x_root, y_root)] = min(x_root, y_root)\n        self.count -= 1\n        return True\n\n\nclass Solution(object):\n    def earliestAcq(self, logs, N):\n        \"\"\"\n        :type logs: List[List[int]]\n        :type N: int\n        :rtype: int\n        \"\"\"\n        logs.sort()\n        union_find = UnionFind(N)\n        for t, a, b in logs:\n            union_find.union_set(a, b)\n            if union_find.count == 1:\n                return t\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

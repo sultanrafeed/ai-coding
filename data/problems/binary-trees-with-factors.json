@@ -1,0 +1,36 @@
+{
+  "id": "aec43bfd-8f77-4b40-ba81-cbfc8dbd56c1",
+  "slug": "binary-trees-with-factors",
+  "title": "Binary Trees With Factors",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of unique integers, <code>arr</code>, where each integer <code>arr[i]</code> is strictly greater than <code>1</code>.</p>\n\n<p>We make a binary tree using these integers, and each number may be used for any number of times. Each non-leaf node&#39;s value should be equal to the product of the values of its children.</p>\n\n<p>Return <em>the number of binary trees we can make</em>. The answer may be too large so return the answer <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [2,4]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We can make these trees: <code>[2], [4], [4, 2, 2]</code></pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [2,4,5,10]\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> We can make these trees: <code>[2], [4], [5], [10], [4, 2, 2], [10, 2, 5], [10, 5, 2]</code>.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 1000</code></li>\n\t<li><code>2 &lt;= arr[i] &lt;= 10<sup>9</sup></code></li>\n\t<li>All the values of <code>arr</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "dynamic-programming",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int numFactoredBinaryTrees(vector<int>& A) {\n        static const int M = 1e9 + 7;\n        sort(A.begin(), A.end());\n        unordered_map<int, int64_t> dp;\n        for (int i = 0; i < A.size(); ++i) {\n            dp[A[i]] = 1;\n            for (int j = 0; j < i; ++j) {\n                if (A[i] % A[j] == 0 && dp.count(A[i] / A[j])) {\n                   dp[A[i]] = (dp[A[i]] + dp[A[j]] * dp[A[i] / A[j]]) % M;\n                }\n            }\n        }\n        return accumulate(dp.cbegin(), dp.cend(), 0L,\n                          [](int64_t x, const pair<int, int>& p) {\n                              return x + p.second;\n                          }) % M;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\n\nclass Solution(object):\n    def numFactoredBinaryTrees(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        M = 10**9 + 7\n        A.sort()\n        dp = {}\n        for i in xrange(len(A)):\n            dp[A[i]] = 1\n            for j in xrange(i):\n                if A[i] % A[j] == 0 and A[i] // A[j] in dp:\n                    dp[A[i]] += dp[A[j]] * dp[A[i] // A[j]]\n                    dp[A[i]] %= M\n        return sum(dp.values()) % M",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

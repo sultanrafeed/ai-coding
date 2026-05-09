@@ -1,0 +1,40 @@
+{
+  "id": "8e7130a0-1dea-471f-a6ff-792fa1f8e5d3",
+  "slug": "minimum-number-of-swaps-to-make-the-binary-string-alternating",
+  "title": "Minimum Number of Swaps to Make the Binary String Alternating",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a binary string <code>s</code>, return <em>the <strong>minimum</strong> number of character swaps to make it <strong>alternating</strong>, or </em><code>-1</code><em> if it is impossible.</em></p>\n\n<p>The string is called <strong>alternating</strong> if no two adjacent characters are equal. For example, the strings <code>&quot;010&quot;</code> and <code>&quot;1010&quot;</code> are alternating, while the string <code>&quot;0100&quot;</code> is not.</p>\n\n<p>Any two characters may be swapped, even if they are&nbsp;<strong>not adjacent</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;111000&quot;\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> Swap positions 1 and 4: &quot;1<u>1</u>10<u>0</u>0&quot; -&gt; &quot;1<u>0</u>10<u>1</u>0&quot;\nThe string is now alternating.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;010&quot;\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The string is already alternating, no swaps are needed.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;1110&quot;\n<strong>Output:</strong> -1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 1000</code></li>\n\t<li><code>s[i]</code> is either <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"111000\"\n\"010\"\n\"1110\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minSwaps(string s) {\n        int ones = count(cbegin(s), cend(s), '1');\n        int zeros = size(s) - ones;\n        if (abs(ones - zeros) > 1) {\n            return -1;\n        }\n        if (ones > zeros) {\n            return cost(s, 1);\n        }\n        if (ones < zeros) {\n            return cost(s, 0);\n        }\n        return min(cost(s, 1), cost(s, 0));\n    }\n\nprivate:\n    int cost(const string& s, int x) {\n        int diff = 0;\n        for (const auto& c : s) {\n            diff += (c - '0' != x);\n            x ^= 1;\n        }\n        return diff / 2;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minSwaps(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        def cost(s, x): \n            diff = 0 \n            for c in s:\n                diff += int(c) != x\n                x ^= 1\n            return diff//2\n    \n        ones = s.count('1')\n        zeros = len(s)-ones \n        if abs(ones-zeros) > 1:\n            return -1\n        if ones > zeros:\n            return cost(s, 1)\n        if ones < zeros:\n            return cost(s, 0)\n        return min(cost(s, 1), cost(s, 0))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

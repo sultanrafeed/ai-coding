@@ -1,0 +1,39 @@
+{
+  "id": "642c0cf2-a5d8-4253-8725-13b609944b88",
+  "slug": "flip-game",
+  "title": "Flip Game",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"++++\"\n\"+\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(c * n + n) = O(n * (c+1)), n is length of string, c is count of \"++\"\n // Space: O(1), no extra space excluding the result which requires at most O(n^2) space\n \n class Solution {\n  public:\n      vector<string> generatePossibleNextMoves(string s) {\n          vector<string> res;\n          int n = s.length();\n          for (int i = 0; i < n - 1; ++i) {  // O(n) time\n              if (s[i] == '+') {\n                  for (;i < n - 1 && s[i + 1] == '+'; ++i) {  // O(c) time\n                      s[i] = s[i + 1] = '-';\n                      res.emplace_back(s);  // O(n) to copy a string\n                      s[i] = s[i + 1] = '+';\n                  }\n              }\n          }\n          return res;\n      }\n  };",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(c * n + n) = O(n * (c+1))\n# Space: O(n)\n\nclass Solution(object):\n    def generatePossibleNextMoves(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: List[str]\n        \"\"\"\n        res = []\n        i, n = 0, len(s) - 1\n        while i < n:                                    # O(n) time\n            if s[i] == '+':\n                while i < n and s[i+1] == '+':          # O(c) time\n                    res.append(s[:i] + '--' + s[i+2:])  # O(n) time and space\n                    i += 1\n            i += 1\n        return res\n\n\n# Time:  O(c * m * n + n) = O(c * n + n), where m = 2 in this question\n# Space: O(n)\n# This solution compares O(m) = O(2) times for two consecutive \"+\", where m is length of the pattern\nclass Solution2(object):\n  def generatePossibleNextMoves(self, s):\n      \"\"\"\n      :type s: str\n      :rtype: List[str]\n      \"\"\"\n      return [s[:i] + \"--\" + s[i+2:] for i in xrange(len(s) - 1) if s[i:i+2] == \"++\"]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

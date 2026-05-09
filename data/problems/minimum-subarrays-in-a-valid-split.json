@@ -1,0 +1,42 @@
+{
+  "id": "a0f9fad3-501d-48a3-81e0-767688a8efe9",
+  "slug": "minimum-subarrays-in-a-valid-split",
+  "title": "Minimum Subarrays in a Valid Split",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,6,3,4,3]\n[3,5]\n[1,2,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2 * logr), r = max(nums)\n// Space: O(n)\n\n// dp\nclass Solution {\npublic:\n    int validSubarraySplit(vector<int>& nums) {\n        static const int INF = numeric_limits<int>::max();\n\n        vector<int> dp(size(nums) + 1, INF);  // dp[i]: min number of subarrays in nums[:i]\n        dp[0] = 0;\n        for (int i = 1; i <= size(nums); ++i) {\n            for (int j = 0; j < i; ++j) {\n                if (gcd(nums[j], nums[i - 1]) != 1) {\n                    if (dp[j] != INF) {\n                        dp[i] = min(dp[i], dp[j] + 1);\n                    }\n                }\n            }\n        }\n        return dp.back() != INF ? dp.back() : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2 * logr), r = max(nums)\n# Space: O(n)\n\n# dp\nclass Solution(object):\n    def validSubarraySplit(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def gcd(a, b):\n            while b:\n                a, b = b, a%b\n            return a\n\n        dp = [float(\"inf\")]*(len(nums)+1)  # dp[i]: min number of subarrays in nums[:i]\n        dp[0] = 0\n        for i in xrange(1, len(nums)+1):\n            for j in xrange(i):\n                 if gcd(nums[j], nums[i-1]) != 1:\n                     dp[i] = min(dp[i], dp[j]+1)\n        return dp[-1] if dp[-1] != float(\"inf\") else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

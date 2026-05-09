@@ -1,0 +1,34 @@
+{
+  "id": "8fc7f789-4329-4d2c-a25f-423d56408d28",
+  "slug": "brick-wall",
+  "title": "Brick Wall",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There is a rectangular brick wall in front of you with <code>n</code> rows of bricks. The <code>i<sup>th</sup></code> row has some number of bricks each of the same height (i.e., one unit) but they can be of different widths. The total width of each row is the same.</p>\n\n<p>Draw a vertical line from the top to the bottom and cross the least bricks. If your line goes through the edge of a brick, then the brick is not considered as crossed. You cannot draw a line just along one of the two vertical edges of the wall, in which case the line will obviously cross no bricks.</p>\n\n<p>Given the 2D array <code>wall</code> that contains the information about the wall, return <em>the minimum number of crossed bricks after drawing such a vertical line</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2025/01/17/a.png\" style=\"width: 400px; height: 384px;\" />\n<pre>\n<strong>Input:</strong> wall = [[1,2,2,1],[3,1,2],[1,3,2],[2,4],[3,1,2],[1,3,1,1]]\n<strong>Output:</strong> 2\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> wall = [[1],[1],[1]]\n<strong>Output:</strong> 3\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == wall.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= wall[i].length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= sum(wall[i].length) &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>sum(wall[i])</code> is the same for each row <code>i</code>.</li>\n\t<li><code>1 &lt;= wall[i][j] &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n), n is the total number of the bricks\n// Space: O(m), m is the total number different widths\n\nclass Solution {\npublic:\n    int leastBricks(vector<vector<int>>& wall) {\n        unordered_map<int, int> widths;\n        auto result = wall.size();\n        for (const auto& row : wall) {\n            for (auto i = 0, width = 0; i < row.size() - 1; ++i) {\n                result = min(result, wall.size() - (++widths[width += row[i]]));\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n), n is the total number of the bricks\n# Space: O(m), m is the total number different widths\n\nimport collections\n\n\nclass Solution(object):\n    def leastBricks(self, wall):\n        \"\"\"\n        :type wall: List[List[int]]\n        :rtype: int\n        \"\"\"\n        widths = collections.defaultdict(int)\n        result = len(wall)\n        for row in wall:\n            width = 0\n            for i in xrange(len(row)-1):\n                width += row[i]\n                widths[width] += 1\n                result = min(result, len(wall) - widths[width])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

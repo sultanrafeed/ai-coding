@@ -1,0 +1,36 @@
+{
+  "id": "baff8b4e-e91e-4bd5-a378-716e22cca508",
+  "slug": "subarrays-with-xor-at-least-k",
+  "title": "Subarrays with XOR at Least K",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "bit-manipulation",
+    "trie",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr), r = max(max(nums), k, 1)\n// Space: O(t)\n\n// bitmasks, prefix sum, trie\nclass Solution {\nprivate:\n    class Trie {\n    public:\n        Trie(int bit_length)\n         : bit_length_(bit_length)\n         , nodes_() {\n             new_node();\n         }\n\n        void add(int num) {\n            int curr = 0;\n            for (int i = bit_length_ - 1; i >= 0; --i) {\n                const auto& x = (num >> i) & 1;\n                if (nodes_[curr][x] == -1) {\n                    nodes_[curr][x] = new_node();\n                }\n                curr = nodes_[curr][x];\n                ++cnts_[curr];\n            }\n        }\n\n        int query(int prefix, int k) {\n            int result = 0, curr = 0;\n            for (int i = bit_length_ - 1; i >= 0 && curr != -1; --i) {\n                const auto& t = (k >> i) & 1;\n                const auto& x = (prefix >> i) & 1;\n                if (t == 0) {\n                    const auto& tmp = nodes_[curr][1 ^ x];\n                    if (tmp != -1) {\n                        result += cnts_[tmp];\n                    }\n                }\n                curr = nodes_[curr][t ^ x];\n            }\n            if (curr != -1) {\n                result += cnts_[curr];\n            }\n            return result;\n        }\n\n    private:\n        int new_node() {\n            nodes_.push_back(array<int, 2>{-1, -1});\n            cnts_.emplace_back(0);\n            return size(nodes_) - 1;\n        }\n\n        const int bit_length_;\n        vector<array<int, 2>> nodes_;\n        vector<int> cnts_;\n    };\n\npublic:\n    long long countXorSubarrays(vector<int>& nums, int k) {\n        const auto& bit_length = [](int x) {\n            return (x ? std::__lg(x) : -1) + 1;\n        };\n\n        int64_t result = 0;\n        int prefix = 0;\n        const auto& mx = max({ranges::max(nums), k, 1});\n        Trie trie(bit_length(mx));\n        trie.add(prefix);\n        for (const auto& x : nums) {\n            prefix ^= x;\n            result += trie.query(prefix, k);\n            trie.add(prefix);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr), r = max(max(nums), k, 1)\n# Space: O(nlogr)\n\n# bitmasks, prefix sum, trie\nclass Solution(object):\n    def countXorSubarrays(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        class Trie(object):\n            def __init__(self, bit_length):\n                self.__lefts = [-1]*(1+(1+len(nums))*bit_length)  # preallocate to speed up performance\n                self.__rights = [-1]*(1+(1+len(nums))*bit_length)\n                self.__cnts = [0]*(1+(1+len(nums))*bit_length)\n                self.__i = 0\n                self.__new_node()\n                self.__bit_length = bit_length\n            \n            def __new_node(self):\n                self.__i += 1\n                return self.__i-1\n\n            def add(self, num):\n                curr = 0\n                for i in reversed(xrange(self.__bit_length)):\n                    x = (num>>i)&1\n                    if x == 0:\n                        if self.__lefts[curr] == -1:\n                            self.__lefts[curr] = self.__new_node()\n                        curr = self.__lefts[curr]\n                    else:\n                        if self.__rights[curr] == -1:\n                            self.__rights[curr] = self.__new_node()\n                        curr = self.__rights[curr]\n                    self.__cnts[curr] += 1\n                        \n            def query(self, prefix, k):\n                result = curr = 0\n                for i in reversed(xrange(self.__bit_length)):\n                    t = (k>>i)&1\n                    x = (prefix>>i)&1\n                    if t == 0:\n                        tmp = self.__lefts[curr] if 1^x == 0 else self.__rights[curr]\n                        if tmp != -1:\n                            result += self.__cnts[tmp]\n                    curr = self.__lefts[curr] if t^x == 0 else self.__rights[curr]\n                    if curr == -1:\n                        break\n                else:\n                    result += self.__cnts[curr]\n                return result\n    \n        result = prefix = 0\n        mx = max(max(nums), k, 1)\n        trie = Trie(mx.bit_length())\n        trie.add(prefix)\n        for x in nums:\n            prefix ^= x\n            result += trie.query(prefix, k)\n            trie.add(prefix)\n        return result\n\n\n# Time:  O(nlogr), r = max(max(nums), k, 1)\n# Space: O(t)\n# bitmasks, prefix sum, trie\nclass Solution_TLE(object):\n    def countXorSubarrays(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        class Trie(object):\n            def __init__(self, bit_length):\n                self.__nodes = []\n                self.__cnts = []\n                self.__new_node()\n                self.__bit_length = bit_length\n            \n            def __new_node(self):\n                self.__nodes.append([-1]*2)\n                self.__cnts.append(0)\n                return len(self.__nodes)-1\n\n            def add(self, num):\n                curr = 0\n                for i in reversed(xrange(self.__bit_length)):\n                    x = (num>>i)&1\n                    if self.__nodes[curr][x] == -1:\n                        self.__nodes[curr][x] = self.__new_node()\n                    curr = self.__nodes[curr][x]\n                    self.__cnts[curr] += 1\n                        \n            def query(self, prefix, k):\n                result = curr = 0\n                for i in reversed(xrange(self.__bit_length)):\n                    t = (k>>i)&1\n                    x = (prefix>>i)&1\n                    if t == 0:\n                        tmp = self.__nodes[curr][1^x]\n                        if tmp != -1:\n                            result += self.__cnts[tmp]\n                    curr = self.__nodes[curr][t^x]\n                    if curr == -1:\n                        break\n                else:\n                    result += self.__cnts[curr]\n                return result\n        \n        result = prefix = 0\n        mx = max(max(nums), k, 1)\n        trie = Trie(mx.bit_length())\n        trie.add(prefix)\n        for x in nums:\n            prefix ^= x\n            result += trie.query(prefix, k)\n            trie.add(prefix)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

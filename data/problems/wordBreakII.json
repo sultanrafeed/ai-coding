@@ -1,0 +1,25 @@
+{
+  "id": "42c29df0-1672-4704-b3eb-c19362eb6ac6",
+  "slug": "wordBreakII",
+  "title": "Wordbreakii",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n^2) ?\n// Space Complexity: O(n^2)\n\nclass Solution {\n    public:\n        vector<string> wordBreak(string s, unordered_set<string> &dict) {\n            vector<bool> f(s.length() + 1, false);\n            vector<vector<bool> > valid(s.length(), vector<bool>(s.length() + 1, false));\n            f[0] = true; // null string\n            for(int i = 1; i <= s.length(); ++i) {\n                for(int j = i - 1; j >= 0; --j) {\n                    if(f[j] && dict.find(s.substr(j, i - j)) != dict.end()) {\n                        f[i] = true;\n                        valid[j][i] = true; // [j, i) is a word\n                    }\n                }\n            }\n\n            vector<string> path;\n            vector<string> ans;\n\n            gen_path(s, valid, s.length(), path, ans);\n\n            return ans;\n        }\n    private:\n        // dfs\n        void gen_path(const string &s, vector<vector<bool> > &valid, int len, vector<string> &path, vector<string> &ans) {\n            if(len == 0) {\n                string tmp;\n                for(auto it = path.rbegin(); it != path.rend(); ++it) {\n                    tmp += *it + \" \";\n                }\n                tmp.pop_back(); // remove last \" \"\n                ans.push_back(tmp);\n            }\n\n            for(int i = 0; i < len; ++i) {\n                if(valid[i][len]) {\n                    path.push_back(s.substr(i, len - i));\n                    gen_path(s, valid, i, path, ans);\n                    path.pop_back();\n                }\n            }\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

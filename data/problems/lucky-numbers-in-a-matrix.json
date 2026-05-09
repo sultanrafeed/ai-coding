@@ -1,0 +1,34 @@
+{
+  "id": "4253fce4-3a23-4846-bbc1-11c64e0989f7",
+  "slug": "lucky-numbers-in-a-matrix",
+  "title": "Lucky Numbers in a Matrix",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an <code>m x n</code> matrix of <strong>distinct </strong>numbers, return <em>all <strong>lucky numbers</strong> in the matrix in <strong>any </strong>order</em>.</p>\n\n<p>A <strong>lucky number</strong> is an element of the matrix such that it is the minimum element in its row and maximum in its column.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> matrix = [[3,7,8],[9,11,13],[15,16,17]]\n<strong>Output:</strong> [15]\n<strong>Explanation:</strong> 15 is the only lucky number since it is the minimum in its row and the maximum in its column.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> matrix = [[1,10,4,2],[9,3,8,7],[15,16,17,12]]\n<strong>Output:</strong> [12]\n<strong>Explanation:</strong> 12 is the only lucky number since it is the minimum in its row and the maximum in its column.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> matrix = [[7,8],[1,2]]\n<strong>Output:</strong> [7]\n<strong>Explanation:</strong> 7 is the only lucky number since it is the minimum in its row and the maximum in its column.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == mat.length</code></li>\n\t<li><code>n == mat[i].length</code></li>\n\t<li><code>1 &lt;= n, m &lt;= 50</code></li>\n\t<li><code>1 &lt;= matrix[i][j] &lt;= 10<sup>5</sup></code>.</li>\n\t<li>All elements in the matrix are distinct.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m + n)\n\nclass Solution {\npublic:\n    vector<int> luckyNumbers (vector<vector<int>>& matrix) {\n        vector<int> rows;\n        for (const auto& row : matrix) {\n            rows.emplace_back(*min_element(row.cbegin(), row.cend()));\n        }\n        vector<int> cols;\n        for (int c = 0; c < matrix[0].size(); ++c) {\n            int max_cell = 0;\n            for (int r = 0; r < matrix.size(); ++r) {\n                max_cell = max(max_cell, matrix[r][c]);\n            }\n            cols.emplace_back(max_cell);\n        }\n        vector<int> result;\n        for (int r = 0; r < matrix.size(); ++r) {\n            for (int c = 0; c < matrix[0].size(); ++c) {\n                if (rows[r] == cols[c]) {\n                    result.emplace_back(matrix[r][c]);\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(m * n)\n// Space: O(m + n)\nclass Solution2 {\npublic:\n    vector<int> luckyNumbers (vector<vector<int>>& matrix) {\n        unordered_set<int> rows;\n        for (const auto& row : matrix) {\n            rows.emplace(*min_element(row.cbegin(), row.cend()));\n        }\n        unordered_set<int> cols;\n        for (int c = 0; c < matrix[0].size(); ++c) {\n            int max_cell = 0;\n            for (int r = 0; r < matrix.size(); ++r) {\n                max_cell = max(max_cell, matrix[r][c]);\n            }\n            cols.emplace(max_cell);\n        }\n        unordered_set<int> intersection = set_intersection(rows, cols);\n        return vector<int>(intersection.cbegin(), intersection.cend());\n    }\n\nprivate:\n    template<typename T>\n    unordered_set<T> set_intersection(const unordered_set<T>& a,\n                                      const unordered_set<T>& b) {\n        if (a.size() > b.size()) {\n            return set_intersection(b, a);\n        }\n        unordered_set<T> result;\n        for (const auto& x : a) {\n            if (b.count(x)) {\n                result.emplace(x);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m + n)\n\nimport itertools\n\n\nclass Solution(object):\n    def luckyNumbers (self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        rows = map(min, matrix)\n        cols = map(max, itertools.izip(*matrix))\n        return [cell for i, row in enumerate(matrix)\n                     for j, cell in enumerate(row) if rows[i] == cols[j]]\n\n    \n# Time:  O(m * n)\n# Space: O(m + n)\nimport itertools\n\n\nclass Solution2(object):\n    def luckyNumbers (self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        return list(set(map(min, matrix)) &\n                    set(map(max, itertools.izip(*matrix))))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

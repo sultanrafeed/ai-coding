@@ -1,0 +1,43 @@
+{
+  "id": "698485d7-3f0c-48aa-979f-10c1abb30f9a",
+  "slug": "smallest-rectangle-enclosing-black-pixels",
+  "title": "Smallest Rectangle Enclosing Black Pixels",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "depth-first-search",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[\"0\",\"0\",\"1\",\"0\"],[\"0\",\"1\",\"1\",\"0\"],[\"0\",\"1\",\"0\",\"0\"]]\n0\n2\n[[\"1\"]]\n0\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// Using template.\nclass Solution {\npublic:\n    int minArea(vector<vector<char>>& image, int x, int y) {\n        using namespace std::placeholders;  // for _1, _2, _3...\n\n        const auto searchColumns =\n            [](const vector<vector<char>>& image, bool has_one, const int mid) {\n                return has_one == any_of(image.cbegin(), image.cend(),\n                                         [=](const vector<char>& row) { return row[mid] == '1'; });\n            };\n        const auto searchRows =\n            [](const vector<vector<char>>& image, bool has_one, const int mid) {\n                return has_one == any_of(image[mid].cbegin(), image[mid].cend(),\n                                         [](const char& col) { return col == '1'; });\n            };\n\n        const int left = binarySearch(0, y - 1, bind(searchColumns, image, true, _1));\n        const int right = binarySearch(y + 1, image[0].size() - 1, bind(searchColumns, image, false, _1));\n        const int top = binarySearch(0, x - 1, bind(searchRows, image, true, _1));\n        const int bottom = binarySearch(x + 1, image.size() - 1, bind(searchRows, image, false, _1));\n\n        return (right - left) * (bottom - top);\n    }\n    \nprivate:\n    template<typename T>\n    int binarySearch(int left, int right, const T& find) {\n        while (left <= right) {\n            const int mid = left + (right - left) / 2;\n            if (find(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n};\n\n// Using std::bind().\nclass Solution2 {\npublic:\n    int minArea(vector<vector<char>>& image, int x, int y) {\n        using namespace std::placeholders;  // for _1, _2, _3...\n\n        const auto searchColumns =\n            [](const vector<vector<char>>& image, bool has_one, const int mid) {\n                return has_one == any_of(image.cbegin(), image.cend(),\n                                         [=](const vector<char>& row) { return row[mid] == '1'; });\n            };\n        const auto searchRows =\n            [](const vector<vector<char>>& image, bool has_one, const int mid) {\n                return has_one == any_of(image[mid].cbegin(), image[mid].cend(),\n                                         [](const char& col) { return col == '1'; });\n            };\n\n        function<bool(const int)> findLeft = bind(searchColumns, image, true, _1);\n        const int left = binarySearch(0, y - 1, findLeft);\n    \n        function<bool(const int)> findRight = bind(searchColumns, image, false, _1);\n        const int right = binarySearch(y + 1, image[0].size() - 1, findRight);\n\n        function<bool(const int)> findTop = bind(searchRows, image, true, _1);\n        const int top = binarySearch(0, x - 1, findTop);\n\n        function<bool(const int)> findBottom = bind(searchRows, image, false, _1);\n        const int bottom = binarySearch(x + 1, image.size() - 1, findBottom);\n\n        return (right - left) * (bottom - top);\n    }\n    \nprivate:\n    int binarySearch(int left, int right, function<bool(const int)>& find) {\n        while (left <= right) {\n            const int mid = left + (right - left) / 2;\n            if (find(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n};\n\n// Using lambda.\nclass Solution3 {\npublic:\n    int minArea(vector<vector<char>>& image, int x, int y) {\n        const auto searchColumns =\n            [](const vector<vector<char>>& image, bool has_one, const int mid) {\n                return has_one == any_of(image.cbegin(), image.cend(),\n                                         [=](const vector<char>& row) { return row[mid] == '1'; });\n            };\n        const auto searchRows =\n            [](const vector<vector<char>>& image, bool has_one, const int mid) {\n                return has_one == any_of(image[mid].cbegin(), image[mid].cend(),\n                                         [](const char& col) { return col == '1'; });\n            };\n\n        const int left = binarySearch(0, y - 1, searchColumns, image, true);\n        const int right = binarySearch(y + 1, image[0].size() - 1, searchColumns, image, false);\n        const int top = binarySearch(0, x - 1, searchRows, image, true);\n        const int bottom = binarySearch(x + 1, image.size() - 1, searchRows, image, false);\n\n        return (right - left) * (bottom - top);\n    }\n    \nprivate:\n    int binarySearch(int left, int right,\n                     const function<bool(const vector<vector<char>>&, bool, const int)>& find,\n                     const vector<vector<char>>& image,\n                     bool has_one) {\n        while (left <= right) {\n            const int mid = left + (right - left) / 2;\n            if (find(image, has_one, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nimport bisect\nimport itertools\n\n\nclass Solution(object):\n    def minArea(self, image, x, y):\n        \"\"\"\n        :type image: List[List[str]]\n        :type x: int\n        :type y: int\n        :rtype: int\n        \"\"\"\n        def binarySearch(left, right, find, image, has_one):\n            while left <= right:  # O(logn) times\n                mid = left + (right - left) / 2\n                if find(image, has_one, mid):  # Time: O(n)\n                    right = mid - 1\n                else:\n                    left = mid + 1\n            return left\n\n\n        searchColumns = lambda image, has_one, mid: any([int(row[mid]) for row in image]) == has_one\n        left = binarySearch(0, y - 1, searchColumns, image, True)\n        right = binarySearch(y + 1, len(image[0]) - 1, searchColumns, image, False)\n\n        searchRows = lambda image, has_one, mid: any(itertools.imap(int, image[mid])) == has_one\n        top = binarySearch(0, x - 1, searchRows, image, True)\n        bottom = binarySearch(x + 1, len(image) - 1, searchRows, image, False)\n\n        return (right - left) * (bottom - top)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

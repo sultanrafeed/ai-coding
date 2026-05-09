@@ -1,0 +1,33 @@
+{
+  "id": "89837cca-5a62-4cb1-a1c9-93c66ddd65aa",
+  "slug": "number-of-good-binary-strings",
+  "title": "Number of Good Binary Strings",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n), n = maxLength\n// Space: O(w), w = max(oneGroup, zeroGroup)+1\n\n// dp\nclass Solution {\npublic:\n    int goodBinaryStrings(int minLength, int maxLength, int oneGroup, int zeroGroup) {\n        static const int MOD = 1e9 + 7;\n\n        int result = 0;\n        const int w = max(oneGroup, zeroGroup) + 1;\n        vector<int> dp(w);\n        for (int i = 0; i <= maxLength; ++i) {\n            dp[i % w] = i == 0 ? 1 : 0;\n            if (i - oneGroup >= 0) {\n                dp[i % w] = (dp[i % w] + dp[(i - oneGroup) % w]) % MOD;\n            }\n            if (i - zeroGroup >= 0 ) {\n                dp[i % w] = (dp[i % w] + dp[(i - zeroGroup) % w]) % MOD;\n            }\n            if (i >= minLength) {\n                result = (result + dp[i % w]) % MOD;\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n), n = maxLength\n// Space: O(w), w = max(oneGroup, zeroGroup)+1\n// dp\nclass Solution2 {\npublic:\n    int goodBinaryStrings(int minLength, int maxLength, int oneGroup, int zeroGroup) {\n        static const int MOD = 1e9 + 7;\n\n        int result = 0;\n        const int w = max(oneGroup, zeroGroup) + 1;\n        vector<int> dp(w);\n        dp[0] = 1;\n        for (int i = 0; i <= maxLength; ++i) {\n            if (i >= minLength) {\n                result = (result + dp[i % w]) % MOD;\n            }\n            if (i + oneGroup <= maxLength) {\n                dp[(i + oneGroup) % w] = (dp[(i + oneGroup) % w] + dp[i % w]) % MOD;\n            }\n            if (i + zeroGroup <= maxLength) {\n                dp[(i + zeroGroup) % w] = (dp[(i + zeroGroup) % w] + dp[i % w]) % MOD;\n            }\n            dp[i % w] = 0;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n), n = maxLength\n# Space: O(w), w = max(oneGroup, zeroGroup)+1\n\n# dp\nclass Solution(object):\n    def goodBinaryStrings(self, minLength, maxLength, oneGroup, zeroGroup):\n        \"\"\"\n        :type minLength: int\n        :type maxLength: int\n        :type oneGroup: int\n        :type zeroGroup: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result = 0\n        w = max(oneGroup, zeroGroup)+1\n        dp = [0]*w\n        for i in xrange(maxLength+1):\n            dp[i%w] = 1 if i == 0 else 0\n            if i-oneGroup >= 0:\n                dp[i%w] = (dp[i%w]+dp[(i-oneGroup)%w])%MOD\n            if i-zeroGroup >= 0:\n                dp[i%w] = (dp[i%w]+dp[(i-zeroGroup)%w])%MOD\n            if i >= minLength:\n                result = (result+dp[i%w])%MOD\n        return result\n\n\n# Time:  O(n), n = maxLength\n# Space: O(w), w = max(oneGroup, zeroGroup)+1\n# dp\nclass Solution(object):\n    def goodBinaryStrings(self, minLength, maxLength, oneGroup, zeroGroup):\n        \"\"\"\n        :type minLength: int\n        :type maxLength: int\n        :type oneGroup: int\n        :type zeroGroup: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result = 0\n        w = max(oneGroup, zeroGroup)+1\n        dp = [0]*w\n        dp[0] = 1\n        for i in xrange(maxLength+1):\n            if i >= minLength:\n                result = (result+dp[i%w])%MOD\n            if i+oneGroup <= maxLength:\n                dp[(i+oneGroup)%w] = (dp[(i+oneGroup)%w]+dp[i%w])%MOD\n            if i+zeroGroup <= maxLength:\n                dp[(i+zeroGroup)%w] = (dp[(i+zeroGroup)%w]+dp[i%w])%MOD\n            dp[i%w] = 0\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

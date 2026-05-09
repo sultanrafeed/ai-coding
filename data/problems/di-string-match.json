@@ -1,0 +1,36 @@
+{
+  "id": "56c25185-6caa-4e93-a669-7d938adde880",
+  "slug": "di-string-match",
+  "title": "DI String Match",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>A permutation <code>perm</code> of <code>n + 1</code> integers of all the integers in the range <code>[0, n]</code> can be represented as a string <code>s</code> of length <code>n</code> where:</p>\n\n<ul>\n\t<li><code>s[i] == &#39;I&#39;</code> if <code>perm[i] &lt; perm[i + 1]</code>, and</li>\n\t<li><code>s[i] == &#39;D&#39;</code> if <code>perm[i] &gt; perm[i + 1]</code>.</li>\n</ul>\n\n<p>Given a string <code>s</code>, reconstruct the permutation <code>perm</code> and return it. If there are multiple valid permutations perm, return <strong>any of them</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> s = \"IDID\"\n<strong>Output:</strong> [0,4,1,3,2]\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> s = \"III\"\n<strong>Output:</strong> [0,1,2,3]\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> s = \"DDI\"\n<strong>Output:</strong> [3,2,0,1]\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s[i]</code> is either <code>&#39;I&#39;</code> or <code>&#39;D&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "string",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> diStringMatch(string S) {\n        vector<int> result;\n        int left = 0, right = S.length();\n        for (const auto& c : S) {\n            if (c == 'I') {\n                result.emplace_back(left);\n                ++left;\n            } else {\n                result.emplace_back(right);\n                --right;\n            }\n        }\n        result.emplace_back(left);\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def diStringMatch(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        left, right = 0, len(S)\n        for c in S:\n            if c == 'I':\n                result.append(left)\n                left += 1\n            else:\n                result.append(right)\n                right -= 1\n        result.append(left)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

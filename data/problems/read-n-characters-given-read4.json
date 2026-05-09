@@ -1,0 +1,41 @@
+{
+  "id": "6707b43e-1855-4ba9-9a29-93f1bd90afaa",
+  "slug": "read-n-characters-given-read4",
+  "title": "Read N Characters Given Read4",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "simulation",
+    "interactive"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abc\"\n4\n\"abcde\"\n5\n\"abcdABCD1234\"\n12",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nint read4(char *buf);\n\nclass Solution {\npublic:\n    /**\n     * @param buf Destination buffer\n     * @param n   Maximum number of characters to read\n     * @return    The number of characters read\n     */\n    int read(char *buf, int n) {\n        int read_bytes = 0;\n        char buffer[4];\n        for (int i = 0; i < (n + 4 - 1) / 4; ++i) {\n            int size = min(read4(buffer), n - read_bytes);\n            for (int j = 0; j < size; ++j) {\n                buf[read_bytes++] = buffer[j];\n            }\n        }\n        return read_bytes;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\ndef read4(buf):\n    global file_content\n    i = 0\n    while i < len(file_content) and i < 4:\n        buf[i] = file_content[i]\n        i += 1\n\n    if len(file_content) > 4:\n        file_content = file_content[4:]\n    else:\n        file_content = \"\"\n    return i\n\nclass Solution(object):\n    def read(self, buf, n):\n        \"\"\"\n        :type buf: Destination buffer (List[str])\n        :type n: Maximum number of characters to read (int)\n        :rtype: The number of characters read (int)\n        \"\"\"\n        read_bytes = 0\n        buffer = [''] * 4\n        for i in xrange((n+4-1)//4):\n            size = min(read4(buffer), n-read_bytes)\n            buf[read_bytes:read_bytes+size] = buffer[:size]\n            read_bytes += size\n        return read_bytes",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

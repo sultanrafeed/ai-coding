@@ -1,0 +1,41 @@
+{
+  "id": "b90ead2e-668f-4ae2-a83e-9123068fbbc9",
+  "slug": "text-justification",
+  "title": "Text Justification",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an array of strings <code>words</code> and a width <code>maxWidth</code>, format the text such that each line has exactly <code>maxWidth</code> characters and is fully (left and right) justified.</p>\n\n<p>You should pack your words in a greedy approach; that is, pack as many words as you can in each line. Pad extra spaces <code>&#39; &#39;</code> when necessary so that each line has exactly <code>maxWidth</code> characters.</p>\n\n<p>Extra spaces between words should be distributed as evenly as possible. If the number of spaces on a line does not divide evenly between words, the empty slots on the left will be assigned more spaces than the slots on the right.</p>\n\n<p>For the last line of text, it should be left-justified, and no extra space is inserted between words.</p>\n\n<p><strong>Note:</strong></p>\n\n<ul>\n\t<li>A word is defined as a character sequence consisting of non-space characters only.</li>\n\t<li>Each word&#39;s length is guaranteed to be greater than <code>0</code> and not exceed <code>maxWidth</code>.</li>\n\t<li>The input array <code>words</code> contains at least one word.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;This&quot;, &quot;is&quot;, &quot;an&quot;, &quot;example&quot;, &quot;of&quot;, &quot;text&quot;, &quot;justification.&quot;], maxWidth = 16\n<strong>Output:</strong>\n[\n&nbsp; &nbsp;&quot;This &nbsp; &nbsp;is &nbsp; &nbsp;an&quot;,\n&nbsp; &nbsp;&quot;example &nbsp;of text&quot;,\n&nbsp; &nbsp;&quot;justification. &nbsp;&quot;\n]</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;What&quot;,&quot;must&quot;,&quot;be&quot;,&quot;acknowledgment&quot;,&quot;shall&quot;,&quot;be&quot;], maxWidth = 16\n<strong>Output:</strong>\n[\n&nbsp; &quot;What &nbsp; must &nbsp; be&quot;,\n&nbsp; &quot;acknowledgment &nbsp;&quot;,\n&nbsp; &quot;shall be &nbsp; &nbsp; &nbsp; &nbsp;&quot;\n]\n<strong>Explanation:</strong> Note that the last line is &quot;shall be    &quot; instead of &quot;shall     be&quot;, because the last line must be left-justified instead of fully-justified.\nNote that the second line is also left-justified because it contains only one word.</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;Science&quot;,&quot;is&quot;,&quot;what&quot;,&quot;we&quot;,&quot;understand&quot;,&quot;well&quot;,&quot;enough&quot;,&quot;to&quot;,&quot;explain&quot;,&quot;to&quot;,&quot;a&quot;,&quot;computer.&quot;,&quot;Art&quot;,&quot;is&quot;,&quot;everything&quot;,&quot;else&quot;,&quot;we&quot;,&quot;do&quot;], maxWidth = 20\n<strong>Output:</strong>\n[\n&nbsp; &quot;Science &nbsp;is &nbsp;what we&quot;,\n  &quot;understand &nbsp; &nbsp; &nbsp;well&quot;,\n&nbsp; &quot;enough to explain to&quot;,\n&nbsp; &quot;a &nbsp;computer. &nbsp;Art is&quot;,\n&nbsp; &quot;everything &nbsp;else &nbsp;we&quot;,\n&nbsp; &quot;do &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp; &nbsp;&quot;\n]</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 300</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 20</code></li>\n\t<li><code>words[i]</code> consists of only English letters and symbols.</li>\n\t<li><code>1 &lt;= maxWidth &lt;= 100</code></li>\n\t<li><code>words[i].length &lt;= maxWidth</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"This\", \"is\", \"an\", \"example\", \"of\", \"text\", \"justification.\"]\n16\n[\"What\",\"must\",\"be\",\"acknowledgment\",\"shall\",\"be\"]\n16\n[\"Science\",\"is\",\"what\",\"we\",\"understand\",\"well\",\"enough\",\"to\",\"explain\",\"to\",\"a\",\"computer.\",\"Art\",\"is\",\"everything\",\"else\",\"we\",\"do\"]\n20",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<string> fullJustify(vector<string>& words, int maxWidth) {\n        vector<string> res;\n        const int n = words.size();\n        int begin = 0, len = 0;\n        for (int i = 0; i < n; ++i) {\n            if (len + words[i].size() + (i - begin) > maxWidth) {\n                res.emplace_back(connect(words, maxWidth, begin, i, len, false));\n                begin = i;\n                len = 0;\n            }\n            len += words[i].size();\n        }\n        // Last line.\n        res.emplace_back(connect(words, maxWidth, begin, n, len, true));\n        return res;\n    }\n\nprivate:\n    string connect(const vector<string>& words, int maxWidth,\n                   int begin, int end, int len,\n                   bool is_last) {\n        string s;\n        int n = end - begin;\n        for (int i = 0; i < n; ++i) {\n            s += words[begin + i];\n            addSpaces(i, n - 1, maxWidth - len, is_last, &s);\n        }\n        // For only one word in a line.\n        if (s.size() < maxWidth) {\n            s.append(maxWidth - s.size(), ' ');\n        }\n        return s;\n    }\n\n    void addSpaces(int i, int spaceCnt, int maxWidth, bool is_last, string *s) {\n        if (i < spaceCnt) {\n            // For the last line of text, it should be left justified,\n            // and no extra space is inserted between words.\n            int spaces = is_last ? 1 : maxWidth / spaceCnt + (i < maxWidth % spaceCnt);\n            s->append(spaces, ' ');\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(k), k is maxWidth.\n\nclass Solution(object):\n    def fullJustify(self, words, maxWidth):\n        \"\"\"\n        :type words: List[str]\n        :type maxWidth: int\n        :rtype: List[str]\n        \"\"\"\n        def addSpaces(i, spaceCnt, maxWidth, is_last):\n            if i < spaceCnt:\n                # For the last line of text, it should be left justified,\n                # and no extra space is inserted between words.\n                return 1 if is_last else (maxWidth // spaceCnt) + int(i < maxWidth % spaceCnt)\n            return 0\n\n        def connect(words, maxWidth, begin, end, length, is_last):\n            s = []  # The extra space O(k) is spent here.\n            n = end - begin\n            for i in xrange(n):\n                s += words[begin + i],\n                s += ' ' * addSpaces(i, n - 1, maxWidth - length, is_last),\n            # For only one word in a line.\n            line = \"\".join(s)\n            if len(line) < maxWidth:\n                line += ' ' * (maxWidth - len(line))\n            return line\n\n        res = []\n        begin, length = 0, 0\n        for i in xrange(len(words)):\n            if length + len(words[i]) + (i - begin) > maxWidth:\n                res += connect(words, maxWidth, begin, i, length, False),\n                begin, length = i, 0\n            length += len(words[i])\n\n        # Last line.\n        res += connect(words, maxWidth, begin, len(words), length, True),\n        return res",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

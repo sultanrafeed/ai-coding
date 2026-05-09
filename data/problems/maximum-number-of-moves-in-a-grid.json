@@ -1,0 +1,41 @@
+{
+  "id": "6188bb01-a258-4d6a-8326-8107de7cb2bc",
+  "slug": "maximum-number-of-moves-in-a-grid",
+  "title": "Maximum Number of Moves in a Grid",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> <code>m x n</code> matrix <code>grid</code> consisting of <strong>positive</strong> integers.</p>\n\n<p>You can start at <strong>any</strong> cell in the first column of the matrix, and traverse the grid in the following way:</p>\n\n<ul>\n\t<li>From a cell <code>(row, col)</code>, you can move to any of the cells: <code>(row - 1, col + 1)</code>, <code>(row, col + 1)</code> and <code>(row + 1, col + 1)</code> such that the value of the cell you move to, should be <strong>strictly</strong> bigger than the value of the current cell.</li>\n</ul>\n\n<p>Return <em>the <strong>maximum</strong> number of <strong>moves</strong> that you can perform.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/04/11/yetgriddrawio-10.png\" style=\"width: 201px; height: 201px;\" />\n<pre>\n<strong>Input:</strong> grid = [[2,4,3,5],[5,4,9,3],[3,4,2,11],[10,9,13,15]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We can start at the cell (0, 0) and make the following moves:\n- (0, 0) -&gt; (0, 1).\n- (0, 1) -&gt; (1, 2).\n- (1, 2) -&gt; (2, 3).\nIt can be shown that it is the maximum number of moves that can be made.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/04/12/yetgrid4drawio.png\" />\n<strong>Input:</strong> grid = [[3,2,4],[2,1,9],[1,1,7]]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Starting from any cell in the first column we cannot perform any moves.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>2 &lt;= m, n &lt;= 1000</code></li>\n\t<li><code>4 &lt;= m * n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= grid[i][j] &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[2,4,3,5],[5,4,9,3],[3,4,2,11],[10,9,13,15]]\n[[3,2,4],[2,1,9],[1,1,7]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m)\n\n// dp\nclass Solution {\npublic:\n    int maxMoves(vector<vector<int>>& grid) {\n        vector<bool> dp(size(grid), true);\n        int c = 0;\n        for (; c < size(grid[0]) - 1; ++c) {\n            vector<bool> new_dp(size(grid));\n            for (int r = 0; r < size(grid); ++r) {\n                if (!dp[r]) {\n                    continue;\n                }\n                if (grid[r][c] < grid[r][c + 1]) {\n                    new_dp[r] = true;\n                }\n                if (r - 1 >= 0 && grid[r][c] < grid[r - 1][c + 1]) {\n                    new_dp[r - 1] = true;\n                }\n                if (r + 1 < size(grid) && grid[r][c] < grid[r + 1][c + 1]) {\n                    new_dp[r + 1] = true;\n                }\n            }\n            dp = move(new_dp);\n            if (!accumulate(cbegin(dp), cend(dp), 0)) {\n                break;\n            }\n        }\n        return c;\n    }\n};\n\n// Time:  O(m * n)\n// Space: O(m)\n// dp\nclass Solution2 {\npublic:\n    int maxMoves(vector<vector<int>>& grid) {\n        vector<int> dp(size(grid));\n        for (int c = size(grid[0]) - 2; c >= 0; --c) {\n            vector<int> new_dp(size(grid));\n            for (int r = 0; r < size(grid); ++r) {\n                if (grid[r][c] < grid[r][c + 1]) {\n                    new_dp[r] = max(new_dp[r], dp[r] + 1);\n                }\n                if (r - 1 >= 0 && grid[r][c] < grid[r - 1][c + 1]) {\n                    new_dp[r] = max(new_dp[r], dp[r - 1] + 1);\n                }\n                if (r + 1 < size(grid) && grid[r][c] < grid[r + 1][c + 1]) {\n                    new_dp[r] = max(new_dp[r], dp[r + 1] + 1);\n                }\n            }\n            dp = move(new_dp);\n        }\n        return *max_element(cbegin(dp), cend(dp));\n    }\n};\n\n// Time:  O(m * n)\n// Space: O(m)\n// bfs\nclass Solution3 {\npublic:\n    int maxMoves(vector<vector<int>>& grid) {\n        unordered_set<int> q;\n        for (int r = 0; r < size(grid); ++r) {\n            q.emplace(r);\n        }\n        int c = 0;\n        for (; c < size(grid[0]) - 1; ++c) {\n            unordered_set<int> new_q;\n            for (const auto& r : q) {\n                if (grid[r][c] < grid[r][c + 1]) {\n                    new_q.emplace(r);\n                }\n                if (r - 1 >= 0 && grid[r][c] < grid[r - 1][c + 1]) {\n                    new_q.emplace(r - 1);\n                }\n                if (r + 1 < size(grid) && grid[r][c] < grid[r + 1][c + 1]) {\n                    new_q.emplace(r + 1);\n                }\n            }\n            q = move(new_q);\n            if (empty(q)) {\n                break;\n            }\n        }\n        return c;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m)\n\n# dp\nclass Solution(object):\n    def maxMoves(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        dp = [True]*len(grid)\n        result = 0\n        for c in xrange(len(grid[0])-1):\n            new_dp = [False]*len(grid)\n            for r in xrange(len(grid)):\n                if not dp[r]:\n                    continue\n                if grid[r][c] < grid[r][c+1]:\n                    new_dp[r] = True\n                if r-1 >= 0 and grid[r][c] < grid[r-1][c+1]:\n                    new_dp[r-1] = True\n                if r+1 < len(grid) and grid[r][c] < grid[r+1][c+1]:\n                    new_dp[r+1] = True\n            dp = new_dp\n            if not sum(dp):\n                break\n        else:\n            c = len(grid[0])-1\n        return c\n\n\n# Time:  O(m * n)\n# Space: O(m)\n# dp\nclass Solution2(object):\n    def maxMoves(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        dp = [0]*len(grid)\n        for c in reversed(xrange(len(grid[0])-1)):\n            new_dp = [0]*len(grid)\n            for r in xrange(len(grid)):\n                if grid[r][c] < grid[r][c+1]:\n                    new_dp[r] = max(new_dp[r], dp[r]+1)\n                if r-1 >= 0 and grid[r][c] < grid[r-1][c+1]:\n                    new_dp[r] = max(new_dp[r], dp[r-1]+1)\n                if r+1 < len(grid) and grid[r][c] < grid[r+1][c+1]:\n                    new_dp[r] = max(new_dp[r], dp[r+1]+1)\n            dp = new_dp\n        return max(dp)\n\n\n# Time:  O(m * n)\n# Space: O(m)\n# bfs\nclass Solution3(object):\n    def maxMoves(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        q = set(xrange(len(grid)))\n        for c in xrange(len(grid[0])-1):\n            new_q = set()\n            for r in q:\n                if grid[r][c] < grid[r][c+1]:\n                    new_q.add(r)\n                if r-1 >= 0 and grid[r][c] < grid[r-1][c+1]:\n                    new_q.add(r-1)\n                if r+1 < len(grid) and grid[r][c] < grid[r+1][c+1]:\n                    new_q.add(r+1)\n            q = new_q\n            if not q:\n                break\n        else:\n            c = len(grid[0])-1\n        return c",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

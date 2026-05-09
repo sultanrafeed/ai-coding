@@ -1,0 +1,44 @@
+{
+  "id": "539fef1c-be9c-4ad4-9c2a-9a357d59026e",
+  "slug": "smallest-common-region",
+  "title": "Smallest Common Region",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "tree",
+    "depth-first-search",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[\"Earth\",\"North America\",\"South America\"],[\"North America\",\"United States\",\"Canada\"],[\"United States\",\"New York\",\"Boston\"],[\"Canada\",\"Ontario\",\"Quebec\"],[\"South America\",\"Brazil\"]]\n\"Quebec\"\n\"New York\"\n[[\"Earth\", \"North America\", \"South America\"],[\"North America\", \"United States\", \"Canada\"],[\"United States\", \"New York\", \"Boston\"],[\"Canada\", \"Ontario\", \"Quebec\"],[\"South America\", \"Brazil\"]]\n\"Canada\"\n\"South America\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    string findSmallestRegion(vector<vector<string>>& regions, string region1, string region2) {\n        unordered_map<string, string> parents;\n        for (const auto& region : regions) {\n            for (int i = 1; i < region.size(); ++i) {\n                parents[region[i]] = region[0];\n            }\n        }\n        unordered_set<string> lookup = {region1};\n        while (parents.count(region1)) {\n            region1 = parents[region1];\n            lookup.emplace(region1);\n        }\n        while (!lookup.count(region2)) {\n            region2 = parents[region2];\n        }\n        return region2;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(n)\n\nclass Solution(object):\n    def findSmallestRegion(self, regions, region1, region2):\n        \"\"\"\n        :type regions: List[List[str]]\n        :type region1: str\n        :type region2: str\n        :rtype: str\n        \"\"\"\n        parents = {region[i] : region[0]\n                   for region in regions\n                   for i in xrange(1, len(region))}\n        lookup = {region1}\n        while region1 in parents:\n            region1 = parents[region1]\n            lookup.add(region1)\n        while region2 not in lookup:\n            region2 = parents[region2]\n        return region2",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

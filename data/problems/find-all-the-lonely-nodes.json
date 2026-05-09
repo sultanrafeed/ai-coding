@@ -1,0 +1,42 @@
+{
+  "id": "f0fbb2ac-f2c6-40fe-bdfc-33461df7d415",
+  "slug": "find-all-the-lonely-nodes",
+  "title": "Find All The Lonely Nodes",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,null,4]\n[7,1,4,6,null,5,3,null,null,null,null,null,2]\n[11,99,88,77,null,null,66,55,null,null,44,33,null,null,22]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode() : val(0), left(nullptr), right(nullptr) {}\n *     TreeNode(int x) : val(x), left(nullptr), right(nullptr) {}\n *     TreeNode(int x, TreeNode *left, TreeNode *right) : val(x), left(left), right(right) {}\n * };\n */\nclass Solution {\npublic:\n    vector<int> getLonelyNodes(TreeNode* root) {\n        vector<int> result;\n        vector<TreeNode *> stk = {root};\n        while (!stk.empty()) {\n            auto node = stk.back(); stk.pop_back();\n            if (!node) {\n                continue;\n            }\n            if (node->left && !node->right) {\n                result.emplace_back(node->left->val);\n            } else if (node->right && !node->left) {\n                result.emplace_back(node->right->val);\n            }\n            stk.emplace_back(node->right);\n            stk.emplace_back(node->left);\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\nclass Solution2 {\npublic:\n    vector<int> getLonelyNodes(TreeNode* root) {\n        vector<int> result;\n        dfs(root, &result);\n        return result;\n    }\n\nprivate:\n    void dfs(TreeNode *node, vector<int> *result) {\n        if (!node) {\n            return;\n        }\n        if (node->left && !node->right) {\n            result->emplace_back(node->left->val);\n        } else if (node->right && !node->left) {\n            result->emplace_back(node->right->val);\n        }\n        dfs(node->left, result);\n        dfs(node->right, result);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        self.val = val\n        self.left = left\n        self.right = right\n\n\nclass Solution(object):\n    def getLonelyNodes(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        stk = [root]\n        while stk:\n            node = stk.pop()\n            if not node:\n                continue\n            if node.left and not node.right:\n                result.append(node.left.val)\n            elif node.right and not node.left:\n                result.append(node.right.val)\n            stk.append(node.right)\n            stk.append(node.left)\n        return result\n\n\n# Time:  O(n)\n# Space: O(h)\nclass Solution2(object):\n    def getLonelyNodes(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[int]\n        \"\"\"\n        def dfs(node, result):\n            if not node:\n                return\n            if node.left and not node.right:\n                result.append(node.left.val)\n            elif node.right and not node.left:\n                result.append(node.right.val)\n            dfs(node.left, result)\n            dfs(node.right, result)\n\n        result = []\n        dfs(root, result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

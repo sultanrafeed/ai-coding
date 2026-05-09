@@ -1,0 +1,35 @@
+{
+  "id": "c4ee3ab6-4ba4-432e-a859-8cd0e0625bb0",
+  "slug": "furthest-building-you-can-reach",
+  "title": "Furthest Building You Can Reach",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>heights</code> representing the heights of buildings, some <code>bricks</code>, and some <code>ladders</code>.</p>\n\n<p>You start your journey from building <code>0</code> and move to the next building by possibly using bricks or ladders.</p>\n\n<p>While moving from building <code>i</code> to building <code>i+1</code> (<strong>0-indexed</strong>),</p>\n\n<ul>\n\t<li>If the current building&#39;s height is <strong>greater than or equal</strong> to the next building&#39;s height, you do <strong>not</strong> need a ladder or bricks.</li>\n\t<li>If the current building&#39;s height is <b>less than</b> the next building&#39;s height, you can either use <strong>one ladder</strong> or <code>(h[i+1] - h[i])</code> <strong>bricks</strong>.</li>\n</ul>\n\n<p><em>Return the furthest building index (0-indexed) you can reach if you use the given ladders and bricks optimally.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/27/q4.gif\" style=\"width: 562px; height: 561px;\" />\n<pre>\n<strong>Input:</strong> heights = [4,2,7,6,9,14,12], bricks = 5, ladders = 1\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> Starting at building 0, you can follow these steps:\n- Go to building 1 without using ladders nor bricks since 4 &gt;= 2.\n- Go to building 2 using 5 bricks. You must use either bricks or ladders because 2 &lt; 7.\n- Go to building 3 without using ladders nor bricks since 7 &gt;= 6.\n- Go to building 4 using your only ladder. You must use either bricks or ladders because 6 &lt; 9.\nIt is impossible to go beyond building 4 because you do not have any more bricks or ladders.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> heights = [4,12,2,7,3,18,20,3,19], bricks = 10, ladders = 2\n<strong>Output:</strong> 7\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> heights = [14,3,19,3], bricks = 17, ladders = 0\n<strong>Output:</strong> 3\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= heights.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= heights[i] &lt;= 10<sup>6</sup></code></li>\n\t<li><code>0 &lt;= bricks &lt;= 10<sup>9</sup></code></li>\n\t<li><code>0 &lt;= ladders &lt;= heights.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogk)\n// Space: O(k)\n\nclass Solution {\npublic:\n    int furthestBuilding(vector<int>& heights, int bricks, int ladders) {\n        priority_queue<int, vector<int>, greater<int>> min_heap;\n        for (int i = 0; i < size(heights) - 1; ++i) {\n            int diff = heights[i + 1] - heights[i];\n            if (diff > 0) {\n                min_heap.emplace(diff);\n            }\n            if (size(min_heap) <= ladders) {  // ladders are reserved for largest diffs\n                continue;\n            }\n            auto h = min_heap.top(); min_heap.pop();\n            bricks -= h;  // use bricks if ladders are not enough\n            if (bricks < 0) {  // not enough bricks\n                return i;\n            }\n        }\n        return size(heights) - 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogk)\n# Space: O(k)\n\nimport heapq\n\n\nclass Solution(object):\n    def furthestBuilding(self, heights, bricks, ladders):\n        \"\"\"\n        :type heights: List[int]\n        :type bricks: int\n        :type ladders: int\n        :rtype: int\n        \"\"\"\n        min_heap = []\n        for i in xrange(len(heights)-1):\n            diff = heights[i+1]-heights[i]\n            if diff > 0:\n                heapq.heappush(min_heap, diff)\n            if len(min_heap) <= ladders:  # ladders are reserved for largest diffs\n                continue\n            bricks -= heapq.heappop(min_heap)  # use bricks if ladders are not enough\n            if bricks < 0:  # not enough bricks\n                return i\n        return len(heights)-1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

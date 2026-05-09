@@ -1,0 +1,34 @@
+{
+  "id": "35e4075a-40ce-40ff-9ddb-889f5323a11f",
+  "slug": "count-distinct-integers-after-removing-zeros",
+  "title": "Count Distinct Integers After Removing Zeros",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>positive</strong> integer <code>n</code>.</p>\n\n<p>For every integer <code>x</code> from 1 to <code>n</code>, we write down the integer obtained by removing all zeros from the decimal representation of <code>x</code>.</p>\n\n<p>Return an integer denoting the number of <strong>distinct</strong> integers written down.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 10</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">9</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The integers we wrote down are 1, 2, 3, 4, 5, 6, 7, 8, 9, 1. There are 9 distinct integers (1, 2, 3, 4, 5, 6, 7, 8, 9).</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The integers we wrote down are 1, 2, 3. There are 3 distinct integers (1, 2, 3).</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>15</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// combinatorics\nclass Solution {\npublic:\n    long long countDistinct(long long n) {\n        const auto& reverse = [](int64_t n) {\n            int64_t result = 0, base = 1;\n            for (; n; n /= 10, base *= 9) {\n                result = result * 10 + n % 10;\n            }\n            return pair(result, base);\n        };\n\n        auto [m, base] = reverse(n + 1);\n        int64_t result = (base - 9) / (9 - 1);\n        base /= 9;\n        for (; base; base /= 9, m /= 10) {\n            const int r = m % 10;\n            if (r == 0) {\n                break;\n            }\n            result += (r - 1) * base;\n        }\n        return result;\n    }\n};\n\n// Time:  O(logn)\n// Space: O(logn)\n// combinatorics\nclass Solution2 {\npublic:\n    long long countDistinct(long long n) {\n        const auto& s = to_string(n);\n        int64_t base = pow(9, size(s));\n        int64_t result = (base - 9) / (9 - 1);\n        base /= 9;\n        for (const auto& x : s) {\n            if (x == '0') {\n                break;\n            }\n            result += ((x - '0') - 1) * base;\n            base /= 9;\n        }\n        if (base == 0) {\n            ++result;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# combinatorics\nclass Solution(object):\n    def countDistinct(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        def reverse(n):\n            result, base = 0, 1\n            while n:\n                n, r = divmod(n, 10)\n                result = result*10+r\n                base *= 9\n            return result, base\n\n        m, base = reverse(n+1)\n        result = (base-9)//(9-1)\n        base //= 9\n        while base:\n            m, r = divmod(m, 10)\n            if r == 0:\n                break\n            result += (r-1)*base\n            base //= 9\n        return result\n\n\n# Time:  O(logn)\n# Space: O(logn)\n# combinatorics\nclass Solution2(object):\n    def countDistinct(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        s = str(n)\n        base = pow(9, len(s))\n        result = (base-9)//(9-1)\n        base //= 9\n        for x in s:\n            if x == '0':\n                break\n            result += ((ord(x)-ord('0'))-1)*base\n            base //= 9\n        if base == 0:\n            result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

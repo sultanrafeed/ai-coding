@@ -1,0 +1,34 @@
+{
+  "id": "1f2ebda0-e337-4fa1-8593-011f89e368ca",
+  "slug": "jump-game-ix",
+  "title": "Jump Game IX",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>From any index <code>i</code>, you can jump to another index <code>j</code> under the following rules:</p>\n\n<ul>\n\t<li>Jump to index <code>j</code> where <code>j &gt; i</code> is allowed only if <code>nums[j] &lt; nums[i]</code>.</li>\n\t<li>Jump to index <code>j</code> where <code>j &lt; i</code> is allowed only if <code>nums[j] &gt; nums[i]</code>.</li>\n</ul>\n\n<p>For each index <code>i</code>, find the <strong>maximum</strong> <strong>value</strong> in <code>nums</code> that can be reached by following <strong>any</strong> sequence of valid jumps starting at <code>i</code>.</p>\n\n<p>Return an array <code>ans</code> where <code>ans[i]</code> is the <strong>maximum</strong> <strong>value</strong> reachable starting from index <code>i</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,1,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[2,2,3]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>For <code>i = 0</code>: No jump increases the value.</li>\n\t<li>For <code>i = 1</code>: Jump to <code>j = 0</code> as <code>nums[j] = 2</code> is greater than <code>nums[i]</code>.</li>\n\t<li>For <code>i = 2</code>: Since <code>nums[2] = 3</code> is the maximum value in <code>nums</code>, no jump increases the value.</li>\n</ul>\n\n<p>Thus, <code>ans = [2, 2, 3]</code>.</p>\n\n<ul>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,3,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[3,3,3]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>For <code>i = 0</code>: Jump forward to <code>j = 2</code> as <code>nums[j] = 1</code> is less than <code>nums[i] = 2</code>, then from <code>i = 2</code> jump to <code>j = 1</code> as <code>nums[j] = 3</code> is greater than <code>nums[2]</code>.</li>\n\t<li>For <code>i = 1</code>: Since <code>nums[1] = 3</code> is the maximum value in <code>nums</code>, no jump increases the value.</li>\n\t<li>For <code>i = 2</code>: Jump to <code>j = 1</code> as <code>nums[j] = 3</code> is greater than <code>nums[2] = 1</code>.</li>\n</ul>\n\n<p>Thus, <code>ans = [3, 3, 3]</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup>​​​​​​​</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// graph, prefix sum\nclass Solution {\npublic:\n    vector<int> maxValue(vector<int>& nums) {\n        vector<int> result(size(nums));\n        result[0] = nums[0];\n        for (int i = 0; i + 1 < size(nums); ++i) {\n            result[i + 1] = max(result[i], nums[i + 1]);\n        }\n        for (int i = size(nums) - 1, mn = numeric_limits<int>::max(); i >= 0; --i) {\n            if (result[i] > mn) {\n                result[i] = result[i + 1];\n            }\n            mn = min(mn, nums[i]);\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// graph, prefix sum\nclass Solution2 {\npublic:\n    vector<int> maxValue(vector<int>& nums) {\n        vector<int> suffix(size(nums) + 1, numeric_limits<int>::max());\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            suffix[i] = min(suffix[i + 1], nums[i]);\n        }\n        vector<int> result(size(nums));\n        for (int right = 0, left = 0, mx = 0; right < size(nums); ++right) {\n            mx = max(mx, nums[right]);\n            if (mx > suffix[right + 1]) {\n                continue;\n            }\n            for (; left <= right; ++left) {\n                result[left] = mx;\n            }\n            \n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# graph, prefix sum\nclass Solution(object):\n    def maxValue(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = [0]*len(nums)\n        result[0] = nums[0]\n        for i in xrange(len(nums)-1):\n            result[i+1] = max(result[i], nums[i+1])\n        mn = float(\"inf\")\n        for i in reversed(xrange(len(nums))):\n            if result[i] > mn:\n                result[i] = result[i+1]\n            mn = min(mn, nums[i])\n        return result\n\n\n# Time:  O(n)\n# Space: O(n)\n# graph, prefix sum\nclass Solution2(object):\n    def maxValue(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        suffix = [float(\"inf\")]*(len(nums)+1)\n        for i in reversed(xrange(len(nums))):\n            suffix[i] = min(suffix[i+1], nums[i])\n        result = [0]*len(nums)\n        mx = left = 0\n        for right in xrange(len(nums)):\n            mx = max(mx, nums[right])\n            if mx > suffix[right+1]:\n                continue\n            while left <= right:\n                result[left] = mx\n                left += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

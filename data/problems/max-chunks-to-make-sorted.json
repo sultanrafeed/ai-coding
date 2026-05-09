@@ -1,0 +1,43 @@
+{
+  "id": "2f461ce5-5ba4-4e59-a11b-e7c853b132d9",
+  "slug": "max-chunks-to-make-sorted",
+  "title": "Max Chunks To Make Sorted",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>arr</code> of length <code>n</code> that represents a permutation of the integers in the range <code>[0, n - 1]</code>.</p>\n\n<p>We split <code>arr</code> into some number of <strong>chunks</strong> (i.e., partitions), and individually sort each chunk. After concatenating them, the result should equal the sorted array.</p>\n\n<p>Return <em>the largest number of chunks we can make to sort the array</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [4,3,2,1,0]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong>\nSplitting into two or more chunks will not return the required result.\nFor example, splitting into [4, 3], [2, 1, 0] will result in [3, 4, 0, 1, 2], which isn&#39;t sorted.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,0,2,3,4]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong>\nWe can split into two chunks, such as [1, 0], [2, 3, 4].\nHowever, splitting into [1, 0], [2], [3], [4] is the highest number of chunks possible.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == arr.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10</code></li>\n\t<li><code>0 &lt;= arr[i] &lt; n</code></li>\n\t<li>All the elements of <code>arr</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "stack",
+    "greedy",
+    "sorting",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,3,2,1,0]\n[1,0,2,3,4]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxChunksToSorted(vector<int>& arr) {\n        int result = 0;\n        for (int i = 0, max_i = 0; i < arr.size(); ++i) {\n            max_i = max(max_i, arr[i]);\n            if (max_i == i) ++result;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// mono stack solution\nclass Solution2 {\npublic:\n    int maxChunksToSorted(vector<int>& arr) {\n        vector<int> increasing_stk;\n        for (const auto& num : arr) {\n            int max_num = empty(increasing_stk) ? num : max(increasing_stk.back(), num);\n            while (!empty(increasing_stk) && increasing_stk.back() > num) {\n                increasing_stk.pop_back();\n            }\n            increasing_stk.emplace_back(max_num);\n        }\n        return size(increasing_stk);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def maxChunksToSorted(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        result, max_i = 0, 0\n        for i, v in enumerate(arr):\n            max_i = max(max_i, v)\n            if max_i == i:\n                result += 1\n        return result\n\n    \n# Time:  O(n)\n# Space: O(n)\n# mono stack solution\nclass Solution2(object):\n    def maxChunksToSorted(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        result, increasing_stk = 0, []\n        for num in arr:\n            max_num = num if not increasing_stk else max(increasing_stk[-1], num)\n            while increasing_stk and increasing_stk[-1] > num:\n                increasing_stk.pop()\n            increasing_stk.append(max_num)\n        return len(increasing_stk)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

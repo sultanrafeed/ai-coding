@@ -1,0 +1,36 @@
+{
+  "id": "1793b194-8fc4-4769-8d07-ecef58178139",
+  "slug": "count-number-of-maximum-bitwise-or-subsets",
+  "title": "Count Number of Maximum Bitwise-OR Subsets",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, find the <strong>maximum</strong> possible <strong>bitwise OR</strong> of a subset of <code>nums</code> and return <em>the <strong>number of different non-empty subsets</strong> with the maximum bitwise OR</em>.</p>\n\n<p>An array <code>a</code> is a <strong>subset</strong> of an array <code>b</code> if <code>a</code> can be obtained from <code>b</code> by deleting some (possibly zero) elements of <code>b</code>. Two subsets are considered <strong>different</strong> if the indices of the elements chosen are different.</p>\n\n<p>The bitwise OR of an array <code>a</code> is equal to <code>a[0] <strong>OR</strong> a[1] <strong>OR</strong> ... <strong>OR</strong> a[a.length - 1]</code> (<strong>0-indexed</strong>).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,1]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The maximum possible bitwise OR of a subset is 3. There are 2 subsets with a bitwise OR of 3:\n- [3]\n- [3,1]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,2,2]\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> All non-empty subsets of [2,2,2] have a bitwise OR of 2. There are 2<sup>3</sup> - 1 = 7 total subsets.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,2,1,5]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The maximum possible bitwise OR of a subset is 7. There are 6 subsets with a bitwise OR of 7:\n- [3,5]\n- [3,1,5]\n- [3,2,5]\n- [3,2,1,5]\n- [2,5]\n- [2,1,5]</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 16</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "backtracking",
+    "bit-manipulation",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(min(2^n, m * n)), m is the 'bitwise or' of nums\n// Space: O(min(2^n, m))\n\nclass Solution {\npublic:\n    int countMaxOrSubsets(vector<int>& nums) {\n        unordered_map<int, int> dp = {{0, 1}};\n        int total = 0;\n        for (const auto& x : nums) {\n            unordered_map<int, int> new_dp = dp;\n            for (const auto& [k, v] : dp) {\n                new_dp[k | x] += v;\n            }\n            dp = move(new_dp);\n            total |= x;\n        }\n        return dp[total];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(min(2^n, m * n)), m is the 'bitwise or' of nums\n# Space: O(min(2^n, m))\n\nimport collections\n\n\nclass Solution(object):\n    def countMaxOrSubsets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        dp = collections.Counter([0])\n        for x in nums:\n            for k, v in dp.items():\n                dp[k|x] += v\n        return dp[reduce(lambda x, y: x|y, nums)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

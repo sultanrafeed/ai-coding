@@ -1,0 +1,42 @@
+{
+  "id": "43467dba-caca-4436-a9a9-a8a629be5429",
+  "slug": "count-odd-letters-from-number",
+  "title": "Count Odd Letters from Number",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "simulation",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "41\n20",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(26)\n\n// freq table\nclass Solution {\npublic:\n    int countOddLetters(int n) {\n        vector<string> lookup = {\"zero\", \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\", \"nine\"};\n        vector<int> cnt(26);\n        for (; n; n /= 10) {\n            const int d = n % 10;\n            for (const auto& x : lookup[d]) {\n                ++cnt[x - 'a'];\n            }\n        }\n        int result = 0;\n        for (const auto& v : cnt) {\n            result += v % 2;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(26)\n\n# freq table\nclass Solution(object):\n    def countOddLetters(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        lookup = [\"zero\", \"one\", \"two\", \"three\", \"four\", \"five\", \"six\", \"seven\", \"eight\", \"nine\"]\n        cnt = [0]*26\n        while n:\n            n, d = divmod(n, 10)\n            for x in lookup[d]:\n                cnt[ord(x)-ord('a')] += 1\n        return sum(v%2 for v in cnt)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

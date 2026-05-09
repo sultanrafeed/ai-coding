@@ -1,0 +1,37 @@
+{
+  "id": "516f9f5e-0146-412f-a27a-299864ab859c",
+  "slug": "132-pattern",
+  "title": "132 Pattern",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of <code>n</code> integers <code>nums</code>, a <strong>132 pattern</strong> is a subsequence of three integers <code>nums[i]</code>, <code>nums[j]</code> and <code>nums[k]</code> such that <code>i &lt; j &lt; k</code> and <code>nums[i] &lt; nums[k] &lt; nums[j]</code>.</p>\n\n<p>Return <code>true</code><em> if there is a <strong>132 pattern</strong> in </em><code>nums</code><em>, otherwise, return </em><code>false</code><em>.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> There is no 132 pattern in the sequence.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,1,4,2]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> There is a 132 pattern in the sequence: [1, 4, 2].\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [-1,3,2,0]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> There are three 132 patterns in the sequence: [-1, 3, 2], [-1, 3, 0] and [-1, 2, 0].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 2 * 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "stack",
+    "monotonic-stack",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool find132pattern(vector<int>& nums) {\n        int ak = numeric_limits<int>::min();\n        vector<int> stk;\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            if (nums[i] < ak) {\n                return true;\n            }\n            while (!empty(stk) && stk.back() < nums[i]) {\n                ak = stk.back(), stk.pop_back(); \n            }\n            stk.emplace_back(nums[i]);\n        }\n        return false;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(1)\nclass Solution_TLE {\npublic:\n    bool find132pattern(vector<int>& nums) {\n        for (int k = 0; k < size(nums); ++k) {\n            bool valid = false;\n            for (int j = 0; j < k; ++j) {\n                if (nums[j] < nums[k]) {\n                    valid = true;\n                } else if (nums[j] > nums[k]) {\n                    if (valid) {\n                        return true;\n                    }\n                }\n           }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def find132pattern(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: bool\n        \"\"\"\n        ak = float(\"-inf\")\n        stk = []\n        for i in reversed(xrange(len(nums))):\n            if nums[i] < ak:\n                return True\n            while stk and stk[-1] < nums[i]:\n                ak = stk.pop()\n            stk.append(nums[i])\n        return False\n\n\n# Time:  O(n^2)\n# Space: O(1)\nclass Solution_TLE(object):\n    def find132pattern(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: bool\n        \"\"\"\n        for k in xrange(len(nums)):\n            valid = False\n            for j in xrange(k):\n                if nums[j] < nums[k]:\n                    valid = True\n                elif nums[j] > nums[k]:\n                    if valid:\n                        return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

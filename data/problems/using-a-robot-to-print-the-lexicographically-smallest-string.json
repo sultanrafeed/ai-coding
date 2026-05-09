@@ -1,0 +1,42 @@
+{
+  "id": "b06a6746-3fa7-47d0-af47-6c66a4ea3114",
+  "slug": "using-a-robot-to-print-the-lexicographically-smallest-string",
+  "title": "Using a Robot to Print the Lexicographically Smallest String",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a string <code>s</code> and a robot that currently holds an empty string <code>t</code>. Apply one of the following operations until <code>s</code> and <code>t</code> <strong>are both empty</strong>:</p>\n\n<ul>\n\t<li>Remove the <strong>first</strong> character of a string <code>s</code> and give it to the robot. The robot will append this character to the string <code>t</code>.</li>\n\t<li>Remove the <strong>last</strong> character of a string <code>t</code> and give it to the robot. The robot will write this character on paper.</li>\n</ul>\n\n<p>Return <em>the lexicographically smallest string that can be written on the paper.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;zza&quot;\n<strong>Output:</strong> &quot;azz&quot;\n<strong>Explanation:</strong> Let p denote the written string.\nInitially p=&quot;&quot;, s=&quot;zza&quot;, t=&quot;&quot;.\nPerform first operation three times p=&quot;&quot;, s=&quot;&quot;, t=&quot;zza&quot;.\nPerform second operation three times p=&quot;azz&quot;, s=&quot;&quot;, t=&quot;&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;bac&quot;\n<strong>Output:</strong> &quot;abc&quot;\n<strong>Explanation:</strong> Let p denote the written string.\nPerform first operation twice p=&quot;&quot;, s=&quot;c&quot;, t=&quot;ba&quot;. \nPerform second operation twice p=&quot;ab&quot;, s=&quot;c&quot;, t=&quot;&quot;. \nPerform first operation p=&quot;ab&quot;, s=&quot;&quot;, t=&quot;c&quot;. \nPerform second operation p=&quot;abc&quot;, s=&quot;&quot;, t=&quot;&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;bdda&quot;\n<strong>Output:</strong> &quot;addb&quot;\n<strong>Explanation:</strong> Let p denote the written string.\nInitially p=&quot;&quot;, s=&quot;bdda&quot;, t=&quot;&quot;.\nPerform first operation four times p=&quot;&quot;, s=&quot;&quot;, t=&quot;bdda&quot;.\nPerform second operation four times p=&quot;addb&quot;, s=&quot;&quot;, t=&quot;&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists of only English lowercase letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "stack",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"zza\"\n\"bac\"\n\"bdda\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table, greedy\nclass Solution {\npublic:\n    string robotWithString(string s) {\n        vector<int> cnt(26);\n        for (const auto& c : s){\n            ++cnt[c - 'a'];\n        }\n        string result, stk;\n        char mn = 'a';\n        for (const auto& c : s) {\n            stk.push_back(c);\n            --cnt[c - 'a'];\n            for (; mn < 'z' && cnt[mn - 'a'] == 0; ++mn);\n            while (!empty(stk) && stk.back() <= mn) {\n                result.push_back(stk.back());\n                stk.pop_back();\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# freq table, greedy\nclass Solution(object):\n    def robotWithString(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        cnt = collections.Counter(s)\n        result, stk = [], []\n        mn = 'a'\n        for c in s:\n            stk.append(c)\n            cnt[c] -= 1\n            while mn < 'z' and cnt[mn] == 0:\n                mn = chr(ord(mn)+1)\n            while stk and stk[-1] <= mn:\n                result.append(stk.pop())\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "9912c868-0fba-4036-8c3f-001e0c49fe22",
+  "slug": "find-all-duplicates-in-an-array",
+  "title": "Find All Duplicates in an Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> of length <code>n</code> where all the integers of <code>nums</code> are in the range <code>[1, n]</code> and each integer appears <strong>at most</strong> <strong>twice</strong>, return <em>an array of all the integers that appears <strong>twice</strong></em>.</p>\n\n<p>You must write an algorithm that runs in <code>O(n)</code> time and uses only <em>constant</em> auxiliary space, excluding the space needed to store the output</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> nums = [4,3,2,7,8,2,3,1]\n<strong>Output:</strong> [2,3]\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> nums = [1,1,2]\n<strong>Output:</strong> [1]\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> nums = [1]\n<strong>Output:</strong> []\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= n</code></li>\n\t<li>Each element in <code>nums</code> appears <strong>once</strong> or <strong>twice</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> findDuplicates(vector<int>& nums) {\n        vector<int> result;\n        for (const auto& i : nums) {\n            if (nums[abs(i) - 1] < 0) {\n                result.emplace_back(abs(i));\n            } else {\n                nums[abs(i) - 1] *= -1;\n            }\n        }\n        return result;\n    }\n};\n\nclass Solution2 {\npublic:\n    vector<int> findDuplicates(vector<int>& nums) {\n        vector<int> result;\n        int i = 0;\n        while (i < nums.size()) {\n            if (nums[i] != nums[nums[i] - 1]) {\n                swap(nums[i], nums[nums[i] - 1]);\n            } else {\n                ++i;\n            }\n        }\n        for (i = 0; i < nums.size(); ++i) {\n            if (i != nums[i] - 1) {\n                result.emplace_back(nums[i]);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findDuplicates(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        for i in nums:\n            if nums[abs(i)-1] < 0:\n                result.append(abs(i))\n            else:\n                nums[abs(i)-1] *= -1\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def findDuplicates(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        i = 0\n        while i < len(nums):\n            if nums[i] != nums[nums[i]-1]:\n                nums[nums[i]-1], nums[i] = nums[i], nums[nums[i]-1]\n            else:\n                i += 1\n\n        for i in xrange(len(nums)):\n            if i != nums[i]-1:\n                result.append(nums[i])\n        return result\n\n\n# Time:  O(n)\n# Space: O(n), this doesn't satisfy the question\nfrom collections import Counter\nclass Solution3(object):\n    def findDuplicates(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        return [elem for elem, count in Counter(nums).items() if count == 2]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

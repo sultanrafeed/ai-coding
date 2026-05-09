@@ -1,0 +1,35 @@
+{
+  "id": "da0d2f86-355e-474f-bc9f-b5a87e42db6f",
+  "slug": "reconstruct-original-digits-from-english",
+  "title": "Reconstruct Original Digits from English",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code> containing an out-of-order English representation of digits <code>0-9</code>, return <em>the digits in <strong>ascending</strong> order</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> s = \"owoztneoer\"\n<strong>Output:</strong> \"012\"\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> s = \"fviefuro\"\n<strong>Output:</strong> \"45\"\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s[i]</code> is one of the characters <code>[&quot;e&quot;,&quot;g&quot;,&quot;f&quot;,&quot;i&quot;,&quot;h&quot;,&quot;o&quot;,&quot;n&quot;,&quot;s&quot;,&quot;r&quot;,&quot;u&quot;,&quot;t&quot;,&quot;w&quot;,&quot;v&quot;,&quot;x&quot;,&quot;z&quot;]</code>.</li>\n\t<li><code>s</code> is <strong>guaranteed</strong> to be valid.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string originalDigits(string s) {\n        const vector<string> numbers{\"zero\", \"one\", \"two\", \"three\",\n                                     \"four\", \"five\", \"six\", \"seven\",\n                                     \"eight\", \"nine\"};\n        vector<vector<int>> cnts(numbers.size(), vector<int>(26));\n        for (int i = 0; i < numbers.size(); ++i) {\n            for (const auto& c : numbers[i]) {\n                ++cnts[i][c - 'a'];\n            }\n        }\n        \n        // The order for greedy method.\n        vector<int> order{0, 2, 4, 6, 8, 1, 3, 5, 7, 9};\n        \n        // The unique char in the order.\n        vector<char> unique_chars{'z', 'o', 'w', 't', 'u', 'f', 'x', 's', 'g', 'n'};\n        vector<int> cnt(26);\n        for (const auto& c : s) {\n            ++cnt[c - 'a'];\n        }\n\n        string result;\n        for (const auto& i : order) {\n            while (cnt[unique_chars[i] - 'a'] > 0) {\n                for (int j = 0; j < cnt.size(); ++j) {\n                    cnt[j] -= cnts[i][j];\n                }\n                result.push_back(i + '0');\n            }\n        }\n        sort(result.begin(), result.end());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nfrom collections import Counter\n\nclass Solution(object):\n    def originalDigits(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        # The count of each char in each number string.\n        cnts = [Counter(_) for _ in [\"zero\", \"one\", \"two\", \"three\", \\\n                                     \"four\", \"five\", \"six\", \"seven\", \\\n                                     \"eight\", \"nine\"]]\n\n        # The order for greedy method.\n        order = [0, 2, 4, 6, 8, 1, 3, 5, 7, 9]\n\n        # The unique char in the order.\n        unique_chars = ['z', 'o', 'w', 't', 'u', \\\n                        'f', 'x', 's', 'g', 'n']\n\n        cnt = Counter(list(s))\n        res = []\n        for i in order:\n            while cnt[unique_chars[i]] > 0:\n                cnt -= cnts[i]\n                res.append(i)\n        res.sort()\n\n        return \"\".join(map(str, res))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

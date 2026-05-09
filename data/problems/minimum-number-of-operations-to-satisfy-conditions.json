@@ -1,0 +1,41 @@
+{
+  "id": "511c17f5-5b68-4f06-8062-e4b4a539382b",
+  "slug": "minimum-number-of-operations-to-satisfy-conditions",
+  "title": "Minimum Number of Operations to Satisfy Conditions",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a 2D matrix <code>grid</code> of size <code>m x n</code>. In one <strong>operation</strong>, you can change the value of <strong>any</strong> cell to <strong>any</strong> non-negative number. You need to perform some <strong>operations</strong> such that each cell <code>grid[i][j]</code> is:</p>\n\n<ul>\n\t<li>Equal to the cell below it, i.e. <code>grid[i][j] == grid[i + 1][j]</code> (if it exists).</li>\n\t<li>Different from the cell to its right, i.e. <code>grid[i][j] != grid[i][j + 1]</code> (if it exists).</li>\n</ul>\n\n<p>Return the <strong>minimum</strong> number of operations needed.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[1,0,2],[1,0,2]]</span></p>\n\n<p><strong>Output:</strong> 0</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><strong><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/04/15/examplechanged.png\" style=\"width: 254px; height: 186px;padding: 10px; background: #fff; border-radius: .5rem;\" /></strong></p>\n\n<p>All the cells in the matrix already satisfy the properties.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[1,1,1],[0,0,0]]</span></p>\n\n<p><strong>Output:</strong> 3</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><strong><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/03/27/example21.png\" style=\"width: 254px; height: 186px;padding: 10px; background: #fff; border-radius: .5rem;\" /></strong></p>\n\n<p>The matrix becomes <code>[[1,0,1],[1,0,1]]</code> which satisfies the properties, by doing these 3 operations:</p>\n\n<ul>\n\t<li>Change <code>grid[1][0]</code> to 1.</li>\n\t<li>Change <code>grid[0][1]</code> to 0.</li>\n\t<li>Change <code>grid[1][2]</code> to 1.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[1],[2],[3]]</span></p>\n\n<p><strong>Output:</strong> 2</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/03/31/changed.png\" style=\"width: 86px; height: 277px;padding: 10px; background: #fff; border-radius: .5rem;\" /></p>\n\n<p>There is a single column. We can change the value to 1 in each cell using 2 operations.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n, m &lt;= 1000</code></li>\n\t<li><code>0 &lt;= grid[i][j] &lt;= 9</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,0,2],[1,0,2]]\n[[1,1,1],[0,0,0]]\n[[1],[2],[3]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * (m + 10))\n// Space: O(10)\n\n// dp\nclass Solution {\npublic:\n    int minimumOperations(vector<vector<int>>& grid) {\n        static const int INF = numeric_limits<int>::max();\n        static const int MAX_VALUE = 9;\n\n        const auto& top = [](const auto& dp, int exclude) {\n            int j = -1;\n            for (int i = 0; i <= MAX_VALUE; ++i) {\n                if (i == exclude) {\n                    continue;\n                }\n                if (j == -1 || dp[i] < dp[j]) {\n                    j = i;\n                }\n            }\n            return j;\n        };\n    \n        vector<int> dp(MAX_VALUE + 1);\n        for (int j = 0; j < size(grid[0]); ++j) {\n            vector<int> cnt(MAX_VALUE + 1);\n            for (int i = 0; i < size(grid); ++i) {\n                ++cnt[grid[i][j]];\n            }\n            vector<int> new_dp(MAX_VALUE + 1, INF);\n            for (int i = 0; i <= MAX_VALUE; ++i) {\n                const int k1 = top(dp, -1);\n                const int k2 = top(dp, k1);\n                new_dp[i] = min(new_dp[i], (i != k1 ? dp[k1] : dp[k2]) + (static_cast<int>(size(grid)) - cnt[i]));\n            }\n            dp = move(new_dp);\n        }\n        return ranges::min(dp);\n    }\n};\n\n// Time:  O(n * (m + 100))\n// Space: O(10)\n// dp\nclass Solution2 {\npublic:\n    int minimumOperations(vector<vector<int>>& grid) {\n        static const int INF = numeric_limits<int>::max();\n        static const int MAX_VALUE = 9;\n    \n        vector<int> dp(MAX_VALUE + 1);\n        for (int j = 0; j < size(grid[0]); ++j) {\n            vector<int> cnt(MAX_VALUE + 1);\n            for (int i = 0; i < size(grid); ++i) {\n                ++cnt[grid[i][j]];\n            }\n            vector<int> new_dp(MAX_VALUE + 1, INF);\n            for (int i = 0; i <= MAX_VALUE; ++i) {\n                int mn = INF;\n                for (int k = 0; k <= MAX_VALUE; ++k) {\n                    if (k != i) {\n                        mn = min(mn, dp[k]);\n                    }\n                }\n                new_dp[i] = min(new_dp[i], mn + (static_cast<int>(size(grid)) - cnt[i]));\n            }\n            dp = move(new_dp);\n        }\n        return ranges::min(dp);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * (m + 10))\n# Space: O(10)\n\n# dp\nclass Solution(object):\n    def minimumOperations(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        INF = float(\"inf\")\n        MAX_VALUE = 9\n        dp = [0]*(MAX_VALUE+1)\n        for j in xrange(len(grid[0])):\n            new_dp = [INF]*(MAX_VALUE+1)\n            cnt = [0]*(MAX_VALUE+1)\n            for i in xrange(len(grid)):\n                cnt[grid[i][j]] += 1\n            k1 = min(xrange(MAX_VALUE+1), key=lambda x: dp[x])\n            k2 = min((i for i in xrange(MAX_VALUE+1) if i != k1), key=lambda x: dp[x])\n            for i in xrange(MAX_VALUE+1):\n                new_dp[i] = min(new_dp[i], (dp[k1] if i != k1 else dp[k2])+(len(grid)-cnt[i]))\n            dp = new_dp\n        return min(dp)\n\n\n# Time:  O(n * (m + 100))\n# Space: O(10)\n# dp\nclass Solution2(object):\n    def minimumOperations(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        INF = float(\"inf\")\n        MAX_VALUE = 9\n        dp = [0]*(MAX_VALUE+1)\n        for j in xrange(len(grid[0])):\n            new_dp = [INF]*(MAX_VALUE+1)\n            cnt = [0]*(MAX_VALUE+1)\n            for i in xrange(len(grid)):\n                cnt[grid[i][j]] += 1\n            for i in xrange(MAX_VALUE+1):\n                new_dp[i] = min(new_dp[i], min(dp[k] for k in xrange(MAX_VALUE+1) if k != i)+(len(grid)-cnt[i]))\n            dp = new_dp\n        return min(dp)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

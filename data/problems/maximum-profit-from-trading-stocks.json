@@ -1,0 +1,40 @@
+{
+  "id": "fa9e49ef-4b9e-4e36-8f9e-1f176829cbfa",
+  "slug": "maximum-profit-from-trading-stocks",
+  "title": "Maximum Profit From Trading Stocks",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,4,6,2,3]\n[8,5,4,3,5]\n10\n[2,2,5]\n[3,4,10]\n6\n[3,3,12]\n[0,3,15]\n10",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * b)\n// Space: O(b)\n\n// dp, optimized from solution2\nclass Solution {\npublic:\n    int maximumProfit(vector<int>& present, vector<int>& future, int budget) {\n        vector<int> dp(budget + 1);\n        for (int i = 0; i < size(present); ++i) {\n            if (future[i] - present[i] < 0) {\n                continue;\n            }\n            for (int b = budget; b >= present[i]; --b) {\n                dp[b] = max(dp[b], dp[b - present[i]] + (future[i] - present[i]));\n            }\n        }\n        return dp.back();\n    }\n};\n\n// Time:  O(n * b)\n// Space: O(b)\n// dp\nclass Solution2 {\npublic:\n    int maximumProfit(vector<int>& present, vector<int>& future, int budget) {\n        vector<vector<int>> dp(2, vector<int>(budget + 1));\n        for (int i = 0; i < size(present); ++i) {\n            for (int b = 0; b <= budget; ++b) {\n                dp[(i + 1) % 2][b] = max(dp[i % 2][b], b - present[i] >= 0 ? dp[i % 2][b - present[i]] + (future[i] - present[i]) : 0);\n            }\n        }\n        return dp[size(present) % 2].back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * b)\n# Space: O(b)\n\nimport itertools\n\n\n# dp, optimized from solution2\nclass Solution(object):\n    def maximumProfit(self, present, future, budget):\n        \"\"\"\n        :type present: List[int]\n        :type future: List[int]\n        :type budget: int\n        :rtype: int\n        \"\"\"\n        dp = [0]*(budget+1)\n        for i, (p, f) in enumerate(itertools.izip(present, future)):\n            if f-p < 0:\n                continue\n            for b in reversed(xrange(p, budget+1)):\n                dp[b] = max(dp[b], dp[b-p]+(f-p))\n        return dp[-1]\n\n\n# Time:  O(n * b)\n# Space: O(b)\nimport itertools\n\n\n# dp\nclass Solution2(object):\n    def maximumProfit(self, present, future, budget):\n        \"\"\"\n        :type present: List[int]\n        :type future: List[int]\n        :type budget: int\n        :rtype: int\n        \"\"\"\n        dp = [[0]*(budget+1) for _ in xrange(2)]\n        for i, (p, f) in enumerate(itertools.izip(present, future)):\n            for b in xrange(budget+1):\n                dp[(i+1)%2][b] = max(dp[i%2][b], (dp[i%2][b-p]+(f-p) if b-p >= 0 else 0))\n        return dp[len(present)%2][-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

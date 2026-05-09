@@ -1,0 +1,35 @@
+{
+  "id": "78184635-3b58-4191-9718-611b28f43990",
+  "slug": "complete-prime-number",
+  "title": "Complete Prime Number",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer <code>num</code>.</p>\n\n<p>A number <code>num</code> is called a <strong>Complete <span data-keyword=\"prime-number\">Prime Number</span></strong> if every <strong>prefix</strong> and every <strong>suffix</strong> of <code>num</code> is <strong>prime</strong>.</p>\n\n<p>Return <code>true</code> if <code>num</code> is a Complete Prime Number, otherwise return <code>false</code>.</p>\n\n<p><strong>Note</strong>:</p>\n\n<ul>\n\t<li>A <strong>prefix</strong> of a number is formed by the <strong>first</strong> <code>k</code> digits of the number.</li>\n\t<li>A <strong>suffix</strong> of a number is formed by the <strong>last</strong> <code>k</code> digits of the number.</li>\n\t<li>Single-digit numbers are considered Complete Prime Numbers only if they are <strong>prime</strong>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">num = 23</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><strong>​​​​​​​</strong>Prefixes of <code>num = 23</code> are 2 and 23, both are prime.</li>\n\t<li>Suffixes of <code>num = 23</code> are 3 and 23, both are prime.</li>\n\t<li>All prefixes and suffixes are prime, so 23 is a Complete Prime Number and the answer is <code>true</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">num = 39</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Prefixes of <code>num = 39</code> are 3 and 39. 3 is prime, but 39 is not prime.</li>\n\t<li>Suffixes of <code>num = 39</code> are 9 and 39. Both 9 and 39 are not prime.</li>\n\t<li>At least one prefix or suffix is not prime, so 39 is not a Complete Prime Number and the answer is <code>false</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">num = 7</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>7 is prime, so all its prefixes and suffixes are prime and the answer is <code>true</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "enumeration",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn * sqrt(n))\n// Space: O(1)\n\n// prefix sum, number theory\nclass Solution {\npublic:\n    bool completePrime(int num) {\n        const auto& is_prime = [](int n) {\n            if (n <= 1 || (n != 2 && n % 2 == 0)) {\n                return false;\n            }\n            for (int i = 3; i <= n; i += 2) {\n                if (i * i > n) {\n                    break;\n                }\n                if (n % i == 0) {\n                    return false;\n                }\n            }\n            return true;\n        };\n\n        for (int suffix = 0, base = 1; num; num /= 10, base *= 10) {\n            if (!is_prime(num)) {\n                return false;\n            }\n            suffix += (num % 10) * base;\n            if (!is_prime(suffix)) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn * sqrt(n))\n# Space: O(1)\n\n# prefix sum, number theory\nclass Solution(object):\n    def completePrime(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: bool\n        \"\"\"\n        def is_prime(n):\n            if (n <= 1) or (n != 2 and n%2 == 0):\n                return False\n            for i in xrange(3, n+1, 2):\n                if i*i > n:\n                    break\n                if n%i == 0:\n                    return False\n            return True\n\n        suffix, base = 0, 1\n        while num:\n            if not is_prime(num):\n                return False\n            suffix += (num%10)*base\n            if not is_prime(suffix):\n                return False\n            num //= 10\n            base *= 10\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

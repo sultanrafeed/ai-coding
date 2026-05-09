@@ -1,0 +1,36 @@
+{
+  "id": "ec9b9298-160c-44a5-86b2-12ec9009d007",
+  "slug": "longest-substring-with-at-least-k-repeating-characters",
+  "title": "Longest Substring with At Least K Repeating Characters",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code> and an integer <code>k</code>, return <em>the length of the longest substring of</em> <code>s</code> <em>such that the frequency of each character in this substring is greater than or equal to</em> <code>k</code>.</p>\n\n<p data-pm-slice=\"1 1 []\">if no such substring exists, return 0.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aaabb&quot;, k = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The longest substring is &quot;aaa&quot;, as &#39;a&#39; is repeated 3 times.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;ababbc&quot;, k = 2\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The longest substring is &quot;ababb&quot;, as &#39;a&#39; is repeated 2 times and &#39;b&#39; is repeated 3 times.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>s</code> consists of only lowercase English letters.</li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "divide-and-conquer",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(26 * n) = O(n)\n// Space: O(26) = O(1)\n\n// Recursive solution.\nclass Solution {\npublic:\n    int longestSubstring(string s, int k) {\n        return longestSubstringHelper(s, k, 0, s.size());\n    }\n\nprivate:\n    int longestSubstringHelper(const string& s, int k, int start, int end) {\n        vector<int> count(26);\n        for (int i = start; i < end; ++i) {\n            ++count[s[i] - 'a'];\n        }\n        \n        int max_len = 0;\n        for (int i = start; i < end;) {\n            while (i < end && count[s[i] - 'a'] < k) {\n                ++i;\n            }\n            if (i == end) {\n                break;\n            }\n\n            int j = i;\n            while (j < end && count[s[j] - 'a'] >= k) {\n                ++j;\n            }\n            if (i == start && j == end) {\n                return end - start; \n            }\n\n            max_len = max(max_len, longestSubstringHelper(s, k, i, j));\n            i = j;\n        }\n        return max_len;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(26 * n) = O(n)\n# Space: O(26) = O(1)\n\nclass Solution(object):\n    def longestSubstring(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def longestSubstringHelper(s, k, start, end):\n            count = [0] * 26\n            for i in xrange(start, end):\n                count[ord(s[i]) - ord('a')] += 1\n            max_len = 0\n            i = start\n            while i < end:\n                while i < end and count[ord(s[i]) - ord('a')] < k:\n                    i += 1\n                j = i\n                while j < end and count[ord(s[j]) - ord('a')] >= k:\n                    j += 1\n\n                if i == start and j == end:\n                    return end - start\n\n                max_len = max(max_len, longestSubstringHelper(s, k, i, j))\n                i = j\n            return max_len\n\n        return longestSubstringHelper(s, k, 0, len(s))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

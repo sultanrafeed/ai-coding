@@ -1,0 +1,40 @@
+{
+  "id": "3e8101a8-cc21-40d6-828e-96fe8847e83c",
+  "slug": "parallel-courses",
+  "title": "Parallel Courses",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "graph",
+    "topological-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n[[1,3],[2,3]]\n3\n[[1,2],[2,3],[3,1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(|V| + |E|)\n// Space: O(|E|)\n\nclass Solution {\npublic:\n    int minimumSemesters(int N, vector<vector<int>>& relations) {\n        unordered_map<int, vector<int>> g;\n        vector<int> in_degree(N);\n        for (const auto& r : relations) {\n            g[r[0] - 1].emplace_back(r[1] - 1);          \n            ++in_degree[r[1] - 1];\n        }\n        queue<pair<int, int>> q;\n        for (int i = 0; i < N; ++i) {\n            if (!in_degree[i]) {\n                q.emplace(1, i);\n            }\n        }\n\n        int result = 0;\n        int count = N;\n        while (!q.empty()) {\n            int level, u;\n            tie(level, u) = q.front(); q.pop();\n            --count;\n            result = level;\n            for (const auto& v : g[u]) {\n                --in_degree[v];\n                if (!in_degree[v]) {\n                    q.emplace(level+1, v);\n                }\n            }\n        }\n        return count == 0 ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(|V| + |E|)\n# Space: O(|E|)\n\nimport collections\n\n\nclass Solution(object):\n    def minimumSemesters(self, N, relations):\n        \"\"\"\n        :type N: int\n        :type relations: List[List[int]]\n        :rtype: int\n        \"\"\"\n        g = collections.defaultdict(list)\n        in_degree = [0]*N\n        for x, y in relations:\n            g[x-1].append(y-1)\n            in_degree[y-1] += 1\n        q = collections.deque([(1, i) for i in xrange(N) if not in_degree[i]])\n\n        result = 0\n        count = N\n        while q:\n            level, u = q.popleft()\n            count -= 1\n            result = level\n            for v in g[u]:\n                in_degree[v] -= 1\n                if not in_degree[v]:\n                    q.append((level+1, v))\n        return result if count == 0 else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

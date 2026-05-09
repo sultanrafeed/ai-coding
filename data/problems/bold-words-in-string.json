@@ -1,0 +1,43 @@
+{
+  "id": "cd05d3dc-da4e-4ff1-9a79-6249ec173282",
+  "slug": "bold-words-in-string",
+  "title": "Bold Words in String",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "trie",
+    "string-matching"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"ab\",\"bc\"]\n\"aabcd\"\n[\"ab\",\"cb\"]\n\"aabcd\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l), n is the length of S, l is the average length of words\n// Space: O(t)    , t is the size of trie\n\nclass Solution {\npublic:\n    string boldWords(vector<string>& words, string S) {\n        TrieNode trie;\n        for (const auto& word : words) {\n            trie.Insert(word);\n        }\n\n        vector<bool> lookup(S.length());\n        for (int i = 0; i < S.length(); ++i) {\n            auto curr = &trie;\n            int k = i - 1;\n            for (int j = i; j < S.length(); ++j) {\n                if (!curr->leaves[S[j] - 'a']) {\n                    break;\n                }\n                curr = curr->leaves[S[j] - 'a'];\n                if (curr->isString) {\n                    k = j;\n                }\n            }\n            fill(lookup.begin() + i, lookup.begin() + k + 1, true);\n        }\n\n        string result;\n        for (int i = 0; i < S.length(); ++i) {\n            if (lookup[i] && (i == 0 || !lookup[i - 1])) {\n                result += \"<b>\";\n            }\n            result.push_back(S[i]);\n            if (lookup[i] && (i == (S.length() - 1) || !lookup[i + 1])) {\n                result += \"</b>\";\n            }\n        }\n        return result;\n    }\n\nprivate:\n    struct TrieNode {\n        bool isString;\n        vector<TrieNode *> leaves;\n        \n        TrieNode() : isString{false}, leaves(26) {}\n        \n        void Insert(const string& s) {\n            auto* p = this;\n            for (const auto& c : s) {\n                if (!p->leaves[c - 'a']) {\n                    p->leaves[c - 'a'] = new TrieNode;\n                }\n                p = p->leaves[c - 'a'];\n            }\n            p->isString = true;\n        }\n        \n        ~TrieNode() {\n            for (auto& node : leaves) {\n                if (node) {\n                    delete node;\n                }\n            }\n        }\n    };\n};\n\n\n// Time:  O(n * d * l), l is the average length of words\n// Space: O(n)\nclass Solution2 {\npublic:\n    string boldWords(vector<string>& words, string S) {\n        vector<bool> lookup(S.length());\n        for (const auto& d: words) {\n            auto pos = -1;\n            while ((pos = S.find(d, pos + 1)) != string::npos) {\n                fill(lookup.begin() + pos, lookup.begin() + pos + d.length(), true);\n            }\n        }\n        string result;\n        for (int i = 0; i < S.length(); ++i) {\n            if (lookup[i] && (i == 0 || !lookup[i - 1])) {\n                result += \"<b>\";\n            }\n            result.push_back(S[i]);\n            if (lookup[i] && (i == (S.length() - 1) || !lookup[i + 1])) {\n                result += \"</b>\";\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l), n is the length of S, l is the average length of words\n# Space: O(t)    , t is the size of trie\n\nimport collections\nimport functools\n\n\nclass Solution(object):\n    def boldWords(self, words, S):\n        \"\"\"\n        :type words: List[str]\n        :type S: str\n        :rtype: str\n        \"\"\"\n        _trie = lambda: collections.defaultdict(_trie)\n        trie = _trie()\n        for i, word in enumerate(words):\n            functools.reduce(dict.__getitem__, word, trie).setdefault(\"_end\")\n\n        lookup = [False] * len(S)\n        for i in xrange(len(S)):\n            curr = trie\n            k = -1\n            for j in xrange(i, len(S)):\n                if S[j] not in curr:\n                    break\n                curr = curr[S[j]]\n                if \"_end\" in curr:\n                    k = j\n            for j in xrange(i, k+1):\n                lookup[j] = True\n\n        result = []\n        for i in xrange(len(S)):\n            if lookup[i] and (i == 0 or not lookup[i-1]):\n                result.append(\"<b>\")\n            result.append(S[i])\n            if lookup[i] and (i == len(S)-1 or not lookup[i+1]):\n                result.append(\"</b>\")\n        return \"\".join(result)\n\n\n# Time:  O(n * d * l), l is the average length of words\n# Space: O(n)\nclass Solution2(object):\n    def boldWords(self, words, S):\n        \"\"\"\n        :type words: List[str]\n        :type S: str\n        :rtype: str\n        \"\"\"\n        lookup = [0] * len(S)\n        for d in words:\n            pos = S.find(d)\n            while pos != -1:\n                lookup[pos:pos+len(d)] = [1] * len(d)\n                pos = S.find(d, pos+1)\n\n        result = []\n        for i in xrange(len(S)):\n            if lookup[i] and (i == 0 or not lookup[i-1]):\n                result.append(\"<b>\")\n            result.append(S[i])\n            if lookup[i] and (i == len(S)-1 or not lookup[i+1]):\n                result.append(\"</b>\")\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "3413d73b-1c46-49f5-88f8-eb8d95769179",
+  "slug": "generalized-abbreviation",
+  "title": "Generalized Abbreviation",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "backtracking",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"word\"\n\"a\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<string> generateAbbreviations(string word) {\n        vector<string> res;\n        string cur;\n        generateAbbreviationsHelper(word, 0, &cur, &res);\n        return res;\n    }\n\n    void generateAbbreviationsHelper(const string& word, int i, string *cur, vector<string> *res) {\n        if (i == word.length()) {\n            res->emplace_back(*cur);\n            return;\n        }\n        cur->push_back(word[i]);\n        generateAbbreviationsHelper(word, i + 1, cur, res);\n        cur->pop_back();\n        if (cur->empty() || not isdigit(cur->back())) {\n            for (int l = 1; i + l <= word.length(); ++l) {\n                cur->append(to_string(l));\n                generateAbbreviationsHelper(word, i + l, cur, res);\n                cur->resize(cur->length() - to_string(l).length());\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^n)\n# Space: O(n)\n\nclass Solution(object):\n    def generateAbbreviations(self, word):\n        \"\"\"\n        :type word: str\n        :rtype: List[str]\n        \"\"\"\n        def generateAbbreviationsHelper(word, i, cur, res):\n            if i == len(word):\n                res.append(\"\".join(cur))\n                return\n            cur.append(word[i])\n            generateAbbreviationsHelper(word, i + 1, cur, res)\n            cur.pop()\n            if not cur or not cur[-1][-1].isdigit():\n                for l in xrange(1, len(word) - i + 1):\n                    cur.append(str(l))\n                    generateAbbreviationsHelper(word, i + l, cur, res)\n                    cur.pop()\n\n        res, cur = [], []\n        generateAbbreviationsHelper(word, 0, cur, res)\n        return res",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

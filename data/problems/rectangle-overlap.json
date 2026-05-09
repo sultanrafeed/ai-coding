@@ -1,0 +1,34 @@
+{
+  "id": "8221549b-598e-4350-a945-171892fc9f88",
+  "slug": "rectangle-overlap",
+  "title": "Rectangle Overlap",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>An axis-aligned rectangle is represented as a list <code>[x1, y1, x2, y2]</code>, where <code>(x1, y1)</code> is the coordinate of its bottom-left corner, and <code>(x2, y2)</code> is the coordinate of its top-right corner. Its top and bottom edges are parallel to the X-axis, and its left and right edges are parallel to the Y-axis.</p>\n\n<p>Two rectangles overlap if the area of their intersection is <strong>positive</strong>. To be clear, two rectangles that only touch at the corner or edges do not overlap.</p>\n\n<p>Given two axis-aligned rectangles <code>rec1</code> and <code>rec2</code>, return <code>true</code><em> if they overlap, otherwise return </em><code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> rec1 = [0,0,2,2], rec2 = [1,1,3,3]\n<strong>Output:</strong> true\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> rec1 = [0,0,1,1], rec2 = [1,0,2,1]\n<strong>Output:</strong> false\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> rec1 = [0,0,1,1], rec2 = [2,2,3,3]\n<strong>Output:</strong> false\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>rec1.length == 4</code></li>\n\t<li><code>rec2.length == 4</code></li>\n\t<li><code>-10<sup>9</sup> &lt;= rec1[i], rec2[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>rec1</code> and <code>rec2</code> represent a valid rectangle with a non-zero area.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "geometry"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isRectangleOverlap(vector<int>& rec1, vector<int>& rec2) {\n        return (intersect(rec1[0], rec1[2], rec2[0], rec2[2]) &&\n                intersect(rec1[1], rec1[3], rec2[1], rec2[3]));\n    }\n\nprivate:\n    bool intersect(int p_left, int p_right, int q_left, int q_right) {\n        return max(p_left, q_left) < min(p_right, q_right);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def isRectangleOverlap(self, rec1, rec2):\n        \"\"\"\n        :type rec1: List[int]\n        :type rec2: List[int]\n        :rtype: bool\n        \"\"\"\n        def intersect(p_left, p_right, q_left, q_right):\n            return max(p_left, q_left) < min(p_right, q_right)\n\n        return (intersect(rec1[0], rec1[2], rec2[0], rec2[2]) and\n                intersect(rec1[1], rec1[3], rec2[1], rec2[3]))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "959283c6-2878-458e-bcec-2f0de8c243df",
+  "slug": "split-array-with-equal-sum",
+  "title": "Split Array with Equal Sum",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool splitArray(vector<int>& nums) {\n        if (nums.size() < 7) {\n            return false;\n        }\n        \n        vector<int> sum(nums.size());\n        sum[0] = nums[0];\n        for (int i = 1; i < nums.size(); ++i) {\n            sum[i] = sum[i - 1] + nums[i];\n        }\n        for (int j = 3; j < nums.size() - 3; ++j) {\n            unordered_set<int> lookup;\n            for (int i = 1; i < j - 1; ++i) {\n                if (sum[i - 1] == sum[j - 1] - sum[i]) {\n                    lookup.emplace(sum[i - 1]);\n                }\n            }\n            for (int k = j + 2; k < nums.size() - 1; ++k) {\n                if (sum[nums.size() - 1] - sum[k] == sum[k - 1] - sum[j] &&\n                    lookup.count(sum[k - 1] - sum[j])) {\n                    return true;\n                }\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def splitArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: bool\n        \"\"\"\n        if len(nums) < 7:\n            return False\n\n        accumulated_sum = [0] * len(nums)\n        accumulated_sum[0] = nums[0]\n        for i in xrange(1, len(nums)):\n            accumulated_sum[i] = accumulated_sum[i-1] + nums[i]\n        for j in xrange(3, len(nums)-3):\n            lookup = set()\n            for i in xrange(1, j-1):\n                if accumulated_sum[i-1] == accumulated_sum[j-1] - accumulated_sum[i]:\n                    lookup.add(accumulated_sum[i-1])\n            for k in xrange(j+2, len(nums)-1):\n                if accumulated_sum[-1] - accumulated_sum[k] == accumulated_sum[k-1] - accumulated_sum[j] and \\\n                   accumulated_sum[k - 1] - accumulated_sum[j] in lookup:\n                    return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

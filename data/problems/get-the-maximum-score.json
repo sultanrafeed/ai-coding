@@ -1,0 +1,36 @@
+{
+  "id": "6f1bf047-1b8c-409d-8259-0bda09c82be2",
+  "slug": "get-the-maximum-score",
+  "title": "Get the Maximum Score",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two <strong>sorted</strong> arrays of distinct integers <code>nums1</code> and <code>nums2</code>.</p>\n\n<p>A <strong>valid<strong><em> </em></strong>path</strong> is defined as follows:</p>\n\n<ul>\n\t<li>Choose array <code>nums1</code> or <code>nums2</code> to traverse (from index-0).</li>\n\t<li>Traverse the current array from left to right.</li>\n\t<li>If you are reading any value that is present in <code>nums1</code> and <code>nums2</code> you are allowed to change your path to the other array. (Only one repeated value is considered in the valid path).</li>\n</ul>\n\n<p>The <strong>score</strong> is defined as the sum of unique values in a valid path.</p>\n\n<p>Return <em>the maximum score you can obtain of all possible <strong>valid paths</strong></em>. Since the answer may be too large, return it modulo <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/07/16/sample_1_1893.png\" style=\"width: 500px; height: 151px;\" />\n<pre>\n<strong>Input:</strong> nums1 = [2,4,5,8,10], nums2 = [4,6,8,9]\n<strong>Output:</strong> 30\n<strong>Explanation:</strong> Valid paths:\n[2,4,5,8,10], [2,4,5,8,9], [2,4,6,8,9], [2,4,6,8,10],  (starting from nums1)\n[4,6,8,9], [4,5,8,10], [4,5,8,9], [4,6,8,10]    (starting from nums2)\nThe maximum is obtained with the path in green <strong>[2,4,6,8,10]</strong>.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,3,5,7,9], nums2 = [3,5,100]\n<strong>Output:</strong> 109\n<strong>Explanation:</strong> Maximum sum is obtained with the path <strong>[1,3,5,100]</strong>.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,2,3,4,5], nums2 = [6,7,8,9,10]\n<strong>Output:</strong> 40\n<strong>Explanation:</strong> There are no common elements between nums1 and nums2.\nMaximum sum is obtained with the path [6,7,8,9,10].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums1.length, nums2.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums1[i], nums2[i] &lt;= 10<sup>7</sup></code></li>\n\t<li><code>nums1</code> and <code>nums2</code> are strictly increasing.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "dynamic-programming",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m + n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxSum(vector<int>& nums1, vector<int>& nums2) {\n        static const int MOD = 1e9 + 7;\n        uint64_t result = 0, sum1 = 0, sum2 = 0;\n        for (int i = 0, j = 0; i != nums1.size() || j != nums2.size();) {\n            if (i != nums1.size() && (j == nums2.size() || nums1[i] < nums2[j])) {\n                sum1 += nums1[i];\n                ++i;\n            } else if (j != nums2.size() && (i == nums1.size() || nums1[i] > nums2[j])) {\n                sum2 += nums2[j];\n                ++j;\n            } else {\n                result = (result + (max(sum1, sum2) + nums1[i])) % MOD;\n                sum1 = sum2 = 0;\n                ++i, ++j;\n            }\n        }\n        return (result + max(sum1, sum2)) % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m + n)\n# Space: O(1)\n\nclass Solution(object):\n    def maxSum(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        i, j = 0, 0\n        result, sum1, sum2 = 0, 0, 0,\n        while i != len(nums1) or j != len(nums2):\n            if i != len(nums1) and (j == len(nums2) or nums1[i] < nums2[j]):\n                sum1 += nums1[i]\n                i += 1\n            elif j != len(nums2) and (i == len(nums1) or nums1[i] > nums2[j]):\n                sum2 += nums2[j]\n                j += 1\n            else:\n                result = (result + (max(sum1, sum2) + nums1[i])) % MOD\n                sum1, sum2 = 0, 0\n                i += 1\n                j += 1\n        return (result + max(sum1, sum2)) % MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

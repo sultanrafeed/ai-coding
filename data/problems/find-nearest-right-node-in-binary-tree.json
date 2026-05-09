@@ -1,0 +1,41 @@
+{
+  "id": "9d5818fc-6d2c-442e-a2f2-fd7960187f45",
+  "slug": "find-nearest-right-node-in-binary-tree",
+  "title": "Find Nearest Right Node in Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,null,4,5,6]\n4\n[3,null,4,2]\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(w)\n\nclass Solution {\npublic:\n    TreeNode* findNeartestRightNode(TreeNode* root, TreeNode* u) {\n        vector<TreeNode *> q = {root};\n        while (!empty(q)) {\n            vector<TreeNode *> new_q;\n            for (int i = 0; i < size(q); ++i) {\n                if (q[i] == u) {\n                    return i + 1 < size(q) ? q[i + 1] : nullptr;\n                }\n                if (q[i]->left) {\n                    new_q.emplace_back(q[i]->left);\n                }\n                if (q[i]->right) {\n                    new_q.emplace_back(q[i]->right);\n                }\n            }\n            q = move(new_q);\n        }\n        return nullptr;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(w)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        pass\n\n\nclass Solution(object):\n    def findNeartestRightNode(self, root, u):\n        \"\"\"\n        :type root: TreeNode\n        :type u: TreeNode\n        :rtype: TreeNode\n        \"\"\"\n        q = [root]\n        while q:\n            new_q = []\n            for i, node in enumerate(q):\n                if node == u:\n                    return q[i+1] if i+1 < len(q) else None\n                if node.left:\n                    new_q.append(node.left)\n                if node.right:\n                    new_q.append(node.right)\n            q = new_q\n        return None",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

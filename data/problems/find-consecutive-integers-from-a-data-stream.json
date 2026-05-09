@@ -1,0 +1,37 @@
+{
+  "id": "0658a4e5-7718-43f4-896c-52fa88be59a7",
+  "slug": "find-consecutive-integers-from-a-data-stream",
+  "title": "Find Consecutive Integers from a Data Stream",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>For a stream of integers, implement a data structure that checks if the last <code>k</code> integers parsed in the stream are <strong>equal</strong> to <code>value</code>.</p>\n\n<p>Implement the <strong>DataStream</strong> class:</p>\n\n<ul>\n\t<li><code>DataStream(int value, int k)</code> Initializes the object with an empty integer stream and the two integers <code>value</code> and <code>k</code>.</li>\n\t<li><code>boolean consec(int num)</code> Adds <code>num</code> to the stream of integers. Returns <code>true</code> if the last <code>k</code> integers are equal to <code>value</code>, and <code>false</code> otherwise. If there are less than <code>k</code> integers, the condition does not hold true, so returns <code>false</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;DataStream&quot;, &quot;consec&quot;, &quot;consec&quot;, &quot;consec&quot;, &quot;consec&quot;]\n[[4, 3], [4], [4], [4], [3]]\n<strong>Output</strong>\n[null, false, false, true, false]\n\n<strong>Explanation</strong>\nDataStream dataStream = new DataStream(4, 3); //value = 4, k = 3 \ndataStream.consec(4); // Only 1 integer is parsed, so returns False. \ndataStream.consec(4); // Only 2 integers are parsed.\n                      // Since 2 is less than k, returns False. \ndataStream.consec(4); // The 3 integers parsed are all equal to value, so returns True. \ndataStream.consec(3); // The last k integers parsed in the stream are [4,4,3].\n                      // Since 3 is not equal to value, it returns False.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= value, num &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>5</sup></code></li>\n\t<li>At most <code>10<sup>5</sup></code> calls will be made to <code>consec</code>.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "design",
+    "queue",
+    "counting",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// array\nclass DataStream {\npublic:\n    DataStream(int value, int k) : value_(value), k_(k) {\n        \n    }\n    \n    bool consec(int num) {\n        if (num == value_) {\n            ++cnt_;\n        } else {\n            cnt_ = 0;\n        }\n        return cnt_ >= k_;\n    }\n\nprivate:\n    int value_;\n    int k_;\n    int cnt_ = 0;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# array\nclass DataStream(object):\n\n    def __init__(self, value, k):\n        \"\"\"\n        :type value: int\n        :type k: int\n        \"\"\"\n        self.__value = value\n        self.__k = k\n        self.__cnt = 0\n\n    def consec(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: bool\n        \"\"\"\n        if num == self.__value:\n            self.__cnt += 1\n        else:\n            self.__cnt = 0\n        return self.__cnt >= self.__k",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

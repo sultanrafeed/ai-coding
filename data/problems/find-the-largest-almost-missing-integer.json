@@ -1,0 +1,34 @@
+{
+  "id": "6963e2c6-8eb9-48de-88b7-29fac043fd5b",
+  "slug": "find-the-largest-almost-missing-integer",
+  "title": "Find the Largest Almost Missing Integer",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> and an integer <code>k</code>.</p>\n\n<p>An integer <code>x</code> is <strong>almost missing</strong> from <code>nums</code> if <code>x</code> appears in <em>exactly</em> one subarray of size <code>k</code> within <code>nums</code>.</p>\n\n<p>Return the <b>largest</b> <strong>almost missing</strong> integer from <code>nums</code>. If no such integer exists, return <code>-1</code>.</p>\nA <strong>subarray</strong> is a contiguous sequence of elements within an array.\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,9,2,1,7], k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">7</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>1 appears in 2 subarrays of size 3: <code>[9, 2, 1]</code> and <code>[2, 1, 7]</code>.</li>\n\t<li>2 appears in 3 subarrays of size 3: <code>[3, 9, 2]</code>, <code>[9, 2, 1]</code>, <code>[2, 1, 7]</code>.</li>\n\t<li index=\"2\">3 appears in 1 subarray of size 3: <code>[3, 9, 2]</code>.</li>\n\t<li index=\"3\">7 appears in 1 subarray of size 3: <code>[2, 1, 7]</code>.</li>\n\t<li index=\"4\">9 appears in 2 subarrays of size 3: <code>[3, 9, 2]</code>, and <code>[9, 2, 1]</code>.</li>\n</ul>\n\n<p>We return 7 since it is the largest integer that appears in exactly one subarray of size <code>k</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,9,7,2,1,7], k = 4</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>1 appears in 2 subarrays of size 4: <code>[9, 7, 2, 1]</code>, <code>[7, 2, 1, 7]</code>.</li>\n\t<li>2 appears in 3 subarrays of size 4: <code>[3, 9, 7, 2]</code>, <code>[9, 7, 2, 1]</code>, <code>[7, 2, 1, 7]</code>.</li>\n\t<li>3 appears in 1 subarray of size 4: <code>[3, 9, 7, 2]</code>.</li>\n\t<li>7 appears in 3 subarrays of size 4: <code>[3, 9, 7, 2]</code>, <code>[9, 7, 2, 1]</code>, <code>[7, 2, 1, 7]</code>.</li>\n\t<li>9 appears in 2 subarrays of size 4: <code>[3, 9, 7, 2]</code>, <code>[9, 7, 2, 1]</code>.</li>\n</ul>\n\n<p>We return 3 since it is the largest and only integer that appears in exactly one subarray of size <code>k</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [0,0], k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There is no integer that appears in only one subarray of size 1.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 50</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 50</code></li>\n\t<li><code>1 &lt;= k &lt;= nums.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table\nclass Solution {\npublic:\n    int largestInteger(vector<int>& nums, int k) {\n        if (k == size(nums)) {\n            return ranges::max(nums);\n        }\n        unordered_map<int, int> cnt;\n        for (const auto& x : nums) {\n            ++cnt[x];\n        }\n        int result = -1;\n        if (k == 1) {\n            for (const auto& [x, v] : cnt) {\n                if (v == 1) {\n                    result = max(result, x);\n                }\n            }\n            return result;\n        }\n        if (cnt[nums[0]] == 1) {\n            result = max(result, nums[0]);\n        }\n        if (cnt[nums.back()] == 1) {\n            result = max(result, nums.back());\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def largestInteger(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        if k == len(nums):\n            return max(nums)\n        cnt = collections.defaultdict(int)\n        for x in nums:\n            cnt[x] += 1\n        if k == 1:\n            return max(x for x, v in cnt.iteritems() if v == 1) if any(v == 1 for v in cnt.itervalues()) else -1\n        result = -1\n        if cnt[nums[0]] == 1:\n            result = max(result, nums[0])\n        if cnt[nums[-1]] == 1:\n            result = max(result, nums[-1])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

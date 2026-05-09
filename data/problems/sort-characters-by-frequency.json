@@ -1,0 +1,44 @@
+{
+  "id": "d1fde40f-3bb0-44f6-920b-8fdfcb71e544",
+  "slug": "sort-characters-by-frequency",
+  "title": "Sort Characters By Frequency",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code>, sort it in <strong>decreasing order</strong> based on the <strong>frequency</strong> of the characters. The <strong>frequency</strong> of a character is the number of times it appears in the string.</p>\n\n<p>Return <em>the sorted string</em>. If there are multiple answers, return <em>any of them</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;tree&quot;\n<strong>Output:</strong> &quot;eert&quot;\n<strong>Explanation:</strong> &#39;e&#39; appears twice while &#39;r&#39; and &#39;t&#39; both appear once.\nSo &#39;e&#39; must appear before both &#39;r&#39; and &#39;t&#39;. Therefore &quot;eetr&quot; is also a valid answer.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;cccaaa&quot;\n<strong>Output:</strong> &quot;aaaccc&quot;\n<strong>Explanation:</strong> Both &#39;c&#39; and &#39;a&#39; appear three times, so both &quot;cccaaa&quot; and &quot;aaaccc&quot; are valid answers.\nNote that &quot;cacaca&quot; is incorrect, as the same characters must be together.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;Aabb&quot;\n<strong>Output:</strong> &quot;bbAa&quot;\n<strong>Explanation:</strong> &quot;bbaA&quot; is also a valid answer, but &quot;Aabb&quot; is incorrect.\nNote that &#39;A&#39; and &#39;a&#39; are treated as two different characters.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 5 * 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists of uppercase and lowercase English letters and digits.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sorting",
+    "heap-priority-queue",
+    "bucket-sort",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"tree\"\n\"cccaaa\"\n\"Aabb\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    string frequencySort(string s) {\n        unordered_map<char, int> freq;\n        for (const auto& c : s) {\n            ++freq[c];\n        }\n            \n        vector<string> counts(s.size() + 1);\n        for (const auto& kvp : freq) {\n            counts[kvp.second].push_back(kvp.first);\n        }\n            \n        string result;\n        for (int count = counts.size() - 1; count >= 0; --count) {\n            for (const auto& c : counts[count]) {\n                result += string(count, c);\n            }\n        }\n        \n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def frequencySort(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        freq = collections.defaultdict(int)\n        for c in s:\n            freq[c] += 1\n\n        counts = [\"\"] * (len(s)+1)\n        for c in freq:\n            counts[freq[c]] += c\n\n        result = \"\"\n        for count in reversed(xrange(len(counts)-1)):\n            for c in counts[count]:\n                result += c * count\n\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

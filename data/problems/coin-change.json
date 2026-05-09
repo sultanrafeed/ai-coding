@@ -1,0 +1,35 @@
+{
+  "id": "a30f8a7d-f151-445c-911b-72e2031e3525",
+  "slug": "coin-change",
+  "title": "Coin Change",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>coins</code> representing coins of different denominations and an integer <code>amount</code> representing a total amount of money.</p>\n\n<p>Return <em>the fewest number of coins that you need to make up that amount</em>. If that amount of money cannot be made up by any combination of the coins, return <code>-1</code>.</p>\n\n<p>You may assume that you have an infinite number of each kind of coin.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> coins = [1,2,5], amount = 11\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> 11 = 5 + 5 + 1\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> coins = [2], amount = 3\n<strong>Output:</strong> -1\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> coins = [1], amount = 0\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= coins.length &lt;= 12</code></li>\n\t<li><code>1 &lt;= coins[i] &lt;= 2<sup>31</sup> - 1</code></li>\n\t<li><code>0 &lt;= amount &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k), n is the number of coins, k is the amount of money\n// Space: O(k)\n\n// DP solution. (164ms)\nclass Solution {\npublic:\n    int coinChange(vector<int>& coins, int amount) {\n        vector<int> dp(amount + 1, numeric_limits<int>::max());\n        dp[0] = 0;\n        for (int i = 0; i <= amount; ++i) {\n            if (dp[i] != numeric_limits<int>::max()) {\n                for (const auto& coin : coins) {\n                    if (coin <= numeric_limits<int>::max() - i && i + coin <= amount) {\n                        dp[i + coin] = min(dp[i + coin], dp[i] + 1);\n                    }\n                }\n            }\n        }\n        return dp[amount] == numeric_limits<int>::max() ? -1 : dp[amount];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k), n is the number of coins, k is the amount of money\n# Space: O(k)\n\nclass Solution(object):\n    def coinChange(self, coins, amount):\n        \"\"\"\n        :type coins: List[int]\n        :type amount: int\n        :rtype: int\n        \"\"\"\n        INF = 0x7fffffff  # Using float(\"inf\") would be slower.\n        dp = [INF] * (amount + 1)\n        dp[0] = 0\n        for i in xrange(amount + 1):\n            if dp[i] != INF:\n                for coin in coins:\n                    if i + coin <= amount:\n                        dp[i + coin] = min(dp[i + coin], dp[i] + 1)\n        return dp[amount] if dp[amount] != INF else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

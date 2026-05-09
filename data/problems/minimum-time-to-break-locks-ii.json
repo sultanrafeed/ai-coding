@@ -1,0 +1,35 @@
+{
+  "id": "cf2bf901-45be-44bb-8e92-823093ff1ccd",
+  "slug": "minimum-time-to-break-locks-ii",
+  "title": "Minimum Time to Break Locks II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^3)\n// Space: O(n^2)\n\n// hungarian algorithm, weighted bipartite matching\nclass Solution {\npublic:\n    int findMinimumTime(vector<int>& strength) {\n        static const int K = 1;\n        const auto& ceil_divide = [](int a, int b) {\n            return (a + b - 1) / b;\n        };\n    \n        vector<vector<int>> adj(size(strength), vector<int>(size(strength)));\n        for (int i = 0; i < size(strength); ++i) {\n            for (int j = 0; j < size(strength); ++j) {\n                adj[i][j] = ceil_divide(strength[i], 1 + j * K);\n            }\n        }\n        return hungarian(adj).first;\n    }\n\nprivate:\n    // Template modified from:\n    // https://github.com/kth-competitive-programming/kactl/blob/main/content/graph/WeightedMatching.h\n    pair<int, vector<int>> hungarian(const vector<vector<int>> &a) {  // Time: O(n^2 * m), Space: O(n + m)\n        if (a.empty()) return {0, {}};\n        int n = size(a) + 1, m = size(a[0]) + 1;\n        vector<int> u(n), v(m), p(m), ans(n - 1);\n        for (int i = 1; i < n; ++i) {\n            p[0] = i;\n            int j0 = 0; // add \"dummy\" worker 0\n            vector<int> dist(m, numeric_limits<int>::max()), pre(m, -1);\n            vector<bool> done(m + 1);\n            do { // dijkstra\n                done[j0] = true;\n                int i0 = p[j0], j1, delta = numeric_limits<int>::max();\n                for (int j = 1; j < m; ++j) {\n                    if (!done[j]) {\n                        auto cur = a[i0 - 1][j - 1] - u[i0] - v[j];\n                        if (cur < dist[j]) dist[j] = cur, pre[j] = j0;\n                        if (dist[j] < delta) delta = dist[j], j1 = j;\n                    }\n                }\n                for (int j = 0; j < m; ++j) {\n                    if (done[j]) u[p[j]] += delta, v[j] -= delta;\n                    else dist[j] -= delta;\n                }\n                j0 = j1;\n            } while (p[j0]);\n            while (j0) { // update alternating path\n                int j1 = pre[j0];\n                p[j0] = p[j1], j0 = j1;\n            }\n        }\n        for (int j = 1; j < m; ++j) if (p[j]) ans[p[j] - 1] = j - 1;\n        return {-v[0], ans}; // min cost\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^3)\n# Space: O(n^2)\n\n# hungarian algorithm, weighted bipartite matching\nclass Solution(object):\n    def findMinimumTime(self, strength):\n        \"\"\"\n        :type strength: List[int]\n        :rtype: int\n        \"\"\"\n        # Template translated from:\n        # https://github.com/kth-competitive-programming/kactl/blob/main/content/graph/WeightedMatching.h\n        def hungarian(a):  # Time: O(n^2 * m), Space: O(n + m)\n            if not a:\n                return 0, []\n            n, m = len(a)+1, len(a[0])+1\n            u, v, p, ans = [0]*n, [0]*m, [0]*m, [0]*(n-1)\n            for i in xrange(1, n):\n                p[0] = i\n                j0 = 0  # add \"dummy\" worker 0\n                dist, pre = [float(\"inf\")]*m, [-1]*m\n                done = [False]*(m+1)\n                while True:  # dijkstra\n                    done[j0] = True\n                    i0, j1, delta = p[j0], None, float(\"inf\")\n                    for j in xrange(1, m):\n                        if done[j]:\n                            continue\n                        cur = a[i0-1][j-1]-u[i0]-v[j]\n                        if cur < dist[j]:\n                            dist[j], pre[j] = cur, j0\n                        if dist[j] < delta:\n                            delta, j1 = dist[j], j\n                    for j in xrange(m):\n                        if done[j]:\n                            u[p[j]] += delta\n                            v[j] -= delta\n                        else:\n                            dist[j] -= delta\n                    j0 = j1\n                    if not p[j0]:\n                        break\n                while j0:  # update alternating path\n                    j1 = pre[j0]\n                    p[j0], j0 = p[j1], j1\n            for j in xrange(1, m):\n                if p[j]:\n                    ans[p[j]-1] = j-1\n            return -v[0], ans  # min cost\n\n        K = 1\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n    \n        adj = [[ceil_divide(strength[i], 1+j*K) for j in xrange(len(strength))] for i in xrange(len(strength))]\n        return hungarian(adj)[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

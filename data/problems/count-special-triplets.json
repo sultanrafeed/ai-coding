@@ -1,0 +1,35 @@
+{
+  "id": "70da9af0-21b6-43df-9d96-922fe094dc18",
+  "slug": "count-special-triplets",
+  "title": "Count Special Triplets",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>A <strong>special triplet</strong> is defined as a triplet of indices <code>(i, j, k)</code> such that:</p>\n\n<ul>\n\t<li><code>0 &lt;= i &lt; j &lt; k &lt; n</code>, where <code>n = nums.length</code></li>\n\t<li><code>nums[i] == nums[j] * 2</code></li>\n\t<li><code>nums[k] == nums[j] * 2</code></li>\n</ul>\n\n<p>Return the total number of <strong>special triplets</strong> in the array.</p>\n\n<p>Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [6,3,6]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The only special triplet is <code>(i, j, k) = (0, 1, 2)</code>, where:</p>\n\n<ul>\n\t<li><code>nums[0] = 6</code>, <code>nums[1] = 3</code>, <code>nums[2] = 6</code></li>\n\t<li><code>nums[0] = nums[1] * 2 = 3 * 2 = 6</code></li>\n\t<li><code>nums[2] = nums[1] * 2 = 3 * 2 = 6</code></li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [0,1,0,0]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The only special triplet is <code>(i, j, k) = (0, 2, 3)</code>, where:</p>\n\n<ul>\n\t<li><code>nums[0] = 0</code>, <code>nums[2] = 0</code>, <code>nums[3] = 0</code></li>\n\t<li><code>nums[0] = nums[2] * 2 = 0 * 2 = 0</code></li>\n\t<li><code>nums[3] = nums[2] * 2 = 0 * 2 = 0</code></li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [8,4,2,8,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There are exactly two special triplets:</p>\n\n<ul>\n\t<li><code>(i, j, k) = (0, 1, 3)</code>\n\n\t<ul>\n\t\t<li><code>nums[0] = 8</code>, <code>nums[1] = 4</code>, <code>nums[3] = 8</code></li>\n\t\t<li><code>nums[0] = nums[1] * 2 = 4 * 2 = 8</code></li>\n\t\t<li><code>nums[3] = nums[1] * 2 = 4 * 2 = 8</code></li>\n\t</ul>\n\t</li>\n\t<li><code>(i, j, k) = (1, 2, 4)</code>\n\t<ul>\n\t\t<li><code>nums[1] = 4</code>, <code>nums[2] = 2</code>, <code>nums[4] = 4</code></li>\n\t\t<li><code>nums[1] = nums[2] * 2 = 2 * 2 = 4</code></li>\n\t\t<li><code>nums[4] = nums[2] * 2 = 2 * 2 = 4</code></li>\n\t</ul>\n\t</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= n == nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// dp\nclass Solution {\npublic:\n    int specialTriplets(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        int result = 0;\n        vector<unordered_map<int, int>> dp(2);\n        for (const auto& x : nums) {\n            if (x % 2 == 0 && dp[1].count(x / 2)) {\n                result = (result + dp[1][x / 2]) % MOD;\n            }\n            if (dp[0].count(2 * x)) {\n                dp[1][x] = (dp[1][x] + dp[0][2 * x]) % MOD;\n            }\n            dp[0][x] = (dp[0][x] + 1) % MOD;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// freq table\nclass Solution2 {\npublic:\n    int specialTriplets(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        unordered_map<int, int> right;\n        for (const auto& x : nums) {\n            ++right[x];\n        }\n        int result = 0;\n        unordered_map<int, int> left;\n        for (const auto& x : nums) {\n            --right[x];\n            if (!right[x]) {\n                right.erase(x);\n            }\n            if (left.count(2 * x) && right.count(2 * x)) {\n                result = (result + static_cast<int64_t>(left[2 * x]) * right[2 * x]) % MOD;\n            }\n            ++left[x];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# dp\nclass Solution(object):\n    def specialTriplets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result = 0\n        dp = [collections.defaultdict(int) for _ in xrange(2)]\n        for x in nums:\n            if x%2 == 0 and x//2 in dp[1]:\n                result = (result+dp[1][x//2])%MOD\n            if 2*x in dp[0]:\n                dp[1][x] = (dp[1][x]+dp[0][2*x])%MOD\n            dp[0][x] = (dp[0][x]+1)%MOD\n        return result\n\n\n# Time:  O(n)\n# Space: O(n)\nimport collections\n\n\n# freq table\nclass Solution2(object):\n    def specialTriplets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result = 0\n        right = collections.defaultdict(int)\n        for x in nums:\n            right[x] += 1\n        left = collections.defaultdict(int)\n        for x in nums:\n            right[x] -= 1\n            if not right[x]:\n                del right[x]\n            if 2*x in left and 2*x in right:\n                result = (result+left[2*x]*right[2*x])%MOD\n            left[x] += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "50fedf2d-28b9-432a-bbdc-ea1cdbfd2766",
+  "slug": "minimum-health-to-beat-game",
+  "title": "Minimum Health to Beat Game",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    long long minimumHealth(vector<int>& damage, int armor) {\n        return accumulate(cbegin(damage), cend(damage), 0ll) -\n               min(*max_element(cbegin(damage), cend(damage)), armor) +\n               1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def minimumHealth(self, damage, armor):\n        \"\"\"\n        :type damage: List[int]\n        :type armor: int\n        :rtype: int\n        \"\"\"\n        return sum(damage)-min(max(damage), armor)+1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

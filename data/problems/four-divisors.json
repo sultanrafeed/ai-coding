@@ -1,0 +1,34 @@
+{
+  "id": "d3eb1aed-1a5b-429e-a179-cab4878f7cb4",
+  "slug": "four-divisors",
+  "title": "Four Divisors",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, return <em>the sum of divisors of the integers in that array that have exactly four divisors</em>. If there is no such integer in the array, return <code>0</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [21,4,7]\n<strong>Output:</strong> 32\n<strong>Explanation:</strong> \n21 has 4 divisors: 1, 3, 7, 21\n4 has 3 divisors: 1, 2, 4\n7 has 2 divisors: 1, 7\nThe answer is the sum of divisors of 21 only.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [21,21]\n<strong>Output:</strong> 64\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4,5]\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * sqrt(n))\n// Space: O(1)\n\nclass Solution {\npublic:\n    int sumFourDivisors(vector<int>& nums) {\n        int result = 0;\n        for (const auto& num : nums) {\n            vector<int> facs;\n            for (int i = 1; i * i <= num; ++i) {\n                if (num % i) {\n                    continue;\n                }\n                facs.emplace_back(i);\n                if (i != num / i) {\n                    facs.emplace_back(num / i);\n                    if (facs.size() > 4) {\n                        break;\n                    }\n                }\n            }\n            if (facs.size() == 4) {\n                result += accumulate(cbegin(facs), cend(facs), 0);\n            } \n        }\n        return result;\n    }\n};\n\n// Time:  O(n * sqrt(n))\n// Space: O(sqrt(n))\nclass Solution2 {\npublic:\n    int sumFourDivisors(vector<int>& nums) {\n        int result = 0;\n        for (const auto& num : nums) {\n            const auto& facs = factorize(num);\n            if (facs.size() == 1 && facs[0].second == 3) {\n                const auto& p = facs[0].first;\n                result += int(pow(p, 4) - 1) / (p - 1);  // p^0 + p^1 +p^2 +p^3\n            } else if (facs.size() == 2 &&\n                       facs[0].second == 1 &&\n                       facs[1].second == 1) {\n                const auto& [p, q] = pair(facs[0].first, facs[1].first);\n                result += (1 + p) * (1 + q);\n            }\n        }\n        return result;\n    }\n\nprivate:\n    vector<pair<int, int>> factorize(int x) {\n        vector<pair<int, int>> result;\n        for (int d = 2; d * d <= x; d += (d == 2) ? 1: 2) {\n            int e = 0;\n            for (; x % d == 0; ++e) {\n                x /= d;\n            }\n            if (e) {\n                result.emplace_back(d, e);\n            }\n        }\n        if (x > 1) {\n            result.emplace_back(x, 1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * sqrt(n))\n# Space: O(1)\n\nclass Solution(object):\n    def sumFourDivisors(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = 0\n        for num in nums:\n            facs, i = [], 1\n            while i*i <= num:\n                if num % i:\n                    i+= 1\n                    continue\n                facs.append(i)\n                if i != num//i:\n                    facs.append(num//i)\n                    if len(facs) > 4:\n                        break\n                i += 1\n            if len(facs) == 4:            \n                result += sum(facs)\n        return result \n\n\n# Time:  O(n * sqrt(n))\n# Space: O(sqrt(n))\nimport itertools\n\n\nclass Solution2(object):\n    def sumFourDivisors(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def factorize(x):\n            result = []\n            d = 2\n            while d*d <= x:\n                e = 0\n                while x%d == 0:\n                    x //= d\n                    e += 1\n                if e:\n                    result.append([d, e])\n                d += 1 if d == 2 else 2\n            if x > 1:\n                result.append([x, 1])\n            return result\n       \n        result = 0\n        for facs in itertools.imap(factorize, nums):\n            if len(facs) == 1 and facs[0][1] == 3:\n                p = facs[0][0]\n                result += (p**4-1)//(p-1)  # p^0 + p^1 +p^2 +p^3\n            elif len(facs) == 2 and facs[0][1] == facs[1][1] == 1:\n                p, q = facs[0][0], facs[1][0]\n                result += (1 + p) * (1 + q)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

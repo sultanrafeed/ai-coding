@@ -1,0 +1,42 @@
+{
+  "id": "406198f0-51fd-448d-af47-50a880779554",
+  "slug": "remove-sub-folders-from-the-filesystem",
+  "title": "Remove Sub-Folders from the Filesystem",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a list of folders <code>folder</code>, return <em>the folders after removing all <strong>sub-folders</strong> in those folders</em>. You may return the answer in <strong>any order</strong>.</p>\n\n<p>If a <code>folder[i]</code> is located within another <code>folder[j]</code>, it is called a <strong>sub-folder</strong> of it. A sub-folder of <code>folder[j]</code> must start with <code>folder[j]</code>, followed by a <code>&quot;/&quot;</code>. For example, <code>&quot;/a/b&quot;</code> is a sub-folder of <code>&quot;/a&quot;</code>, but <code>&quot;/b&quot;</code> is not a sub-folder of <code>&quot;/a/b/c&quot;</code>.</p>\n\n<p>The format of a path is one or more concatenated strings of the form: <code>&#39;/&#39;</code> followed by one or more lowercase English letters.</p>\n\n<ul>\n\t<li>For example, <code>&quot;/leetcode&quot;</code> and <code>&quot;/leetcode/problems&quot;</code> are valid paths while an empty string and <code>&quot;/&quot;</code> are not.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> folder = [&quot;/a&quot;,&quot;/a/b&quot;,&quot;/c/d&quot;,&quot;/c/d/e&quot;,&quot;/c/f&quot;]\n<strong>Output:</strong> [&quot;/a&quot;,&quot;/c/d&quot;,&quot;/c/f&quot;]\n<strong>Explanation:</strong> Folders &quot;/a/b&quot; is a subfolder of &quot;/a&quot; and &quot;/c/d/e&quot; is inside of folder &quot;/c/d&quot; in our filesystem.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> folder = [&quot;/a&quot;,&quot;/a/b/c&quot;,&quot;/a/b/d&quot;]\n<strong>Output:</strong> [&quot;/a&quot;]\n<strong>Explanation:</strong> Folders &quot;/a/b/c&quot; and &quot;/a/b/d&quot; will be removed because they are subfolders of &quot;/a&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> folder = [&quot;/a/b/c&quot;,&quot;/a/b/ca&quot;,&quot;/a/b/d&quot;]\n<strong>Output:</strong> [&quot;/a/b/c&quot;,&quot;/a/b/ca&quot;,&quot;/a/b/d&quot;]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= folder.length &lt;= 4 * 10<sup>4</sup></code></li>\n\t<li><code>2 &lt;= folder[i].length &lt;= 100</code></li>\n\t<li><code>folder[i]</code> contains only lowercase letters and <code>&#39;/&#39;</code>.</li>\n\t<li><code>folder[i]</code> always starts with the character <code>&#39;/&#39;</code>.</li>\n\t<li>Each folder name is <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string",
+    "depth-first-search",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"/a\",\"/a/b\",\"/c/d\",\"/c/d/e\",\"/c/f\"]\n[\"/a\",\"/a/b/c\",\"/a/b/d\"]\n[\"/a/b/c\",\"/a/b/ca\",\"/a/b/d\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n), n is the total sum of the lengths of folder names\n// Space: O(t), t is the number of nodes in trie\n\nclass Solution {\npublic:\n    vector<string> removeSubfolders(vector<string>& folder) {\n        TrieNode trie;\n        for (const auto& s : folder) {\n            trie.Insert(split(s, '/'));\n        }\n        vector<string> result;\n        vector<string> path;\n        dfs(&trie, &path, &result);\n        return result;\n    }\n\nprivate:\n    struct TrieNode {\n        bool is_end = false;\n        unordered_map<string, TrieNode *> leaves;\n\n        void Insert(const vector<string>& s) {\n            auto* p = this;\n            for (const auto& c : s) {\n                if (c.empty()) {\n                    continue;\n                }\n                if (!p->leaves.count(c)) {\n                    p->leaves[c] = new TrieNode;\n                }\n                p = p->leaves[c];\n            }\n            p->is_end = true;\n        }\n\n        ~TrieNode() {\n            for (auto& kv : leaves) {\n                if (kv.second) {\n                    delete kv.second;\n                }\n            }\n        }\n    };\n    \n    void dfs(TrieNode *curr, vector<string> *path, vector<string> *result) {\n        if (curr->is_end) {\n            result->emplace_back(join(*path, '/'));\n            return;\n        }\n        for (const auto& kvp : curr->leaves) {\n            path->emplace_back(kvp.first);\n            dfs(kvp.second, path, result);\n            path->pop_back();\n        }\n    }\n\n    vector<string> split(const string& s, const char delim) {\n        vector<string> result;\n        auto end = string::npos;\n        do {\n            const auto& start = end + 1;\n            end = s.find(delim, start);\n            result.emplace_back(s.substr(start, end - start));\n        } while (end != string::npos); \n        return result;\n    }\n\n    string join(const vector<string>& names, const char delim) {\n        string result;\n        for (const auto& name : names) {\n            result.push_back('/');\n            result += name;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n), n is the total sum of the lengths of folder names\n# Space: O(t), t is the number of nodes in trie\n\nimport collections\nimport itertools\n\n\nclass Solution(object):\n    def removeSubfolders(self, folder):\n        \"\"\"\n        :type folder: List[str]\n        :rtype: List[str]\n        \"\"\"\n        def dfs(curr, path, result):\n            if \"_end\" in curr:\n                result.append(\"/\" + \"/\".join(path))\n                return\n            for c in curr:\n                if c == \"_end\":\n                    continue\n                path.append(c)\n                dfs(curr[c], path, result)\n                path.pop()\n\n        _trie = lambda: collections.defaultdict(_trie)\n        trie = _trie()\n        for f in folder:\n            f_list = f.split(\"/\")\n            reduce(dict.__getitem__,\n                   itertools.islice(f_list, 1, len(f_list)),\n                   trie).setdefault(\"_end\")\n        result = []\n        dfs(trie, [], result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "7c1d5c2d-ac7a-4e9e-bab8-7768d2f9c33e",
+  "slug": "number-of-common-factors",
+  "title": "Number of Common Factors",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two positive integers <code>a</code> and <code>b</code>, return <em>the number of <strong>common</strong> factors of </em><code>a</code><em> and </em><code>b</code>.</p>\n\n<p>An integer <code>x</code> is a <strong>common factor</strong> of <code>a</code> and <code>b</code> if <code>x</code> divides both <code>a</code> and <code>b</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> a = 12, b = 6\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The common factors of 12 and 6 are 1, 2, 3, 6.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> a = 25, b = 30\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The common factors of 25 and 30 are 1, 5.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= a, b &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "enumeration",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "12\n6\n25\n30",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(log(min(a, b)) + sqrt(gcd))\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    int commonFactors(int a, int b) {\n        const int g = gcd(a, b);  // log(min(a, b))\n        int result = 0;\n        for (int x = 1; x * x <= g; ++x) {\n            if (g % x == 0) {\n                result += g / x == x ? 1 : 2;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(log(min(a, b)) + sqrt(gcd))\n# Space: O(1)\n\n# math\nclass Solution(object):\n    def commonFactors(self, a, b):\n        \"\"\"\n        :type a: int\n        :type b: int\n        :rtype: int\n        \"\"\"\n        def gcd(a, b):  # Time: O(log(min(a, b)))\n            while b:\n                a, b = b, a%b\n            return a\n        \n        g = gcd(a, b)\n        result = 0\n        x = 1\n        while x*x <= g:\n            if g%x == 0:\n                result += 1 if g//x == x else 2\n            x += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

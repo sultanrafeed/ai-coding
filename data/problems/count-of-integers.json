@@ -1,0 +1,35 @@
+{
+  "id": "103c0f0f-3e6f-44a1-a41f-c53946bd56f8",
+  "slug": "count-of-integers",
+  "title": "Count of Integers",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two numeric strings <code>num1</code> and <code>num2</code> and two integers <code>max_sum</code> and <code>min_sum</code>. We denote an integer <code>x</code> to be <em>good</em> if:</p>\n\n<ul>\n\t<li><code>num1 &lt;= x &lt;= num2</code></li>\n\t<li><code>min_sum &lt;= digit_sum(x) &lt;= max_sum</code>.</li>\n</ul>\n\n<p>Return <em>the number of good integers</em>. Since the answer may be large, return it modulo <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>Note that <code>digit_sum(x)</code> denotes the sum of the digits of <code>x</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num1 = &quot;1&quot;, num2 = &quot;12&quot;, <code>min_sum</code> = 1, max_sum = 8\n<strong>Output:</strong> 11\n<strong>Explanation:</strong> There are 11 integers whose sum of digits lies between 1 and 8 are 1,2,3,4,5,6,7,8,10,11, and 12. Thus, we return 11.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num1 = &quot;1&quot;, num2 = &quot;5&quot;, <code>min_sum</code> = 1, max_sum = 5\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The 5 integers whose sum of digits lies between 1 and 5 are 1,2,3,4, and 5. Thus, we return 5.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num1 &lt;= num2 &lt;= 10<sup>22</sup></code></li>\n\t<li><code>1 &lt;= min_sum &lt;= max_sum &lt;= 400</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * m), m = max_sum\n// Space: O(m)\n\n// combinatorics, dp\nclass Solution {\npublic:\n    int count(string num1, string num2, int min_sum, int max_sum) {\n        static const int MOD = 1e9 + 7;\n        const auto& check = [&](const auto& x) {\n            const auto& total = accumulate(cbegin(x), cend(x), 0, [](const auto& accu, const auto& c) {\n                return accu + (c - '0');\n            });\n            return min_sum <= total && total <= max_sum;\n        };\n\n        const auto& f = [&](const auto& x) {\n            vector<vector<int>> dp(2, vector<int>(max_sum + 1));\n            dp[0][0] = dp[1][0] = 1;\n            for (int i = size(x) - 1; i >= 0; --i) {\n                vector<vector<int>> new_dp(2, vector<int>(max_sum + 1));\n                for (int t = 0; t < 2; ++t) {\n                    for (int total = 0; total <= max_sum; ++total) {\n                        for (int d = 0; d <= min((t == 1 ? x[i] - '0' : 9), total); ++d) {\n                            new_dp[t][total] = (new_dp[t][total] + dp[static_cast<int>(t && d == x[i] - '0')][total - d]) % MOD;\n                        }\n                    }\n                }\n                dp = move(new_dp);\n            }\n            int result = 0;\n            for (int total = min_sum; total <= max_sum; ++total) {\n                result = (result + dp[1][total]) % MOD;\n            }\n            return result;\n        };\n\n        return (((f(num2) - f(num1)) % MOD + MOD) % MOD + check(num1)) % MOD;\n    }\n};\n\n// Time:  O(n * m), m = max_sum\n// Space: O(m)\n// combinatorics, dp\nclass Solution2 {\npublic:\n    int count(string num1, string num2, int min_sum, int max_sum) {\n        static const int MOD = 1e9 + 7;\n        const auto& dec = [](auto& x) {\n            for (int i = size(x) - 1; i >= 0; --i) {\n                if (x[i] != '0') {\n                    --x[i];\n                    break;\n                }\n                x[i] = '9';\n            }\n            return x;\n        };\n\n        const auto& f = [&](const auto& x) {\n            vector<vector<int>> dp(2, vector<int>(max_sum + 1));\n            dp[0][0] = dp[1][0] = 1;\n            for (int i = size(x) - 1; i >= 0; --i) {\n                vector<vector<int>> new_dp(2, vector<int>(max_sum + 1));\n                for (int t = 0; t < 2; ++t) {\n                    for (int total = 0; total <= max_sum; ++total) {\n                        for (int d = 0; d <= min((t == 1 ? x[i] - '0' : 9), total); ++d) {\n                            new_dp[t][total] = (new_dp[t][total] + dp[static_cast<int>(t && d == x[i] - '0')][total - d]) % MOD;\n                        }\n                    }\n                }\n                dp = move(new_dp);\n            }\n            int result = 0;\n            for (int total = min_sum; total <= max_sum; ++total) {\n                result = (result + dp[1][total]) % MOD;\n            }\n            return result;\n        };\n\n        return ((f(num2) - f(dec(num1)) % MOD) + MOD) % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * m), m = max_sum\n# Space: O(n + m)\n\n# combinatorics, dp\nclass Solution(object):\n    def count(self, num1, num2, min_sum, max_sum):\n        \"\"\"\n        :type num1: str\n        :type num2: str\n        :type min_sum: int\n        :type max_sum: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def f(x):\n            dp = [[0]*(max_sum+1) for _ in xrange(2)]\n            dp[0][0] = dp[1][0] = 1\n            for i in reversed(xrange(len(x))):\n                new_dp = [[0]*(max_sum+1) for _ in xrange(2)]\n                for t in xrange(2):\n                    for total in xrange(max_sum+1):\n                        for d in xrange(min((int(x[i]) if t else 9), total)+1):\n                            new_dp[t][total] = (new_dp[t][total]+dp[int(t and d == int(x[i]))][total-d])%MOD\n                dp = new_dp\n            return reduce(lambda x, y: (x+y)%MOD, (dp[1][total] for total in xrange(min_sum, max_sum+1)))\n\n        return (f(num2)-f(str(int(num1)-1)))%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "65910240-4a74-4c62-b12b-ff2fb2d8c4ec",
+  "slug": "count-substrings-with-k-frequency-characters-ii",
+  "title": "Count Substrings With K-Frequency Characters II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abacb\"\n2\n\"abcde\"\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// freq table, two pointers, sliding window\nclass Solution {\npublic:\n    long long numberOfSubstrings(string s, int k) {\n        int64_t result = 0;\n        vector<int> cnt(26);\n        for (int right = 0, left = 0; right < size(s); ++right) {\n            ++cnt[s[right] - 'a'];\n            for (; cnt[s[right] - 'a'] == k; ++left) {\n                result += (size(s) - 1) - right + 1;\n                --cnt[s[left] - 'a'];\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# freq table, two pointers, sliding window\nclass Solution(object):\n    def numberOfSubstrings(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: int\n        \"\"\"\n        cnt = [0]*26\n        result = left = 0\n        for right in xrange(len(s)):\n            cnt[ord(s[right])-ord('a')] += 1\n            while cnt[ord(s[right])-ord('a')] == k:\n                result += (len(s)-1)-right+1\n                cnt[ord(s[left])-ord('a')] -= 1\n                left += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

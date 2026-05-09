@@ -1,0 +1,36 @@
+{
+  "id": "feb9a731-a5dd-466e-8dd0-f7ad4e7deb7f",
+  "slug": "count-the-number-of-complete-components",
+  "title": "Count the Number of Complete Components",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer <code>n</code>. There is an <strong>undirected</strong> graph with <code>n</code> vertices, numbered from <code>0</code> to <code>n - 1</code>. You are given a 2D integer array <code>edges</code> where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> denotes that there exists an <strong>undirected</strong> edge connecting vertices <code>a<sub>i</sub></code> and <code>b<sub>i</sub></code>.</p>\n\n<p>Return <em>the number of <strong>complete connected components</strong> of the graph</em>.</p>\n\n<p>A <strong>connected component</strong> is a subgraph of a graph in which there exists a path between any two vertices, and no vertex of the subgraph shares an edge with a vertex outside of the subgraph.</p>\n\n<p>A connected component is said to be <b>complete</b> if there exists an edge between every pair of its vertices.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><strong class=\"example\"><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/04/11/screenshot-from-2023-04-11-23-31-23.png\" style=\"width: 671px; height: 270px;\" /></strong></p>\n\n<pre>\n<strong>Input:</strong> n = 6, edges = [[0,1],[0,2],[1,2],[3,4]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> From the picture above, one can see that all of the components of this graph are complete.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><strong class=\"example\"><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/04/11/screenshot-from-2023-04-11-23-32-00.png\" style=\"width: 671px; height: 270px;\" /></strong></p>\n\n<pre>\n<strong>Input:</strong> n = 6, edges = [[0,1],[0,2],[1,2],[3,4],[3,5]]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The component containing vertices 0, 1, and 2 is complete since there is an edge between every pair of two vertices. On the other hand, the component containing vertices 3, 4, and 5 is not complete since there is no edge between vertices 4 and 5. Thus, the number of complete components in this graph is 1.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 50</code></li>\n\t<li><code>0 &lt;= edges.length &lt;= n * (n - 1) / 2</code></li>\n\t<li><code>edges[i].length == 2</code></li>\n\t<li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt;= n - 1</code></li>\n\t<li><code>a<sub>i</sub> != b<sub>i</sub></code></li>\n\t<li>There are no repeated edges.</li>\n</ul>\n",
+  "patterns": [
+    "depth-first-search",
+    "breadth-first-search",
+    "union-find",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// bfs\nclass Solution {\npublic:\n    int countCompleteComponents(int n, vector<vector<int>>& edges) {\n        vector<bool> lookup(n);\n        vector<vector<int>> adj(n);\n        for (const auto& e : edges) {\n            adj[e[0]].emplace_back(e[1]);\n            adj[e[1]].emplace_back(e[0]);\n        }\n        const auto& bfs = [&](int u) {\n            if (lookup[u]) {\n                return false;\n            }\n            int v_cnt = 0, e_cnt = 0;\n            lookup[u] = true;\n            vector<int> q = {u};\n            while (!empty(q)) {\n                vector<int> new_q;\n                v_cnt += size(q);\n                for (const auto& u : q) {\n                    e_cnt += size(adj[u]);\n                    for (const auto& v : adj[u]) {\n                        if (lookup[v]) {\n                            continue;\n                        }\n                        lookup[v] = true;\n                        new_q.emplace_back(v);\n                    }\n                }\n                q = move(new_q);\n            }\n            return v_cnt * (v_cnt - 1) == e_cnt;\n        };\n\n        int result = 0;\n        for (int u = 0; u < n; ++u) {\n            result += bfs(u);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# bfs\nclass Solution(object):\n    def countCompleteComponents(self, n, edges):\n        \"\"\"\n        :type n: int\n        :type edges: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def bfs(u):\n            if lookup[u]:\n                return False\n            v_cnt = e_cnt = 0\n            lookup[u] = True\n            q = [u]\n            while q:\n                new_q = []\n                v_cnt += len(q)\n                for u in q:\n                    e_cnt += len(adj[u])\n                    for v in adj[u]:\n                        if lookup[v]:\n                            continue\n                        lookup[v] = True\n                        new_q.append(v)\n                q = new_q\n            return v_cnt*(v_cnt-1) == e_cnt\n\n        adj = [[] for _ in xrange(n)]\n        for u, v in edges:\n            adj[u].append(v)\n            adj[v].append(u)\n        lookup = [False]*n\n        return sum(bfs(u) for u in xrange(n) if not lookup[u])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

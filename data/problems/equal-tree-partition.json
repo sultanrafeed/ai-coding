@@ -1,0 +1,41 @@
+{
+  "id": "ef988b22-6b3a-4212-bb09-e5d1bdec0974",
+  "slug": "equal-tree-partition",
+  "title": "Equal Tree Partition",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,10,10,null,null,2,3]\n[1,2,10,null,null,2,20]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    bool checkEqualTree(TreeNode* root) {\n        unordered_map<int, int> lookup;\n        auto total = getSumHelper(root, &lookup);\n        if (total == 0) {\n            return lookup[total] > 1;\n        }\n        return total % 2 == 0 && lookup.count(total / 2);\n    }\n\nprivate:\n    int getSumHelper(TreeNode* node,  unordered_map<int, int> *lookup) {\n        if (!node) {\n            return 0;\n        }\n        int total = node->val + \n                    getSumHelper(node->left, lookup) +\n                    getSumHelper(node->right, lookup);\n        ++(*lookup)[total];\n        return total;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def checkEqualTree(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: bool\n        \"\"\"\n        def getSumHelper(node, lookup):\n            if not node:\n                return 0\n            total = node.val + \\\n                    getSumHelper(node.left, lookup) + \\\n                    getSumHelper(node.right, lookup)\n            lookup[total] += 1\n            return total\n\n        lookup = collections.defaultdict(int)\n        total = getSumHelper(root, lookup)\n        if total == 0:\n            return lookup[total] > 1\n        return total%2 == 0 and (total/2) in lookup",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "8d334cd4-0e30-43bc-b993-58b91b2f27db",
+  "slug": "maximum-trailing-zeros-in-a-cornered-path",
+  "title": "Maximum Trailing Zeros in a Cornered Path",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a 2D integer array <code>grid</code> of size <code>m x n</code>, where each cell contains a positive integer.</p>\n\n<p>A <strong>cornered path</strong> is defined as a set of adjacent cells with <strong>at most</strong> one turn. More specifically, the path should exclusively move either <strong>horizontally</strong> or <strong>vertically</strong> up to the turn (if there is one), without returning to a previously visited cell. After the turn, the path will then move exclusively in the <strong>alternate</strong> direction: move vertically if it moved horizontally, and vice versa, also without returning to a previously visited cell.</p>\n\n<p>The <strong>product</strong> of a path is defined as the product of all the values in the path.</p>\n\n<p>Return <em>the <strong>maximum</strong> number of <strong>trailing zeros</strong> in the product of a cornered path found in </em><code>grid</code>.</p>\n\n<p>Note:</p>\n\n<ul>\n\t<li><strong>Horizontal</strong> movement means moving in either the left or right direction.</li>\n\t<li><strong>Vertical</strong> movement means moving in either the up or down direction.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/03/23/ex1new2.jpg\" style=\"width: 577px; height: 190px;\" />\n<pre>\n<strong>Input:</strong> grid = [[23,17,15,3,20],[8,1,20,27,11],[9,4,6,2,21],[40,9,1,10,6],[22,7,4,5,3]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The grid on the left shows a valid cornered path.\nIt has a product of 15 * 20 * 6 * 1 * 10 = 18000 which has 3 trailing zeros.\nIt can be shown that this is the maximum trailing zeros in the product of a cornered path.\n\nThe grid in the middle is not a cornered path as it has more than one turn.\nThe grid on the right is not a cornered path as it requires a return to a previously visited cell.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/03/25/ex2.jpg\" style=\"width: 150px; height: 157px;\" />\n<pre>\n<strong>Input:</strong> grid = [[4,3,2],[7,6,1],[8,8,8]]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The grid is shown in the figure above.\nThere are no cornered paths in the grid that result in a product with a trailing zero.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= m * n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= grid[i][j] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\n// prefix sum\nclass Solution {\npublic:\n    int maxTrailingZeros(vector<vector<int>>& grid) {\n        const auto& factor = [](int x) {\n            static const array<int, 2> primes = {2, 5};\n            array<int, 2> cnt = {0, 0};\n            for (int i = 0; i < size(primes); ++i) {\n                while (x && x % primes[i] == 0) {\n                    x /= primes[i];\n                    ++cnt[i];\n                }\n            }\n            return cnt;\n        };\n        const auto& add = [](const auto& a, const auto& b) {\n            return array<int, 2>{a[0] + b[0], a[1] + b[1]};\n        };\n        const auto& sub = [](const auto& a, const auto& b) {\n            return array<int, 2>{a[0] - b[0], a[1] - b[1]};\n        };\n        const auto& count = [](const auto& a) {\n            return min(a[0], a[1]);\n        };\n\n        vector<vector<array<int, 2>>> left(size(grid), vector<array<int, 2>>(size(grid[0])));\n        for (int i = 0; i < size(grid); ++i) {\n            left[i][0] = factor(grid[i][0]);\n            for (int j = 1; j < size(grid[0]); ++j) {\n                left[i][j] = add(left[i][j - 1], factor(grid[i][j]));\n            }\n        }\n        int result = 0;\n        for (int j = 0; j < size(grid[0]); ++j) {\n            array<int, 2> total = {0, 0};\n            for (int i = 0; i < size(grid); ++i) {\n                total = add(total, factor(grid[i][j]));\n            }\n            array<int, 2> up = {0, 0};\n            for (int i = 0; i < size(grid); ++i) {\n                const auto& right = j ? sub(left[i].back(), left[i][j - 1]) : left[i].back();\n                result = max({result, count(add(left[i][j], up)), count(add(right, up))});\n                up = add(up, factor(grid[i][j]));\n                const auto& down = sub(total, up);\n                result = max({result, count(add(left[i][j], down)), count(add(right, down))});\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\nimport itertools\n\n\n# prefix sum\nclass Solution(object):\n    def maxTrailingZeros(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def factor(x):\n            cnt = [0]*2\n            for i, p in enumerate([2, 5]):\n                while x and x%p == 0:\n                    x //= p\n                    cnt[i] += 1\n            return cnt\n\n        def add(a, b):\n            return [x+y for x, y in itertools.izip(a, b)]\n\n        def sub(a, b):\n            return [x-y for x, y in itertools.izip(a, b)]\n\n        left = [[None for _ in xrange(len(grid[0]))] for _ in xrange(len(grid))]\n        for i in xrange(len(grid)):\n            left[i][0] = factor(grid[i][0])\n            for j in xrange(1, len(grid[0])):\n                left[i][j] = add(left[i][j-1], factor(grid[i][j]))\n        result = 0\n        for j in xrange(len(grid[0])):\n            total = [0]*2\n            for i in xrange(len(grid)):\n                total = add(total, factor(grid[i][j]))\n            up = [0]*2\n            for i in xrange(len(grid)):\n                right = sub(left[i][-1], left[i][j-1] if j else [0]*2)\n                result = max(result, min(add(left[i][j], up)), min(add(right, up)))\n                up = add(up, factor(grid[i][j]))\n                down = sub(total, up)\n                result = max(result, min(add(left[i][j], down)), min(add(right, down)))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

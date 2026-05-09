@@ -1,0 +1,25 @@
+{
+  "id": "9185b06f-4404-4c46-9d94-cb3703191884",
+  "slug": "combinationSum",
+  "title": "Combinationsum",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n!)\n// Space Complexity: O(1)\n\nclass Solution {\n    public:\n        vector<vector<int> > combinationSum(vector<int> &candidates, int target) {\n            sort(candidates.begin(), candidates.end());\n            vector<vector<int> > ans;\n            vector<int> v;\n            dfs(candidates, target, 0, v, ans);\n            return ans;\n        }\n\n    private:\n        void dfs(vector<int>& candidates, int gap, int begin, vector<int>& v,vector<vector<int> > &ans) {\n            if (gap == 0) {\n                ans.push_back(v);\n                return;\n            }\n\n            for (size_t i = begin; i < candidates.size(); i++) {\n                if (gap < candidates[i]) return;\n                v.push_back(candidates[i]);\n                dfs(candidates, gap - candidates[i], i, v, ans);\n                v.pop_back();\n            }\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

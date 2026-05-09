@@ -1,0 +1,42 @@
+{
+  "id": "0ab9b451-68eb-4069-ab58-acaefc0598f5",
+  "slug": "maximum-performance-of-a-team",
+  "title": "Maximum Performance of a Team",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two integers <code>n</code> and <code>k</code> and two integer arrays <code>speed</code> and <code>efficiency</code> both of length <code>n</code>. There are <code>n</code> engineers numbered from <code>1</code> to <code>n</code>. <code>speed[i]</code> and <code>efficiency[i]</code> represent the speed and efficiency of the <code>i<sup>th</sup></code> engineer respectively.</p>\n\n<p>Choose <strong>at most</strong> <code>k</code> different engineers out of the <code>n</code> engineers to form a team with the maximum <strong>performance</strong>.</p>\n\n<p>The performance of a team is the sum of its engineers&#39; speeds multiplied by the minimum efficiency among its engineers.</p>\n\n<p>Return <em>the maximum performance of this team</em>. Since the answer can be a huge number, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 6, speed = [2,10,3,1,5,8], efficiency = [5,4,3,9,7,2], k = 2\n<strong>Output:</strong> 60\n<strong>Explanation:</strong> \nWe have the maximum performance of the team by selecting engineer 2 (with speed=10 and efficiency=4) and engineer 5 (with speed=5 and efficiency=7). That is, performance = (10 + 5) * min(4, 7) = 60.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 6, speed = [2,10,3,1,5,8], efficiency = [5,4,3,9,7,2], k = 3\n<strong>Output:</strong> 68\n<strong>Explanation:\n</strong>This is the same example as the first but k = 3. We can select engineer 1, engineer 2 and engineer 5 to get the maximum performance of the team. That is, performance = (2 + 10 + 5) * min(5, 4, 7) = 68.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 6, speed = [2,10,3,1,5,8], efficiency = [5,4,3,9,7,2], k = 4\n<strong>Output:</strong> 72\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= k &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>speed.length == n</code></li>\n\t<li><code>efficiency.length == n</code></li>\n\t<li><code>1 &lt;= speed[i] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= efficiency[i] &lt;= 10<sup>8</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "6\n[2,10,3,1,5,8]\n[5,4,3,9,7,2]\n2\n6\n[2,10,3,1,5,8]\n[5,4,3,9,7,2]\n3\n6\n[2,10,3,1,5,8]\n[5,4,3,9,7,2]\n4",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxPerformance(int n, vector<int>& speed, vector<int>& efficiency, int k) {\n        static const int MOD = 1e9 + 7;\n        uint64_t result = 0, s_sum = 0;\n        vector<pair<int, int>> engineers;\n        for (int i = 0; i < speed.size(); ++i) {\n            engineers.emplace_back(efficiency[i], speed[i]);\n        }\n        sort(engineers.begin(), engineers.end(), greater<pair<int, int>>());\n        priority_queue<int, vector<int>, greater<int>> min_heap;\n        for (const auto& [e, s] : engineers) {\n            s_sum += s;\n            min_heap.emplace(s);\n            if (min_heap.size() > k) {\n                s_sum -= min_heap.top(); min_heap.pop();\n            }\n            result = max(result, s_sum * e);\n        }\n        return result % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport itertools\nimport heapq\n\n\nclass Solution(object):\n    def maxPerformance(self, n, speed, efficiency, k):\n        \"\"\"\n        :type n: int\n        :type speed: List[int]\n        :type efficiency: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9 + 7\n        result, s_sum = 0, 0\n        min_heap = []\n        for e, s in sorted(itertools.izip(efficiency, speed), reverse=True):\n            s_sum += s\n            heapq.heappush(min_heap, s)\n            if len(min_heap) > k:\n                s_sum -= heapq.heappop(min_heap)\n            result = max(result, s_sum*e)\n        return result % MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

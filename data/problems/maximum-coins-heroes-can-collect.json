@@ -1,0 +1,37 @@
+{
+  "id": "4a069c07-664b-415e-b340-5201a63812e2",
+  "slug": "maximum-coins-heroes-can-collect",
+  "title": "Maximum Coins Heroes Can Collect",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "sorting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn + mlogm)\n// Space: O(n + m)\n\n// sort, two pointers\nclass Solution {\npublic:\n    vector<long long> maximumCoins(vector<int>& heroes, vector<int>& monsters, vector<int>& coins) {\n        vector<int> idxs1(size(heroes));\n        iota(begin(idxs1), end(idxs1), 0);\n        sort(begin(idxs1), end(idxs1), [&](const auto& a, const auto& b) {\n            return heroes[a] < heroes[b];\n        });\n        vector<int> idxs2(size(monsters));\n        iota(begin(idxs2), end(idxs2), 0);\n        sort(begin(idxs2), end(idxs2), [&](const auto& a, const auto& b) {\n            return monsters[a] < monsters[b];\n        });\n        vector<long long> result(size(idxs1));\n        int i = 0;\n        long long curr = 0;\n        for (const auto& idx : idxs1) {\n            for (; i < size(idxs2); ++i) {\n                if (monsters[idxs2[i]] > heroes[idx]) {\n                    break;\n                }\n                curr += coins[idxs2[i]];\n            }\n            result[idx] = curr;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn + mlogm)\n# Space: O(n + m)\n\n# sort, two pointers\nclass Solution(object):\n    def maximumCoins(self, heroes, monsters, coins):\n        \"\"\"\n        :type heroes: List[int]\n        :type monsters: List[int]\n        :type coins: List[int]\n        :rtype: List[int]\n        \"\"\"\n        idxs1 = range(len(heroes))\n        idxs1.sort(key=lambda x: heroes[x])\n        idxs2 = range(len(monsters))\n        idxs2.sort(key=lambda x: monsters[x])\n        result = [0]*len(idxs1)\n        i = curr = 0\n        for idx in idxs1:\n            for i in xrange(i, len(idxs2)):\n                if monsters[idxs2[i]] > heroes[idx]:\n                    break\n                curr += coins[idxs2[i]]\n            else:\n                i = len(idxs2)\n            result[idx] = curr\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

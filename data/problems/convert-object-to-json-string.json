@@ -1,0 +1,31 @@
+{
+  "id": "03e0c0de-ccd5-4a32-a1f0-4221a2683cba",
+  "slug": "convert-object-to-json-string",
+  "title": "Convert Object to JSON String",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"y\":1,\"x\":2}\n{\"a\":\"str\",\"b\":-12,\"c\":true,\"d\":null}\n{\"key\":{\"a\":1,\"b\":[{},null,\"Hello\"]}}\ntrue",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// dfs\nfunction jsonStringify(object: any): string {\n    let result = [];\n    let dfs = (object) => {\n        if (object === null) {\n            result.push('null');\n            return;\n        }\n        if (typeof object === 'number' || typeof object === 'boolean') {\n            result.push(String(object));\n            return;\n        }\n        if (typeof object === 'string') {\n            result.push(`\"${object}\"`);\n            return;\n        }\n        if (Array.isArray(object)) {\n            result.push('[');\n            for (const x of object) {\n                dfs(x);\n                result.push(',');\n            }\n            if (object.length) {\n                result.pop();\n            }\n            result.push(']');\n            return;\n        }\n        result.push('{');\n        for (const key in object) {\n            result.push(`\"${key}\":`)\n            dfs(object[key]);\n            result.push(',');\n        }\n        if (Object.keys(object).length) {\n            result.pop();\n        }\n        result.push('}');\n    }\n\n    dfs(object);\n    return result.join('');\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

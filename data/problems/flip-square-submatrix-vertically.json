@@ -1,0 +1,35 @@
+{
+  "id": "5375caeb-6e15-4ea8-b971-5fe8c096a13f",
+  "slug": "flip-square-submatrix-vertically",
+  "title": "Flip Square Submatrix Vertically",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an <code>m x n</code> integer matrix <code>grid</code>, and three integers <code>x</code>, <code>y</code>, and <code>k</code>.</p>\n\n<p>The integers <code>x</code> and <code>y</code> represent the row and column indices of the <strong>top-left</strong> corner of a <strong>square</strong> submatrix and the integer <code>k</code> represents the size (side length) of the square submatrix.</p>\n\n<p>Your task is to flip the submatrix by reversing the order of its rows vertically.</p>\n\n<p>Return the updated matrix.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2025/07/20/gridexmdrawio.png\" style=\"width: 300px; height: 116px;\" />\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = </span>[[1,2,3,4],[5,6,7,8],[9,10,11,12],[13,14,15,16]]<span class=\"example-io\">, x = 1, y = 0, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[[1,2,3,4],[13,14,15,8],[9,10,11,12],[5,6,7,16]]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The diagram above shows the grid before and after the transformation.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2025/07/20/gridexm2drawio.png\" style=\"width: 350px; height: 68px;\" />​​​​​​​\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[3,4,2,3],[2,3,4,2]], x = 0, y = 2, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[[3,4,4,2],[2,3,2,3]]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The diagram above shows the grid before and after the transformation.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 50</code></li>\n\t<li><code>1 &lt;= grid[i][j] &lt;= 100</code></li>\n\t<li><code>0 &lt;= x &lt; m</code></li>\n\t<li><code>0 &lt;= y &lt; n</code></li>\n\t<li><code>1 &lt;= k &lt;= min(m - x, n - y)</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(k^2)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    vector<vector<int>> reverseSubmatrix(vector<vector<int>>& grid, int x, int y, int k) {\n        for (int i = 0; i < k / 2; ++i) {\n            for (int j = 0; j < k; ++j) {\n                swap(grid[x + i][y + j], grid[x + (k - 1 - i)][y + j]);\n            }\n        }\n        return grid;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(k^2)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def reverseSubmatrix(self, grid, x, y, k):\n        \"\"\"\n        :type grid: List[List[int]]\n        :type x: int\n        :type y: int\n        :type k: int\n        :rtype: List[List[int]]\n        \"\"\"\n        for i in xrange(k//2):\n            for j in xrange(k):\n                grid[x+i][y+j], grid[x+(k-1-i)][y+j] = grid[x+(k-1-i)][y+j], grid[x+i][y+j]\n        return grid",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

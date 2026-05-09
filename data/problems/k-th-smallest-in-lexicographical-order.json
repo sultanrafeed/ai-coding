@@ -1,0 +1,33 @@
+{
+  "id": "06e81e5e-24f7-473d-aff5-fdb09f4ff12e",
+  "slug": "k-th-smallest-in-lexicographical-order",
+  "title": "K-th Smallest in Lexicographical Order",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given two integers <code>n</code> and <code>k</code>, return <em>the</em> <code>k<sup>th</sup></code> <em>lexicographically smallest integer in the range</em> <code>[1, n]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 13, k = 2\n<strong>Output:</strong> 10\n<strong>Explanation:</strong> The lexicographical order is [1, 10, 11, 12, 13, 2, 3, 4, 5, 6, 7, 8, 9], so the second smallest number is 10.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 1, k = 1\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= k &lt;= n &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(logn)\n\nclass Solution {\npublic:\n    int findKthNumber(int n, int k) {\n        int result = 0;\n\n        vector<int> cnts(10);\n        for (int i = 1; i <= 9; ++i) {\n            cnts[i] = cnts[i - 1] * 10 + 1;\n        }\n\n        vector<int> nums;\n        for (int i = n; i > 0; i /= 10) {\n            nums.emplace_back(i % 10);\n        }\n        int total = n;\n        int target = 0;\n        for (int i = nums.size() - 1; i >= 0 && k; --i) {\n            target = target * 10 + nums[i];\n            const auto start = i == nums.size() - 1 ? 1 : 0;\n            for (int j = start; j <= 9; ++j) {\n                const auto candidate = result * 10 + j;\n                int num;\n                if (candidate < target) {\n                    num = cnts[i + 1];\n                } else if (candidate > target) {\n                    num = cnts[i];\n                } else {\n                    num = total - cnts[i + 1] * (j - start) - cnts[i] * (9 - j);\n                }\n                if (k > num) {\n                    k -= num;\n                } else {\n                    result = candidate;\n                    --k;\n                    total = num - 1;\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(logn * logn)\n// Space: O(logn)\nclass Solution2 {\npublic:\n    int findKthNumber(int n, int k) {\n        int result = 0;\n        int index = 0;\n        findKthNumberHelper(n, k, 0, &index, &result);\n        return result;\n    }\n\nprivate:\n    bool findKthNumberHelper(int n, int k, int cur, int *index, int *result) {\n        if (cur) {\n            ++(*index);\n            if (*index == k) {\n                *result = cur;\n                return true;\n            }\n        }\n        for (int i = (cur == 0 ? 1 : 0); i <= 9; ++i, cur /= 10) {\n            cur = cur * 10 + i;\n            int cnt = count(n, cur);\n            if (k > cnt + *index) {\n                *index += cnt;\n                continue;\n            }\n            if (cur <= n && findKthNumberHelper(n, k, cur, index, result)) {\n                return true;\n            }\n        }\n        return false;\n    }\n\n    int count(int n, long long prefix) {  // Time:  O(logn)\n        int result = 0;\n        int number = 1;\n        while (prefix <= n) {\n            result += number;\n            prefix *= 10;\n            number *= 10;\n        }\n        result -= max(number / 10 - (n - prefix / 10 + 1), static_cast<long long>(0));\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(logn)\n\nclass Solution(object):\n    def findKthNumber(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = 0\n\n        cnts = [0] * 10\n        for i in xrange(1, 10):\n            cnts[i] = cnts[i - 1] * 10 + 1\n\n        nums = []\n        i = n\n        while i:\n            nums.append(i % 10)\n            i /= 10\n\n        total, target = n, 0\n        i = len(nums) - 1\n        while i >= 0 and k > 0:\n            target = target*10 + nums[i]\n            start = int(i == len(nums)-1)\n            for j in xrange(start, 10):\n                candidate = result*10 + j\n                if candidate < target:\n                    num = cnts[i+1]\n                elif candidate > target:\n                    num = cnts[i]\n                else:\n                    num = total - cnts[i + 1]*(j-start) - cnts[i]*(9-j)\n                if k > num:\n                    k -= num\n                else:\n                    result = candidate\n                    k -= 1\n                    total = num-1\n                    break\n            i -= 1\n\n        return result\n\n\n# Time:  O(logn * logn)\n# Space: O(logn)\nclass Solution2(object):\n    def findKthNumber(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def count(n, prefix):\n            result, number = 0, 1\n            while prefix <= n:\n                result += number\n                prefix *= 10\n                number *= 10\n            result -= max(number/10 - (n - prefix/10 + 1), 0)\n            return result\n\n        def findKthNumberHelper(n, k, cur, index):\n            if cur:\n                index += 1\n                if index == k:\n                    return (cur, index)\n\n            i = int(cur == 0)\n            while i <= 9:\n                cur = cur * 10 + i\n                cnt = count(n, cur)\n                if k > cnt + index:\n                    index += cnt\n                elif cur <= n:\n                    result = findKthNumberHelper(n, k, cur, index)\n                    if result[0]:\n                        return result\n                i += 1\n                cur /= 10\n            return (0, index)\n\n        return findKthNumberHelper(n, k, 0, 0)[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

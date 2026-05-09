@@ -1,0 +1,33 @@
+{
+  "id": "dcba70a4-5991-4ab3-ac8f-ff0b93268a72",
+  "slug": "paths-in-maze-that-lead-to-same-room",
+  "title": "Paths in Maze That Lead to Same Room",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(|V|^3)\n// Space: O(|E|)\n\nclass Solution {\npublic:\n    int numberOfPaths(int n, vector<vector<int>>& corridors) {\n        vector<unordered_set<int>> adj(n);\n        for (const auto& x : corridors) {\n            adj[min(x[0], x[1]) - 1].emplace(max(x[0], x[1]) - 1);\n        }\n        int result = 0;\n        for (int i = 0; i < n; ++i) {\n            for (const auto& j : adj[i]) {\n                for (const auto& k : adj[j]) {\n                    result += adj[i].count(k);\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(|V|^3)\n# Space: O(|E|)\n\nclass Solution(object):\n    def numberOfPaths(self, n, corridors):\n        \"\"\"\n        :type n: int\n        :type corridors: List[List[int]]\n        :rtype: int\n        \"\"\"\n        adj = [set() for _ in xrange(n)]\n        for u, v in corridors:\n            adj[min(u, v)-1].add(max(u, v)-1)\n        return sum(k in adj[i] for i in xrange(n) for j in adj[i] for k in adj[j])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

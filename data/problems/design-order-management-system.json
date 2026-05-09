@@ -1,0 +1,40 @@
+{
+  "id": "21a6a414-0e5f-4929-9edf-e3d2a16e26c8",
+  "slug": "design-order-management-system",
+  "title": "Design Order Management System",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"OrderManagementSystem\",\"addOrder\",\"addOrder\",\"addOrder\",\"getOrdersAtPrice\",\"modifyOrder\",\"modifyOrder\",\"getOrdersAtPrice\",\"cancelOrder\",\"cancelOrder\",\"getOrdersAtPrice\"]\n[[],[1,\"buy\",1],[2,\"buy\",1],[3,\"sell\",2],[\"buy\",1],[1,3],[2,1],[\"buy\",1],[3],[2],[\"buy\",1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:             O(1)\n//        addOrder:         O(1)\n//        modifyOrder:      O(1)\n//        cancelOrder:      O(1)\n//        getOrdersAtPrice: O(n)\n// Space: O(n)\n\n// hash table\nclass OrderManagementSystem {\npublic:\n    OrderManagementSystem() {\n        \n    }\n    \n    void addOrder(int orderId, string orderType, int price) {\n        orders_[orderId] = {orderType, price, size(type_price_[orderType][price])};\n        type_price_[orderType][price].emplace_back(orderId);\n    }\n    \n    void modifyOrder(int orderId, int newPrice) {\n        const auto orderType = get<0>(orders_[orderId]);\n        cancelOrder(orderId);\n        addOrder(orderId, orderType, newPrice);\n    }\n    \n    void cancelOrder(int orderId) {\n        const auto [orderType, price, i] = move(orders_[orderId]);\n        auto& arr = type_price_[orderType][price];\n        get<2>(orders_[arr.back()]) = i;\n        swap(arr[i], arr.back());\n        arr.pop_back();\n        if (empty(type_price_[orderType][price])) {\n            type_price_[orderType].erase(price);\n            if (empty(type_price_[orderType])) {\n                type_price_.erase(orderType);\n            }\n        }\n        orders_.erase(orderId);\n    }\n    \n    vector<int> getOrdersAtPrice(string orderType, int price) {\n        return type_price_.count(orderType) && type_price_[orderType].count(price) ? type_price_[orderType][price] : vector<int>();\n    }\n\nprivate:\n    unordered_map<int, tuple<string, int, int>> orders_;\n    unordered_map<string, unordered_map<int, vector<int>>> type_price_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:             O(1)\n#        addOrder:         O(1)\n#        modifyOrder:      O(1)\n#        cancelOrder:      O(1)\n#        getOrdersAtPrice: O(n)\n# Space: O(n)\n\nimport collections\n\n\n# hash table\nclass OrderManagementSystem(object):\n\n    def __init__(self):\n        self.__orders = {}\n        self.__type_price = collections.defaultdict(list)\n        \n\n    def addOrder(self, orderId, orderType, price):\n        \"\"\"\n        :type orderId: int\n        :type orderType: str\n        :type price: int\n        :rtype: None\n        \"\"\"\n        self.__orders[orderId] = [orderType, price, len(self.__type_price[orderType, price])]\n        self.__type_price[orderType, price].append(orderId)\n        \n\n    def modifyOrder(self, orderId, newPrice):\n        \"\"\"\n        :type orderId: int\n        :type newPrice: int\n        :rtype: None\n        \"\"\"\n        orderType = self.__orders[orderId][0]\n        self.cancelOrder(orderId)\n        self.addOrder(orderId, orderType, newPrice)\n        \n\n    def cancelOrder(self, orderId):\n        \"\"\"\n        :type orderId: int\n        :rtype: None\n        \"\"\"\n        orderType, price, i = self.__orders[orderId]\n        arr = self.__type_price[orderType, price]\n        self.__orders[arr[-1]][2] = i\n        arr[i], arr[-1] = arr[-1], arr[i]\n        arr.pop()\n        if not self.__type_price[orderType, price]:\n            del self.__type_price[orderType, price]\n        del self.__orders[orderId]\n\n\n    def getOrdersAtPrice(self, orderType, price):\n        \"\"\"\n        :type orderType: str\n        :type price: int\n        :rtype: List[int]\n        \"\"\"\n        return self.__type_price.get((orderType, price), [])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

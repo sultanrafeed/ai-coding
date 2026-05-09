@@ -1,0 +1,39 @@
+{
+  "id": "d8dca83e-e1be-4c19-8445-bc5fa4ac89b3",
+  "slug": "missing-ranges",
+  "title": "Missing Ranges",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[0,1,3,50,75]\n0\n99\n[-1]\n-1\n-1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<string> findMissingRanges(vector<int>& nums, int lower, int upper) {\n        vector<string> ranges;\n        for (int64_t i = 0, pre = static_cast<int64_t>(lower) - 1, cur = 0; i <= nums.size(); ++i, pre = cur) {\n            if (i == nums.size()) {\n                cur = static_cast<int64_t>(upper) + 1;\n            } else {\n                cur = nums[i];\n            }\n            if (cur - pre >= 2) {\n                ranges.emplace_back(getRange(pre + 1, cur - 1));\n            }\n        }\n        return ranges;\n    }\n\nprivate:\n    string getRange(const int lower, const int upper) {\n        if (lower == upper) {\n            return to_string(lower);\n        } else {\n            return to_string(lower) + \"->\" + to_string(upper);\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findMissingRanges(self, nums, lower, upper):\n        \"\"\"\n        :type nums: List[int]\n        :type lower: int\n        :type upper: int\n        :rtype: List[str]\n        \"\"\"\n        def getRange(lower, upper):\n            if lower == upper:\n                return \"{}\".format(lower)\n            else:\n                return \"{}->{}\".format(lower, upper)\n        ranges = []\n        pre = lower - 1\n\n        for i in xrange(len(nums) + 1):\n            if i == len(nums):\n                cur = upper + 1\n            else:\n                cur = nums[i]\n            if cur - pre >= 2:\n                ranges.append(getRange(pre + 1, cur - 1))\n\n            pre = cur\n\n        return ranges",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

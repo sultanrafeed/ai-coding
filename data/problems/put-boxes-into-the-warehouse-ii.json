@@ -1,0 +1,35 @@
+{
+  "id": "08e99c37-3129-48e8-9545-946ab828cbd5",
+  "slug": "put-boxes-into-the-warehouse-ii",
+  "title": "Put Boxes Into the Warehouse II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxBoxesInWarehouse(vector<int>& boxes, vector<int>& warehouse) {\n        sort(rbegin(boxes), rend(boxes));\n        int left = 0, right = size(warehouse) - 1;\n        for (const auto& h : boxes) {\n            if (h <= warehouse[left]) {\n                ++left;\n            } else if (h <= warehouse[right]) {\n                --right;\n            }\n            if (left > right) {\n                break;\n            }\n        }\n        return left + (size(warehouse) - 1 - right);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def maxBoxesInWarehouse(self, boxes, warehouse):\n        \"\"\"\n        :type boxes: List[int]\n        :type warehouse: List[int]\n        :rtype: int\n        \"\"\"\n        boxes.sort(reverse=True)\n        left, right = 0, len(warehouse)-1\n        for h in boxes:\n            if h <= warehouse[left]:\n                left += 1\n            elif h <= warehouse[right]:\n                right -= 1\n            if left > right:\n                break\n        return left + (len(warehouse)-1-right)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

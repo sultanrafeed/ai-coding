@@ -1,0 +1,36 @@
+{
+  "id": "6c9f7484-d704-4dc9-9d46-a90d519b345f",
+  "slug": "generate-random-point-in-a-circle",
+  "title": "Generate Random Point in a Circle",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the radius and the position of the center of a circle, implement the function <code>randPoint</code> which generates a uniform random point inside the circle.</p>\n\n<p>Implement the <code>Solution</code> class:</p>\n\n<ul>\n\t<li><code>Solution(double radius, double x_center, double y_center)</code> initializes the object with the radius of the circle <code>radius</code> and the position of the center <code>(x_center, y_center)</code>.</li>\n\t<li><code>randPoint()</code> returns a random point inside the circle. A point on the circumference of the circle is considered to be in the circle. The answer is returned as an array <code>[x, y]</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;Solution&quot;, &quot;randPoint&quot;, &quot;randPoint&quot;, &quot;randPoint&quot;]\n[[1.0, 0.0, 0.0], [], [], []]\n<strong>Output</strong>\n[null, [-0.02493, -0.38077], [0.82314, 0.38945], [0.36572, 0.17248]]\n\n<strong>Explanation</strong>\nSolution solution = new Solution(1.0, 0.0, 0.0);\nsolution.randPoint(); // return [-0.02493, -0.38077]\nsolution.randPoint(); // return [0.82314, 0.38945]\nsolution.randPoint(); // return [0.36572, 0.17248]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;&nbsp;radius &lt;= 10<sup>8</sup></code></li>\n\t<li><code>-10<sup>7</sup> &lt;= x_center, y_center &lt;= 10<sup>7</sup></code></li>\n\t<li>At most <code>3 * 10<sup>4</sup></code> calls will be made to <code>randPoint</code>.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "geometry",
+    "rejection-sampling",
+    "randomized"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    Solution(double radius, double x_center, double y_center) :\n        radius_(radius),\n        x_center_(x_center),\n        y_center_(y_center), \n        gen_((random_device())()),\n        uni_(0.0, 1.0) {\n        \n    }\n    \n    vector<double> randPoint() {\n        const auto r = radius_ * sqrt(uni_(gen_));\n        const auto theta = (2 * M_PI) * uni_(gen_);\n        return {r * cos(theta) + x_center_,\n                r * sin(theta) + y_center_};\n    }\n    \nprivate:\n    double radius_;\n    double x_center_;\n    double y_center_;\n    default_random_engine gen_;\n    uniform_real_distribution<double> uni_;\n};\n\n/**\n * Your Solution object will be instantiated and called as such:\n * Solution obj = new Solution(radius, x_center, y_center);\n * vector<double> param_1 = obj.randPoint();\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nimport random\nimport math\n\nclass Solution(object):\n\n    def __init__(self, radius, x_center, y_center):\n        \"\"\"\n        :type radius: float\n        :type x_center: float\n        :type y_center: float\n        \"\"\"\n        self.__radius = radius\n        self.__x_center = x_center\n        self.__y_center = y_center\n        \n\n    def randPoint(self):\n        \"\"\"\n        :rtype: List[float]\n        \"\"\"\n        r = (self.__radius) * math.sqrt(random.uniform(0, 1))\n        theta = (2*math.pi) * random.uniform(0, 1)\n        return (r*math.cos(theta) + self.__x_center,\n                r*math.sin(theta) + self.__y_center)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "5e25cd90-b03c-4f35-9a9f-e5707ddc2bb9",
+  "slug": "course-schedule",
+  "title": "Course Schedule",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There are a total of <code>numCourses</code> courses you have to take, labeled from <code>0</code> to <code>numCourses - 1</code>. You are given an array <code>prerequisites</code> where <code>prerequisites[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> indicates that you <strong>must</strong> take course <code>b<sub>i</sub></code> first if you want to take course <code>a<sub>i</sub></code>.</p>\n\n<ul>\n\t<li>For example, the pair <code>[0, 1]</code>, indicates that to take course <code>0</code> you have to first take course <code>1</code>.</li>\n</ul>\n\n<p>Return <code>true</code> if you can finish all courses. Otherwise, return <code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> numCourses = 2, prerequisites = [[1,0]]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> There are a total of 2 courses to take. \nTo take course 1 you should have finished course 0. So it is possible.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> numCourses = 2, prerequisites = [[1,0],[0,1]]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> There are a total of 2 courses to take. \nTo take course 1 you should have finished course 0, and to take course 0 you should also have finished course 1. So it is impossible.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= numCourses &lt;= 2000</code></li>\n\t<li><code>0 &lt;= prerequisites.length &lt;= 5000</code></li>\n\t<li><code>prerequisites[i].length == 2</code></li>\n\t<li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt; numCourses</code></li>\n\t<li>All the pairs prerequisites[i] are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "depth-first-search",
+    "breadth-first-search",
+    "graph",
+    "topological-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(|V| + |E|)\n// Space: O(|E|)\n\n// Kahn’s algorithm (bfs solution)\nclass Solution {\npublic:\n    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {\n        unordered_map<int, vector<int>> adj;\n        unordered_map<int, int> in_degree;\n        for (const auto& p : prerequisites) {\n            ++in_degree[p[0]];\n            adj[p[1]].emplace_back(p[0]);\n        }\n        queue<int> q;\n        for (int i = 0; i < numCourses; ++i) {\n            if (!in_degree.count(i)) {\n                q.emplace(i);\n            }\n        }\n        vector<int> result;\n        while (!q.empty()) {\n            const auto node = q.front(); q.pop();\n            result.emplace_back(node);\n            for (const auto& i : adj[node]) {\n                if (!--in_degree[i]) {\n                    q.emplace(i);\n                }\n            }\n        }\n        return size(result) == numCourses;\n    }\n};\n\n// Time:  O(|V| + |E|)\n// Space: O(|E|)\n// dfs solution\nclass Solution2 {\npublic:\n    bool canFinish(int numCourses, vector<vector<int>>& prerequisites) {\n        unordered_map<int, vector<int>> adj;\n        unordered_map<int, int> in_degree;\n        for (const auto& p : prerequisites) {\n            ++in_degree[p[0]];\n            adj[p[1]].emplace_back(p[0]);\n        }\n        vector<int> stk;\n        for (int i = 0; i < numCourses; ++i) {\n            if (!in_degree.count(i)) {\n                stk.emplace_back(i);\n            }\n        }\n        vector<int> result;\n        while (!stk.empty()) {\n            const auto node = stk.back(); stk.pop_back();\n            result.emplace_back(node);\n            for (const auto& i : adj[node]) {\n                if (!--in_degree[i]) {\n                    stk.emplace_back(i);\n                }\n            }\n        }\n        return size(result) == numCourses;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(|V| + |E|)\n# Space: O(|E|)\n\nimport collections\n\n\n# Khan's algorithm (bfs solution)\nclass Solution(object):\n    def canFinish(self, numCourses, prerequisites):\n        \"\"\"\n        :type numCourses: int\n        :type prerequisites: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        adj = collections.defaultdict(list)\n        in_degree = collections.Counter()\n        for u, v in prerequisites:\n            in_degree[u] += 1\n            adj[v].append(u)\n        result = []\n        q = [u for u in xrange(numCourses) if u not in in_degree]\n        while q:\n            new_q = []\n            for u in q:\n                result.append(u)\n                for v in adj[u]:\n                    in_degree[v] -= 1\n                    if in_degree[v] == 0:\n                        new_q.append(v)\n            q = new_q\n        return len(result) == numCourses\n\n\n# Time:  O(|V| + |E|)\n# Space: O(|E|)\nimport collections\n\n\n# dfs solution\nclass Solution2(object):\n    def canFinish(self, numCourses, prerequisites):\n        \"\"\"\n        :type numCourses: int\n        :type prerequisites: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        adj = collections.defaultdict(list)\n        in_degree = collections.Counter()\n        for u, v in prerequisites:\n            in_degree[u] += 1\n            adj[v].append(u)\n        result = []\n        stk = [u for u in xrange(numCourses) if u not in in_degree]\n        while stk:\n            u = stk.pop()\n            result.append(u)\n            for v in adj[u]:\n                in_degree[v] -= 1\n                if in_degree[v] == 0:\n                    stk.append(v)\n        return len(result) == numCourses",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

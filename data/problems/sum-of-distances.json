@@ -1,0 +1,41 @@
+{
+  "id": "ecd5f925-3ce2-484d-976b-b29bb9c7c427",
+  "slug": "sum-of-distances",
+  "title": "Sum of Distances",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>. There exists an array <code>arr</code> of length <code>nums.length</code>, where <code>arr[i]</code> is the sum of <code>|i - j|</code> over all <code>j</code> such that <code>nums[j] == nums[i]</code> and <code>j != i</code>. If there is no such <code>j</code>, set <code>arr[i]</code> to be <code>0</code>.</p>\n\n<p>Return <em>the array </em><code>arr</code><em>.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,3,1,1,2]\n<strong>Output:</strong> [5,0,3,4,0]\n<strong>Explanation:</strong> \nWhen i = 0, nums[0] == nums[2] and nums[0] == nums[3]. Therefore, arr[0] = |0 - 2| + |0 - 3| = 5. \nWhen i = 1, arr[1] = 0 because there is no other index with value 3.\nWhen i = 2, nums[2] == nums[0] and nums[2] == nums[3]. Therefore, arr[2] = |2 - 0| + |2 - 3| = 3. \nWhen i = 3, nums[3] == nums[0] and nums[3] == nums[2]. Therefore, arr[3] = |3 - 0| + |3 - 2| = 4. \nWhen i = 4, arr[4] = 0 because there is no other index with value 2. \n\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,5,3]\n<strong>Output:</strong> [0,0,0]\n<strong>Explanation:</strong> Since each element in nums is distinct, arr[i] = 0 for all i.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Note:</strong> This question is the same as <a href=\"https://leetcode.com/problems/intervals-between-identical-elements/description/\" target=\"_blank\"> 2121: Intervals Between Identical Elements.</a></p>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,3,1,1,2]\n[0,5,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table, prefix sum\nclass Solution {\npublic:\n    vector<long long> distance(vector<int>& nums) {\n        vector<long long> result(size(nums));\n        unordered_map<int, long long> cnt1, left;\n        for (int i = 0; i < size(nums); ++i) {\n            result[i] += cnt1[nums[i]] * i - left[nums[i]];\n            ++cnt1[nums[i]];\n            left[nums[i]] += i;\n        }\n        unordered_map<int, long long> cnt2, right;\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            result[i] += right[nums[i]] - cnt2[nums[i]] * i ;\n            ++cnt2[nums[i]];\n            right[nums[i]] += i;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# freq table, prefix sum\nclass Solution(object):\n    def distance(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = [0]*len(nums)\n        cnt1, left = collections.Counter(), collections.Counter()\n        for i in xrange(len(nums)):\n            result[i] += cnt1[nums[i]]*i-left[nums[i]]\n            cnt1[nums[i]] += 1\n            left[nums[i]] += i\n        cnt2, right = collections.Counter(), collections.Counter()\n        for i in reversed(xrange(len(nums))):\n            result[i] += right[nums[i]]-cnt2[nums[i]]*i\n            cnt2[nums[i]] += 1\n            right[nums[i]] += i\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "3e0916c3-4b25-43a8-8c4d-d6a14769c6cd",
+  "slug": "find-diameter-endpoints-of-a-tree",
+  "title": "Find Diameter Endpoints of a Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "breadth-first-search",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n[[0,1],[1,2]]\n7\n[[0,1],[1,2],[2,3],[3,4],[3,5],[1,6]]\n2\n[[0,1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// tree diameter, bfs\nclass Solution {\npublic:\n    string findSpecialNodes(int n, vector<vector<int>>& edges) {\n        vector<vector<int>> adj(size(edges) + 1);\n        for (const auto& e : edges) {\n            adj[e[0]].emplace_back(e[1]);\n            adj[e[1]].emplace_back(e[0]);\n        }\n        const auto& bfs = [&](int u) {\n            vector<bool> lookup(size(adj));\n            lookup[u] = true;\n            vector<int> q = {u}, new_q;\n            while (!empty(q)) {\n                new_q.clear();\n                for (const auto& u : q) {\n                    for (const auto& v : adj[u]) {\n                        if (lookup[v]) {\n                            continue;\n                        }\n                        lookup[v] = true;\n                        new_q.emplace_back(v);\n                    }\n                }\n                swap(q, new_q);\n            }\n            return new_q;\n        };\n\n        string result(n, '0');\n        const auto& far = bfs(0);\n        for (const auto& u : far) {\n            result[u] = '1';\n        }\n        for (const auto& u : bfs(far[0])) {\n            result[u] = '1';\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# tree diameter, bfs\nclass Solution(object):\n    def findSpecialNodes(self, n, edges):\n        \"\"\"\n        :type n: int\n        :type edges: List[List[int]]\n        :rtype: str\n        \"\"\"\n        def bfs(u):\n            lookup = [False]*len(adj)\n            lookup[u] = True\n            q = [u]\n            new_q = []\n            while q:\n                new_q = []\n                for u in q:\n                    for v in adj[u]:\n                        if lookup[v]:\n                            continue\n                        lookup[v] = True\n                        new_q.append(v)\n                q, new_q = new_q, q\n            return new_q\n        \n        adj = [[] for _ in xrange(len(edges)+1)]\n        for u, v in edges:\n            adj[u].append(v)\n            adj[v].append(u)\n        result = ['0']*n\n        far = bfs(0)\n        for u in far:\n            result[u] = '1'\n        for u in bfs(far[0]):\n            result[u] = '1'\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

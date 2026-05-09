@@ -1,0 +1,41 @@
+{
+  "id": "2e31ed4b-740d-49e0-ab31-cf5f22a2fa84",
+  "slug": "ternary-expression-parser",
+  "title": "Ternary Expression Parser",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "stack",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"T?2:3\"\n\"F?1:T?4:5\"\n\"T?T?F:5:3\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string parseTernary(string expression) {\n        if (expression.empty()) {\n            return \"\";\n        }\n\n        string stack;\n        for (int i = expression.length() - 1; i >= 0; --i) {\n            auto c = expression[i];\n            if (!stack.empty() && stack.back() == '?') {\n                stack.pop_back();  // pop '?'\n                auto first = stack.back(); stack.pop_back();\n                stack.pop_back();  // pop ':'\n                auto second = stack.back(); stack.pop_back();\n    \n                if (c == 'T') {\n                    stack.push_back(first);\n                } else {\n                    stack.push_back(second);\n                }\n            } else {\n                stack.push_back(c);\n            }\n        }\n    \n        return string(1, stack.back());\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def parseTernary(self, expression):\n        \"\"\"\n        :type expression: str\n        :rtype: str\n        \"\"\"\n        if not expression:\n            return \"\"\n\n        stack = []\n        for c in expression[::-1]:\n            if stack and stack[-1] == '?':\n                stack.pop()  # pop '?'\n                first = stack.pop()\n                stack.pop()  # pop ':'\n                second = stack.pop()\n\n                if c == 'T':\n                    stack.append(first)\n                else:\n                    stack.append(second)\n            else:\n                stack.append(c)\n\n\n        return str(stack[-1])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

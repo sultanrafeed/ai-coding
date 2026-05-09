@@ -1,0 +1,34 @@
+{
+  "id": "129a0682-c6ad-4f10-82bd-4e45f256a1cc",
+  "slug": "day-of-the-year",
+  "title": "Day of the Year",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>date</code> representing a <a href=\"https://en.wikipedia.org/wiki/Gregorian_calendar\" target=\"_blank\">Gregorian calendar</a> date formatted as <code>YYYY-MM-DD</code>, return <em>the day number of the year</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> date = &quot;2019-01-09&quot;\n<strong>Output:</strong> 9\n<strong>Explanation:</strong> Given date is the 9th day of the year in 2019.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> date = &quot;2019-02-10&quot;\n<strong>Output:</strong> 41\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>date.length == 10</code></li>\n\t<li><code>date[4] == date[7] == &#39;-&#39;</code>, and all other <code>date[i]</code>&#39;s are digits</li>\n\t<li><code>date</code> represents a calendar date between Jan 1<sup>st</sup>, 1900 and Dec 31<sup>st</sup>, 2019.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    Solution() : lookup_(12) {\n        for (int M = 1; M < lookup_.size(); ++M) {\n            lookup_[M] = lookup_[M - 1] + dayOfMonth(M);\n        }\n    }\n\n    int dayOfYear(string date) {   \n        const auto& result = split(date, '-');\n        const auto& Y = stoi(result[0]), &M = stoi(result[1]), &D = stoi(result[2]);\n        const auto& leap = (M > 2 && (((Y % 4 == 0) && (Y % 100 != 0)) || (Y % 400 == 0))) ? 1 : 0;\n        return lookup_[M - 1] + D + leap;\n    }\n\nprivate:\n    int dayOfMonth(int M) {\n        return (M == 2) ? 28 : 31 - (M - 1) % 7 % 2;\n    }\n    \n    vector<string> split(const string& s, const char delim) {\n        vector<string> result;\n        auto end = string::npos;\n        do {\n            const auto& start = end + 1;\n            end = s.find(delim, start);\n            result.emplace_back(s.substr(start, end - start));\n        } while (end != string::npos); \n        return result;\n    }\n\n    vector<int> lookup_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def __init__(self):\n        def dayOfMonth(M):\n            return (28 if (M == 2) else 31-(M-1)%7%2)\n\n        self.__lookup = [0]*12\n        for M in xrange(1, len(self.__lookup)):\n            self.__lookup[M] += self.__lookup[M-1]+dayOfMonth(M)\n            \n    def dayOfYear(self, date):\n        \"\"\"\n        :type date: str\n        :rtype: int\n        \"\"\"\n        Y, M, D = map(int, date.split(\"-\"))\n        leap = 1 if M > 2 and (((Y % 4 == 0) and (Y % 100 != 0)) or (Y % 400 == 0)) else 0\n        return self.__lookup[M-1]+D+leap\n\n\n# Time:  O(1)\n# Space: O(1)\nclass Solution2(object):\n    def dayOfYear(self, date):\n        \"\"\"\n        :type date: str\n        :rtype: int\n        \"\"\"\n        def numberOfDays(Y, M):\n            leap = 1 if ((Y % 4 == 0) and (Y % 100 != 0)) or (Y % 400 == 0) else 0\n            return (28+leap if (M == 2) else 31-(M-1)%7%2)\n\n        Y, M, result = map(int, date.split(\"-\"))\n        for i in xrange(1, M):\n            result += numberOfDays(Y, i)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

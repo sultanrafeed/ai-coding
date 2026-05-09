@@ -1,0 +1,35 @@
+{
+  "id": "ec078d6b-a7b2-4ab9-8571-250c44fac6bf",
+  "slug": "the-knights-tour",
+  "title": "The Knight’s Tour",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "backtracking",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\n// backtracking, greedy, warnsdorff's rule\nclass Solution {\npublic:\n    vector<vector<int>> tourOfKnight(int m, int n, int r, int c) {\n        static const vector<pair<int, int>> DIRECTIONS = {{1, 2}, {-1, 2}, {1, -2}, {-1, -2},\n                                                          {2, 1}, {-2, 1}, {2, -1}, {-2, -1}};\n\n        vector<vector<int>> result(m, vector<int>(n, -1));\n        result[r][c] = 0;\n        const function<bool(int, int, int)> backtracking = [&](int r, int c, int i) {\n            const auto& degree = [&](const auto& x) {\n                int cnt = 0;\n                const auto& [r, c] = x;\n                for (const auto& [dr, dc] : DIRECTIONS) {\n                    const int nr = r + dr, nc = c + dc;\n                    if (0 <= nr && nr < m && 0 <= nc && nc < n && result[nr][nc] == -1) {\n                        ++cnt;\n                    }\n                }\n                return cnt;\n            };\n\n            if (i == m * n) {\n                return true;\n            }\n            vector<pair<int, int>> candidates;\n            for (const auto& [dr, dc] : DIRECTIONS) {\n                const int nr = r + dr, nc = c + dc;\n                if (0 <= nr && nr < m && 0 <= nc && nc < n && result[nr][nc] == -1) {\n                    candidates.emplace_back(nr, nc);\n                }\n            }\n            sort(begin(candidates), end(candidates), [&](const auto& a, const auto& b) {\n                return degree(a) < degree(b);\n            });\n            for (const auto& [nr, nc] : candidates) {  // warnsdorff's rule\n                result[nr][nc] = i;\n                if (backtracking(nr, nc, i + 1)) {\n                    return true;\n                }\n                result[nr][nc] = -1;\n            }\n            return false;\n        };\n\n        backtracking(r, c, 1);\n        return result;\n    }\n};\n\n// Time:  O(8^(m * n - 1))\n// Space: O(m * n)\n// backtracking\nclass Solution2 {\npublic:\n    vector<vector<int>> tourOfKnight(int m, int n, int r, int c) {\n        static const vector<pair<int, int>> DIRECTIONS = {{1, 2}, {-1, 2}, {1, -2}, {-1, -2},\n                                                          {2, 1}, {-2, 1}, {2, -1}, {-2, -1}};\n\n        vector<vector<int>> result(m, vector<int>(n, -1));\n        result[r][c] = 0;\n        const function<bool(int, int, int)> backtracking = [&](int r, int c, int i) {\n            if (i == m * n) {\n                return true;\n            }\n            for (const auto& [dr, dc] : DIRECTIONS) {\n                const int nr = r + dr, nc = c + dc;\n                if (!(0 <= nr && nr < m && 0 <= nc && nc < n && result[nr][nc] == -1)) {\n                    continue;\n                }\n                result[nr][nc] = i;\n                if (backtracking(nr, nc, i + 1)) {\n                    return true;\n                }\n                result[nr][nc] = -1;\n            }\n            return false;\n        };\n\n        backtracking(r, c, 1);\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\n# backtracking, greedy, warnsdorff's rule\nclass Solution(object):\n    def tourOfKnight(self, m, n, r, c):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :type r: int\n        :type c: int\n        :rtype: List[List[int]]\n        \"\"\"\n        DIRECTIONS = ((1, 2), (-1, 2), (1, -2), (-1, -2),\n                      (2, 1), (-2, 1), (2, -1), (-2, -1))\n        def backtracking(r, c, i):\n            def degree(x):\n                cnt = 0\n                r, c = x\n                for dr, dc in DIRECTIONS:\n                    nr, nc = r+dr, c+dc\n                    if 0 <= nr < m and 0 <= nc < n and result[nr][nc] == -1:\n                        cnt += 1\n                return cnt\n\n            if i == m*n:\n                return True\n            candidates = []\n            for dr, dc in DIRECTIONS:\n                nr, nc = r+dr, c+dc\n                if 0 <= nr < m and 0 <= nc < n and result[nr][nc] == -1:\n                    candidates.append((nr, nc))\n            for nr, nc in sorted(candidates, key=degree):  # warnsdorff's rule\n                result[nr][nc] = i\n                if backtracking(nr, nc, i+1):\n                    return True\n                result[nr][nc] = -1\n            return False\n    \n        result = [[-1]*n for _ in xrange(m)]\n        result[r][c] = 0\n        backtracking(r, c, 1)\n        return result\n\n\n# Time:  O(8^(m * n - 1))\n# Space: O(1)\n# backtracking\nclass Solution2(object):\n    def tourOfKnight(self, m, n, r, c):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :type r: int\n        :type c: int\n        :rtype: List[List[int]]\n        \"\"\"\n        DIRECTIONS = ((1, 2), (-1, 2), (1, -2), (-1, -2),\n                      (2, 1), (-2, 1), (2, -1), (-2, -1))\n        def backtracking(r, c, i):\n            if i == m*n:\n                return True\n            for dr, dc in DIRECTIONS:\n                nr, nc = r+dr, c+dc\n                if not (0 <= nr < m and 0 <= nc < n and result[nr][nc] == -1):\n                    continue\n                result[nr][nc] = i\n                if backtracking(nr, nc, i+1):\n                    return True\n                result[nr][nc] = -1\n            return False\n    \n        result = [[-1]*n for _ in xrange(m)]\n        result[r][c] = 0\n        backtracking(r, c, 1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

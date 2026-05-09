@@ -1,0 +1,36 @@
+{
+  "id": "a42396ec-0bf4-49ca-bfbd-8bf11d92264c",
+  "slug": "count-special-subsequences",
+  "title": "Count Special Subsequences",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array <code>nums</code> consisting of positive integers.</p>\n\n<p>A <strong>special subsequence</strong> is defined as a <span data-keyword=\"subsequence-array\">subsequence</span> of length 4, represented by indices <code>(p, q, r, s)</code>, where <code>p &lt; q &lt; r &lt; s</code>. This subsequence <strong>must</strong> satisfy the following conditions:</p>\n\n<ul>\n\t<li><code>nums[p] * nums[r] == nums[q] * nums[s]</code></li>\n\t<li>There must be <em>at least</em> <strong>one</strong> element between each pair of indices. In other words, <code>q - p &gt; 1</code>, <code>r - q &gt; 1</code> and <code>s - r &gt; 1</code>.</li>\n</ul>\n\n<p>Return the <em>number</em> of different <strong>special</strong> <strong>subsequences</strong> in <code>nums</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3,4,3,6,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There is one special subsequence in <code>nums</code>.</p>\n\n<ul>\n\t<li><code>(p, q, r, s) = (0, 2, 4, 6)</code>:\n\n\t<ul>\n\t\t<li>This corresponds to elements <code>(1, 3, 3, 1)</code>.</li>\n\t\t<li><code>nums[p] * nums[r] = nums[0] * nums[4] = 1 * 3 = 3</code></li>\n\t\t<li><code>nums[q] * nums[s] = nums[2] * nums[6] = 3 * 1 = 3</code></li>\n\t</ul>\n\t</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,4,3,4,3,4,3,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There are three special subsequences in <code>nums</code>.</p>\n\n<ul>\n\t<li><code>(p, q, r, s) = (0, 2, 4, 6)</code>:\n\n\t<ul>\n\t\t<li>This corresponds to elements <code>(3, 3, 3, 3)</code>.</li>\n\t\t<li><code>nums[p] * nums[r] = nums[0] * nums[4] = 3 * 3 = 9</code></li>\n\t\t<li><code>nums[q] * nums[s] = nums[2] * nums[6] = 3 * 3 = 9</code></li>\n\t</ul>\n\t</li>\n\t<li><code>(p, q, r, s) = (1, 3, 5, 7)</code>:\n\t<ul>\n\t\t<li>This corresponds to elements <code>(4, 4, 4, 4)</code>.</li>\n\t\t<li><code>nums[p] * nums[r] = nums[1] * nums[5] = 4 * 4 = 16</code></li>\n\t\t<li><code>nums[q] * nums[s] = nums[3] * nums[7] = 4 * 4 = 16</code></li>\n\t</ul>\n\t</li>\n\t<li><code>(p, q, r, s) = (0, 2, 5, 7)</code>:\n\t<ul>\n\t\t<li>This corresponds to elements <code>(3, 3, 4, 4)</code>.</li>\n\t\t<li><code>nums[p] * nums[r] = nums[0] * nums[5] = 3 * 4 = 12</code></li>\n\t\t<li><code>nums[q] * nums[s] = nums[2] * nums[7] = 3 * 4 = 12</code></li>\n\t</ul>\n\t</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>7 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n^2)\n\n// freq table\nclass Solution {\npublic:\n    long long numberOfSubsequences(vector<int>& nums) {\n        int64_t result = 0;\n        unordered_map<double, int> cnt;\n        for (int r = 4; r + 2 < size(nums); ++r) {\n            const int q = r - 2;\n            for (int p = 0; p <= q - 2; ++p) {\n                ++cnt[static_cast<double>(nums[p]) / nums[q]];\n            }\n            for (int s = r + 2; s < size(nums); ++s) {\n                result += cnt[static_cast<double>(nums[s]) / nums[r]];\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2 * logr)\n// Space: O(n^2)\n// freq table, number theory\nclass Solution2 {\npublic:\n    long long numberOfSubsequences(vector<int>& nums) {\n        int64_t result = 0;\n        unordered_map<int, unordered_map<int, int>> cnt;\n        for (int r = 4; r + 2 < size(nums); ++r) {\n            const int q = r - 2;\n            for (int p = 0; p <= q - 2; ++p) {\n                const int g = gcd(nums[p], nums[q]);\n                ++cnt[nums[p] / g][nums[q] / g];\n            }\n            for (int s = r + 2; s < size(nums); ++s) {\n                const int g = gcd(nums[s], nums[r]);\n                result += cnt[nums[s] / g][nums[r] / g];\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n^2)\n\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def numberOfSubsequences(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        cnt = collections.defaultdict(int)\n        result = 0\n        for r in xrange(4, len(nums)-2):\n            q = r-2\n            for p in xrange((q-2)+1):\n                cnt[float(nums[p])/nums[q]] += 1\n            for s in xrange(r+2, len(nums)):\n                result += cnt[float(nums[s])/nums[r]]\n        return result\n\n\n# Time:  O(n^2 * logr)\n# Space: O(n^2)\nimport collections\n\n\n# freq table, number theory\nclass Solution2(object):\n    def numberOfSubsequences(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def gcd(a, b):\n            while b:\n                a, b = b, a%b\n            return a\n    \n        cnt = collections.defaultdict(int)\n        result = 0\n        for r in xrange(4, len(nums)-2):\n            q = r-2\n            for p in xrange((q-2)+1):\n                g = gcd(nums[p], nums[q])\n                cnt[nums[p]//g, nums[q]//g] += 1\n            for s in xrange(r+2, len(nums)):\n                g = gcd(nums[s], nums[r])\n                result += cnt[nums[s]//g, nums[r]//g]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

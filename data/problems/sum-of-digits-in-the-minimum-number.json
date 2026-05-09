@@ -1,0 +1,40 @@
+{
+  "id": "c854574c-9cca-4553-9b4a-24171dde136b",
+  "slug": "sum-of-digits-in-the-minimum-number",
+  "title": "Sum of Digits in the Minimum Number",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[34,23,1,24,75,33,54,8]\n[99,77,33,66,55]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l), l is the max length of numbers\n// Space: O(l)\n\nclass Solution {\npublic:\n    int sumOfDigits(vector<int>& A) {\n        int min_num = *min_element(A.begin(),A.end());\n        int total = 0;\n        while (min_num) {\n            total += min_num % 10;\n            min_num /= 10;\n        }\n        return total % 2 == 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l)\n# Space: O(l)\n\nclass Solution(object):\n    def sumOfDigits(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        total = sum([int(c) for c in str(min(A))])\n        return 1 if total % 2 == 0 else 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

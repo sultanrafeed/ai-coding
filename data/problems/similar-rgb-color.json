@@ -1,0 +1,35 @@
+{
+  "id": "59e4adf2-f29b-4247-823f-62aaff3518f9",
+  "slug": "similar-rgb-color",
+  "title": "Similar RGB Color",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "string",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string similarRGB(string color) {\n        string result = \"#\";\n        result += round(color.substr(1, 2));\n        result += round(color.substr(3, 2));\n        result += round(color.substr(5, 2));\n        return result;\n    }\n\nprivate:\n    string round(const string& color) {\n        std::stringstream in(color);\n        int decimal = 0;\n        in >> std::hex >> decimal;\n        decimal = decimal / 17 + (decimal % 17 > 8 ? 1 : 0);\n        std::stringstream out;\n        out << std::setfill('0') << std::setw(2) << std::hex <<  17 * q;\n        return out.str();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def similarRGB(self, color):\n        \"\"\"\n        :type color: str\n        :rtype: str\n        \"\"\"\n        def rounding(color):\n            q, r = divmod(int(color, 16), 17)\n            if r > 8: q += 1\n            return '{:02x}'.format(17*q)\n\n        return '#' + \\\n                rounding(color[1:3]) + \\\n                rounding(color[3:5]) + \\\n                rounding(color[5:7])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

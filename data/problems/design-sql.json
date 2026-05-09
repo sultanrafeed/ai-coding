@@ -1,0 +1,42 @@
+{
+  "id": "9dd0d153-6cf2-4beb-a220-f841400a25df",
+  "slug": "design-sql",
+  "title": "Design SQL",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"SQL\",\"ins\",\"sel\",\"ins\",\"exp\",\"rmv\",\"sel\",\"exp\"]\n[[[\"one\",\"two\",\"three\"],[2,3,1]],[\"two\",[\"first\",\"second\",\"third\"]],[\"two\",1,3],[\"two\",[\"fourth\",\"fifth\",\"sixth\"]],[\"two\"],[\"two\",1],[\"two\",2,2],[\"two\"]]\n[\"SQL\",\"ins\",\"sel\",\"rmv\",\"sel\",\"ins\",\"ins\"]\n[[[\"one\",\"two\",\"three\"],[2,3,1]],[\"two\",[\"first\",\"second\",\"third\"]],[\"two\",1,3],[\"two\",1],[\"two\",1,2],[\"two\",[\"fourth\",\"fifth\"]],[\"two\",[\"fourth\",\"fifth\",\"sixth\"]]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:       O(t * max_m), t is the number of tables, max_m is the max number of columns in all tables\n//        insertRow:  O(m), m is the number of columns\n//        deleteRow:  O(1)\n//        selectCell: O(m)\n// Space: O(d), d is the total size of data\n\n// hash table\nclass SQL {\npublic:\n    SQL(vector<string>& names, vector<int>& columns) {\n        for (int i = 0; i < size(names); ++i) {\n            table_[names[i]].emplace_back(columns[i]);\n        }\n    }\n    \n    void insertRow(string name, vector<string> row) {\n        row.emplace_back();  // soft delete\n        table_[name].emplace_back(row);\n    }\n    \n    void deleteRow(string name, int rowId) {\n        table_[name][rowId].back() = \"deleted\";  // soft delete\n    }\n    \n    string selectCell(string name, int rowId, int columnId) {\n        return table_[name][rowId].back() != \"deleted\" ? table_[name][rowId][columnId - 1] : \"\";\n    }\n\nprivate:\n    unordered_map<string, vector<vector<string>>> table_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:       O(t * max_m), t is the number of tables, max_m is the max number of columns in all tables\n#        insertRow:  O(m), m is the number of columns\n#        deleteRow:  O(1)\n#        selectCell: O(m)\n# Space: O(d), d is the total size of data\n\nimport itertools\n\n\n# hash table\nclass SQL(object):\n\n    def __init__(self, names, columns):\n        \"\"\"\n        :type names: List[str]\n        :type columns: List[int]\n        \"\"\"\n        self.__table = {name:[column] for name, column in itertools.izip(names, columns)}\n\n    def insertRow(self, name, row):\n        \"\"\"\n        :type name: str\n        :type row: List[str]\n        :rtype: None\n        \"\"\"\n        row.append(\"\")  # soft delete\n        self.__table[name].append(row)\n\n    def deleteRow(self, name, rowId):\n        \"\"\"\n        :type name: str\n        :type rowId: int\n        :rtype: None\n        \"\"\"\n        self.__table[name][rowId][-1] = \"deleted\"  # soft delete\n\n    def selectCell(self, name, rowId, columnId):\n        \"\"\"\n        :type name: str\n        :type rowId: int\n        :type columnId: int\n        :rtype: str\n        \"\"\"\n        return self.__table[name][rowId][columnId-1] if self.__table[name][rowId][-1] == \"\" else \"\"",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

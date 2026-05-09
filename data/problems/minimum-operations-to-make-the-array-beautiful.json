@@ -1,0 +1,34 @@
+{
+  "id": "4d184ffd-cd43-41c0-8d42-7762dbf4d3d7",
+  "slug": "minimum-operations-to-make-the-array-beautiful",
+  "title": "Minimum Operations to Make the Array Beautiful",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * rlogr), r = max(nums)\n// Space: O(r)\n\n// dp\nclass Solution {\npublic:\n    int minOperations(vector<int>& nums) {\n        static const int INF = numeric_limits<int>::max();\n\n        const auto& ceil_divide = [](int a, int b) {\n            return (a + b - 1) / b;\n        };\n\n        const auto& mx = ranges::max(nums);\n        if (mx == 1) {\n            return 0;\n        }\n        vector<int> dp((2 * mx - 2) + 1, INF);\n        dp[nums[0]] = 0;\n        for (int i = 1; i < size(nums); ++i) {\n            vector<int> new_dp((2 * mx - 2) + 1, INF);\n            for (int x = 1; x < size(dp); ++x) {\n                if (dp[x] == INF) {\n                    continue;\n                }\n                for (int j = ceil_divide(nums[i], x); j * x < size(dp); ++j) {\n                    new_dp[j * x] = min(new_dp[j * x], dp[x] + (j * x - nums[i]));\n                }\n            }\n            dp = move(new_dp);\n        }\n        \n        return ranges::min(dp);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * rlogr), r = max(nums)\n# Space: O(r)\n\n# dp\nclass Solution(object):\n    def minOperations(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n\n        INF = float(\"inf\")\n        mx = max(nums)\n        if mx == 1:\n            return 0\n        dp = [INF]*((2*mx-2)+1)\n        dp[nums[0]] = 0\n        for i in xrange(1, len(nums)):\n            new_dp = [INF]*len(dp)\n            for x in xrange(1, len(dp)):\n                if dp[x] == INF:\n                    continue\n                for j in xrange(ceil_divide(nums[i], x), (len(dp)-1)//x+1):\n                    new_dp[j*x] = min(new_dp[j*x], dp[x]+(j*x-nums[i]))\n            dp = new_dp\n        return min(dp)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

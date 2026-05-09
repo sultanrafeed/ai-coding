@@ -1,0 +1,31 @@
+{
+  "id": "147b1e4f-a2d3-4b5f-9f48-63d1f6560389",
+  "slug": "custom-interval",
+  "title": "Custom Interval",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "50\n20\n225\n20\n20\n150\n100\n200\n500",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nlet id = 0;\nconst lookup = new Map();\n\nfunction customInterval(fn: Function, delay: number, period: number): number {\n    const fn1 = () => {\n        lookup.set(i, setTimeout(fn2, curr));\n        curr += period;\n    };\n    const fn2 = () => {\n        fn();\n        fn1();\n    };\n    let i = id++;\n    let curr = delay;\n    fn1();\n    return i;\n}\n\nfunction customClearInterval(id: number) {\n    clearTimeout(lookup.get(id));\n    lookup.delete(id); \n}",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

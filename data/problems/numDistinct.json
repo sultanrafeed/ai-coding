@@ -1,0 +1,25 @@
+{
+  "id": "0ec162f0-af9e-45a3-bb30-51e70058f9c7",
+  "slug": "numDistinct",
+  "title": "Numdistinct",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(m * n)\n// Space Complexity: O(n)\n\nclass Solution {\n    public:\n        int numDistinct(const string &S, const string &T) {\n            vector<int> f(T.size() + 1);\n            f[0] = 1; // f(0, 0) = 1, means S = \"\" and T = \"\", there is only one distinct subsequence, i.e. \"\"\n            for (int i = 1; i <= S.size(); ++i) {\n                for (int j = T.size(); j > 0; --j) {\n                    // f(i, j) is composed of:\n                    // f(i−1,j): not using S[i - 1] \n                    // f(i−1,j−1): using S[i - 1] if S[i - 1] == S[j - 1]\n                    f[j] += (S[i - 1] == T[j - 1]) ? f[j - 1] : 0;\n                }\n            }\n            return f[T.size()];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

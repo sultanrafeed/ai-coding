@@ -1,0 +1,39 @@
+{
+  "id": "350069fa-964a-473f-8335-b32969e1333b",
+  "slug": "find-kth-character-in-expanded-string",
+  "title": "Find Kth Character in Expanded String",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"hello world\"\n0\n\"hello world\"\n15",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// string\nclass Solution {\npublic:\n    char kthCharacter(string s, long long k) {\n        int i = 0;\n        for (int l = 0; i < size(s); ++i) {\n            if (s[i] == ' ') {\n                l = 0;\n                --k;\n            } else {\n                k -= ++l;\n            }\n            if (k < 0) {\n                break;\n            }\n        }\n        return s[i];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# string\nclass Solution(object):\n    def kthCharacter(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: str\n        \"\"\"\n        l = 0\n        for i in xrange(len(s)):\n            if s[i] == ' ':\n                l = 0\n                k -= 1\n            else:\n                l += 1\n                k -= l\n            if k < 0:\n                break\n        return s[i]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

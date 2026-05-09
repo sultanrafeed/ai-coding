@@ -1,0 +1,42 @@
+{
+  "id": "ac216c4d-e791-43c7-b385-ab52cb52a31e",
+  "slug": "palindrome-linked-list",
+  "title": "Palindrome Linked List",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the <code>head</code> of a singly linked list, return <code>true</code><em> if it is a </em><span data-keyword=\"palindrome-sequence\"><em>palindrome</em></span><em> or </em><code>false</code><em> otherwise</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/03/pal1linked-list.jpg\" style=\"width: 422px; height: 62px;\" />\n<pre>\n<strong>Input:</strong> head = [1,2,2,1]\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/03/pal2linked-list.jpg\" style=\"width: 182px; height: 62px;\" />\n<pre>\n<strong>Input:</strong> head = [1,2]\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the list is in the range <code>[1, 10<sup>5</sup>]</code>.</li>\n\t<li><code>0 &lt;= Node.val &lt;= 9</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Could you do it in <code>O(n)</code> time and <code>O(1)</code> space?",
+  "patterns": [
+    "linked-list",
+    "two-pointers",
+    "stack",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,2,1]\n[1,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    bool isPalindrome(ListNode* head) {\n        // Reverse the first half list.\n        ListNode *reverse = nullptr, *fast = head;\n        while (fast && fast->next) {\n            fast = fast->next->next;\n            const auto head_next = head->next;\n            head->next = reverse;\n            reverse = head;\n            head = head_next;\n        }\n\n        // If the number of the nodes is odd,\n        // set the head of the tail list to the next of the median node.\n        ListNode *tail = fast ? head->next : head;\n\n        // Compare the reversed first half list with the second half list.\n        // And restore the reversed first half list.\n        bool is_palindrome = true;\n        while (reverse) {\n            is_palindrome = is_palindrome && reverse->val == tail->val;\n            const auto reverse_next = reverse->next;\n            reverse->next = head;\n            head = reverse;\n            reverse = reverse_next;\n            tail = tail->next;\n        }\n            \n        return is_palindrome;   \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    # @param {ListNode} head\n    # @return {boolean}\n    def isPalindrome(self, head):\n        reverse, fast = None, head\n        # Reverse the first half part of the list.\n        while fast and fast.next:\n            fast = fast.next.next\n            head.next, reverse, head = reverse, head, head.next\n\n        # If the number of the nodes is odd,\n        # set the head of the tail list to the next of the median node.\n        tail = head.next if fast else head\n\n        # Compare the reversed first half list with the second half list.\n        # And restore the reversed first half list.\n        is_palindrome = True\n        while reverse:\n            is_palindrome = is_palindrome and reverse.val == tail.val\n            reverse.next, head, reverse = head, reverse, reverse.next\n            tail = tail.next\n\n        return is_palindrome",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

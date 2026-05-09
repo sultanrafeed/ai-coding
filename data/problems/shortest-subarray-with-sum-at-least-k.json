@@ -1,0 +1,39 @@
+{
+  "id": "ddf01d98-5665-42dc-9a74-af11d51ba3de",
+  "slug": "shortest-subarray-with-sum-at-least-k",
+  "title": "Shortest Subarray with Sum at Least K",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the length of the shortest non-empty <strong>subarray</strong> of </em><code>nums</code><em> with a sum of at least </em><code>k</code>. If there is no such <strong>subarray</strong>, return <code>-1</code>.</p>\n\n<p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> nums = [1], k = 1\n<strong>Output:</strong> 1\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> nums = [1,2], k = 4\n<strong>Output:</strong> -1\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> nums = [2,-1,2], k = 3\n<strong>Output:</strong> 3\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>5</sup> &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "queue",
+    "sliding-window",
+    "heap-priority-queue",
+    "prefix-sum",
+    "monotonic-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int shortestSubarray(vector<int>& A, int K) {\n        vector<int> accumulated_sum(A.size() + 1, 0);\n        partial_sum(A.cbegin(), A.cend(), next(accumulated_sum.begin()), plus<int>());\n        \n        int result = numeric_limits<int>::max();\n        deque<int> mono_increasing_q;\n        for (int i = 0; i < accumulated_sum.size(); ++i) {\n            while (!mono_increasing_q.empty() &&\n                   accumulated_sum[i] <= accumulated_sum[mono_increasing_q.back()]) {\n                mono_increasing_q.pop_back();\n            }\n            while (!mono_increasing_q.empty() &&\n                   accumulated_sum[i] - accumulated_sum[mono_increasing_q.front()] >= K) {\n                result = min(result, i - mono_increasing_q.front());\n                mono_increasing_q.pop_front();\n            }\n            mono_increasing_q.emplace_back(i);\n        }\n        return result != numeric_limits<int>::max() ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def shortestSubarray(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        accumulated_sum = [0]*(len(A)+1)\n        for i in xrange(len(A)):\n            accumulated_sum[i+1] = accumulated_sum[i]+A[i]\n\n        result = float(\"inf\")\n        mono_increasing_q = collections.deque()\n        for i, curr in enumerate(accumulated_sum):\n            while mono_increasing_q and curr <= \\\n                    accumulated_sum[mono_increasing_q[-1]]:\n                mono_increasing_q.pop()\n            while mono_increasing_q and \\\n                    curr-accumulated_sum[mono_increasing_q[0]] >= K:\n                result = min(result, i-mono_increasing_q.popleft())\n            mono_increasing_q.append(i)\n        return result if result != float(\"inf\") else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

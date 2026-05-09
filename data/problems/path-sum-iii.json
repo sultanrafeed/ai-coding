@@ -1,0 +1,41 @@
+{
+  "id": "95c98e41-487b-4d51-a050-a75316686603",
+  "slug": "path-sum-iii",
+  "title": "Path Sum III",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree and an integer <code>targetSum</code>, return <em>the number of paths where the sum of the values&nbsp;along the path equals</em>&nbsp;<code>targetSum</code>.</p>\n\n<p>The path does not need to start or end at the root or a leaf, but it must go downwards (i.e., traveling only from parent nodes to child nodes).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/09/pathsum3-1-tree.jpg\" style=\"width: 450px; height: 386px;\" />\n<pre>\n<strong>Input:</strong> root = [10,5,-3,3,2,null,11,3,-2,null,1], targetSum = 8\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The paths that sum to 8 are shown.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> root = [5,4,8,11,null,13,4,7,2,null,null,5,1], targetSum = 22\n<strong>Output:</strong> 3\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[0, 1000]</code>.</li>\n\t<li><code>-10<sup>9</sup> &lt;= Node.val &lt;= 10<sup>9</sup></code></li>\n\t<li><code>-1000 &lt;= targetSum &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[10,5,-3,3,2,null,11,3,-2,null,1]\n8\n[5,4,8,11,null,13,4,7,2,null,null,5,1]\n22",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    int pathSum(TreeNode* root, int sum) {        \n        unordered_map<int, int> lookup;\n        lookup[0] = 1;\n        return pathSumHelper(root, 0, sum, &lookup);\n    }\n\nprivate:\n    int pathSumHelper(TreeNode* root, int curr, int sum, unordered_map<int, int> *lookup) {\n        if (!root) {\n            return 0;\n        }\n        curr += root->val;\n        int result = lookup->count(curr - sum) ? (*lookup)[curr - sum] : 0;\n        ++(*lookup)[curr];\n        result += pathSumHelper(root->left, curr, sum, lookup) + pathSumHelper(root->right, curr, sum, lookup);\n        --(*lookup)[curr];\n        if ((*lookup)[curr] == 0) {\n            lookup->erase(curr);\n        }\n        return result;\n    }\n};\n\n\n// Time:  O(n^2)\n// Space: O(h)\nclass Solution2 {\npublic:\n    int pathSum(TreeNode* root, int sum) {\n        if (!root) {\n            return 0;\n        }\n        return pathSumHelper(root, 0, sum) + pathSum(root->left, sum) + pathSum(root->right, sum);\n    }\n\nprivate:\n    int pathSumHelper(TreeNode* root, int prev, int sum) {\n        if (!root) {\n            return 0;\n        }\n        int curr = prev + root->val;\n        return (curr == sum) + pathSumHelper(root->left, curr, sum) + pathSumHelper(root->right, curr, sum);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nimport collections\n\n\nclass Solution(object):\n    def pathSum(self, root, sum):\n        \"\"\"\n        :type root: TreeNode\n        :type sum: int\n        :rtype: int\n        \"\"\"\n        def pathSumHelper(root, curr, sum, lookup):\n            if root is None:\n                return 0\n            curr += root.val\n            result = lookup[curr-sum] if curr-sum in lookup else 0\n            lookup[curr] += 1\n            result += pathSumHelper(root.left, curr, sum, lookup) + \\\n                      pathSumHelper(root.right, curr, sum, lookup)\n            lookup[curr] -= 1\n            if lookup[curr] == 0:\n                del lookup[curr]\n            return result\n\n        lookup = collections.defaultdict(int)\n        lookup[0] = 1\n        return pathSumHelper(root, 0, sum, lookup)\n\n\n# Time:  O(n^2)\n# Space: O(h)\nclass Solution2(object):\n    def pathSum(self, root, sum):\n        \"\"\"\n        :type root: TreeNode\n        :type sum: int\n        :rtype: int\n        \"\"\"\n        def pathSumHelper(root, prev, sum):\n            if root is None:\n                return 0\n\n            curr = prev + root.val\n            return int(curr == sum) + \\\n                   pathSumHelper(root.left, curr, sum) + \\\n                   pathSumHelper(root.right, curr, sum)\n\n        if root is None:\n            return 0\n\n        return pathSumHelper(root, 0, sum) + \\\n               self.pathSum(root.left, sum) + \\\n               self.pathSum(root.right, sum)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

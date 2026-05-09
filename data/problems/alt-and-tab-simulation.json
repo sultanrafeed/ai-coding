@@ -1,0 +1,41 @@
+{
+  "id": "130e06ea-2919-4ec0-bfbb-a4544d2ed5eb",
+  "slug": "alt-and-tab-simulation",
+  "title": "Alt and Tab Simulation",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3]\n[3,3,2]\n[1,4,2,3]\n[4,1,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// hash table\nclass Solution {\npublic:\n    vector<int> simulationResult(vector<int>& windows, vector<int>& queries) {\n        vector<bool> lookup(size(windows));\n        vector<int> result;\n        for (int i = size(queries) - 1; i >= 0; --i) {\n            if (lookup[queries[i]]) {\n                continue;\n            }\n            lookup[queries[i]] = true;\n            result.emplace_back(queries[i]);\n        }\n        for (const auto& x : windows) {\n            if (lookup[x]) {\n                continue;\n            }\n            result.emplace_back(x);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# hash table\nclass Solution(object):\n    def simulationResult(self, windows, queries):\n        \"\"\"\n        :type windows: List[int]\n        :type queries: List[int]\n        :rtype: List[int]\n        \"\"\"\n        lookup = [False]*len(windows)\n        result = []\n        for x in reversed(queries):\n            if lookup[x-1]:\n                continue\n            lookup[x-1] = True\n            result.append(x)\n        result.extend(x for x in windows if not lookup[x-1])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

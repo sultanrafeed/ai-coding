@@ -1,0 +1,31 @@
+{
+  "id": "c5060663-fcef-4390-a5a7-5d1b0d14c7d2",
+  "slug": "convert-callback-based-function-to-promise-based-function",
+  "title": "Convert Callback Based Function to Promise Based Function",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "(callback, a, b, c) => { callback(a * b * c) }\n[1, 2, 3]\n(callback, a, b, c) => { callback(a * b * c, \"Promise Rejected\") }\n[4, 5, 6]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\ntype CallbackFn = (\n    next: (data: number, error: string) => void, \n    ...args: number[]\n) => void\ntype Promisified = (...args: number[]) => Promise<number>\n\n// promise\nfunction promisify(fn: CallbackFn): Promisified {\n    return async function(...args) {\n        return new Promise((resolve, reject) => {\n            const cb = (val, err) => {\n                err ? reject(err) : resolve(val);\n            };\n            fn(cb, ...args);\n        });\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

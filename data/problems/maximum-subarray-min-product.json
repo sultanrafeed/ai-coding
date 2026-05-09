@@ -1,0 +1,36 @@
+{
+  "id": "dd5419a2-cab2-4fc7-853f-8c59dd3e5768",
+  "slug": "maximum-subarray-min-product",
+  "title": "Maximum Subarray Min-Product",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>The <strong>min-product</strong> of an array is equal to the <strong>minimum value</strong> in the array <strong>multiplied by</strong> the array&#39;s <strong>sum</strong>.</p>\n\n<ul>\n\t<li>For example, the array <code>[3,2,5]</code> (minimum value is <code>2</code>) has a min-product of <code>2 * (3+2+5) = 2 * 10 = 20</code>.</li>\n</ul>\n\n<p>Given an array of integers <code>nums</code>, return <em>the <strong>maximum min-product</strong> of any <strong>non-empty subarray</strong> of </em><code>nums</code>. Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>Note that the min-product should be maximized <strong>before</strong> performing the modulo operation. Testcases are generated such that the maximum min-product <strong>without</strong> modulo will fit in a <strong>64-bit signed integer</strong>.</p>\n\n<p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,<u>2,3,2</u>]\n<strong>Output:</strong> 14\n<strong>Explanation:</strong> The maximum min-product is achieved with the subarray [2,3,2] (minimum value is 2).\n2 * (2+3+2) = 2 * 7 = 14.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,<u>3,3</u>,1,2]\n<strong>Output:</strong> 18\n<strong>Explanation:</strong> The maximum min-product is achieved with the subarray [3,3] (minimum value is 3).\n3 * (3+3) = 3 * 6 = 18.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,1,<u>5,6,4</u>,2]\n<strong>Output:</strong> 60\n<strong>Explanation:</strong> The maximum min-product is achieved with the subarray [5,6,4] (minimum value is 4).\n4 * (5+6+4) = 4 * 15 = 60.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>7</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "stack",
+    "monotonic-stack",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxSumMinProduct(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        vector<int64_t> prefix(nums.size() + 1);\n        for (int i = 0; i < size(nums); ++i) {\n           prefix[i + 1] = prefix[i] + nums[i];\n        }\n        vector<int> stk = {-1};\n        int64_t result = 0;\n        for (int i = 0; i <= size(nums); ++i) {\n            while (stk.back() != -1 && (i == size(nums) || nums[stk.back()] >= nums[i])) {\n                int j = stk.back();\n                stk.pop_back();\n                result = max(result, nums[j] * (prefix[(i - 1) + 1] - prefix[stk.back() + 1]));\n            }\n            stk.emplace_back(i);\n        }\n        return result % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def maxSumMinProduct(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        prefix = [0]*(len(nums)+1)\n        for i in xrange(len(nums)):\n            prefix[i+1] = prefix[i]+nums[i]\n        stk, result = [-1], 0\n        for i in xrange(len(nums)+1):\n            while stk[-1] != -1 and (i == len(nums) or nums[stk[-1]] >= nums[i]):\n                result = max(result, nums[stk.pop()]*(prefix[(i-1)+1]-prefix[stk[-1]+1]))\n            stk.append(i) \n        return result%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

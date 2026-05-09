@@ -1,0 +1,42 @@
+{
+  "id": "abbd67a3-939d-4eb2-b4f4-176e02664479",
+  "slug": "shortest-way-to-form-string",
+  "title": "Shortest Way to Form String",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "string",
+    "binary-search",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abc\"\n\"abcbc\"\n\"abc\"\n\"acdbc\"\n\"xyz\"\n\"xzyxz\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m + n), m is the length of source\n//                , n is the length of target\n// Space: O(m)\n\n// greedy solution\nclass Solution {\npublic:\n    int shortestWay(string source, string target) {\n        vector<vector<int>> lookup(source.size() + 1, vector<int>(26, -1));\n        vector<int> find_char_next_pos(26, -1);\n        for (int i = source.length() - 1; i >= 0; --i) {\n            find_char_next_pos[source[i] - 'a'] = i + 1;\n            lookup[i] = find_char_next_pos;\n        }\n        \n        int result = 1, start = 0;\n        for (const auto& c : target) {\n            start = lookup[start][c - 'a'];\n            if (start != -1) {\n                continue;\n            }\n            ++result;\n            start = lookup[0][c - 'a'];\n            if (start == -1) {\n                return -1;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m + n), m is the length of source\n#                , n is the length of target\n# Space: O(m)\n\n# greedy solution\nclass Solution(object):\n    def shortestWay(self, source, target):\n        \"\"\"\n        :type source: str\n        :type target: str\n        :rtype: int\n        \"\"\"\n        lookup = [[None for _ in xrange(26)] for _ in xrange(len(source)+1)]\n        find_char_next_pos = [None]*26\n        for i in reversed(xrange(len(source))):\n            find_char_next_pos[ord(source[i])-ord('a')] = i+1\n            lookup[i] = list(find_char_next_pos)\n\n        result, start = 1, 0\n        for c in target:\n            start = lookup[start][ord(c)-ord('a')]\n            if start != None:\n                continue\n            result += 1\n            start = lookup[0][ord(c)-ord('a')]\n            if start == None:\n                return -1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "a78d7539-6890-4bc1-90ad-2b16a08353d9",
+  "slug": "sum-of-squares-of-special-elements",
+  "title": "Sum of Squares of Special Elements ",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>1-indexed</strong> integer array <code>nums</code> of length <code>n</code>.</p>\n\n<p>An element <code>nums[i]</code> of <code>nums</code> is called <strong>special</strong> if <code>i</code> divides <code>n</code>, i.e. <code>n % i == 0</code>.</p>\n\n<p>Return <em>the <strong>sum of the squares</strong> of all <strong>special</strong> elements of </em><code>nums</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4]\n<strong>Output:</strong> 21\n<strong>Explanation:</strong> There are exactly 3 special elements in nums: nums[1] since 1 divides 4, nums[2] since 2 divides 4, and nums[4] since 4 divides 4. \nHence, the sum of the squares of all special elements of nums is nums[1] * nums[1] + nums[2] * nums[2] + nums[4] * nums[4] = 1 * 1 + 2 * 2 + 4 * 4 = 21.  \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,7,1,19,18,3]\n<strong>Output:</strong> 63\n<strong>Explanation:</strong> There are exactly 4 special elements in nums: nums[1] since 1 divides 6, nums[2] since 2 divides 6, nums[3] since 3 divides 6, and nums[6] since 6 divides 6. \nHence, the sum of the squares of all special elements of nums is nums[1] * nums[1] + nums[2] * nums[2] + nums[3] * nums[3] + nums[6] * nums[6] = 2 * 2 + 7 * 7 + 1 * 1 + 3 * 3 = 63. \n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length == n &lt;= 50</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 50</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4]\n[2,7,1,19,18,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(sqrt(n))\n// Space: O(1)\n\n// number theory\nclass Solution {\npublic:\n    int sumOfSquares(vector<int>& nums) {\n        int result = 0;\n        const int sqrt_n = sqrt(size(nums));\n        for (int i = 1; i <= sqrt_n; ++i) {\n            if (size(nums) % i) {\n                continue;\n            }\n            result += nums[i - 1] * nums[i - 1];\n            if (size(nums) / i != i) {\n                result += nums[size(nums) / i - 1] * nums[size(nums) / i - 1];\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(sqrt(n))\n# Space: O(1)\n\n# number theory\nclass Solution(object):\n    def sumOfSquares(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = 0\n        for i in xrange(1, int(len(nums)**0.5)+1):\n            if len(nums)%i:\n                continue\n            result += nums[i-1]**2\n            if len(nums)//i != i:\n                result += nums[len(nums)//i-1]**2\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

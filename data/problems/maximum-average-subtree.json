@@ -1,0 +1,35 @@
+{
+  "id": "0abd3b52-7037-422d-adfc-f086fa7d0e03",
+  "slug": "maximum-average-subtree",
+  "title": "Maximum Average Subtree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    double maximumAverageSubtree(TreeNode* root) {\n        double result = 0.0;\n        maximumAverageSubtreeHelper(root, &result);\n        return result;\n    }\n\nprivate:\n    pair<double, double> maximumAverageSubtreeHelper(TreeNode *root, double *result) {\n        if (!root) {\n            return {0, 0};\n        }\n        const auto& [s1, n1] = maximumAverageSubtreeHelper(root->left, result);\n        const auto& [s2, n2] = maximumAverageSubtreeHelper(root->right, result);\n        const auto& s = s1 + s2 + root->val;\n        const auto& n = n1 + n2 + 1;\n        *result = max(*result, s / n);\n        return {s, n};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def maximumAverageSubtree(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: float\n        \"\"\"\n        def maximumAverageSubtreeHelper(root, result):\n            if not root:\n                return [0.0, 0]\n            s1, n1 = maximumAverageSubtreeHelper(root.left, result)\n            s2, n2 = maximumAverageSubtreeHelper(root.right, result)\n            s = s1+s2+root.val\n            n = n1+n2+1\n            result[0] = max(result[0], s / n)\n            return [s, n]\n\n        result = [0]\n        maximumAverageSubtreeHelper(root, result)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

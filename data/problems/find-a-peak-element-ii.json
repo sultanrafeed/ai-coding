@@ -1,0 +1,35 @@
+{
+  "id": "02604400-633b-44d5-bd36-42aea532eac4",
+  "slug": "find-a-peak-element-ii",
+  "title": "Find a Peak Element II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A <strong>peak</strong> element in a 2D grid is an element that is <strong>strictly greater</strong> than all of its <strong>adjacent </strong>neighbors to the left, right, top, and bottom.</p>\n\n<p>Given a <strong>0-indexed</strong> <code>m x n</code> matrix <code>mat</code> where <strong>no two adjacent cells are equal</strong>, find <strong>any</strong> peak element <code>mat[i][j]</code> and return <em>the length 2 array </em><code>[i,j]</code>.</p>\n\n<p>You may assume that the entire matrix is surrounded by an <strong>outer perimeter</strong> with the value <code>-1</code> in each cell.</p>\n\n<p>You must write an algorithm that runs in <code>O(m log(n))</code> or <code>O(n log(m))</code> time.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/06/08/1.png\" style=\"width: 206px; height: 209px;\" /></p>\n\n<pre>\n<strong>Input:</strong> mat = [[1,4],[3,2]]\n<strong>Output:</strong> [0,1]\n<strong>Explanation:</strong>&nbsp;Both 3 and 4 are peak elements so [1,0] and [0,1] are both acceptable answers.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><strong><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/06/07/3.png\" style=\"width: 254px; height: 257px;\" /></strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[10,20,15],[21,30,14],[7,16,32]]\n<strong>Output:</strong> [1,1]\n<strong>Explanation:</strong>&nbsp;Both 30 and 32 are peak elements so [1,1] and [2,2] are both acceptable answers.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == mat.length</code></li>\n\t<li><code>n == mat[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 500</code></li>\n\t<li><code>1 &lt;= mat[i][j] &lt;= 10<sup>5</sup></code></li>\n\t<li>No two adjacent cells are equal.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(min(n, m) * log(max(n, m)))\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> findPeakGrid(vector<vector<int>>& mat) {\n        int left = 0, right = (max(size(mat), size(mat[0])) - 1) - 1;\n        while (left <= right) {\n            const auto& mid = left + (right - left) / 2;\n            if (check(mat, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        vector<int> result = {left, find_max(mat, left).first};\n        if (!(size(mat) > size(mat[0]))) {\n            reverse(begin(result), end(result));\n        }\n        return result;\n    }\n\nprivate:\n    bool check(const vector<vector<int>>& mat, int x) {\n        return find_max(mat, x).second > find_max(mat, x + 1).second;\n    }\n    \n    pair<int, int> find_max(const vector<vector<int>>& mat, int x) {\n        pair<int, int> result = {-1, -1};\n        for (int j = 0; j < min(size(mat), size(mat[0])); ++j) {\n            if (result.first == -1 || result.second < get_val(mat, x, j)) {\n                result = {j, get_val(mat, x, j)};\n            }\n        }\n        return result;\n    }\n\n    int get_val(const vector<vector<int>>& mat, int i, int j) {\n        return (size(mat) > size(mat[0])) ? mat[i][j] : mat[j][i];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(min(n, m) * log(max(n, m)))\n# Space: O(1)\n\nclass Solution(object):\n    def findPeakGrid(self, mat):\n        \"\"\"\n        :type mat: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        def get_vec(mat, i):\n            return mat[i] if len(mat) > len(mat[0]) else (mat[j][i] for j in xrange(len(mat)))\n\n        def check(mat, x):\n            return max(get_vec(mat, x)) > max(get_vec(mat, x+1))\n\n        left, right = 0, (max(len(mat), len(mat[0]))-1)-1\n        while left <= right:\n            mid = left + (right-left)//2\n            if check(mat, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        mav_val = max(get_vec(mat, left))\n        result = [left, next(i for i, x in enumerate(get_vec(mat, left)) if x == mav_val)]\n        return result if len(mat) > len(mat[0]) else result[::-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

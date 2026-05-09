@@ -1,0 +1,45 @@
+{
+  "id": "3ad9bdd6-b29d-46dc-980d-af6de2f3eeb1",
+  "slug": "maximum-number-of-intersections-on-the-chart",
+  "title": "Maximum Number of Intersections on the Chart",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "binary-indexed-tree",
+    "geometry",
+    "line-sweep",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,1,2,1,3,2]\n[2,1,3,4,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// sort, line sweep, coordinate compression\nclass Solution {\npublic:\n    int maxIntersectionCount(vector<int>& y) {\n        unordered_set<int> set_y(cbegin(y), cend(y));\n        vector<int> sorted_set_y(cbegin(set_y), cend(set_y));\n        sort(begin(sorted_set_y), end(sorted_set_y));\n        unordered_map<int, int> val_to_idx;\n        for (int i = 0; i < size(sorted_set_y); ++i) {\n            val_to_idx[sorted_set_y[i]] = i;\n        }\n        vector<int> cnts(2 * size(val_to_idx) + 1);\n        for (int i = 0; i + 1 < size(y); ++i) {\n            // [y[i], y[i+1]) <=> [y[i], y[i+1]-0.5] <=> [2*y[i], 2*y[i+1]-1]\n            const int left = 2 * val_to_idx[y[i]], right = 2 * val_to_idx[y[i + 1]] + (y[i] < y[i + 1] ? -1 : +1);\n            ++cnts[min(left, right)];\n            --cnts[max(left, right) + 1];\n        }\n        // [y[i], y[i]] <=> [2*y[i], 2*y[i]]\n        ++cnts[2 * val_to_idx[y.back()]];\n        --cnts[2 * val_to_idx[y.back()] + 1];\n        int result = 0, cnt = 0;\n        for (const auto& c : cnts) {\n            cnt += c;\n            result = max(result, cnt);\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// sort, line sweep\nclass Solution2 {\npublic:\n    int maxIntersectionCount(vector<int>& y) {\n        vector<pair<int, int>> events;\n        for (int i = 0; i + 1 < size(y); ++i) {\n            // [y[i], y[i+1]) <=> [y[i], y[i+1]-0.5] <=> [2*y[i], 2*y[i+1]-1]\n            const int left = 2 * y[i], right = 2 * y[i + 1] + (y[i] < y[i + 1] ? -1 : +1);\n            events.emplace_back(min(left, right), +1);\n            events.emplace_back(max(left, right) + 1, -1);\n        }\n        // [y[i], y[i]] <=> [2*y[i], 2*y[i]]\n        events.emplace_back(2 * y.back(), +1);\n        events.emplace_back(2 * y.back() + 1, -1);\n        sort(begin(events), end(events));\n        int result = 0, cnt = 0;\n        for (const auto& [_, c] : events) {\n            cnt += c;\n            result = max(result, cnt);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\n# sort, line sweep, coordinate compression\nclass Solution(object):\n    def maxIntersectionCount(self, y):\n        \"\"\"\n        :type y: List[int]\n        :rtype: int\n        \"\"\"\n        val_to_idx = {x:i for i, x in enumerate(sorted(set(y)))}\n        cnts = [0]*(2*len(val_to_idx)+1)\n        for i in xrange(len(y)-1):\n            # [y[i], y[i+1]) <=> [y[i], y[i+1]-0.5] <=> [2*y[i], 2*y[i+1]-1]\n            left, right = 2*val_to_idx[y[i]], 2*val_to_idx[y[i+1]]+(-1 if y[i] < y[i+1] else +1)\n            cnts[min(left, right)] += 1\n            cnts[max(left, right)+1] -= 1\n        # [y[i], y[i]] <=> [2*y[i], 2*y[i]]\n        cnts[2*val_to_idx[y[-1]]] += 1\n        cnts[2*val_to_idx[y[-1]]+1] -= 1\n        result = cnt = 0\n        for c in cnts:\n            cnt += c\n            result = max(result, cnt)\n        return result\n    \n\n# Time:  O(nlogn)\n# Space: O(n)\n# sort, line sweep\nclass Solution2(object):\n    def maxIntersectionCount(self, y):\n        \"\"\"\n        :type y: List[int]\n        :rtype: int\n        \"\"\"\n        events = []\n        for i in xrange(len(y)-1):\n            # [y[i], y[i+1]) <=> [y[i], y[i+1]-0.5] <=> [2*y[i], 2*y[i+1]-1]\n            left, right = 2*y[i], 2*y[i+1]+(-1 if y[i] < y[i+1] else +1)\n            events.append((min(left, right), +1))\n            events.append((max(left, right)+1, -1))\n        # [y[i], y[i]] <=> [2*y[i], 2*y[i]]\n        events.append((2*y[-1], +1))\n        events.append((2*y[-1]+1, -1))\n        events.sort()\n        result = cnt = 0\n        for _, c in events:\n            cnt += c\n            result = max(result, cnt)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

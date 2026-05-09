@@ -1,0 +1,36 @@
+{
+  "id": "60598a37-537c-4127-aa06-539a4f63ba71",
+  "slug": "find-missing-and-repeated-values",
+  "title": "Find Missing and Repeated Values",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> 2D integer matrix <code><font face=\"monospace\">grid</font></code> of size <code>n * n</code> with values in the range <code>[1, n<sup>2</sup>]</code>. Each integer appears <strong>exactly once</strong> except <code>a</code> which appears <strong>twice</strong> and <code>b</code> which is <strong>missing</strong>. The task is to find the repeating and missing numbers <code>a</code> and <code>b</code>.</p>\n\n<p>Return <em>a <strong>0-indexed </strong>integer array </em><code>ans</code><em> of size </em><code>2</code><em> where </em><code>ans[0]</code><em> equals to </em><code>a</code><em> and </em><code>ans[1]</code><em> equals to </em><code>b</code><em>.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[1,3],[2,2]]\n<strong>Output:</strong> [2,4]\n<strong>Explanation:</strong> Number 2 is repeated and number 4 is missing so the answer is [2,4].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[9,1,7],[8,9,2],[3,4,6]]\n<strong>Output:</strong> [9,5]\n<strong>Explanation:</strong> Number 9 is repeated and number 5 is missing so the answer is [9,5].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= n == grid.length == grid[i].length &lt;= 50</code></li>\n\t<li><code>1 &lt;= grid[i][j] &lt;= n * n</code></li>\n\t<li>For all <code>x</code> that <code>1 &lt;= x &lt;= n * n</code> there is exactly one <code>x</code> that is not equal to any of the grid members.</li>\n\t<li>For all <code>x</code> that <code>1 &lt;= x &lt;= n * n</code> there is exactly one <code>x</code> that is equal to exactly two of the grid members.</li>\n\t<li>For all <code>x</code> that <code>1 &lt;= x &lt;= n * n</code> except two of them there is exactly one pair of <code>i, j</code> that <code>0 &lt;= i, j &lt;= n - 1</code> and <code>grid[i][j] == x</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(1)\n\n// bit manipulation\nclass Solution {\npublic:\n    vector<int> findMissingAndRepeatedValues(vector<vector<int>>& grid) {\n        const int n = size(grid);\n        int a_xor_b = 0;\n        for (int i = 0; i < n * n; ++i) {\n            const int r = i / n, c = i % n;\n            a_xor_b ^= grid[r][c] ^ (i + 1);\n        }\n        const int base = a_xor_b & -a_xor_b;\n        vector<int> result(2);\n        for (int i = 0; i < n * n; ++i) {\n            const int r = i / n, c = i % n;\n            result[((i + 1) & base) != 0 ? 1 : 0] ^= i + 1;\n            result[(grid[r][c] & base) != 0 ? 1 : 0] ^= grid[r][c];\n        }\n        for (int r = 0; r < n; ++r) {\n            for (int c = 0; c < n; ++c) {\n                if (grid[r][c] == result[1]) {\n                    swap(result[0], result[1]);\n                    return result;\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n^2)\n// freq table\nclass Solution2 {\npublic:\n    vector<int> findMissingAndRepeatedValues(vector<vector<int>>& grid) {\n        const int n = size(grid);\n        vector<int> cnt(n * n);\n        for (int r = 0; r < n; ++r) {\n            for (int c = 0; c < n; ++c) {\n                ++cnt[grid[r][c] - 1];\n            }\n        }\n        vector<int> result(2);\n        for (int i = 0; i < n * n; ++i) {\n            if (cnt[i] == 2) {\n                result[0] = i + 1;\n            } else if (cnt[i] == 0) {\n                result[1] = i + 1;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(1)\n\n# bit manipulation\nclass Solution(object):\n    def findMissingAndRepeatedValues(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        n = len(grid)\n        a_xor_b = 0\n        for i in xrange(n**2):\n            r, c = divmod(i, n)\n            a_xor_b ^= grid[r][c]^(i+1)\n        base = a_xor_b&-a_xor_b\n        result = [0]*2\n        for i in xrange(n**2):\n            r, c = divmod(i, len(grid[0]))\n            result[1 if (i+1)&base != 0 else 0] ^= i+1\n            result[1 if grid[r][c]&base != 0 else 0] ^= grid[r][c]\n        if any(x == result[1] for row in grid for x in row):\n            result[0], result[1] = result[1], result[0]\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(n^2)\nimport collections\n\n\n# freq table\nclass Solution2(object):\n    def findMissingAndRepeatedValues(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        cnt = collections.Counter(x for row in grid for x in row)\n        return [next(k for k, v in cnt.iteritems() if v == 2), next(x for x in xrange(1, len(grid)**2+1) if x not in cnt)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

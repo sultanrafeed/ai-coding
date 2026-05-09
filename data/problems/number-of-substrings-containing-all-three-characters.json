@@ -1,0 +1,35 @@
+{
+  "id": "e5506e1c-a803-40d8-a7e7-7846b7da1cd6",
+  "slug": "number-of-substrings-containing-all-three-characters",
+  "title": "Number of Substrings Containing All Three Characters",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code>&nbsp;consisting only of characters <em>a</em>, <em>b</em> and <em>c</em>.</p>\n\n<p>Return the number of substrings containing <b>at least</b>&nbsp;one occurrence of all these characters <em>a</em>, <em>b</em> and <em>c</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abcabc&quot;\n<strong>Output:</strong> 10\n<strong>Explanation:</strong> The substrings containing&nbsp;at least&nbsp;one occurrence of the characters&nbsp;<em>a</em>,&nbsp;<em>b</em>&nbsp;and&nbsp;<em>c are &quot;</em>abc<em>&quot;, &quot;</em>abca<em>&quot;, &quot;</em>abcab<em>&quot;, &quot;</em>abcabc<em>&quot;, &quot;</em>bca<em>&quot;, &quot;</em>bcab<em>&quot;, &quot;</em>bcabc<em>&quot;, &quot;</em>cab<em>&quot;, &quot;</em>cabc<em>&quot; </em>and<em> &quot;</em>abc<em>&quot; </em>(<strong>again</strong>)<em>. </em>\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aaacb&quot;\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The substrings containing&nbsp;at least&nbsp;one occurrence of the characters&nbsp;<em>a</em>,&nbsp;<em>b</em>&nbsp;and&nbsp;<em>c are &quot;</em>aaacb<em>&quot;, &quot;</em>aacb<em>&quot; </em>and<em> &quot;</em>acb<em>&quot;.</em><em> </em>\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abc&quot;\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= s.length &lt;= 5 x 10^4</code></li>\n\t<li><code>s</code>&nbsp;only consists of&nbsp;<em>a</em>, <em>b</em> or <em>c&nbsp;</em>characters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int numberOfSubstrings(string s) {\n        int result = 0;\n        vector<int> left(3, -1);\n        for (int right = 0; right < s.length(); ++right) {\n            left[s[right] - 'a'] = right;\n            result += *min_element(cbegin(left), cend(left)) + 1;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int numberOfSubstrings(string s) {\n        int result = 0, left = 0;\n        vector<int> count(3);\n        for (int right = 0; right < s.length(); ++right) {\n            ++count[s[right] - 'a'];\n            while (all_of(cbegin(count), cend(count),\n                          [](const auto& x) {\n                              return x != 0;\n                          })) {\n                --count[s[left++] - 'a'];\n            }\n            result += left;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution3 {\npublic:\n    int numberOfSubstrings(string s) {\n        int result = 0, right = 0;\n        vector<int> count(3);\n        for (int left = 0; left < s.length(); ++left) {\n            while (right < s.length() &&\n                   !all_of(cbegin(count), cend(count),\n                           [](const auto& x) {\n                              return x != 0;\n                           })) {\n                ++count[s[right++] - 'a'];\n            }\n            if (all_of(cbegin(count), cend(count),\n                       [](const auto& x) {\n                          return x != 0;\n                       })) {\n                result += (s.length() - 1) - (right - 1) + 1;\n            }\n            --count[s[left] - 'a'];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def numberOfSubstrings(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result, left = 0, [-1]*3\n        for right, c in enumerate(s):\n            left[ord(c)-ord('a')] = right\n            result += min(left)+1\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def numberOfSubstrings(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result, left, count = 0, 0, [0]*3\n        for right, c in enumerate(s):\n            count[ord(s[right])-ord('a')] += 1\n            while all(count):\n                count[ord(s[left])-ord('a')] -= 1\n                left += 1\n            result += left\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution3(object):\n    def numberOfSubstrings(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result, right, count = 0, 0, [0]*3\n        for left, c in enumerate(s):\n            while right < len(s) and not all(count):\n                count[ord(s[right])-ord('a')] += 1\n                right += 1\n            if all(count):\n                result += (len(s)-1) - (right-1) + 1\n            count[ord(c)-ord('a')] -= 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

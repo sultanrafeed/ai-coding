@@ -1,0 +1,40 @@
+{
+  "id": "104a5db2-68b6-493b-863a-e31ed8b1c327",
+  "slug": "permutation-sequence",
+  "title": "Permutation Sequence",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>The set <code>[1, 2, 3, ...,&nbsp;n]</code> contains a total of <code>n!</code> unique permutations.</p>\n\n<p>By listing and labeling all of the permutations in order, we get the following sequence for <code>n = 3</code>:</p>\n\n<ol>\n\t<li><code>&quot;123&quot;</code></li>\n\t<li><code>&quot;132&quot;</code></li>\n\t<li><code>&quot;213&quot;</code></li>\n\t<li><code>&quot;231&quot;</code></li>\n\t<li><code>&quot;312&quot;</code></li>\n\t<li><code>&quot;321&quot;</code></li>\n</ol>\n\n<p>Given <code>n</code> and <code>k</code>, return the <code>k<sup>th</sup></code> permutation sequence.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> n = 3, k = 3\n<strong>Output:</strong> \"213\"\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> n = 4, k = 9\n<strong>Output:</strong> \"2314\"\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> n = 3, k = 1\n<strong>Output:</strong> \"123\"\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 9</code></li>\n\t<li><code>1 &lt;= k &lt;= n!</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n3\n4\n9\n3\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    string getPermutation(int n, int k) {\n        vector<int> nums;\n        int total = 1;\n        for (int i = 1; i <= n; ++i) {\n            nums.emplace_back(i);\n            total *= i;\n        }\n\n        // Cantor Ordering:\n        // Construct the k-th permutation with a list of n numbers\n        // Idea: group all permutations according to their first number (so n groups, each of\n        // (n - 1)! numbers), find the group where the k-th permutation belongs, remove the common\n        // first number from the list and append it to the resulting string, and iteratively\n        // construct the (((k - 1) % (n - 1)!) + 1)-th permutation with the remaining n-1 numbers\n        int group = total;\n        stringstream permutation;\n        while (n > 0) {\n            group /= n;\n            int idx = (k - 1) / group;\n            permutation << nums[idx];\n            nums.erase(nums.begin() + idx);\n            k = (k - 1) % group + 1;\n            --n;\n        }\n\n        return permutation.str();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nimport math\n\n# Cantor ordering solution\nclass Solution(object):\n    def getPermutation(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: str\n        \"\"\"\n        seq, k, fact = \"\", k - 1, math.factorial(n - 1)\n        perm = [i for i in xrange(1, n + 1)]\n        for i in reversed(xrange(n)):\n            curr = perm[k / fact]\n            seq += str(curr)\n            perm.remove(curr)\n            if i > 0:\n                k %= fact\n                fact /= i\n        return seq",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

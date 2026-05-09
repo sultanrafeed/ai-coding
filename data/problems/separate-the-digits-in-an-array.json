@@ -1,0 +1,34 @@
+{
+  "id": "e3e8f53b-3c0a-4d34-9cc2-d3386f0960f2",
+  "slug": "separate-the-digits-in-an-array",
+  "title": "Separate the Digits in an Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an array of positive integers <code>nums</code>, return <em>an array </em><code>answer</code><em> that consists of the digits of each integer in </em><code>nums</code><em> after separating them in <strong>the same order</strong> they appear in </em><code>nums</code>.</p>\n\n<p>To separate the digits of an integer is to get all the digits it has in the same order.</p>\n\n<ul>\n\t<li>For example, for the integer <code>10921</code>, the separation of its digits is <code>[1,0,9,2,1]</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [13,25,83,77]\n<strong>Output:</strong> [1,3,2,5,8,3,7,7]\n<strong>Explanation:</strong> \n- The separation of 13 is [1,3].\n- The separation of 25 is [2,5].\n- The separation of 83 is [8,3].\n- The separation of 77 is [7,7].\nanswer = [1,3,2,5,8,3,7,7]. Note that answer contains the separations in the same order.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [7,1,3,9]\n<strong>Output:</strong> [7,1,3,9]\n<strong>Explanation:</strong> The separation of each integer in nums is itself.\nanswer = [7,1,3,9].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * logr)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    vector<int> separateDigits(vector<int>& nums) {\n        vector<int> result;\n        for (int i = size(nums) - 1; i >= 0; --i) {\n            for (int x = nums[i]; x; x /= 10) {\n                result.emplace_back(x % 10);\n            }\n        }\n        reverse(begin(result), end(result));\n        return result;\n    }\n};\n\n// Time:  O(n * logr)\n// Space: O(logr), r = max(nums)\n// array\nclass Solution2 {\npublic:\n    vector<int> separateDigits(vector<int>& nums) {\n        vector<int> result;\n        for (const auto& x : nums) {\n            for (const auto& c : to_string(x)) {\n                result.emplace_back(c - '0');\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * logr)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def separateDigits(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        for x in reversed(nums):\n            while x:\n                result.append(x%10)\n                x //= 10\n        result.reverse()\n        return result\n\n\n# Time:  O(n * logr)\n# Space: O(logr), r = max(nums)\n# array\nclass Solution2(object):\n    def separateDigits(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        return [int(c) for x in nums for c in str(x)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

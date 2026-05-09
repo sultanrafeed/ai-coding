@@ -1,0 +1,34 @@
+{
+  "id": "072b8579-f9fb-4ff5-aa06-6d6e19fcbb7c",
+  "slug": "count-good-meals",
+  "title": "Count Good Meals",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A <strong>good meal</strong> is a meal that contains <strong>exactly two different food items</strong> with a sum of deliciousness equal to a power of two.</p>\n\n<p>You can pick <strong>any</strong> two different foods to make a good meal.</p>\n\n<p>Given an array of integers <code>deliciousness</code> where <code>deliciousness[i]</code> is the deliciousness of the <code>i<sup>​​​​​​th</sup>​​​​</code>​​​​ item of food, return <em>the number of different <strong>good meals</strong> you can make from this list modulo</em> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>Note that items with different indices are considered different even if they have the same deliciousness value.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> deliciousness = [1,3,5,7,9]\n<strong>Output:</strong> 4\n<strong>Explanation: </strong>The good meals are (1,3), (1,7), (3,5) and, (7,9).\nTheir respective sums are 4, 8, 8, and 16, all of which are powers of 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> deliciousness = [1,1,1,3,3,3,7]\n<strong>Output:</strong> 15\n<strong>Explanation: </strong>The good meals are (1,1) with 3 ways, (1,3) with 9 ways, and (1,7) with 3 ways.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= deliciousness.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= deliciousness[i] &lt;= 2<sup>20</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countPairs(vector<int>& deliciousness) {\n        static const int MOD = 1e9 + 7;\n\n        static const auto& floor_log2_x = [](int x) {\n            return 8 * sizeof(int) - __builtin_clz(x) - 1;\n        };\n        \n        int max_pow = floor_log2_x(*max_element(cbegin(deliciousness),\n                                                cend(deliciousness))) + 1;\n        unordered_map<int, int> cnt;\n        int result = 0;\n        for (const auto& d : deliciousness) {\n            int p = 1;\n            for (int i = 0; i <= max_pow; ++i) {\n                result = (result + cnt[p - d]) % MOD;\n                p <<= 1;\n            }\n            ++cnt[d];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def countPairs(self, deliciousness):\n        \"\"\"\n        :type deliciousness: List[int]\n        :rtype: int\n        \"\"\"\n        def floor_log2_x(x):\n            return x.bit_length()-1\n\n        MOD = 10**9+7\n        max_pow = floor_log2_x(max(deliciousness))+1\n        cnt = collections.Counter()\n        result = 0\n        for d in deliciousness:\n            p = 1\n            for i in xrange(max_pow+1):\n                result = (result+cnt[p-d])%MOD\n                p <<= 1\n            cnt[d] += 1    \n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

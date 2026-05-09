@@ -1,0 +1,34 @@
+{
+  "id": "d8d99707-a4e6-4375-b911-4da6c66002a5",
+  "slug": "count-palindromic-subsequences",
+  "title": "Count Palindromic Subsequences",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a string of digits <code>s</code>, return <em>the number of <strong>palindromic subsequences</strong> of</em> <code>s</code><em> having length </em><code>5</code>. Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p><strong>Note:</strong></p>\n\n<ul>\n\t<li>A string is <strong>palindromic</strong> if it reads the same forward and backward.</li>\n\t<li>A <strong>subsequence</strong> is a string that can be derived from another string by deleting some or no characters without changing the order of the remaining characters.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;103301&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> \nThere are 6 possible subsequences of length 5: &quot;10330&quot;,&quot;10331&quot;,&quot;10301&quot;,&quot;10301&quot;,&quot;13301&quot;,&quot;03301&quot;. \nTwo of them (both equal to &quot;10301&quot;) are palindromic.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;0000000&quot;\n<strong>Output:</strong> 21\n<strong>Explanation:</strong> All 21 subsequences are &quot;00000&quot;, which is palindromic.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;9999900000&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The only two palindromic subsequences are &quot;99999&quot; and &quot;00000&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>s</code> consists of digits.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(10^(l/2) * n), l = 5\n// Space: O(10^(l/2) * n)\n\n// freq table, prefix sum\nclass Solution {\npublic:\n    int countPalindromes(string s) {\n        static const int MOD = 1e9 + 7;\n        vector<int> cnt(10);\n        vector<vector<vector<int64_t>>> left(size(s) + 1, vector<vector<int64_t>>(10, vector<int64_t>(10)));\n        for (int k = 0; k < size(s); ++k) {\n            left[k + 1] = left[k];\n            for (int i = 0; i < 10; ++i) {\n                left[k + 1][s[k] - '0'][i] += cnt[i];\n            }\n            ++cnt[s[k] - '0'];\n        }\n        cnt.assign(10, 0);\n        vector<vector<int64_t>> right(10, vector<int64_t>(10));\n        int result = 0;\n        for (int k = size(s) - 1; k >= 0; --k) {\n            for (int i = 0; i < 10; ++i) {\n                for (int j = 0; j < 10; ++j) {\n                    result = (result + left[k][i][j] * right[i][j]) % MOD;\n                }\n            }\n            for (int i = 0; i < 10; ++i) {\n                right[s[k] - '0'][i] += cnt[i];\n            }\n             ++cnt[s[k] - '0'];\n        }\n        return result;\n    }\n};\n\n// Time:  O(10^(l/2) * n * l), l = 5\n// Space: O(l)\n// dp\nclass Solution2 {\npublic:\n    int countPalindromes(string s) {\n        static const int MOD = 1e9 + 7;\n        int result = 0;\n        for (char i = '0'; i <= '9'; ++i) {\n            for (char j = '0'; j <= '9'; ++j) {\n                const string pattern = {i, j, '*', j, i};\n                vector<int> dp(5 + 1);\n                dp[0] = 1;\n                for (int k = 0; k < size(s); ++k) {\n                    for (int l = 4; l >= 0; --l) {\n                        if (pattern[l] == '*' || pattern[l] == s[k]) {\n                            dp[l + 1] = (dp[l + 1] + dp[l]) % MOD;\n                        }\n                    }\n                }\n                result = (result + dp[5]) % MOD;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(10^(l/2) * n), l = 5\n# Space: O(10^(l/2) * n)\n\n# freq table, prefix sum\nclass Solution(object):\n    def countPalindromes(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        cnt = [0]*10\n        left = [[[0]*10 for _ in xrange(10)] for _ in xrange(len(s)+1)]\n        for k in xrange(len(s)):\n            left[k+1] = [[left[k][i][j] for j in xrange(10)] for i in xrange(10)]\n            for i in xrange(10):\n                left[k+1][int(s[k])][i] += cnt[i]\n            cnt[int(s[k])] += 1\n        cnt = [0]*10\n        right = [[0]*10 for _ in xrange(10)]\n        result = 0\n        for k in reversed(xrange(len(s))):\n            for i in xrange(10):\n                for j in xrange(10):\n                    result = (result+left[k][i][j]*right[i][j])%MOD\n            for i in xrange(10):\n                right[int(s[k])][i] += cnt[i]\n            cnt[int(s[k])] += 1\n        return result\n                    \n\n# Time:  O(10^(l/2) * n * l), l = 5\n# Space: O(l)\n# dp\nclass Solution2(object):\n    def countPalindromes(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result = 0\n        for i in xrange(10):\n            for j in xrange(10):\n                pattern = \"%s%s*%s%s\" % (i, j, j, i)\n                dp = [0]*(5+1)\n                dp[0] = 1\n                for k in xrange(len(s)):\n                    for l in reversed(xrange(5)):\n                        if pattern[l] == '*' or pattern[l] == s[k]:\n                            dp[l+1] = (dp[l+1]+dp[l])%MOD\n                result = (result+dp[5])%MOD\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "5a2b070c-bf47-4940-a7cd-bb8f3b8307ca",
+  "slug": "missing-element-in-sorted-array",
+  "title": "Missing Element in Sorted Array",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int missingElement(vector<int>& nums, int k) {\n        int left = 0, right = nums.size() - 1;\n        while (left <= right) {  // find the largest right s.t. k > missingCount(nums, x)\n            const auto& mid = left + (right - left) / 2;\n            if (!check(nums, k, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return nums[right] + (k - missingCount(nums, right));\n    }\n    \nprivate:\n    int missingCount(const vector<int>& nums, int x) {\n        return (nums[x] - nums[0] + 1) - (x - 0 + 1);\n    }\n    \n    bool check(const vector<int>& nums, int k, int x) {\n        return k > missingCount(nums, x);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def missingElement(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def missing_count(nums, x):\n            return (nums[x]-nums[0]+1)-(x-0+1)\n\n        def check(nums, k, x):\n            return k > missing_count(nums, x)\n\n        left, right = 0, len(nums)-1\n        while left <= right:  # find the largest right s.t. k > missingCount(nums, x)\n            mid = left + (right-left)//2\n            if not check(nums, k, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        assert(check(nums, k, right))\n        return nums[right] + (k-missing_count(nums, right))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

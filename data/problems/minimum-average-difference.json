@@ -1,0 +1,34 @@
+{
+  "id": "3658f40f-8e23-4e0e-b9f6-dc8fa47870be",
+  "slug": "minimum-average-difference",
+  "title": "Minimum Average Difference",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> of length <code>n</code>.</p>\n\n<p>The <strong>average difference</strong> of the index <code>i</code> is the <strong>absolute</strong> <strong>difference</strong> between the average of the <strong>first</strong> <code>i + 1</code> elements of <code>nums</code> and the average of the <strong>last</strong> <code>n - i - 1</code> elements. Both averages should be <strong>rounded down</strong> to the nearest integer.</p>\n\n<p>Return<em> the index with the <strong>minimum average difference</strong></em>. If there are multiple such indices, return the <strong>smallest</strong> one.</p>\n\n<p><strong>Note:</strong></p>\n\n<ul>\n\t<li>The <strong>absolute difference</strong> of two numbers is the absolute value of their difference.</li>\n\t<li>The <strong>average</strong> of <code>n</code> elements is the <strong>sum</strong> of the <code>n</code> elements divided (<strong>integer division</strong>) by <code>n</code>.</li>\n\t<li>The average of <code>0</code> elements is considered to be <code>0</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,5,3,9,5,3]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong>\n- The average difference of index 0 is: |2 / 1 - (5 + 3 + 9 + 5 + 3) / 5| = |2 / 1 - 25 / 5| = |2 - 5| = 3.\n- The average difference of index 1 is: |(2 + 5) / 2 - (3 + 9 + 5 + 3) / 4| = |7 / 2 - 20 / 4| = |3 - 5| = 2.\n- The average difference of index 2 is: |(2 + 5 + 3) / 3 - (9 + 5 + 3) / 3| = |10 / 3 - 17 / 3| = |3 - 5| = 2.\n- The average difference of index 3 is: |(2 + 5 + 3 + 9) / 4 - (5 + 3) / 2| = |19 / 4 - 8 / 2| = |4 - 4| = 0.\n- The average difference of index 4 is: |(2 + 5 + 3 + 9 + 5) / 5 - 3 / 1| = |24 / 5 - 3 / 1| = |4 - 3| = 1.\n- The average difference of index 5 is: |(2 + 5 + 3 + 9 + 5 + 3) / 6 - 0| = |27 / 6 - 0| = |4 - 0| = 4.\nThe average difference of index 3 is the minimum average difference so return 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong>\nThe only index is 0 so return 0.\nThe average difference of index 0 is: |0 / 1 - 0| = |0 - 0| = 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// prefix sum\nclass Solution {\npublic:\n    int minimumAverageDifference(vector<int>& nums) {\n        int64_t total = accumulate(cbegin(nums), cend(nums), 0ll);\n        int64_t mn = numeric_limits<int64_t>::max(), idx = -1;\n        int64_t prefix = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            prefix += nums[i];\n            const int a = prefix / (i + 1);\n            const int b = i + 1 < size(nums) ? (total - prefix) / (size(nums) - (i + 1)) : 0;\n            const int diff = abs(a - b);\n            if (diff < mn) {\n                mn = diff;\n                idx = i;\n            }\n        }\n        return idx;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# prefix sum\nclass Solution(object):\n    def minimumAverageDifference(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        total = sum(nums)\n        mn, idx = float(\"inf\"), -1\n        prefix = 0\n        for i, x in enumerate(nums):\n            prefix += x\n            a = prefix//(i+1)\n            b = (total-prefix)//(len(nums)-(i+1)) if i+1 < len(nums) else 0\n            diff = abs(a-b)\n            if diff < mn:\n                mn, idx = diff, i\n        return idx",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

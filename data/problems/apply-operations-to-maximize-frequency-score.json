@@ -1,0 +1,37 @@
+{
+  "id": "f5b248df-c550-48e0-9767-445c7cb4bd19",
+  "slug": "apply-operations-to-maximize-frequency-score",
+  "title": "Apply Operations to Maximize Frequency Score",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> and an integer <code>k</code>.</p>\n\n<p>You can perform the following operation on the array <strong>at most</strong> <code>k</code> times:</p>\n\n<ul>\n\t<li>Choose any index <code>i</code> from the array and <strong>increase</strong> or <strong>decrease</strong> <code>nums[i]</code> by <code>1</code>.</li>\n</ul>\n\n<p>The score of the final array is the <strong>frequency</strong> of the most frequent element in the array.</p>\n\n<p>Return <em>the <strong>maximum</strong> score you can achieve</em>.</p>\n\n<p>The frequency of an element is the number of occurences of that element in the array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,6,4], k = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We can do the following operations on the array:\n- Choose i = 0, and increase the value of nums[0] by 1. The resulting array is [2,2,6,4].\n- Choose i = 3, and decrease the value of nums[3] by 1. The resulting array is [2,2,6,3].\n- Choose i = 3, and decrease the value of nums[3] by 1. The resulting array is [2,2,6,2].\nThe element 2 is the most frequent in the final array so our score is 3.\nIt can be shown that we cannot achieve a better score.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,4,4,2,4], k = 0\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We cannot apply any operations so our score will be the frequency of the most frequent element in the original array, which is 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>0 &lt;= k &lt;= 10<sup>14</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "sliding-window",
+    "sorting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// sort, two pointers, sliding window\nclass Solution {\npublic:\n    int maxFrequencyScore(vector<int>& nums, long long k) {\n        sort(begin(nums), end(nums));\n        int64_t curr = 0;\n        int right = 0, left = 0;\n        for (; right < size(nums); ++right) {\n            curr += nums[right] - nums[(left + right) / 2];\n            if (!(curr <= k)) {\n                curr -= nums[((left + 1) + right) / 2] - nums[left++];\n            }\n        }\n        return right - left;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\n// sort, two pointers, sliding window\nclass Solution2 {\npublic:\n    int maxFrequencyScore(vector<int>& nums, long long k) {\n        sort(begin(nums), end(nums));\n        int result = 0;\n        int64_t curr = 0;\n        for (int right = 0, left = 0; right < size(nums); ++right) {\n            curr += nums[right] - nums[(left + right) / 2];\n            while (!(curr <= k)) {\n                curr -= nums[((left + 1) + right) / 2] - nums[left++];\n            }\n            result = max(result, right - left + 1);\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// sort, prefix sum, binary search\nclass Solution3 {\npublic:\n    int maxFrequencyScore(vector<int>& nums, long long k) {\n        sort(begin(nums), end(nums));\n        vector<int64_t> prefix(size(nums) + 1);\n        for (int i = 0; i < size(nums); ++i) {\n            prefix[i + 1] = prefix[i] + nums[i];\n        }\n        const auto& check = [&](int l) {\n            for (int i = 0; i < size(nums) - l + 1; ++i) {\n                if ((prefix[i + l] - prefix[i + (l + 1) / 2]) - (prefix[i + l / 2] - prefix[i]) <= k) {\n                    return true;\n                }\n            }\n            return false;\n        };\n\n        int left = 1, right = size(nums);\n        while (left <= right) {\n            const int mid = left + (right - left) / 2;\n            if (!check(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return right;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# sort, two pointers, sliding window\nclass Solution(object):\n    def maxFrequencyScore(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        nums.sort()\n        result = left = curr = 0\n        for right in xrange(len(nums)):\n            # \"-+  \" => \"-0+ \"\n            # \"-0+ \" => \"--++\"\n            curr += nums[right]-nums[(left+right)//2]\n            if not curr <= k:\n                # \"--++\" => \" -0+\"\n                # \" -0+\" => \"  -+\"\n                curr -= nums[((left+1)+right)//2]-nums[left]\n                left += 1\n        return right-left+1\n\n\n# Time:  O(nlogn)\n# Space: O(1)\n# sort, two pointers, sliding window\nclass Solution2(object):\n    def maxFrequencyScore(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        nums.sort()\n        result = left = curr = 0\n        for right in xrange(len(nums)):\n            # \"-+  \" => \"-0+ \"\n            # \"-0+ \" => \"--++\"\n            curr += nums[right]-nums[(left+right)//2]\n            while not curr <= k:\n                # \"--++\" => \" -0+\"\n                # \" -0+\" => \"  -+\"\n                curr -= nums[((left+1)+right)//2]-nums[left]\n                left += 1\n            result = max(result, right-left+1)\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\n# sort, prefix sum, binary search\nclass Solution3(object):\n    def maxFrequencyScore(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def check(l):\n            # \"-+ \" or \"-0+\"\n            return any((prefix[i+l]-prefix[i+(l+1)//2])-(prefix[i+l//2]-prefix[i]) <= k for i in xrange(len(nums)-l+1))\n\n        nums.sort()\n        prefix = [0]*(len(nums)+1)\n        for i, x in enumerate(nums):\n            prefix[i+1] = prefix[i]+x\n        left, right = 1, len(nums)\n        while left <= right:\n            mid = left+(right-left)//2\n            if not check(mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return right",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

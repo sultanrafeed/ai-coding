@@ -1,0 +1,41 @@
+{
+  "id": "8372e753-9b9c-4693-a77d-45dda71346da",
+  "slug": "maximum-price-to-fill-a-bag",
+  "title": "Maximum Price to Fill a Bag",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[50,1],[10,8]]\n5\n[[100,30]]\n50",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// greedy, sort\nclass Solution {\npublic:\n    double maxPrice(vector<vector<int>>& items, int capacity) {\n        sort(begin(items), end(items), [](const auto& a, const auto& b) {\n            return a[0] * b[1] > a[1] * b[0];\n        });\n        double result = 0;\n        for (const auto& item : items) {\n            const auto cnt = min(item[1], capacity);\n            capacity -= cnt;\n            result += (static_cast<double>(item[0]) / item[1]) * cnt;\n        }\n        return capacity == 0 ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# greedy, sort\nclass Solution(object):\n    def maxPrice(self, items, capacity):\n        \"\"\"\n        :type items: List[List[int]]\n        :type capacity: int\n        :rtype: float\n        \"\"\"\n        result = 0\n        items.sort(key=lambda x: float(x[0])/x[1], reverse=True)\n        for p, c in items:\n            cnt = min(c, capacity)\n            capacity -= cnt\n            result += (float(p)/c)*cnt\n        return result if capacity == 0 else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

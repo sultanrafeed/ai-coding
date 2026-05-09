@@ -1,0 +1,34 @@
+{
+  "id": "b6fddb87-50d2-4131-97bb-2cc42bf7dddd",
+  "slug": "minimum-time-to-finish-the-race",
+  "title": "Minimum Time to Finish the Race",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> 2D integer array <code>tires</code> where <code>tires[i] = [f<sub>i</sub>, r<sub>i</sub>]</code> indicates that the <code>i<sup>th</sup></code> tire can finish its <code>x<sup>th</sup></code> successive lap in <code>f<sub>i</sub> * r<sub>i</sub><sup>(x-1)</sup></code> seconds.</p>\n\n<ul>\n\t<li>For example, if <code>f<sub>i</sub> = 3</code> and <code>r<sub>i</sub> = 2</code>, then the tire would finish its <code>1<sup>st</sup></code> lap in <code>3</code> seconds, its <code>2<sup>nd</sup></code> lap in <code>3 * 2 = 6</code> seconds, its <code>3<sup>rd</sup></code> lap in <code>3 * 2<sup>2</sup> = 12</code> seconds, etc.</li>\n</ul>\n\n<p>You are also given an integer <code>changeTime</code> and an integer <code>numLaps</code>.</p>\n\n<p>The race consists of <code>numLaps</code> laps and you may start the race with <strong>any</strong> tire. You have an <strong>unlimited</strong> supply of each tire and after every lap, you may <strong>change</strong> to any given tire (including the current tire type) if you wait <code>changeTime</code> seconds.</p>\n\n<p>Return<em> the <strong>minimum</strong> time to finish the race.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> tires = [[2,3],[3,4]], changeTime = 5, numLaps = 4\n<strong>Output:</strong> 21\n<strong>Explanation:</strong> \nLap 1: Start with tire 0 and finish the lap in 2 seconds.\nLap 2: Continue with tire 0 and finish the lap in 2 * 3 = 6 seconds.\nLap 3: Change tires to a new tire 0 for 5 seconds and then finish the lap in another 2 seconds.\nLap 4: Continue with tire 0 and finish the lap in 2 * 3 = 6 seconds.\nTotal time = 2 + 6 + 5 + 2 + 6 = 21 seconds.\nThe minimum time to complete the race is 21 seconds.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> tires = [[1,10],[2,2],[3,4]], changeTime = 6, numLaps = 5\n<strong>Output:</strong> 25\n<strong>Explanation:</strong> \nLap 1: Start with tire 1 and finish the lap in 2 seconds.\nLap 2: Continue with tire 1 and finish the lap in 2 * 2 = 4 seconds.\nLap 3: Change tires to a new tire 1 for 6 seconds and then finish the lap in another 2 seconds.\nLap 4: Continue with tire 1 and finish the lap in 2 * 2 = 4 seconds.\nLap 5: Change tires to tire 0 for 6 seconds then finish the lap in another 1 second.\nTotal time = 2 + 4 + 6 + 2 + 4 + 6 + 1 = 25 seconds.\nThe minimum time to complete the race is 25 seconds. \n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= tires.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>tires[i].length == 2</code></li>\n\t<li><code>1 &lt;= f<sub>i</sub>, changeTime &lt;= 10<sup>5</sup></code></li>\n\t<li><code>2 &lt;= r<sub>i</sub> &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= numLaps &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((n + l) * logc)\n// Space: O(n + l + logc)\n\n// greedy, dp\nclass Solution {\npublic:\n    int minimumFinishTime(vector<vector<int>>& tires, int changeTime, int numLaps) {\n        static const int INF = numeric_limits<int>::max();\n\n        const auto& ceil_log2 = [](const auto& x) {\n            return std::__lg(x - 1) + 1;\n        };\n        vector<int64_t> dp(ceil_log2(changeTime + 1), INF);  // dp[i]: min time to complete i+1 laps without changing a tire\n        for (int i = 0; i < size(tires); ++i) {\n            const int f = tires[i][0], r = tires[i][1];\n            for (int64_t curr = f, total = f, cnt = 0;\n                 curr < changeTime + f;\n                 curr *= r, total += curr, ++cnt) {  // at worst (f, r) = (1, 2) => 2^(cnt-1) < changeTime+1 => cnt < ceil(log2(changeTime+1))\n                dp[cnt] = min(dp[cnt], total);\n            }\n        }\n        vector<int64_t> dp2(numLaps, INF);  // dp2[i]: min time to complete i+1 laps with changing zero or more tires\n        for (int i = 0; i < numLaps; ++i) {\n            for (int j = 0; j < min(i + 1, static_cast<int>(size(dp))); ++j) {\n                dp2[i] = min(dp2[i], (i - j - 1 >= 0 ? dp2[i - j - 1] + changeTime : 0) + dp[j]);\n            }\n        }\n        return dp2.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((n + l) * logc)\n# Space: O(n + l + logc)\n\n# greedy, dp\nclass Solution(object):\n    def minimumFinishTime(self, tires, changeTime, numLaps):\n        \"\"\"\n        :type tires: List[List[int]]\n        :type changeTime: int\n        :type numLaps: int\n        :rtype: int\n        \"\"\"\n        def ceil_log2(x):\n            return (x-1).bit_length()\n\n        dp = [float(\"inf\")]*ceil_log2(changeTime+1)  # dp[i]: min time to complete i+1 laps without changing a tire\n        for f, r in tires:\n            total = curr = f\n            cnt = 0\n            while curr < changeTime+f:  # at worst (f, r) = (1, 2) => 2^(cnt-1) < changeTime+1 => cnt < ceil(log2(changeTime+1))\n                dp[cnt] = min(dp[cnt], total)\n                curr *= r\n                total += curr\n                cnt += 1\n        dp2 = [float(\"inf\")]*numLaps  # dp2[i]: min time to complete i+1 laps with changing zero or more tires\n        for i in xrange(numLaps):\n            dp2[i] = min((dp2[i-j-1]+changeTime if i-j-1 >= 0 else 0)+dp[j] for j in xrange(min(i+1, len(dp))))\n        return dp2[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

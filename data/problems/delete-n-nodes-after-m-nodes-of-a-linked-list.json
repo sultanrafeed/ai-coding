@@ -1,0 +1,39 @@
+{
+  "id": "3e372403-fdc3-4c01-aa09-861d5178bcb1",
+  "slug": "delete-n-nodes-after-m-nodes-of-a-linked-list",
+  "title": "Delete N Nodes After M Nodes of a Linked List",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5,6,7,8,9,10,11,12,13]\n2\n3\n[1,2,3,4,5,6,7,8,9,10,11]\n1\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode() : val(0), next(nullptr) {}\n *     ListNode(int x) : val(x), next(nullptr) {}\n *     ListNode(int x, ListNode *next) : val(x), next(next) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode* deleteNodes(ListNode* head, int m, int n) {\n        ListNode dummy;\n        dummy.next = head;\n        head = &dummy;\n        while (head) {\n            for (int i = 0; i < m; ++i) {\n                if (!head->next) {\n                    return dummy.next;\n                }\n                head = head->next;\n            }\n            auto prev = head;\n            for (int i = 0; i < n; ++i) {\n                if (!head->next) {\n                    prev->next = nullptr;\n                    return dummy.next;\n                }\n                head = head->next;\n            }\n            prev->next = head->next;\n        }\n        return dummy.next;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# Definition for singly-linked list.\nclass ListNode(object):\n    def __init__(self, val=0, next=None):\n        self.val = val\n        self.next = next\n\n\nclass Solution(object):\n    def deleteNodes(self, head, m, n):\n        \"\"\"\n        :type head: ListNode\n        :type m: int\n        :type n: int\n        :rtype: ListNode\n        \"\"\"\n        head = dummy = ListNode(next=head)\n        while head:\n            for _ in xrange(m):\n                if not head.next:\n                    return dummy.next\n                head = head.next\n            prev = head\n            for _ in xrange(n):\n                if not head.next:\n                    prev.next = None\n                    return dummy.next\n                head = head.next\n            prev.next = head.next\n        return dummy.next",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

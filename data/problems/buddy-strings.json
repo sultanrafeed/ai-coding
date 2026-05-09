@@ -1,0 +1,34 @@
+{
+  "id": "91d329d3-95c1-4254-87e9-50398027ab4e",
+  "slug": "buddy-strings",
+  "title": "Buddy Strings",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two strings <code>s</code> and <code>goal</code>, return <code>true</code><em> if you can swap two letters in </em><code>s</code><em> so the result is equal to </em><code>goal</code><em>, otherwise, return </em><code>false</code><em>.</em></p>\n\n<p>Swapping letters is defined as taking two indices <code>i</code> and <code>j</code> (0-indexed) such that <code>i != j</code> and swapping the characters at <code>s[i]</code> and <code>s[j]</code>.</p>\n\n<ul>\n\t<li>For example, swapping at indices <code>0</code> and <code>2</code> in <code>&quot;abcd&quot;</code> results in <code>&quot;cbad&quot;</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;ab&quot;, goal = &quot;ba&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> You can swap s[0] = &#39;a&#39; and s[1] = &#39;b&#39; to get &quot;ba&quot;, which is equal to goal.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;ab&quot;, goal = &quot;ab&quot;\n<strong>Output:</strong> false\n<strong>Explanation:</strong> The only letters you can swap are s[0] = &#39;a&#39; and s[1] = &#39;b&#39;, which results in &quot;ba&quot; != goal.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aa&quot;, goal = &quot;aa&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> You can swap s[0] = &#39;a&#39; and s[1] = &#39;a&#39; to get &quot;aa&quot;, which is equal to goal.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length, goal.length &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>s</code> and <code>goal</code> consist of lowercase letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool buddyStrings(string A, string B) {\n        if (A.length() != B.length()) {\n            return false;\n        }\n        vector<int> diff;\n        for (int i = 0; i < A.length(); ++i) {\n            if (A[i] != B[i]) {\n                diff.emplace_back(i);\n                if (diff.size() > 2) {\n                    return false;\n                }\n            }\n        }\n        return (diff.empty() && unordered_set<char>(A.begin(), A.end()).size() < A.size()) ||\n               (diff.size() == 2 && A[diff[0]] == B[diff[1]] && A[diff[1]] == B[diff[0]]);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport itertools\n\n\nclass Solution(object):\n    def buddyStrings(self, A, B):\n        \"\"\"\n        :type A: str\n        :type B: str\n        :rtype: bool\n        \"\"\"\n        if len(A) != len(B):\n            return False\n        diff = []\n        for a, b in itertools.izip(A, B):\n            if a != b:\n                diff.append((a, b))\n                if len(diff) > 2:\n                    return False\n        return (not diff and len(set(A)) < len(A)) or \\\n               (len(diff) == 2 and diff[0] == diff[1][::-1])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

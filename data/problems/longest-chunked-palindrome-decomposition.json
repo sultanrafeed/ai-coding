@@ -1,0 +1,38 @@
+{
+  "id": "5d2fa301-f184-4e41-a622-b18b3aceef33",
+  "slug": "longest-chunked-palindrome-decomposition",
+  "title": "Longest Chunked Palindrome Decomposition",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a string <code>text</code>. You should split it to k substrings <code>(subtext<sub>1</sub>, subtext<sub>2</sub>, ..., subtext<sub>k</sub>)</code> such that:</p>\n\n<ul>\n\t<li><code>subtext<sub>i</sub></code> is a <strong>non-empty</strong> string.</li>\n\t<li>The concatenation of all the substrings is equal to <code>text</code> (i.e., <code>subtext<sub>1</sub> + subtext<sub>2</sub> + ... + subtext<sub>k</sub> == text</code>).</li>\n\t<li><code>subtext<sub>i</sub> == subtext<sub>k - i + 1</sub></code> for all valid values of <code>i</code> (i.e., <code>1 &lt;= i &lt;= k</code>).</li>\n</ul>\n\n<p>Return the largest possible value of <code>k</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> text = &quot;ghiabcdefhelloadamhelloabcdefghi&quot;\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> We can split the string on &quot;(ghi)(abcdef)(hello)(adam)(hello)(abcdef)(ghi)&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> text = &quot;merchant&quot;\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> We can split the string on &quot;(merchant)&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> text = &quot;antaprezatepzapreanta&quot;\n<strong>Output:</strong> 11\n<strong>Explanation:</strong> We can split the string on &quot;(a)(nt)(a)(pre)(za)(tep)(za)(pre)(a)(nt)(a)&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= text.length &lt;= 1000</code></li>\n\t<li><code>text</code> consists only of lowercase English characters.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string",
+    "dynamic-programming",
+    "greedy",
+    "rolling-hash",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// Rabin-Karp Algorithm\nclass Solution {\npublic:\n    int longestDecomposition(string text) {  \n        static const uint64_t MOD = 1e9 + 7;\n        static const uint64_t D = 26;\n        int result = 0;\n        int left = 0, right = 0, l = 0;\n        uint64_t pow_D = 1;\n        for (int i = 0; i < text.length(); ++i) {\n            left = (D * left + (text[i] - 'a')) % MOD;\n            right = (pow_D * (text[text.length() - 1 - i] - 'a') + right) % MOD;\n            ++l;\n            pow_D = (pow_D * D) % MOD;\n            if (left == right &&\n                compare(text, l, i - l + 1, text.length() - 1 - i)) {\n                ++result;\n                left = 0, right = 0, l = 0, pow_D = 1;\n            }\n        }\n        return result;\n    }\n\nprivate:\n    bool compare(const string& text, size_t l, int s1, int s2) {\n        for (int i = 0; i < l; ++i) {\n            if (text[s1 + i] != text[s2 + i]) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# Rabin-Karp Algorithm\nclass Solution(object):\n    def longestDecomposition(self, text):\n        \"\"\"\n        :type text: str\n        :rtype: int\n        \"\"\"\n        def compare(text, l, s1, s2):\n            for i in xrange(l):\n                if text[s1+i] != text[s2+i]:\n                    return False\n            return True\n\n        MOD = 10**9+7\n        D = 26\n        result = 0\n        left, right, l, pow_D = 0, 0, 0, 1\n        for i in xrange(len(text)):\n            left = (D*left + (ord(text[i])-ord('a'))) % MOD\n            right = (pow_D*(ord(text[-1-i])-ord('a')) + right) % MOD\n            l += 1\n            pow_D = (pow_D*D) % MOD \n            if left == right and compare(text, l, i-l+1, len(text)-1-i):\n                result += 1\n                left, right, l, pow_D = 0, 0, 0, 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

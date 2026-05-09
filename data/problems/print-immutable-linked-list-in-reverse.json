@@ -1,0 +1,42 @@
+{
+  "id": "aa236b92-2642-4711-b69a-cf77b736e45a",
+  "slug": "print-immutable-linked-list-in-reverse",
+  "title": "Print Immutable Linked List in Reverse",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list",
+    "two-pointers",
+    "stack",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4]\n[0,-4,-1,3,-5]\n[-2,0,6,4,4,-6]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(sqrt(n))\n\nclass Solution {\npublic:\n    void printLinkedListInReverse(ImmutableListNode* head) {\n        int count = 0;\n        auto curr = head;\n        while (curr) {\n            curr = curr->getNext();\n            ++count;\n        }\n        int bucket_count = ceil(sqrt(count));\n        \n        vector<ImmutableListNode *> buckets;\n        count = 0;\n        curr = head;\n        while (curr) {\n            if (count % bucket_count == 0) {\n                buckets.emplace_back(curr);\n            }\n            curr = curr->getNext();\n            ++count;\n        }\n        \n        for (int i = buckets.size() - 1; i >= 0; --i) {\n            printNodes(buckets[i], bucket_count);\n        }\n    }\n\nprivate:\n    void printNodes(ImmutableListNode *head, int count) {\n        vector<ImmutableListNode *> nodes;\n        while (head && nodes.size() != count) {\n            nodes.emplace_back(head);\n            head = head->getNext();\n        }\n        for (int i = nodes.size() - 1; i >= 0; --i) {\n            nodes[i]->printValue();\n        }\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution2 {\npublic:\n    void printLinkedListInReverse(ImmutableListNode* head) {\n        vector<ImmutableListNode *> nodes;\n        while (head) {\n            nodes.emplace_back(head);\n            head = head->getNext();\n        }\n        for (int i = nodes.size() - 1; i >= 0; --i) {\n            nodes[i]->printValue();\n        }\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(1)\nclass Solution3 {\npublic:\n    void printLinkedListInReverse(ImmutableListNode* head) {\n        for (ImmutableListNode *tail = nullptr, *curr = nullptr; tail != head; tail = curr) {\n            for (curr = head; curr->getNext() != tail; curr = curr->getNext());\n            curr->printValue();\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(sqrt(n))\n\nimport math\n\n\nclass Solution(object):\n    def printLinkedListInReverse(self, head):\n        \"\"\"\n        :type head: ImmutableListNode\n        :rtype: None\n        \"\"\"\n        def print_nodes(head, count):\n            nodes = []\n            while head and len(nodes) != count:\n                nodes.append(head)\n                head = head.getNext()\n            for node in reversed(nodes):\n                node.printValue()\n                   \n        count = 0\n        curr = head\n        while curr:\n            curr = curr.getNext()\n            count += 1\n        bucket_count = int(math.ceil(count**0.5))\n        \n        buckets = []\n        count = 0\n        curr = head\n        while curr:\n            if count % bucket_count == 0:\n                buckets.append(curr)\n            curr = curr.getNext()\n            count += 1\n        for node in reversed(buckets):\n            print_nodes(node, bucket_count)\n            \n        \n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    def printLinkedListInReverse(self, head):\n        \"\"\"\n        :type head: ImmutableListNode\n        :rtype: None\n        \"\"\"\n        nodes = []\n        while head:\n            nodes.append(head)\n            head = head.getNext()\n        for node in reversed(nodes):\n            node.printValue()\n\n\n# Time:  O(n^2)\n# Space: O(1)\nclass Solution3(object):\n    def printLinkedListInReverse(self, head):\n        \"\"\"\n        :type head: ImmutableListNode\n        :rtype: None\n        \"\"\"\n        tail = None\n        while head != tail:\n            curr = head\n            while curr.getNext() != tail:\n                curr = curr.getNext()\n            curr.printValue()\n            tail = curr",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

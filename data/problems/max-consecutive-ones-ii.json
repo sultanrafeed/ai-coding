@@ -1,0 +1,41 @@
+{
+  "id": "4f68c22e-7b71-455b-be58-06990994814a",
+  "slug": "max-consecutive-ones-ii",
+  "title": "Max Consecutive Ones II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,0,1,1,0]\n[1,0,1,1,0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findMaxConsecutiveOnes(vector<int>& nums) {\n        int result = 0, prev = 0, curr = 0;\n        for (const auto& n : nums) {\n            if (n == 0) {\n                result = max(result, prev + curr + 1);\n                prev = curr;\n                curr = 0;\n            } else {\n                ++curr;\n            }\n        }\n        return min(max(result, prev + curr + 1), static_cast<int>(nums.size()));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findMaxConsecutiveOnes(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result, prev, curr = 0, 0, 0\n        for n in nums:\n            if n == 0:\n                result = max(result, prev+curr+1)\n                prev, curr = curr, 0\n            else:\n                curr += 1\n        return min(max(result, prev+curr+1), len(nums))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "eebd947b-95b4-4f20-bae6-9bcc21532480",
+  "slug": "increasing-subsequences",
+  "title": "Increasing Subsequences",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<vector<int>> findSubsequences(vector<int>& nums) {\n        vector<vector<int>> result;\n        vector<int> seq;\n        findSubsequencesHelper(nums, 0, &seq, &result);\n        return result;\n    }\n    \n    void findSubsequencesHelper(const vector<int>& nums, int i,\n                                vector<int> *seq,\n                                vector<vector<int>> *result) {\n        if (seq->size() >= 2) {\n            result->emplace_back(*seq);\n        }\n        unordered_set<int> lookup;\n        for (; i < nums.size(); ++i) {\n            if ((seq->empty() || nums[i] >= seq->back()) &&\n                 lookup.find(nums[i]) == lookup.end()) {\n                lookup.emplace(nums[i]);\n                seq->emplace_back(nums[i]);\n                findSubsequencesHelper(nums, i + 1, seq, result);\n                seq->pop_back();\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^n)\n# Space: O(n), longest possible path in tree, which is if all numbers are increasing.\n\nclass Solution(object):\n    def findSubsequences(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        def findSubsequencesHelper(nums, pos, seq, result):\n            if len(seq) >= 2:\n                result.append(list(seq))\n            lookup = set()\n            for i in xrange(pos, len(nums)):\n                if (not seq or nums[i] >= seq[-1]) and \\\n                   nums[i] not in lookup:\n                    lookup.add(nums[i])\n                    seq.append(nums[i])\n                    findSubsequencesHelper(nums, i+1, seq, result)\n                    seq.pop()\n\n        result, seq = [], []\n        findSubsequencesHelper(nums, 0, seq, result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

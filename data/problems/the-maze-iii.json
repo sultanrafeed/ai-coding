@@ -1,0 +1,46 @@
+{
+  "id": "96bf1b0b-e485-4cc2-9eae-ec3b699a31b7",
+  "slug": "the-maze-iii",
+  "title": "The Maze III",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "depth-first-search",
+    "breadth-first-search",
+    "graph",
+    "heap-priority-queue",
+    "matrix",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,0,0,0,0],[1,1,0,0,1],[0,0,0,0,0],[0,1,0,0,1],[0,1,0,0,0]]\n[4,3]\n[0,1]\n[[0,0,0,0,0],[1,1,0,0,1],[0,0,0,0,0],[0,1,0,0,1],[0,1,0,0,0]]\n[4,3]\n[3,0]\n[[0,0,0,0,0,0,0],[0,0,1,0,0,1,0],[0,0,0,0,1,0,0],[0,0,0,0,0,0,1]]\n[0,4]\n[3,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(max(r, c) * wlogw)\n// Space: O(w^2)\n\nclass Solution {\npublic:\n    string findShortestWay(vector<vector<int>>& maze, vector<int>& ball, vector<int>& hole) {\n        static const unordered_map<string, vector<int>> dirs = {{\"u\", {-1, 0}}, {\"r\", {0, 1}},\n                                                                {\"l\", {0, -1}}, {\"d\", {1, 0}}};\n        priority_queue<node, vector<node>, greater<node>> heap;\n        unordered_set<int> visited;\n        heap.emplace(0, make_pair(\"\", ball));\n\n        while (!heap.empty()) {\n            int dist = 0;\n            string path;\n            vector<int> node;\n            tie(dist, lvalue(tie(path, node))) = heap.top();\n            heap.pop();\n            if (visited.count(hash(maze, node))) {\n                continue;\n            }\n\n            if (node[0] == hole[0] &&\n                node[1] == hole[1]) {\n                return path;\n            }\n\n            visited.emplace(hash(maze, node));\n            for (const auto& kvp : dirs) {\n                int neighbor_dist = 0;\n                string dir;\n                vector<int> neighbor;\n                tie(neighbor_dist, lvalue(tie(dir, neighbor))) = findNeighbor(maze, hole, node, kvp);\n                heap.emplace(dist + neighbor_dist, make_pair(path + dir, neighbor));\n            }\n        }\n\n        return \"impossible\";\n    }\n\nprivate:\n    using node = pair<int, pair<string, vector<int>>>;\n\n    node findNeighbor(const vector<vector<int>>& maze, const vector<int>& hole,\n                      const vector<int>& node, const pair<string, vector<int>>& kvp) {\n        string dir;\n        vector<int> vec;\n        tie(dir, vec) = kvp;\n        vector<int> cur_node = node;\n        int dist = 0;\n    \n        while (0 <= cur_node[0] + vec[0] && cur_node[0] + vec[0] < maze.size() &&\n               0 <= cur_node[1] + vec[1] && cur_node[1] + vec[1] < maze[0].size() &&\n               !maze[cur_node[0] + vec[0]][cur_node[1] + vec[1]]) {\n    \n            cur_node[0] += vec[0];\n            cur_node[1] += vec[1];\n            ++dist;\n            if (cur_node[0] == hole[0] &&\n                cur_node[1] == hole[1]) {\n                break;\n            }\n        }\n        return {dist, {dir, cur_node}};\n    }\n    \n    int hash(const vector<vector<int>>& maze, const vector<int>& node) {\n        return node[0] * maze[0].size() + node[1];\n    }\n\n    template <class T>\n    constexpr T &lvalue(T &&v) {\n        return v;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(max(r, c) * wlogw)\n# Space: O(w^2)\n\nimport heapq\n\n\nclass Solution(object):\n    def findShortestWay(self, maze, ball, hole):\n        \"\"\"\n        :type maze: List[List[int]]\n        :type ball: List[int]\n        :type hole: List[int]\n        :rtype: str\n        \"\"\"\n        ball, hole = tuple(ball), tuple(hole)\n        dirs = {'u' : (-1, 0), 'r' : (0, 1), 'l' : (0, -1), 'd': (1, 0)}\n\n        def neighbors(maze, node):\n            for dir, vec in dirs.iteritems():\n                cur_node, dist = list(node), 0\n                while 0 <= cur_node[0]+vec[0] < len(maze) and \\\n                      0 <= cur_node[1]+vec[1] < len(maze[0]) and \\\n                      not maze[cur_node[0]+vec[0]][cur_node[1]+vec[1]]:\n                    cur_node[0] += vec[0]\n                    cur_node[1] += vec[1]\n                    dist += 1\n                    if tuple(cur_node) == hole:\n                        break\n                yield tuple(cur_node), dir, dist\n\n        heap = [(0, '', ball)]\n        visited = set()\n        while heap:\n            dist, path, node = heapq.heappop(heap)\n            if node in visited: continue\n            if node == hole: return path\n            visited.add(node)\n            for neighbor, dir, neighbor_dist in neighbors(maze, node):\n                heapq.heappush(heap, (dist+neighbor_dist, path+dir, neighbor))\n\n        return \"impossible\"",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

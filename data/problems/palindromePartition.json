@@ -1,0 +1,25 @@
+{
+  "id": "af9bedc2-963e-4a9a-b086-435670140402",
+  "slug": "palindromePartition",
+  "title": "Palindromepartition",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: average: O(n^2), worst: O(n^2 * 2^n)\n// Space Complexity: average: O(1), worst: O(2^n)\n\nclass Solution {\n    public:\n        vector<vector<string> > partition(string s) {\n            const int n = s.size();\n            bool p[n][n];\n\n            fill_n(&p[0][0], n * n, false);\n\n            for (int i = n - 1; i >= 0; --i)\n                for (int j = i; j < n; ++j)\n                    p[i][j] = s[i] == s[j] && ((j - i < 2) || p[i + 1][j - 1]);\n\n            vector<vector<string> > sub_palins[n];\n            for (int i = n - 1; i >= 0; --i) {\n                for (int j = i; j < n; ++j)\n                    if (p[i][j]) {\n                        const string palindrome = s.substr(i, j - i + 1);\n                        if (j + 1 < n) {\n                            for (auto v : sub_palins[j + 1]) {\n                                v.insert(v.begin(), palindrome);\n                                sub_palins[i].push_back(v);\n                            }\n                        } \n                        else {\n                            sub_palins[i].push_back(vector<string> { palindrome });\n                        }\n                    }\n            }\n\n            return sub_palins[0];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "23f8eeaa-d044-490f-a709-e698e727bb3c",
+  "slug": "check-if-string-is-a-prefix-of-array",
+  "title": "Check If String Is a Prefix of Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code> and an array of strings <code>words</code>, determine whether <code>s</code> is a <strong>prefix string</strong> of <code>words</code>.</p>\n\n<p>A string <code>s</code> is a <strong>prefix string</strong> of <code>words</code> if <code>s</code> can be made by concatenating the first <code>k</code> strings in <code>words</code> for some <strong>positive</strong> <code>k</code> no larger than <code>words.length</code>.</p>\n\n<p>Return <code>true</code><em> if </em><code>s</code><em> is a <strong>prefix string</strong> of </em><code>words</code><em>, or </em><code>false</code><em> otherwise</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;iloveleetcode&quot;, words = [&quot;i&quot;,&quot;love&quot;,&quot;leetcode&quot;,&quot;apples&quot;]\n<strong>Output:</strong> true\n<strong>Explanation:</strong>\ns can be made by concatenating &quot;i&quot;, &quot;love&quot;, and &quot;leetcode&quot; together.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;iloveleetcode&quot;, words = [&quot;apples&quot;,&quot;i&quot;,&quot;love&quot;,&quot;leetcode&quot;]\n<strong>Output:</strong> false\n<strong>Explanation:</strong>\nIt is impossible to make s using a prefix of arr.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 20</code></li>\n\t<li><code>1 &lt;= s.length &lt;= 1000</code></li>\n\t<li><code>words[i]</code> and <code>s</code> consist of only lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isPrefixString(string s, vector<string>& words) {\n        int i = 0, j = 0;\n        for (const auto& c : s) {\n            if (i == size(words) || words[i][j] != c) {\n                return false;\n            }\n            if (++j == size(words[i])) {\n                ++i;\n                j = 0;\n            }\n        }\n        return j == 0;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    bool isPrefixString(string s, vector<string>& words) {\n        int i = 0;\n        for (const auto& word : words) {\n            for (const auto& c : word) {\n                if (i == size(s) || s[i] != c) {\n                    return false;\n                }\n                ++i;\n            }\n            if (i == size(s)) {\n                return true;\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def isPrefixString(self, s, words):\n        \"\"\"\n        :type s: str\n        :type words: List[str]\n        :rtype: bool\n        \"\"\"\n        i = j = 0\n        for c in s:\n            if i == len(words) or words[i][j] != c:\n                return False \n            j += 1\n            if j == len(words[i]):\n                i += 1\n                j = 0\n        return j == 0\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def isPrefixString(self, s, words):\n        \"\"\"\n        :type s: str\n        :type words: List[str]\n        :rtype: bool\n        \"\"\"\n        i = 0\n        for word in words:\n            for c in word:\n                if i == len(s) or s[i] != c:\n                    return False\n                i += 1\n            if i == len(s):\n                return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

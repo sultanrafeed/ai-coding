@@ -1,0 +1,35 @@
+{
+  "id": "e59b4f89-03e6-4975-80dc-08fb5ad87f22",
+  "slug": "delete-columns-to-make-sorted-ii",
+  "title": "Delete Columns to Make Sorted II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array of <code>n</code> strings <code>strs</code>, all of the same length.</p>\n\n<p>We may choose any deletion indices, and we delete all the characters in those indices for each string.</p>\n\n<p>For example, if we have <code>strs = [&quot;abcdef&quot;,&quot;uvwxyz&quot;]</code> and deletion indices <code>{0, 2, 3}</code>, then the final array after deletions is <code>[&quot;bef&quot;, &quot;vyz&quot;]</code>.</p>\n\n<p>Suppose we chose a set of deletion indices <code>answer</code> such that after deletions, the final array has its elements in <strong>lexicographic</strong> order (i.e., <code>strs[0] &lt;= strs[1] &lt;= strs[2] &lt;= ... &lt;= strs[n - 1]</code>). Return <em>the minimum possible value of</em> <code>answer.length</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> strs = [&quot;ca&quot;,&quot;bb&quot;,&quot;ac&quot;]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> \nAfter deleting the first column, strs = [&quot;a&quot;, &quot;b&quot;, &quot;c&quot;].\nNow strs is in lexicographic order (ie. strs[0] &lt;= strs[1] &lt;= strs[2]).\nWe require at least 1 deletion since initially strs was not in lexicographic order, so the answer is 1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> strs = [&quot;xc&quot;,&quot;yb&quot;,&quot;za&quot;]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> \nstrs is already in lexicographic order, so we do not need to delete anything.\nNote that the rows of strs are not necessarily in lexicographic order:\ni.e., it is NOT necessarily true that (strs[0][0] &lt;= strs[0][1] &lt;= ...)\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> strs = [&quot;zyx&quot;,&quot;wvu&quot;,&quot;tsr&quot;]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We have to delete every column.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == strs.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 100</code></li>\n\t<li><code>1 &lt;= strs[i].length &lt;= 100</code></li>\n\t<li><code>strs[i]</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int minDeletionSize(vector<string>& A) {\n        int result = 0;\n        unordered_set<int> unsorted;\n        for (int i = 0; i < A.size() - 1; ++i) {\n            unsorted.emplace(i);\n        }\n        for (int j = 0; j < A[0].size(); ++j) {\n            if (any_of(unsorted.begin(), unsorted.end(),\n                       [&](int i) {\n                           return A[i][j] > A[i + 1][j];\n                       })\n               ) {\n                ++result;\n            } else {\n                unordered_set<int> tmp(unsorted);\n                for (const auto& i : tmp) {\n                    if (A[i][j] < A[i + 1][j]) {\n                        unsorted.erase(i);\n                    }\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n * m)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int minDeletionSize(vector<string>& A) {\n        int result = 0;\n        vector<bool> is_sorted(A.size() - 1);\n        for (int j = 0; j < A[0].size(); ++j) {\n            vector<bool> tmp(is_sorted);\n            int i = 0;\n            for (; i < A.size() - 1; ++i) {\n                if (A[i][j] > A[i + 1][j] && tmp[i] == false) {\n                    ++result;\n                    break;\n                }\n                if (A[i][j] < A[i + 1][j]) {\n                    tmp[i] = true;\n                }\n            }\n            if (i == A.size() - 1) {\n                is_sorted = move(tmp);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l)\n# Space: O(n)\n\nclass Solution(object):\n    def minDeletionSize(self, A):\n        \"\"\"\n        :type A: List[str]\n        :rtype: int\n        \"\"\"\n        result = 0\n        unsorted = set(range(len(A)-1))\n        for j in xrange(len(A[0])):\n            if any(A[i][j] > A[i+1][j] for i in unsorted):\n                result += 1\n            else:\n                unsorted -= set(i for i in unsorted if A[i][j] < A[i+1][j])\n        return result\n\n\n# Time:  O(n * m)\n# Space: O(n)\nclass Solution2(object):\n    def minDeletionSize(self, A):\n        \"\"\"\n        :type A: List[str]\n        :rtype: int\n        \"\"\"\n        result = 0\n        is_sorted = [False]*(len(A)-1)\n        for j in xrange(len(A[0])):\n            tmp = is_sorted[:]\n            for i in xrange(len(A)-1):\n                if A[i][j] > A[i+1][j] and tmp[i] == False:\n                    result += 1\n                    break\n                if A[i][j] < A[i+1][j]:\n                    tmp[i] = True\n            else:\n                is_sorted = tmp\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

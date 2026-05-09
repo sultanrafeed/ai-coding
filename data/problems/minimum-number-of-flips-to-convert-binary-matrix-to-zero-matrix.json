@@ -1,0 +1,37 @@
+{
+  "id": "655597fd-d986-4db7-abed-b40171c41def",
+  "slug": "minimum-number-of-flips-to-convert-binary-matrix-to-zero-matrix",
+  "title": "Minimum Number of Flips to Convert Binary Matrix to Zero Matrix",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a <code>m x n</code> binary matrix <code>mat</code>. In one step, you can choose one cell and flip it and all the four neighbors of it if they exist (Flip is changing <code>1</code> to <code>0</code> and <code>0</code> to <code>1</code>). A pair of cells are called neighbors if they share one edge.</p>\n\n<p>Return the <em>minimum number of steps</em> required to convert <code>mat</code> to a zero matrix or <code>-1</code> if you cannot.</p>\n\n<p>A <strong>binary matrix</strong> is a matrix with all cells equal to <code>0</code> or <code>1</code> only.</p>\n\n<p>A <strong>zero matrix</strong> is a matrix with all cells equal to <code>0</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/11/28/matrix.png\" style=\"width: 409px; height: 86px;\" />\n<pre>\n<strong>Input:</strong> mat = [[0,0],[0,1]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> One possible solution is to flip (1, 0) then (0, 1) and finally (1, 1) as shown.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[0]]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Given matrix is a zero matrix. We do not need to change it.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[1,0,0],[1,0,0]]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> Given matrix cannot be a zero matrix.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == mat.length</code></li>\n\t<li><code>n == mat[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 3</code></li>\n\t<li><code>mat[i][j]</code> is either <code>0</code> or <code>1</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "bit-manipulation",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((m * n) * 2^(m * n))\n// Space: O((m * n) * 2^(m * n))\n\nclass Solution {\npublic:\n    int minFlips(vector<vector<int>>& mat) {\n        static const vector<pair<int, int>> directions{{0, 0}, {0, 1}, {1, 0}, {0, -1}, {-1, 0}};\n        int start = 0;\n        for (int r = 0; r < mat.size(); ++r) {\n            for (int c = 0; c < mat[0].size(); ++c) {\n                start |= mat[r][c] << r * mat[0].size() + c;\n            }\n        }\n        queue<pair<int, int>> q({{start, 0}});\n        unordered_set<int> lookup = {start};\n        while (!q.empty()) {\n            const auto [state, step] = q.front(); q.pop();\n            if (!state) {\n                return step;\n            }\n            for (int r = 0; r < mat.size(); ++r) {\n                for (int c = 0; c < mat[0].size(); ++c) {\n                    int new_state = state;\n                    for (const auto& [dr, dc] : directions) {\n                        const auto& [nr, nc] = make_pair(r + dr, c + dc);\n                        if (0 <= nr && nr < mat.size() &&\n                            0 <= nc && nc < mat[0].size()) {\n                            new_state ^= 1 << nr * mat[0].size() + nc;\n                        }\n                    }\n                    if (lookup.count(new_state)) {\n                        continue;\n                    }\n                    lookup.emplace(new_state);\n                    q.emplace(new_state, step + 1);\n                 }\n            }\n        }\n        return -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((m * n) * 2^(m * n))\n# Space: O((m * n) * 2^(m * n))\n\nimport collections\n\n\nclass Solution(object):\n    def minFlips(self, mat):\n        \"\"\"\n        :type mat: List[List[int]]\n        :rtype: int\n        \"\"\"\n        directions = [(0, 0), (0, 1), (1, 0), (0, -1), (-1, 0)]\n        start = sum(val << r*len(mat[0])+c for r, row in enumerate(mat) for c, val in enumerate(row))\n        q = collections.deque([(start, 0)])\n        lookup = {start}\n        while q:\n            state, step = q.popleft()\n            if not state:\n                return step\n            for r in xrange(len(mat)):\n                for c in xrange(len(mat[0])):\n                    new_state = state\n                    for dr, dc in directions:\n                        nr, nc = r+dr, c+dc\n                        if 0 <= nr < len(mat) and 0 <= nc < len(mat[0]):\n                            new_state ^= 1 << nr*len(mat[0])+nc\n                    if new_state in lookup:\n                        continue\n                    lookup.add(new_state)\n                    q.append((new_state, step+1))\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

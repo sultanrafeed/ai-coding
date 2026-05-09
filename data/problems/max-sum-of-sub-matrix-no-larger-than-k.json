@@ -1,0 +1,31 @@
+{
+  "id": "222d637e-6267-4341-88a7-16a8d661f79e",
+  "slug": "max-sum-of-sub-matrix-no-larger-than-k",
+  "title": "Max Sum Of Sub Matrix No Larger Than K",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(min(m, n)^2 * max(m, n) * log(max(m, n)))\n// Space: O(max(m, n))\n\nclass Solution {\npublic:\n    int maxSumSubmatrix(vector<vector<int>>& matrix, int k) {\n        if (matrix.empty()) {\n            return 0;\n        }\n\n        const int m = min(matrix.size(), matrix[0].size());\n        const int n = max(matrix.size(), matrix[0].size());\n        int result = numeric_limits<int>::min();\n\n        for (int i = 0; i < m; ++i) {\n            vector<int> sums(n, 0);\n            for (int j = i; j < m; ++j) {\n                for (int l = 0; l < n; ++l) {\n                    sums[l] += (m == matrix.size()) ? matrix[j][l] : matrix[l][j];\n                }\n    \n                // Find the max subarray no more than K.\n                set<int> accu_sum_set;\n                accu_sum_set.emplace(0);\n                int accu_sum = 0;\n                for (int sum : sums) {\n                    accu_sum += sum;\n                    auto it = accu_sum_set.lower_bound(accu_sum - k);\n                    if (it != accu_sum_set.end()) {\n                        result = max(result, accu_sum - *it);\n                    }\n                    accu_sum_set.emplace(accu_sum);\n                }\n            }\n        }\n\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(min(m, n)^2 * max(m, n) * log(max(m, n)))\n# Space: O(max(m, n))\n\nfrom bisect import bisect_left, insort\n\nclass Solution(object):\n    def maxSumSubmatrix(self, matrix, k):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        if not matrix:\n            return 0\n\n        m = min(len(matrix), len(matrix[0]))\n        n = max(len(matrix), len(matrix[0]))\n        result = float(\"-inf\")\n\n        for i in xrange(m):\n            sums = [0] * n\n            for j in xrange(i, m):\n                for l in xrange(n):\n                    sums[l] += matrix[j][l] if m == len(matrix) else matrix[l][j]\n\n                # Find the max subarray no more than K.\n                accu_sum_set, accu_sum = [0], 0\n                for sum in sums:\n                    accu_sum += sum\n                    it = bisect_left(accu_sum_set, accu_sum - k)  # Time: O(logn)\n                    if it != len(accu_sum_set):\n                        result = max(result, accu_sum - accu_sum_set[it])\n                    insort(accu_sum_set, accu_sum)  # Time: O(n)\n\n        return result\n\n\n# Time:  O(min(m, n)^2 * max(m, n) * log(max(m, n))) ~ O(min(m, n)^2 * max(m, n)^2)\n# Space: O(max(m, n))\nclass Solution_TLE(object):\n    def maxSumSubmatrix(self, matrix, k):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        class BST(object):  # not avl, rbtree\n            def __init__(self, val):\n                self.val = val\n                self.left = None\n                self.right = None\n\n            def insert(self, val):  # Time: O(h) = O(logn) ~ O(n)\n                curr = self\n                while curr:\n                    if curr.val >= val:\n                        if curr.left:\n                            curr = curr.left\n                        else:\n                            curr.left = BST(val)\n                            return\n                    else:\n                        if curr.right:\n                            curr = curr.right\n                        else:\n                            curr.right = BST(val)\n                            return\n\n            def lower_bound(self, val):  # Time: O(h) = O(logn) ~ O(n)\n                result, curr = None, self\n                while curr:\n                    if curr.val >= val:\n                        result, curr = curr, curr.left\n                    else:\n                        curr = curr.right\n                return result\n\n\n        if not matrix:\n            return 0\n\n        m = min(len(matrix), len(matrix[0]))\n        n = max(len(matrix), len(matrix[0]))\n        result = float(\"-inf\")\n\n        for i in xrange(m):\n            sums = [0] * n\n            for j in xrange(i, m):\n                for l in xrange(n):\n                    sums[l] += matrix[j][l] if m == len(matrix) else matrix[l][j]\n\n                # Find the max subarray no more than K.\n                accu_sum_set = BST(0)\n                accu_sum = 0\n                for sum in sums:\n                    accu_sum += sum\n                    node = accu_sum_set.lower_bound(accu_sum - k)\n                    if node:\n                        result = max(result, accu_sum - node.val)\n                    accu_sum_set.insert(accu_sum)\n\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

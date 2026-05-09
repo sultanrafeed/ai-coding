@@ -1,0 +1,36 @@
+{
+  "id": "0ce4b3e4-7eb2-4825-a3e7-44fbd81577c1",
+  "slug": "sum-of-nodes-with-even-valued-grandparent",
+  "title": "Sum of Nodes with Even-Valued Grandparent",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree, return <em>the sum of values of nodes with an <strong>even-valued grandparent</strong></em>. If there are no nodes with an <strong>even-valued grandparent</strong>, return <code>0</code>.</p>\n\n<p>A <strong>grandparent</strong> of a node is the parent of its parent if it exists.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/08/10/even1-tree.jpg\" style=\"width: 504px; height: 302px;\" />\n<pre>\n<strong>Input:</strong> root = [6,7,8,2,7,1,3,9,null,1,4,null,null,null,5]\n<strong>Output:</strong> 18\n<strong>Explanation:</strong> The red nodes are the nodes with even-value grandparent while the blue nodes are the even-value grandparents.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/08/10/even2-tree.jpg\" style=\"width: 64px; height: 65px;\" />\n<pre>\n<strong>Input:</strong> root = [1]\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>\n\t<li><code>1 &lt;= Node.val &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    int sumEvenGrandparent(TreeNode* root) {\n        return sumEvenGrandparentHelper(root, 1, 1);\n    }\n\nprivate:\n    int sumEvenGrandparentHelper(TreeNode *root, int p, int gp) {\n        return root\n               ? sumEvenGrandparentHelper(root->left, root->val, p) +\n                 sumEvenGrandparentHelper(root->right, root->val, p) +\n                 (gp % 2 == 0 ? root->val : 0)\n               : 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def sumEvenGrandparent(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        def sumEvenGrandparentHelper(root, p, gp):\n            return sumEvenGrandparentHelper(root.left, root.val, p) + \\\n                   sumEvenGrandparentHelper(root.right, root.val, p) + \\\n                   (root.val if gp is not None and gp % 2 == 0 else 0) if root else 0\n\n        return sumEvenGrandparentHelper(root, None, None)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "080b910b-b196-4aea-84c4-98d92c5e98da",
+  "slug": "total-distance-to-type-a-string-using-one-finger",
+  "title": "Total Distance to Type a String Using One Finger",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"hello\"\n\"a\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// hash table\nconst auto& init = []() {\n    static const vector<string> KEYBOARD = {\"qwertyuiop\", \"asdfghjkl\", \"zxcvbnm\"};\n    vector<pair<int, int>> lookup(26);\n    for (int i = 0; i < size(KEYBOARD); ++i) {\n        for (int j = 0; j < size(KEYBOARD[i]); ++j) {\n            lookup[KEYBOARD[i][j] - 'a'] = {i, j};\n        }\n    }\n    return lookup;\n};\n\nconst auto& LOOKUP = init();\nclass Solution {\npublic:\n    int totalDistance(string s) {\n        int result = 0;\n        pair<int, int> prev = LOOKUP[0];\n        for (const auto& x : s) {\n            auto curr = LOOKUP[x - 'a'];\n            result += abs(curr.first - prev.first) + abs(curr.second - prev.second);\n            prev = curr;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# hash table\nKEYBOARD = (\"qwertyuiop\", \"asdfghjkl\", \"zxcvbnm\")\nLOOKUP = [None]*26\nfor r, row in enumerate(KEYBOARD):\n    for c, x in enumerate(row):\n        LOOKUP[ord(x)-ord('a')] = (r, c)\nclass Solution(object):\n    def totalDistance(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = 0\n        prev = LOOKUP[0]\n        for x in s:\n            curr = LOOKUP[ord(x)-ord('a')]\n            result += abs(curr[0]-prev[0])+abs(curr[1]-prev[1])\n            prev = curr\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

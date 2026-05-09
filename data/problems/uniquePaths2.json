@@ -1,0 +1,25 @@
+{
+  "id": "5ca8bedb-cbc1-43d5-81a4-78ad9a6cc5db",
+  "slug": "uniquePaths2",
+  "title": "Uniquepaths2",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(mn)\n// Space Complexity: O(n)\n\nclass Solution {\n    public:\n        int uniquePaths(int m, int n) {\n            vector<int> f(n, 1);\n            for(int i = 1; i < m; ++i) {\n                for(int j = 1; j < n; ++j) {\n                    f[j] += f[j-1];\n                }\n            }\n            return f[n-1];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

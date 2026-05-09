@@ -1,0 +1,31 @@
+{
+  "id": "f83d35c2-dae8-41ce-a0bb-f1887dfbd211",
+  "slug": "create-object-from-two-arrays",
+  "title": "Create Object from Two Arrays",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"a\",\"b\",\"c\"]\n[1,2,3]\n[1,\"1\",false]\n[4,5,6]\n[]\n[]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nfunction createObject(keysArr: any[], valuesArr: any[]): Record<string, any> {\n    let result: Record<string, any> = {};\n    keysArr.forEach((key, index) => {\n        if (result[key] === undefined) {\n            result[key] = valuesArr[index];\n        }\n    });\n    return result;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

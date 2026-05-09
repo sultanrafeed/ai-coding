@@ -1,0 +1,35 @@
+{
+  "id": "b7044068-30c1-47c4-ae30-6585e9dc5a3f",
+  "slug": "find-all-good-indices",
+  "title": "Find All Good Indices",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> of size <code>n</code> and a positive integer <code>k</code>.</p>\n\n<p>We call an index <code>i</code> in the range <code>k &lt;= i &lt; n - k</code> <strong>good</strong> if the following conditions are satisfied:</p>\n\n<ul>\n\t<li>The <code>k</code> elements that are just <strong>before</strong> the index <code>i</code> are in <strong>non-increasing</strong> order.</li>\n\t<li>The <code>k</code> elements that are just <strong>after</strong> the index <code>i</code> are in <strong>non-decreasing</strong> order.</li>\n</ul>\n\n<p>Return <em>an array of all good indices sorted in <strong>increasing</strong> order</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,1,1,3,4,1], k = 2\n<strong>Output:</strong> [2,3]\n<strong>Explanation:</strong> There are two good indices in the array:\n- Index 2. The subarray [2,1] is in non-increasing order, and the subarray [1,3] is in non-decreasing order.\n- Index 3. The subarray [1,1] is in non-increasing order, and the subarray [3,4] is in non-decreasing order.\nNote that the index 4 is not good because [4,1] is not non-decreasing.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,1,2], k = 2\n<strong>Output:</strong> []\n<strong>Explanation:</strong> There are no good indices in this array.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums.length</code></li>\n\t<li><code>3 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= n / 2</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// prefix sum\nclass Solution {\npublic:\n    vector<int> goodIndices(vector<int>& nums, int k) {\n        vector<int> left(size(nums), 1);\n        for (int i = 1; i + 1 < size(nums); ++i) {\n            if (nums[i] <= nums[i - 1]) {\n                left[i] = left[i - 1] + 1;\n            }\n        }\n        vector<int> right(size(nums), 1);\n        for (int i = size(nums) - 2; i >= 1; --i) {\n            if (nums[i] <= nums[i + 1]) {\n                right[i] = right[i + 1] + 1;\n            }\n        }\n        vector<int> result;\n        for (int i = k; i + k < size(nums); ++i) {\n            if (min(left[i - 1], right[i + 1]) >= k) {\n                result.emplace_back(i);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# prefix sum\nclass Solution(object):\n    def goodIndices(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: List[int]\n        \"\"\"\n        left = [1]*len(nums)\n        for i in xrange(1, len(nums)-1):\n            if nums[i] <= nums[i-1]:\n                left[i] = left[i-1]+1\n        right = [1]*len(nums)\n        for i in reversed(xrange(1, len(nums)-1)):\n            if nums[i] <= nums[i+1]:\n                right[i] = right[i+1]+1\n        return [i for i in xrange(k, len(nums)-k) if min(left[i-1], right[i+1]) >= k]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

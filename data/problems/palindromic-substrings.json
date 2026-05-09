@@ -1,0 +1,35 @@
+{
+  "id": "13a500b4-598c-44a3-b8f2-dff1801097c2",
+  "slug": "palindromic-substrings",
+  "title": "Palindromic Substrings",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code>, return <em>the number of <strong>palindromic substrings</strong> in it</em>.</p>\n\n<p>A string is a <strong>palindrome</strong> when it reads the same backward as forward.</p>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters within the string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abc&quot;\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> Three palindromic strings: &quot;a&quot;, &quot;b&quot;, &quot;c&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aaa&quot;\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> Six palindromic strings: &quot;a&quot;, &quot;a&quot;, &quot;a&quot;, &quot;aa&quot;, &quot;aa&quot;, &quot;aaa&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 1000</code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int countSubstrings(string s) {\n        auto result = 0;\n        for (const auto& max_len : manacher(s)) {\n            result += (max_len + 1) / 2;\n        }\n        return result;\n    }\n\nprivate:\n    vector<int> manacher(const string& s) {\n        string T = preProcess(s);\n        const int n = T.length();\n        vector<int> P(n);\n        int C = 0, R = 0;\n        for (int i = 1; i < n - 1; ++i) {\n            int i_mirror = 2 * C - i;\n            P[i] = (R > i) ? min(R - i, P[i_mirror]) : 0;\n            while (T[i + 1 + P[i]] == T[i - 1 - P[i]]) {\n                ++P[i];\n            }\n            if (i + P[i] > R) {\n                C = i;\n                R = i + P[i];\n            }\n        }\n        return P;\n    }\n        \n    string preProcess(const string& s) {\n        if (s.empty()) {\n            return \"^$\";\n        }\n        string ret = \"^\";\n        for (int i = 0; i < s.length(); ++i) {\n            ret += \"#\" + s.substr(i, 1);\n        }\n        ret += \"#$\";\n        return ret;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def countSubstrings(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        def manacher(s):\n            s = '^#' + '#'.join(s) + '#$'\n            P = [0] * len(s)\n            C, R = 0, 0\n            for i in xrange(1, len(s) - 1):\n                i_mirror = 2*C-i\n                if R > i:\n                    P[i] = min(R-i, P[i_mirror])\n                while s[i+1+P[i]] == s[i-1-P[i]]:\n                    P[i] += 1\n                if i+P[i] > R:\n                    C, R = i, i+P[i]\n            return P\n        return sum((max_len+1)//2 for max_len in manacher(s))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

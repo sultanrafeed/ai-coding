@@ -1,0 +1,42 @@
+{
+  "id": "498e6f15-0c84-4399-8373-701fe8cc98f7",
+  "slug": "dot-product-of-two-sparse-vectors",
+  "title": "Dot Product of Two Sparse Vectors",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "two-pointers",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,0,0,2,3]\n[0,3,0,4,0]\n[0,1,0,0,0]\n[0,0,0,0,2]\n[0,1,0,0,2,0,0]\n[1,0,0,0,3,0,4]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor: O(n)\n//        dot_product: O(min(n, m))\n// Space: O(n)\n\nclass SparseVector {\npublic:\n    SparseVector(vector<int> &nums) {\n        for (int i = 0; i < nums.size(); ++i) {\n            if (nums[i]) {\n                lookup_[i] = nums[i];\n            }\n        }\n    }\n    \n    int dotProduct(SparseVector& vec) {\n        auto a = this, b = &vec;\n        if (a->lookup_.size() > b->lookup_.size()) {\n            swap(a, b);\n        }\n        int result = 0;\n        for (const auto& [i, v] : a->lookup_) {\n            if (b->lookup_.count(i)) {\n                result += v * b->lookup_[i];\n            }\n        }\n        return result;\n    }\n\nprivate:\n    unordered_map<int, int> lookup_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor: O(n)\n#        dot_product: O(min(n, m))\n# Space: O(n)\n\nclass SparseVector:\n    def __init__(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        \"\"\"\n        self.lookup = {i:v for i, v in enumerate(nums) if v}\n\n    def dotProduct(self, vec):\n        \"\"\"\n        :type vec: 'SparseVector'\n        :rtype: int\n        \"\"\"\n        if len(self.lookup) > len(vec.lookup):\n            self, vec = vec, self\n        return sum(v*vec.lookup[i] for i, v in self.lookup.iteritems() if i in vec.lookup)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

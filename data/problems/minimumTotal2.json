@@ -1,0 +1,25 @@
+{
+  "id": "b1af91e2-dad4-4651-ab9f-99146bfdd8dd",
+  "slug": "minimumTotal2",
+  "title": "Minimumtotal2",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n^2)\n// Space Complexity: O(1)\n\nclass Solution {\n    public:\n        int minimumTotal(vector<vector<int> > &triangle) {\n            const int N = triangle.size();\n\n            for(int i = N - 2; i >= 0; --i) {\n                for(int j = 0; j < i + 1; ++j) {\n                    triangle[i][j] += min(triangle[i + 1][j], triangle[i + 1][j + 1]);\n                }\n            }\n\n            return triangle[0][0];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

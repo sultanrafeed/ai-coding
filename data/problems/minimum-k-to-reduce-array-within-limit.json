@@ -1,0 +1,34 @@
+{
+  "id": "9e9ee66f-8f2b-4808-b397-f0ded3832add",
+  "slug": "minimum-k-to-reduce-array-within-limit",
+  "title": "Minimum K to Reduce Array Within Limit",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>positive</strong> integer array <code>nums</code>.</p>\n\n<p>For a positive integer <code>k</code>, define <code>nonPositive(nums, k)</code> as the <strong>minimum</strong> number of <strong>operations</strong> needed to make every element of <code>nums</code> <strong>non-positive</strong>. In one operation, you can choose an index <code>i</code> and reduce <code>nums[i]</code> by <code>k</code>.</p>\n\n<p>Return an integer denoting the <strong>minimum</strong> value of <code>k</code> such that <code>nonPositive(nums, k) &lt;= k<sup>2</sup></code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,7,5]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>When <code>k = 3</code>, <code>nonPositive(nums, k) = 6 &lt;= k<sup>2</sup></code>.</p>\n\n<ul>\n\t<li>Reduce <code>nums[0] = 3</code> one time. <code>nums[0]</code> becomes <code>3 - 3 = 0</code>.</li>\n\t<li>Reduce <code>nums[1] = 7</code> three times. <code>nums[1]</code> becomes <code>7 - 3 - 3 - 3 = -2</code>.</li>\n\t<li>Reduce <code>nums[2] = 5</code> two times. <code>nums[2]</code> becomes <code>5 - 3 - 3 = -1</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>When <code>k = 1</code>, <code>nonPositive(nums, k) = 1 &lt;= k<sup>2</sup></code>.</p>\n\n<ul>\n\t<li>Reduce <code>nums[0] = 1</code> one time. <code>nums[0]</code> becomes <code>1 - 1 = 0</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr + nlogn)\n// Space: O(1)\n\n// binary search\nclass Solution {\npublic:\n    int minimumK(vector<int>& nums) {\n        const auto& binary_search = [](auto left, auto right, const auto& check) {\n            while (left <= right) {\n                const auto& mid = left + (right - left) / 2;\n                if (check(mid)) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            }\n            return left;\n        };\n\n        const auto& ceil_divide = [](int a, int b) {\n            return (a + b - 1) / b;\n        };\n\n        const auto& check = [&](int k) {\n            int64_t result = 0;\n            for (const auto& x : nums) {\n                result += ceil_divide(x, k);\n                if (result > static_cast<int64_t>(k) * k) {\n                    return false;\n                }\n            }\n            return true;\n        };\n\n        const auto& right = max(ranges::max(nums), static_cast<int>(ceil(sqrt(size(nums)))));\n        return binary_search(1, right, check);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr + nlogn)\n# Space: O(1)\n\n# binary search\nclass Solution(object):\n    def minimumK(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n\n        def binary_search(left, right, check):\n            while left <= right:\n                mid = left+(right-left)//2\n                if check(mid):\n                    right = mid-1\n                else:\n                    left = mid+1\n            return left\n\n        def check(k):\n            return sum((ceil_divide(x, k)) for x in nums) <= k**2\n\n        right = max(max(nums), int(ceil(sqrt(len(nums)))))\n        return binary_search(1, right, check)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

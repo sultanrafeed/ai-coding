@@ -1,0 +1,44 @@
+{
+  "id": "32eb7e4a-1711-424b-9b88-6c41d97b16c1",
+  "slug": "find-pattern-in-infinite-stream-ii",
+  "title": "Find Pattern in Infinite Stream II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "sliding-window",
+    "rolling-hash",
+    "string-matching",
+    "interactive",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,1,0,1]\n[0,1]\n[0]\n[0]\n[1,0,1,1,0,1]\n[1,1,0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(p + n)\n// Space: O(p)\n\n// kmp\nclass Solution {\npublic:\n    int findPattern(InfiniteStream* stream, vector<int>& pattern) {\n        const auto& getPrefix = [](const auto& pattern) {\n            vector<int> prefix(size(pattern), -1);\n            int j = -1;\n            for (int i = 1; i < size(pattern); ++i) {\n                while (j > -1 && pattern[j + 1] != pattern[i]) {\n                    j = prefix[j];\n                }\n                if (pattern[j + 1] == pattern[i]) {\n                    ++j;\n                }\n                prefix[i] = j;\n            }\n            return prefix;\n        };\n\n        vector<int> result;\n        const vector<int> prefix = getPrefix(pattern);\n        int j = -1;\n        for (int i = 0; ; ++i) {\n            const auto d = stream->next();\n            while (j > -1 && pattern[j + 1] != d) {\n                j = prefix[j];\n            }\n            if (pattern[j + 1] == d) {\n                ++j;\n            }\n            if (j == size(pattern) - 1) {\n                return i - j;\n            }\n        }\n        return -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(p + n)\n# Space: O(p)\n\n# Definition for an infinite stream.\nclass InfiniteStream:\n    def next(self):\n        pass\n\n\n# kmp\nclass Solution(object):\n    def findPattern(self, stream, pattern):\n        \"\"\"\n        :type stream: InfiniteStream\n        :type pattern: List[int]\n        :rtype: int\n        \"\"\"\n        def getPrefix(pattern):\n            prefix = [-1]*len(pattern)\n            j = -1\n            for i in xrange(1, len(pattern)):\n                while j+1 > 0 and pattern[j+1] != pattern[i]:\n                    j = prefix[j]\n                if pattern[j+1] == pattern[i]:\n                    j += 1\n                prefix[i] = j\n            return prefix\n\n        prefix = getPrefix(pattern)\n        i = j = -1\n        while True:\n            d = stream.next()\n            i += 1\n            while j+1 > 0 and pattern[j+1] != d:\n                j = prefix[j]\n            if pattern[j+1] == d:\n                j += 1\n            if j+1 == len(pattern):\n                return i-j\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "fd21b34c-b0a2-4159-aeac-389620d3e9b6",
+  "slug": "length-of-last-word",
+  "title": "Length of Last Word",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code> consisting of words and spaces, return <em>the length of the <strong>last</strong> word in the string.</em></p>\n\n<p>A <strong>word</strong> is a maximal <span data-keyword=\"substring-nonempty\">substring</span> consisting of non-space characters only.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;Hello World&quot;\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The last word is &quot;World&quot; with length 5.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;   fly me   to   the moon  &quot;\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The last word is &quot;moon&quot; with length 4.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;luffy is still joyboy&quot;\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The last word is &quot;joyboy&quot; with length 6.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>s</code> consists of only English letters and spaces <code>&#39; &#39;</code>.</li>\n\t<li>There will be at least one word in <code>s</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int lengthOfLastWord(string s) {\n        const auto is_space = [](const char c) { return isspace(c); };\n        const auto it = find_if_not(s.rbegin(), s.rend(), is_space);\n        const auto jt = find_if(it, s.rend(), is_space);\n        return distance(it, jt);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    # @param s, a string\n    # @return an integer\n    def lengthOfLastWord(self, s):\n        length = 0\n        for i in reversed(s):\n            if i == ' ':\n                if length:\n                    break\n            else:\n                length += 1\n        return length\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    # @param s, a string\n    # @return an integer\n    def lengthOfLastWord(self, s):\n        return len(s.strip().split(\" \")[-1])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "f02de12c-4383-4bfc-baa1-3385fd126147",
+  "slug": "maximum-employees-to-be-invited-to-a-meeting",
+  "title": "Maximum Employees to Be Invited to a Meeting",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>A company is organizing a meeting and has a list of <code>n</code> employees, waiting to be invited. They have arranged for a large <strong>circular</strong> table, capable of seating <strong>any number</strong> of employees.</p>\n\n<p>The employees are numbered from <code>0</code> to <code>n - 1</code>. Each employee has a <strong>favorite</strong> person and they will attend the meeting <strong>only if</strong> they can sit next to their favorite person at the table. The favorite person of an employee is <strong>not</strong> themself.</p>\n\n<p>Given a <strong>0-indexed</strong> integer array <code>favorite</code>, where <code>favorite[i]</code> denotes the favorite person of the <code>i<sup>th</sup></code> employee, return <em>the <strong>maximum number of employees</strong> that can be invited to the meeting</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/12/14/ex1.png\" style=\"width: 236px; height: 195px;\" />\n<pre>\n<strong>Input:</strong> favorite = [2,2,1,2]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong>\nThe above figure shows how the company can invite employees 0, 1, and 2, and seat them at the round table.\nAll employees cannot be invited because employee 2 cannot sit beside employees 0, 1, and 3, simultaneously.\nNote that the company can also invite employees 1, 2, and 3, and give them their desired seats.\nThe maximum number of employees that can be invited to the meeting is 3. \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> favorite = [1,2,0]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> \nEach employee is the favorite person of at least one other employee, and the only way the company can invite them is if they invite every employee.\nThe seating arrangement will be the same as that in the figure given in example 1:\n- Employee 0 will sit between employees 2 and 1.\n- Employee 1 will sit between employees 0 and 2.\n- Employee 2 will sit between employees 1 and 0.\nThe maximum number of employees that can be invited to the meeting is 3.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/12/14/ex2.png\" style=\"width: 219px; height: 220px;\" />\n<pre>\n<strong>Input:</strong> favorite = [3,0,1,4,1]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong>\nThe above figure shows how the company will invite employees 0, 1, 3, and 4, and seat them at the round table.\nEmployee 2 cannot be invited because the two spots next to their favorite employee 1 are taken.\nSo the company leaves them out of the meeting.\nThe maximum number of employees that can be invited to the meeting is 4.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == favorite.length</code></li>\n\t<li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= favorite[i] &lt;=&nbsp;n - 1</code></li>\n\t<li><code>favorite[i] != i</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "depth-first-search",
+    "graph",
+    "topological-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maximumInvitations(vector<int>& favorite) {\n        vector<vector<int>> inv_adj(size(favorite));\n        for (int u = 0; u < size(favorite); ++u) {\n            inv_adj[favorite[u]].emplace_back(u);\n        }\n        int result = 0, cycle_2s = 0;\n        for (const auto& [u, l] : find_cycles(favorite)) {\n            if (l > 2) {\n                result = max(result, l);\n                continue;\n            }\n            cycle_2s += bfs(inv_adj, u, favorite[u]) + bfs(inv_adj, favorite[u], u);\n        }\n        return max(result, cycle_2s);\n    }\n\nprivate:\n    vector<pair<int, int>> find_cycles(const vector<int>& adj) {\n        vector<pair<int, int>> result;\n        vector<bool> lookup(size(adj));\n        for (int i = 0; i < size(adj); ++i) {\n            unordered_map<int, int> cnt;\n            int u = i;\n            while (!lookup[u]) {\n                lookup[u] = true;\n                cnt[u] = size(cnt);\n                u = adj[u];\n            }\n            if (cnt.count(u)) {\n                result.emplace_back(u, size(cnt) - cnt[u]);\n            }\n        }\n        return result;\n    }\n\n    int bfs(const vector<vector<int>>& adj, int u, int exclude) {\n        int result = 0;\n        vector<int> q = {u};\n        while (!empty(q)) {\n            ++result;\n            vector<int> new_q;\n            for (const auto& u : q) {\n                for (const auto& v : adj[u]) {\n                    if (v == exclude) {\n                        continue;\n                    }\n                    new_q.emplace_back(v);\n                }\n            }\n            q = move(new_q);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def maximumInvitations(self, favorite):\n        \"\"\"\n        :type favorite: List[int]\n        :rtype: int\n        \"\"\"\n        def find_cycles(adj):\n            result = []\n            lookup = [False]*len(adj)\n            for u in xrange(len(adj)):\n                cnt = {}\n                while not lookup[u]:\n                    lookup[u] = True\n                    cnt[u] = len(cnt)\n                    u = adj[u]\n                if u in cnt:\n                    result.append((u, len(cnt)-cnt[u]))\n            return result\n\n        def bfs(adj, u, exclude):\n            result = 0\n            q = [u]\n            while q:\n                result += 1\n                new_q = []\n                for u in q:\n                    for v in adj[u]:\n                        if v == exclude:\n                            continue\n                        new_q.append(v)\n                q = new_q\n            return result\n            \n        inv_adj = [[] for _ in xrange(len(favorite))]  \n        for u, v in enumerate(favorite):\n            inv_adj[v].append(u)\n        cycles = find_cycles(favorite)\n        return max(max([l for _, l in cycles if l > 2] or [0]),\n                   sum(bfs(inv_adj, u, favorite[u]) + bfs(inv_adj, favorite[u], u) for u, l in cycles if l == 2))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

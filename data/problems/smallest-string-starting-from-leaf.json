@@ -1,0 +1,37 @@
+{
+  "id": "35280692-5cc6-4f80-93e7-965e749122ac",
+  "slug": "smallest-string-starting-from-leaf",
+  "title": "Smallest String Starting From Leaf",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given the <code>root</code> of a binary tree where each node has a value in the range <code>[0, 25]</code> representing the letters <code>&#39;a&#39;</code> to <code>&#39;z&#39;</code>.</p>\n\n<p>Return <em>the <strong>lexicographically smallest</strong> string that starts at a leaf of this tree and ends at the root</em>.</p>\n\n<p>As a reminder, any shorter prefix of a string is <strong>lexicographically smaller</strong>.</p>\n\n<ul>\n\t<li>For example, <code>&quot;ab&quot;</code> is lexicographically smaller than <code>&quot;aba&quot;</code>.</li>\n</ul>\n\n<p>A leaf of a node is a node that has no children.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/01/30/tree1.png\" style=\"width: 534px; height: 358px;\" />\n<pre>\n<strong>Input:</strong> root = [0,1,2,3,4,3,4]\n<strong>Output:</strong> &quot;dba&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/01/30/tree2.png\" style=\"width: 534px; height: 358px;\" />\n<pre>\n<strong>Input:</strong> root = [25,1,3,1,3,0,2]\n<strong>Output:</strong> &quot;adz&quot;\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/02/01/tree3.png\" style=\"height: 490px; width: 468px;\" />\n<pre>\n<strong>Input:</strong> root = [2,2,1,null,1,0,null,0]\n<strong>Output:</strong> &quot;abc&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 8500]</code>.</li>\n\t<li><code>0 &lt;= Node.val &lt;= 25</code></li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "backtracking",
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + l * h), l is the number of leaves\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    string smallestFromLeaf(TreeNode* root) {\n        string result = \"~\";\n        string candidate;\n        dfs(root, &candidate, &result);\n        return result;\n    }\n    \nprivate:\n    void dfs(TreeNode *node, string *candidate, string *result) {\n        if (!node) {\n            return;\n        }\n\n        candidate->push_back('a' + node->val);\n        if (!node->left && !node->right) {\n            *result = min(*result, string(candidate->rbegin(), candidate->rend()));\n        }\n        dfs(node->left, candidate, result);\n        dfs(node->right, candidate, result);\n        candidate->pop_back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + l * h), l is the number of leaves\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def smallestFromLeaf(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: str\n        \"\"\"\n        def dfs(node, candidate, result):\n            if not node:\n                return\n\n            candidate.append(chr(ord('a') + node.val))\n            if not node.left and not node.right:\n                result[0] = min(result[0], \"\".join(reversed(candidate)))\n            dfs(node.left, candidate, result)\n            dfs(node.right, candidate, result)\n            candidate.pop()\n\n        result = [\"~\"]\n        dfs(root, [], result)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

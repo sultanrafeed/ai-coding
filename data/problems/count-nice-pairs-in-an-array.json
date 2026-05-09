@@ -1,0 +1,36 @@
+{
+  "id": "b45f9a25-fd5f-4c27-ba82-a46169945b8d",
+  "slug": "count-nice-pairs-in-an-array",
+  "title": "Count Nice Pairs in an Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array <code>nums</code> that consists of non-negative integers. Let us define <code>rev(x)</code> as the reverse of the non-negative integer <code>x</code>. For example, <code>rev(123) = 321</code>, and <code>rev(120) = 21</code>. A pair of indices <code>(i, j)</code> is <strong>nice</strong> if it satisfies all of the following conditions:</p>\n\n<ul>\n\t<li><code>0 &lt;= i &lt; j &lt; nums.length</code></li>\n\t<li><code>nums[i] + rev(nums[j]) == nums[j] + rev(nums[i])</code></li>\n</ul>\n\n<p>Return <em>the number of nice pairs of indices</em>. Since that number can be too large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [42,11,1,97]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The two pairs are:\n - (0,3) : 42 + rev(97) = 42 + 79 = 121, 97 + rev(42) = 97 + 24 = 121.\n - (1,2) : 11 + rev(1) = 11 + 1 = 12, 1 + rev(11) = 1 + 11 = 12.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [13,10,35,24,76]\n<strong>Output:</strong> 4\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogm), m is max of nums\n// Space: O(n)\n\nclass Solution {\npublic:\n    int countNicePairs(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        unordered_map<int, int> lookup;\n        int result = 0;\n        for (const auto& i : nums) {\n            result = (result + lookup[i - rev(i)]++) % MOD;\n        }\n        return result;\n    }\n\nprivate:\n    int rev(int i) {\n        int result = 0;\n        for (; i; i /= 10) {\n            result = result * 10 + i % 10;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogm), m is max of nums\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def countNicePairs(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9 + 7\n\n        def rev(x):\n            result = 0\n            while x:\n                x, r = divmod(x, 10)\n                result = result*10+r\n            return result\n        \n        result = 0\n        lookup = collections.defaultdict(int)\n        for num in nums:\n            result = (result + lookup[num-rev(num)])%MOD\n            lookup[num-rev(num)] += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "0cd2be32-df46-49d1-840e-4100be1c62b7",
+  "slug": "unique-word-abbreviation",
+  "title": "Unique Word Abbreviation",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:   O(n), n is number of words in the dictionary. \n//        lookup: O(1)\n// Space: O(k), k is number of unique words.\n\nclass ValidWordAbbr {\npublic:\n    ValidWordAbbr(vector<string> &dictionary) {\n        for (string& word : dictionary) {\n            const string abbr = abbreviation(word);\n            lookup_[abbr].emplace(word);\n        }\n    } \n\n    bool isUnique(string word) {\n        const string abbr = abbreviation(word);\n        return lookup_[abbr].empty() ||\n               (lookup_[abbr].count(word) == lookup_[abbr].size());\n    }\n\nprivate:\n    unordered_map<string, unordered_set<string>> lookup_;\n\n    string abbreviation(const string& word) {\n        if (word.length() <= 2) {\n            return word;\n        }\n        return word.front() + to_string(word.length()) + word.back();\n    }\n};\n\n\n// Your ValidWordAbbr object will be instantiated and called as such:\n// ValidWordAbbr vwa(dictionary);\n// vwa.isUnique(\"hello\");\n// vwa.isUnique(\"anotherWord\");",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:   O(n), n is number of words in the dictionary.\n#        lookup: O(1)\n# Space: O(k), k is number of unique words.\n\nimport collections\n\n\nclass ValidWordAbbr(object):\n    def __init__(self, dictionary):\n        \"\"\"\n        initialize your data structure here.\n        :type dictionary: List[str]\n        \"\"\"\n        self.lookup_ = collections.defaultdict(set)\n        for word in dictionary:\n            abbr = self.abbreviation(word)\n            self.lookup_[abbr].add(word)\n\n\n    def isUnique(self, word):\n        \"\"\"\n        check if a word is unique.\n        :type word: str\n        :rtype: bool\n        \"\"\"\n        abbr = self.abbreviation(word)\n        return self.lookup_[abbr] <= {word}\n\n\n    def abbreviation(self, word):\n        if len(word) <= 2:\n            return word\n        return word[0] + str(len(word)-2) + word[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

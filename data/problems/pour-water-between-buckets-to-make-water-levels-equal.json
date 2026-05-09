@@ -1,0 +1,40 @@
+{
+  "id": "ce273f93-ede5-4701-8e71-b96d3b43e009",
+  "slug": "pour-water-between-buckets-to-make-water-levels-equal",
+  "title": "Pour Water Between Buckets to Make Water Levels Equal",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,7]\n80\n[2,4,6]\n50\n[3,3,3,3]\n40",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr)\n// Space: O(1)\n\n// binary search\nclass Solution {\npublic:\n    double equalizeWater(vector<int>& buckets, int loss) {\n        static const double EPS = 1e-5;\n        double rate = (100.0 - loss) / 100.0;\n        auto check = [&buckets, &rate](double x) {\n            double extra = 0.0, need = 0.0;\n            for (const auto& b : buckets) {\n                if (b >= x) {\n                    extra += b - x;\n                } else {\n                    need += x - b;\n                }\n            }\n            return extra * rate >= need;\n        };\n        double left = *min_element(cbegin(buckets), cend(buckets));\n        double right = static_cast<double>(accumulate(cbegin(buckets), cend(buckets), 0ll)) / size(buckets);\n        while (right - left > EPS) {\n            double mid = left + (right - left) / 2;\n            if (!check(mid)) {\n                right = mid;\n            } else {\n                left = mid;\n            }\n        }\n        return right;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr)\n# Space: O(1)\n\n# binary search\nclass Solution(object):\n    def equalizeWater(self, buckets, loss):\n        \"\"\"\n        :type buckets: List[int]\n        :type loss: int\n        :rtype: float\n        \"\"\"\n        def check(buckets, rate, x):\n            return sum(b-x for b in buckets if b-x > 0)*rate >= sum(x-b for b in buckets if x-b > 0)\n\n        EPS = 1e-5\n        rate = (100-loss)/100.0\n        left, right = float(min(buckets)), float(sum(buckets))/len(buckets)\n        while right-left > EPS:\n            mid = left + (right-left)/2\n            if not check(buckets, rate, mid):\n                right = mid\n            else:\n                left = mid\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

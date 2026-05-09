@@ -1,0 +1,25 @@
+{
+  "id": "0ab88880-cba8-4f88-873d-a5ac5a319f39",
+  "slug": "minCut",
+  "title": "Mincut",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n^2)\n// Space Complexity: O(n^2)\n\nclass Solution {\n    public:      \n        int minCut(string s) {\n            const int n = s.size();\n            vector<vector<bool> > p(n, vector<bool>(n, false)); // p[i][j]: range [i, j] is a palindrome paritioning of s\n            vector<int> f(n + 1, 0); // f[i]: minimum cuts in range [i, n - 1]\n\n            for(int i = 0; i <= n; ++i) {\n                f[i] = n - 1 - i;    // initialize f[i] to the max cuts\n            }\n\n            for (int i = n - 1; i >= 0; --i) {\n                for (int j = i; j < n; ++j) {\n                    // [i, j] is palindrome if only if s[i] equals to s[j] and [i + 1, j - 1] is palindrome too\n                    if(s[i] == s[j] && ((j - i < 2) || p[i + 1][j - 1])) {\n                        p[i][j] = true;\n                        f[i] = min(f[i], f[j + 1] + 1);  // f[i] = min(f[j + 1] + 1) for each i <= j <= n - 1\n                    }\n                }   \n            }\n\n            return f[0];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

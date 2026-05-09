@@ -1,0 +1,40 @@
+{
+  "id": "c690702d-2bed-4104-9a24-e55234ef470d",
+  "slug": "minimize-max-distance-to-gas-station",
+  "title": "Minimize Max Distance to Gas Station",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5,6,7,8,9,10]\n9\n[23,24,36,39,46,56,57,65,84,98]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr)\n// Space: O(1)\n\nclass Solution {\npublic:\n    double minmaxGasDist(vector<int>& stations, int K) {\n        const auto& check = [&](double x) {\n            int total = 0;\n            for (int i = 0; i + 1 < stations.size(); ++i) {\n                total += ceil((stations[i + 1] - stations[i]) / x) - 1;\n            }\n            return total <= K;\n        };\n\n        double left = 0.0, right = stations.back() - stations.front();\n        while (right - left > 1e-6) {\n            const auto mid = left + (right - left) / 2.0;\n            if (check(mid)) {\n                right = mid;\n            } else {\n                left = mid;\n            }\n        }\n        return left;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr)\n# Space: O(1)\n\nimport math\n\n\nclass Solution(object):\n    def minmaxGasDist(self, stations, K):\n        \"\"\"\n        :type stations: List[int]\n        :type K: int\n        :rtype: float\n        \"\"\"\n        def check(x):\n            return sum(int(math.ceil((stations[i+1]-stations[i])/x))-1 for i in xrange(len(stations)-1)) <= K\n\n        left, right = 0, stations[-1]-stations[0]\n        while right-left > 1e-6:\n            mid = left + (right-left)/2.0\n            if check(mid):\n                right = mid\n            else:\n                left = mid\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

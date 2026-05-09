@@ -1,0 +1,36 @@
+{
+  "id": "7b354027-2050-4441-83e0-1663ab41b428",
+  "slug": "minimum-number-of-flips-to-reverse-binary-string",
+  "title": "Minimum Number of Flips to Reverse Binary String",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>positive</strong> integer <code>n</code>.</p>\n\n<p>Let <code>s</code> be the <strong>binary representation</strong> of <code>n</code> without leading zeros.</p>\n\n<p>The <strong>reverse</strong> of a binary string <code>s</code> is obtained by writing the characters of <code>s</code> in the opposite order.</p>\n\n<p>You may flip any bit in <code>s</code> (change <code>0 &rarr; 1</code> or <code>1 &rarr; 0</code>). Each flip affects <strong>exactly</strong> one bit.</p>\n\n<p>Return the <strong>minimum</strong> number of flips required to make <code>s</code> equal to the reverse of its original form.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 7</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The binary representation of 7 is <code>&quot;111&quot;</code>. Its reverse is also <code>&quot;111&quot;</code>, which is the same. Hence, no flips are needed.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 10</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The binary representation of 10 is <code>&quot;1010&quot;</code>. Its reverse is <code>&quot;0101&quot;</code>. All four bits must be flipped to make them equal. Thus, the minimum number of flips required is 4.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "two-pointers",
+    "string",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// bitmasks\nclass Solution {\npublic:\n    int minimumFlips(int n) {\n        const auto& bit_length = [](int64_t x) {\n            return (x ? std::__lg(x) : -1) + 1;\n        };\n\n        const auto& l = bit_length(n);\n        int result = 0;\n        for (int i = 0; i < l / 2; ++i) {\n            if (((n >> i) & 1) != (((n >> ((l - 1) - i)) & 1))) {\n                result += 2;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# bitmasks\nclass Solution(object):\n    def minimumFlips(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        l = n.bit_length()\n        return sum(2 for i in xrange(l//2) if (n>>i)&1 != (n>>((l-1)-i))&1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

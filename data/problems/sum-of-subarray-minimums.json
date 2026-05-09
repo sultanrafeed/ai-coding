@@ -1,0 +1,36 @@
+{
+  "id": "f2b06811-e81d-46cd-a9c7-19e7a31564b4",
+  "slug": "sum-of-subarray-minimums",
+  "title": "Sum of Subarray Minimums",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers arr, find the sum of <code>min(b)</code>, where <code>b</code> ranges over every (contiguous) subarray of <code>arr</code>. Since the answer may be large, return the answer <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [3,1,2,4]\n<strong>Output:</strong> 17\n<strong>Explanation:</strong> \nSubarrays are [3], [1], [2], [4], [3,1], [1,2], [2,4], [3,1,2], [1,2,4], [3,1,2,4]. \nMinimums are 3, 1, 2, 4, 1, 1, 2, 1, 1, 1.\nSum is 17.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [11,81,94,43,3]\n<strong>Output:</strong> 444\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 3 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= arr[i] &lt;= 3 * 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "stack",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// Ascending stack solution\nclass Solution {\npublic:\n    int sumSubarrayMins(vector<int>& A) {\n        static const int M = 1e9 + 7;\n\n        vector<int> left(A.size());\n        stack<pair<int, int>> s1;\n        for (int i = 0; i < A.size(); ++i) {\n            int count = 1;\n            while (!s1.empty() && s1.top().first > A[i]) {\n                count += s1.top().second;\n                s1.pop();\n            }\n            s1.emplace(A[i], count);\n            left[i] = count;\n        }\n\n        vector<int> right(A.size());\n        stack<pair<int, int>> s2;\n        for (int i = A.size() - 1; i >= 0; --i) {\n            int count = 1;\n            while (!s2.empty() && s2.top().first >= A[i]) {\n                count += s2.top().second;\n                s2.pop();\n            }\n            s2.emplace(A[i], count);\n            right[i] = count;\n        }\n\n        int result = 0;\n        for (int i = 0; i < A.size(); ++i) {\n            result = (result + A[i] * left[i] * right[i]) % M;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport itertools\n\n\n# Ascending stack solution\nclass Solution(object):\n    def sumSubarrayMins(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        M = 10**9 + 7\n\n        left, s1 = [0]*len(A), []\n        for i in xrange(len(A)):\n            count = 1\n            while s1 and s1[-1][0] > A[i]:\n                count += s1.pop()[1]\n            left[i] = count\n            s1.append([A[i], count])\n\n        right, s2 = [0]*len(A), []\n        for i in reversed(xrange(len(A))):\n            count = 1\n            while s2 and s2[-1][0] >= A[i]:\n                count += s2.pop()[1]\n            right[i] = count\n            s2.append([A[i], count])\n\n        return sum(a*l*r for a, l, r in itertools.izip(A, left, right)) % M",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

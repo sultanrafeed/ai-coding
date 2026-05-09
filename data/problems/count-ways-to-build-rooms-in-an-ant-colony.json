@@ -1,0 +1,40 @@
+{
+  "id": "9e72f594-b9e9-43d4-aa37-7219c21f40a0",
+  "slug": "count-ways-to-build-rooms-in-an-ant-colony",
+  "title": "Count Ways to Build Rooms in an Ant Colony",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are an ant tasked with adding <code>n</code> new rooms numbered <code>0</code> to <code>n-1</code> to your colony. You are given the expansion plan as a <strong>0-indexed</strong> integer array of length <code>n</code>, <code>prevRoom</code>, where <code>prevRoom[i]</code> indicates that you must build room <code>prevRoom[i]</code> before building room <code>i</code>, and these two rooms must be connected <strong>directly</strong>. Room <code>0</code> is already built, so <code>prevRoom[0] = -1</code>. The expansion&nbsp;plan is given such that once all the rooms are built, every room will be reachable from room <code>0</code>.</p>\r\n\r\n<p>You can only build <strong>one room</strong> at a time, and you can travel freely between rooms you have <strong>already built</strong> only if they are <strong>connected</strong>.&nbsp;You can choose to build <strong>any room</strong> as long as its <strong>previous room</strong>&nbsp;is already built.</p>\r\n\r\n<p>Return <em>the <strong>number of different orders</strong> you can build all the rooms in</em>. Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong class=\"example\">Example 1:</strong></p>\r\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/06/19/d1.JPG\" style=\"width: 200px; height: 212px;\" />\r\n<pre>\r\n<strong>Input:</strong> prevRoom = [-1,0,1]\r\n<strong>Output:</strong> 1\r\n<strong>Explanation:</strong>&nbsp;There is only one way to build the additional rooms: 0 &rarr; 1 &rarr; 2\r\n</pre>\r\n\r\n<p><strong class=\"example\">Example 2:</strong></p>\r\n<strong><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/06/19/d2.JPG\" style=\"width: 200px; height: 239px;\" /></strong>\r\n\r\n<pre>\r\n<strong>Input:</strong> prevRoom = [-1,0,0,1,2]\r\n<strong>Output:</strong> 6\r\n<strong>Explanation:\r\n</strong>The 6 ways are:\r\n0 &rarr; 1 &rarr; 3 &rarr; 2 &rarr; 4\r\n0 &rarr; 2 &rarr; 4 &rarr; 1 &rarr; 3\r\n0 &rarr; 1 &rarr; 2 &rarr; 3 &rarr; 4\r\n0 &rarr; 1 &rarr; 2 &rarr; 4 &rarr; 3\r\n0 &rarr; 2 &rarr; 1 &rarr; 3 &rarr; 4\r\n0 &rarr; 2 &rarr; 1 &rarr; 4 &rarr; 3\r\n</pre>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong>Constraints:</strong></p>\r\n\r\n<ul>\r\n\t<li><code>n == prevRoom.length</code></li>\r\n\t<li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>\r\n\t<li><code>prevRoom[0] == -1</code></li>\r\n\t<li><code>0 &lt;= prevRoom[i] &lt; n</code> for all <code>1 &lt;= i &lt; n</code></li>\r\n\t<li>Every room is reachable from room <code>0</code> once all the rooms are built.</li>\r\n</ul>",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "tree",
+    "depth-first-search",
+    "graph",
+    "topological-sort",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int waysToBuildRooms(vector<int>& prevRoom) {\n        vector<vector<int>> adj(size(prevRoom));\n        for (int i = 1; i < size(prevRoom); ++i) {\n            adj[prevRoom[i]].emplace_back(i);\n        }\n        return dfs(adj, 0).first;\n    }\n\nprivate:\n    pair<int, int> dfs(const vector<vector<int>>& adj, int curr) {\n        static const int MOD = 1e9 + 7;\n        int total_ways = 1, total_cnt = 0;\n        for (const auto& child : adj[curr]) {\n            const auto& [ways, cnt] = dfs(adj, child);\n            total_cnt += cnt;\n            total_ways = mulmod(mulmod(total_ways, ways, MOD), nCr(total_cnt, cnt, MOD), MOD);\n        }\n        return {total_ways, total_cnt + 1};\n    }\n\n    int nCr(int n, int k, uint32_t mod) {\n        while (size(inv_) <= n) {  // lazy initialization\n            fact_.emplace_back(mulmod(fact_.back(), size(inv_), mod));\n            inv_.emplace_back(mulmod(inv_[mod % size(inv_)], mod - mod / size(inv_), mod));  // https://cp-algorithms.com/algebra/module-inverse.html\n            inv_fact_.emplace_back(mulmod(inv_fact_.back(), inv_.back(), mod));\n        }\n        return mulmod(mulmod(fact_[n], inv_fact_[n - k], mod), inv_fact_[k], mod);\n    }\n\n    uint32_t addmod(uint32_t a, uint32_t b, uint32_t mod) {  // avoid overflow\n        a %= mod, b %= mod;\n        if (mod - a <= b) {\n            b -= mod;  // relied on unsigned integer overflow in order to give the expected results\n        }\n        return a + b;\n    }\n\n    // reference: https://stackoverflow.com/questions/12168348/ways-to-do-modulo-multiplication-with-primitive-types\n    uint32_t mulmod(uint32_t a, uint32_t b, uint32_t mod)  {  // avoid overflow\n        a %= mod, b %= mod;\n        uint32_t result = 0;\n        if (a < b) {\n            swap(a, b);\n        }\n        while (b > 0)  { \n            if (b % 2 == 1) {\n                result = addmod(result, a, mod);\n            }\n            a = addmod(a, a, mod);\n            b /= 2; \n        } \n        return result; \n    }\n\n    static const int MOD = 1e9 + 7;\n    vector<int> fact_ = {1, 1};\n    vector<int> inv_ = {0, 1};\n    vector<int> inv_fact_ = {1, 1};\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def waysToBuildRooms(self, prevRoom):\n        \"\"\"\n        :type prevRoom: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        fact = [1, 1]\n        inv = [0, 1]\n        inv_fact = [1, 1]\n        def nCr(n, k):\n            while len(inv) <= n:  # lazy initialization\n                fact.append(fact[-1]*len(inv) % MOD)\n                inv.append(inv[MOD%len(inv)]*(MOD-MOD//len(inv)) % MOD)  # https://cp-algorithms.com/algebra/module-inverse.html\n                inv_fact.append(inv_fact[-1]*inv[-1] % MOD)\n            return (fact[n]*inv_fact[n-k] % MOD) * inv_fact[k] % MOD\n\n        def dfs(adj, curr):\n            total_ways, total_cnt = 1, 0\n            for child in adj[curr]:\n                ways, cnt = dfs(adj, child)\n                total_cnt += cnt\n                total_ways = (((total_ways*ways) % MOD)*nCr(total_cnt, cnt)) % MOD\n            return total_ways, total_cnt+1\n\n        adj = [[] for _ in xrange(len(prevRoom))]\n        for i in xrange(1, len(prevRoom)):\n            adj[prevRoom[i]].append(i)\n        return dfs(adj, 0)[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

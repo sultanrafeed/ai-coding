@@ -1,0 +1,34 @@
+{
+  "id": "55621770-8acc-4e1f-a572-002825ff8e41",
+  "slug": "restore-ip-addresses",
+  "title": "Restore IP Addresses",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A <strong>valid IP address</strong> consists of exactly four integers separated by single dots. Each integer is between <code>0</code> and <code>255</code> (<strong>inclusive</strong>) and cannot have leading zeros.</p>\n\n<ul>\n\t<li>For example, <code>&quot;0.1.2.201&quot;</code> and <code>&quot;192.168.1.1&quot;</code> are <strong>valid</strong> IP addresses, but <code>&quot;0.011.255.245&quot;</code>, <code>&quot;192.168.1.312&quot;</code> and <code>&quot;192.168@1.1&quot;</code> are <strong>invalid</strong> IP addresses.</li>\n</ul>\n\n<p>Given a string <code>s</code> containing only digits, return <em>all possible valid IP addresses that can be formed by inserting dots into </em><code>s</code>. You are <strong>not</strong> allowed to reorder or remove any digits in <code>s</code>. You may return the valid IP addresses in <strong>any</strong> order.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;25525511135&quot;\n<strong>Output:</strong> [&quot;255.255.11.135&quot;,&quot;255.255.111.35&quot;]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;0000&quot;\n<strong>Output:</strong> [&quot;0.0.0.0&quot;]\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;101023&quot;\n<strong>Output:</strong> [&quot;1.0.10.23&quot;,&quot;1.0.102.3&quot;,&quot;10.1.0.23&quot;,&quot;10.10.2.3&quot;,&quot;101.0.2.3&quot;]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 20</code></li>\n\t<li><code>s</code> consists of digits only.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"25525511135\"\n\"0000\"\n\"101023\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n^m) = O(3^4)\n# Space: O(n * m) = O(3 * 4)\n\nclass Solution(object):\n    # @param s, a string\n    # @return a list of strings\n    def restoreIpAddresses(self, s):\n        result = []\n        self.restoreIpAddressesRecur(result, s, 0, \"\", 0)\n        return result\n\n    def restoreIpAddressesRecur(self, result, s, start, current, dots):\n        # pruning to improve performance\n        if (4 - dots) * 3 < len(s) - start or (4 - dots) > len(s) - start:\n            return\n\n        if start == len(s) and dots == 4:\n            result.append(current[:-1])\n        else:\n            for i in xrange(start, start + 3):\n                if len(s) > i and self.isValid(s[start:i + 1]):\n                    current += s[start:i + 1] + '.'\n                    self.restoreIpAddressesRecur(result, s, i + 1, current, dots + 1)\n                    current = current[:-(i - start + 2)]\n\n    def isValid(self, s):\n        if len(s) == 0 or (s[0] == '0' and s != \"0\"):\n            return False\n        return int(s) < 256",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

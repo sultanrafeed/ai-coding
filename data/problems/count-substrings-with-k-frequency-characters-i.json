@@ -1,0 +1,35 @@
+{
+  "id": "08592955-d15b-4a79-b14a-acc3cd461951",
+  "slug": "count-substrings-with-k-frequency-characters-i",
+  "title": "Count Substrings With K-Frequency Characters I",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code> and an integer <code>k</code>, return the total number of <span data-keyword=\"substring-nonempty\">substrings</span> of <code>s</code> where <strong>at least one</strong> character appears <strong>at least</strong> <code>k</code> times.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abacb&quot;, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The valid substrings are:</p>\n\n<ul>\n\t<li><code>&quot;aba&quot;</code> (character <code>&#39;a&#39;</code> appears 2 times).</li>\n\t<li><code>&quot;abac&quot;</code> (character <code>&#39;a&#39;</code> appears 2 times).</li>\n\t<li><code>&quot;abacb&quot;</code> (character <code>&#39;a&#39;</code> appears 2 times).</li>\n\t<li><code>&quot;bacb&quot;</code> (character <code>&#39;b&#39;</code> appears 2 times).</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abcde&quot;, k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">15</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>All substrings are valid because every character appears at least once.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 3000</code></li>\n\t<li><code>1 &lt;= k &lt;= s.length</code></li>\n\t<li><code>s</code> consists only of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// freq table, two pointers, sliding window\nclass Solution {\npublic:\n    int numberOfSubstrings(string s, int k) {\n        const auto& count = [&]() {\n            int result = 0;\n            vector<int> cnt(26);\n            for (int right = 0, left = 0; right < size(s); ++right) {\n                ++cnt[s[right] - 'a'];\n                for (; cnt[s[right] - 'a'] == k; ++left) {\n                    --cnt[s[left] - 'a'];\n                }\n                result += right - left + 1;\n            }\n            return result;\n        };\n\n        return (size(s) + 1) * size(s) / 2 - count();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# freq table, two pointers, sliding window\nclass Solution(object):\n    def numberOfSubstrings(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def count():\n            cnt = [0]*26\n            result= left = 0\n            for right in xrange(len(s)):\n                cnt[ord(s[right])-ord('a')] += 1\n                while cnt[ord(s[right])-ord('a')] == k:\n                    cnt[ord(s[left])-ord('a')] -= 1\n                    left += 1\n                result += right-left+1\n            return result\n                \n        return (len(s)+1)*len(s)//2-count()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

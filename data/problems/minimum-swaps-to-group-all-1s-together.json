@@ -1,0 +1,40 @@
+{
+  "id": "cd9129de-8b8a-4636-9717-0143f7818bbf",
+  "slug": "minimum-swaps-to-group-all-1s-together",
+  "title": "Minimum Swaps to Group All 1's Together",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,0,1,0,1]\n[0,0,0,1,0]\n[1,0,1,0,1,0,0,1,1,0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minSwaps(vector<int>& data) {\n        const auto& total_count = accumulate(data.cbegin(), data.cend(), 0);\n        int result = 0, count = 0, left = 0;\n        for (int i = 0; i < data.size(); ++i) {\n            count += data[i];\n            if (i - left + 1 > total_count) {\n                count -= data[left];\n                ++left;\n            }\n            result = max(result, count);\n        }\n        return total_count - result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minSwaps(self, data):\n        \"\"\"\n        :type data: List[int]\n        :rtype: int\n        \"\"\"\n        total_count = sum(data)\n        result, count, left = 0, 0, 0\n        for i in xrange(len(data)):\n            count += data[i]\n            if i-left+1 > total_count: \n                count -= data[left]\n                left += 1\n            result = max(result, count)\n        return total_count-result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

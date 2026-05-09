@@ -1,0 +1,45 @@
+{
+  "id": "00597597-2250-4566-bd14-ffaf269dc712",
+  "slug": "design-excel-sum-formula",
+  "title": "Design Excel Sum Formula",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "graph",
+    "design",
+    "topological-sort",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"Excel\",\"set\",\"sum\",\"set\",\"get\"]\n[[3,\"C\"],[1,\"A\",2],[3,\"C\",[\"A1\",\"A1:B2\"]],[2,\"B\",2],[3,\"C\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  set: O((r * c)^2)\n//        get: O(1)\n//        sum: O((r * c)^2)\n// Space: O(r * c)\n\nclass Excel {\npublic:\n    Excel(int H, char W) : Exl_(H + 1, vector<int>(W - 'A' + 1)) {\n    }\n    \n    // Time:  O((r * c)^2)\n    void set(int r, char c, int v) {\n        auto col = c - 'A';\n        reset_dependency(r, col);\n        update_others(r, col, v);\n    }\n    \n    // Time:  O(1)\n    int get(int r, char c) {\n        return Exl_[r][c - 'A'];\n    }\n\n    // Time:  O((r * c)^2)\n    int sum(int r, char c, vector<string> strs) {\n        auto col = c - 'A';\n        reset_dependency(r, col);\n        auto result = calc_and_update_dependency(r, col, strs);\n        update_others(r, col, result);\n        return result;\n    }\n\nprivate:\n    // Time:  O(r * c)\n    void reset_dependency(int r, int col) {\n        auto key = r * 26 + col;\n        if (bward_.count(key)) {\n            for (const auto& k : bward_[key]) {\n                fward_[k].erase(key);\n            }\n            bward_.erase(key);\n        }\n    }\n\n    // Time:  O(r * c * l), l is the length of strs\n    int calc_and_update_dependency(int r, int col, const vector<string>& strs) {\n        auto result = 0;\n        for (const auto& s : strs) {\n            int p = s.find(':'), left, right, top, bottom;\n            left = s[0] - 'A';\n            right = s[p + 1] - 'A';\n            top = (p == string::npos) ? stoi(s.substr(1)) : stoi(s.substr(1, p - 1));\n            bottom = stoi(s.substr(p + 2));\n            for (int i = top; i <= bottom; ++i) {\n                for (int j = left; j <= right; ++j) {\n                    result += Exl_[i][j];\n                    ++fward_[i * 26 + j][r * 26 + col];\n                    bward_[r * 26 + col].emplace(i * 26 + j);\n                }\n            }\n        }\n        return result;\n    }\n\n    // Time:  O((r * c)^2)\n    void update_others(int r, int col, int v) {\n        auto prev = Exl_[r][col];\n        Exl_[r][col] = v;\n        queue<pair<int, int>> q;\n        q.emplace(make_pair(r * 26 + col, v - prev));\n        while (!q.empty()) {\n            int key, diff;\n            tie(key, diff) = q.front(), q.pop();\n            if (fward_.count(key)) {\n                for (auto it = fward_[key].begin(); it != fward_[key].end(); ++it) {\n                    int k, count;\n                    tie(k, count) = *it;\n                    q.emplace(make_pair(k, diff * count));\n                    Exl_[k / 26][k % 26] += diff * count;\n                }\n            }\n        }\n    }\n    \n    unordered_map<int, unordered_map<int, int>> fward_;\n    unordered_map<int, unordered_set<int>> bward_;\n    vector<vector<int>> Exl_;\n};\n\n/**\n * Your Excel object will be instantiated and called as such:\n * Excel obj = new Excel(H, W);\n * obj.set(r,c,v);\n * int param_2 = obj.get(r,c);\n * int param_3 = obj.sum(r,c,strs);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  set: O((r * c)^2)\n#        get: O(1)\n#        sum: O((r * c)^2)\n# Space: O(r * c)\n\nimport collections\n\n\nclass Excel(object):\n\n    def __init__(self, H, W):\n        \"\"\"\n        :type H: int\n        :type W: str\n        \"\"\"\n        self.__exl = [[0 for _ in xrange(ord(W)-ord('A')+1)] \\\n                      for _ in xrange(H+1)]\n        self.__fward = collections.defaultdict(lambda : collections.defaultdict(int))\n        self.__bward = collections.defaultdict(set)\n\n\n    def set(self, r, c, v):\n        \"\"\"\n        :type r: int\n        :type c: str\n        :type v: int\n        :rtype: void\n        \"\"\"\n        self.__reset_dependency(r, c)\n        self.__update_others(r, c, v)\n\n\n    def get(self, r, c):\n        \"\"\"\n        :type r: int\n        :type c: str\n        :rtype: int\n        \"\"\"\n        return self.__exl[r][ord(c) - ord('A')]\n\n\n    def sum(self, r, c, strs):\n        \"\"\"\n        :type r: int\n        :type c: str\n        :type strs: List[str]\n        :rtype: int\n        \"\"\"\n        self.__reset_dependency(r, c)\n        result = self.__calc_and_update_dependency(r, c, strs)\n        self.__update_others(r, c, result)\n        return result\n\n\n    def __reset_dependency(self, r, c):\n        key = (r, c)\n        if key in self.__bward.keys():\n            for k in self.__bward[key]:\n                self.__fward[k].pop(key, None)\n            self.__bward[key] = set()\n\n\n    def __calc_and_update_dependency(self, r, c, strs):\n        result = 0\n        for s in strs:\n            s, e = s.split(':')[0], s.split(':')[1] if ':' in s else s\n            left, right, top, bottom = ord(s[0])-ord('A'), ord(e[0])-ord('A'), int(s[1:]), int(e[1:])\n            for i in xrange(top, bottom+1):\n                for j in xrange(left, right+1):\n                    result += self.__exl[i][j]\n                    self.__fward[(i, chr(ord('A')+j))][(r, c)] += 1\n                    self.__bward[(r, c)].add((i, chr(ord('A')+j)))\n        return result\n\n\n    def __update_others(self, r, c, v):\n        prev = self.__exl[r][ord(c)-ord('A')]\n        self.__exl[r][ord(c)-ord('A')] = v\n        q = collections.deque()\n        q.append(((r, c), v-prev))\n        while q:\n            key, diff = q.popleft()\n            if key in self.__fward:\n                for k, count in self.__fward[key].iteritems():\n                    q.append((k, diff*count))\n                    self.__exl[k[0]][ord(k[1])-ord('A')] += diff*count",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

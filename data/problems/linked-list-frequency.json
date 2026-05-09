@@ -1,0 +1,41 @@
+{
+  "id": "147d35ff-fcfd-40f0-8dd0-61ec203fbdae",
+  "slug": "linked-list-frequency",
+  "title": "Linked List Frequency",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "linked-list",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,2,1,2,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    ListNode* frequenciesOfElements(ListNode* head) {\n        ListNode dummy(0);\n        auto curr = &dummy;\n        for (int cnt = 0; head; head = head->next) {\n            ++cnt;\n            if (!head->next || head->next->val != head->val) {\n                curr->next = new ListNode(cnt);\n                curr = curr->next;\n                cnt = 0;\n            }\n        }\n        return dummy.next;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# linked list\nclass Solution(object):\n    def frequenciesOfElements(self, head):\n        \"\"\"\n        :type head: Optional[ListNode]\n        :rtype: Optional[ListNode]\n        \"\"\"\n        curr = dummy = ListNode(0)\n        cnt = 0\n        while head:\n            cnt += 1\n            if not head.next or head.next.val != head.val:\n                curr.next = ListNode(cnt)\n                curr = curr.next\n                cnt = 0\n            head = head.next\n        return dummy.next",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

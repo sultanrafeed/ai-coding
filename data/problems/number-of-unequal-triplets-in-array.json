@@ -1,0 +1,41 @@
+{
+  "id": "03d48fe5-457a-4ed3-9da1-fd22beefe9c9",
+  "slug": "number-of-unequal-triplets-in-array",
+  "title": "Number of Unequal Triplets in Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> array of positive integers <code>nums</code>. Find the number of triplets <code>(i, j, k)</code> that meet the following conditions:</p>\n\n<ul>\n\t<li><code>0 &lt;= i &lt; j &lt; k &lt; nums.length</code></li>\n\t<li><code>nums[i]</code>, <code>nums[j]</code>, and <code>nums[k]</code> are <strong>pairwise distinct</strong>.\n\t<ul>\n\t\t<li>In other words, <code>nums[i] != nums[j]</code>, <code>nums[i] != nums[k]</code>, and <code>nums[j] != nums[k]</code>.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>Return <em>the number of triplets that meet the conditions.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [4,4,2,4,3]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The following triplets meet the conditions:\n- (0, 2, 4) because 4 != 2 != 3\n- (1, 2, 4) because 4 != 2 != 3\n- (2, 3, 4) because 2 != 4 != 3\nSince there are 3 triplets, we return 3.\nNote that (2, 0, 4) is not a valid triplet because 2 &gt; 0.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,1,1,1]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> No triplets meet the conditions so we return 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,4,2,4,3]\n[1,1,1,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k) = O(3 * n)\n// Space: O(n + k) = O(n)\n\n// freq table, dp\nclass Solution {\npublic:\n    int unequalTriplets(vector<int>& nums) {\n        static const int K = 3;\n\n        unordered_map<int, int> cnt;\n        vector<int> dp(K);  // dp[i]: number of unequal (i+1)-plets\n        for (const auto& x : nums) {\n            ++cnt[x];\n            int other_cnt = 1;\n            for (int i = 0; i < K; ++i) {\n                dp[i] += other_cnt;\n                other_cnt = dp[i] - cnt[x] * other_cnt;\n            }\n        }\n        return dp[K - 1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k) = O(3 * n)\n# Space: O(n + k) = O(n)\n\nimport collections\n\n\n# freq table, dp\nclass Solution(object):\n    def unequalTriplets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        K = 3\n        cnt = collections.Counter()\n        dp = [0]*K  # dp[i]: number of unequal (i+1)-plets\n        for x in nums:\n            cnt[x] += 1\n            other_cnt = 1\n            for i in xrange(K):\n                dp[i] += other_cnt\n                other_cnt = dp[i]-cnt[x]*other_cnt\n        return dp[K-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

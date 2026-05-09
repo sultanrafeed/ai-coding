@@ -1,0 +1,37 @@
+{
+  "id": "7f8abb75-2b2c-41f6-99ef-481e86250dcd",
+  "slug": "all-possible-full-binary-trees",
+  "title": "All Possible Full Binary Trees",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, return <em>a list of all possible <strong>full binary trees</strong> with</em> <code>n</code> <em>nodes</em>. Each node of each tree in the answer must have <code>Node.val == 0</code>.</p>\n\n<p>Each element of the answer is the root node of one possible tree. You may return the final list of trees in <strong>any order</strong>.</p>\n\n<p>A <strong>full binary tree</strong> is a binary tree where each node has exactly <code>0</code> or <code>2</code> children.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://s3-lc-upload.s3.amazonaws.com/uploads/2018/08/22/fivetrees.png\" style=\"width: 700px; height: 400px;\" />\n<pre>\n<strong>Input:</strong> n = 7\n<strong>Output:</strong> [[0,0,0,null,null,0,0,null,null,0,0],[0,0,0,null,null,0,0,0,0],[0,0,0,0,0,0,0],[0,0,0,0,0,null,null,null,null,0,0],[0,0,0,0,0,null,null,0,0]]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 3\n<strong>Output:</strong> [[0,0,0]]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 20</code></li>\n</ul>\n",
+  "patterns": [
+    "dynamic-programming",
+    "tree",
+    "recursion",
+    "memoization",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 4^n / n^(3/2)) ~= sum of Catalan numbers from 1 .. N\n// Space: O(n * 4^n / n^(3/2)) ~= sum of Catalan numbers from 1 .. N\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<TreeNode*> allPossibleFBT(int N) {\n        if (!memo_.count(N)) {\n            vector<TreeNode*> result;\n            if (N == 1) {\n                result.emplace_back(new TreeNode(0));\n            } else if (N % 2 == 1) {\n                for (int i = 0; i < N; ++i) {\n                    for (const auto& left: allPossibleFBT(i)) {\n                        for (const auto& right: allPossibleFBT(N - 1 - i)) {\n                            auto node = new TreeNode(0);\n                            node->left = left;\n                            node->right = right;\n                            result.emplace_back(node);\n                        }\n                    }\n                }\n            }\n            memo_[N] = move(result);\n        }\n        return memo_[N];\n    }\n\nprivate:\n    unordered_map<int, vector<TreeNode*>> memo_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 4^n / n^(3/2)) ~= sum of Catalan numbers from 1 .. N\n# Space: O(n * 4^n / n^(3/2)) ~= sum of Catalan numbers from 1 .. N\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def __init__(self):\n        self.__memo = {1: [TreeNode(0)]}\n    \n    def allPossibleFBT(self, N):\n        \"\"\"\n        :type N: int\n        :rtype: List[TreeNode]\n        \"\"\"\n        if N % 2 == 0:\n            return []\n\n        if N not in self.__memo:\n            result = []\n            for i in xrange(N):\n                for left in self.allPossibleFBT(i):\n                    for right in self.allPossibleFBT(N-1-i):\n                        node = TreeNode(0)\n                        node.left = left\n                        node.right = right\n                        result.append(node)\n            self.__memo[N] = result\n\n        return self.__memo[N]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

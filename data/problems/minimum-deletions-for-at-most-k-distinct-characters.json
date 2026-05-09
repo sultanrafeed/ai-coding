@@ -1,0 +1,43 @@
+{
+  "id": "0b91dd7e-f7e5-4658-a7c5-2c013b4b9a6f",
+  "slug": "minimum-deletions-for-at-most-k-distinct-characters",
+  "title": "Minimum Deletions for At Most K Distinct Characters",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a string <code>s</code> consisting of lowercase English letters, and an integer <code>k</code>.</p>\n\n<p>Your task is to delete some (possibly none) of the characters in the string so that the number of <strong>distinct</strong> characters in the resulting string is <strong>at most</strong> <code>k</code>.</p>\n\n<p>Return the <strong>minimum</strong> number of deletions required to achieve this.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abc&quot;, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><code>s</code> has three distinct characters: <code>&#39;a&#39;</code>, <code>&#39;b&#39;</code> and <code>&#39;c&#39;</code>, each with a frequency of 1.</li>\n\t<li>Since we can have at most <code>k = 2</code> distinct characters, remove all occurrences of any one character from the string.</li>\n\t<li>For example, removing all occurrences of <code>&#39;c&#39;</code> results in at most <code>k</code> distinct characters. Thus, the answer is 1.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;aabb&quot;, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><code>s</code> has two distinct characters (<code>&#39;a&#39;</code> and <code>&#39;b&#39;</code>) with frequencies of 2 and 2, respectively.</li>\n\t<li>Since we can have at most <code>k = 2</code> distinct characters, no deletions are required. Thus, the answer is 0.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;yyyzz&quot;, k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><code>s</code> has two distinct characters (<code>&#39;y&#39;</code> and <code>&#39;z&#39;</code>) with frequencies of 3 and 2, respectively.</li>\n\t<li>Since we can have at most <code>k = 1</code> distinct character, remove all occurrences of any one character from the string.</li>\n\t<li>Removing all <code>&#39;z&#39;</code> results in at most <code>k</code> distinct characters. Thus, the answer is 2.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 16</code></li>\n\t<li><code>1 &lt;= k &lt;= 16</code></li>\n\t<li><code>s</code> consists only of lowercase English letters.</li>\n</ul>\n\n<p> </p>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "greedy",
+    "sorting",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abc\"\n2\n\"aabb\"\n2\n\"yyyzz\"\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(n + 26)\n\n// freq table, counting sort, greedy\nclass Solution {\npublic:\n    int minDeletion(string s, int k) {\n        vector<int> cnt(26);\n        for (const auto& x : s) {\n            ++cnt[x - 'a'];\n        }\n        vector<int> cnt2(ranges::max(cnt) + 1);\n        for (const auto& x : cnt) {\n            ++cnt2[x];\n        }\n        int result = 0;\n        for (int i = 0, total = 26 - k; i < size(cnt2); ++i) {\n            const int c = min(cnt2[i], total);\n            result += i * c;\n            total -= c;\n            if (total == 0) {\n                break;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(n + 26)\n\n# freq table, counting sort, greedy\nclass Solution(object):\n    def minDeletion(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: int\n        \"\"\"\n        cnt = [0]*26\n        for x in s:\n            cnt[ord(x)-ord('a')] += 1\n        cnt2 = [0]*(max(cnt)+1)\n        for x in cnt:\n            cnt2[x] += 1\n        result = 0\n        total = 26-k\n        for i, x in enumerate(cnt2):\n            c = min(total, x)\n            result += i*c\n            total -= c\n            if total == 0:\n                break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "9e73a1f6-b45d-48f3-aae1-6ae285f7c48e",
+  "slug": "maximum-equal-frequency",
+  "title": "Maximum Equal Frequency",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an array <code>nums</code> of positive integers, return the longest possible length of an array prefix of <code>nums</code>, such that it is possible to remove <strong>exactly one</strong> element from this prefix so that every number that has appeared in it will have the same number of occurrences.</p>\n\n<p>If after removing one element there are no remaining elements, it&#39;s still considered that every appeared number has the same number of ocurrences (0).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,2,1,1,5,3,3,5]\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> For the subarray [2,2,1,1,5,3,3] of length 7, if we remove nums[4] = 5, we will get [2,2,1,1,3,3], so that each number will appear exactly twice.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,1,2,2,2,3,3,3,4,4,4,5]\n<strong>Output:</strong> 13\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxEqualFreq(vector<int>& nums) {\n        int result = 0;\n        unordered_map<int, int> count;\n        vector<int> freq(nums.size() + 1);\n        for (int i = 0; i < nums.size(); ++i) {\n            --freq[count[nums[i]]];\n            ++freq[count[nums[i]] + 1];\n            const auto c = ++count[nums[i]];\n            if (freq[c] * c == (i + 1) && (i + 1) < nums.size()) {\n                result = (i + 1) + 1;\n            }\n            const auto& remain = (i + 1) - freq[c] * c;\n            if (freq[remain] == 1 && (remain == 1 || remain == c + 1)) {\n                result = (i + 1);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def maxEqualFreq(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = 0\n        count = collections.Counter()\n        freq = [0 for _ in xrange(len(nums)+1)]\n        for i, n in enumerate(nums, 1):\n            freq[count[n]] -= 1\n            freq[count[n]+1] += 1\n            count[n] += 1\n            c = count[n]\n            if freq[c]*c == i and i < len(nums):\n                result = i+1\n            remain = i-freq[c]*c\n            if freq[remain] == 1 and remain in [1, c+1]:\n                result = i\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

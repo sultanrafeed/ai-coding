@@ -1,0 +1,41 @@
+{
+  "id": "7e2190dd-3a63-47ad-8091-54c78408a79a",
+  "slug": "maximal-range-that-each-element-is-maximum-in-it",
+  "title": "Maximal Range That Each Element Is Maximum in It",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "stack",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,5,4,3,6]\n[1,2,3,4,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// mono stack\nclass Solution {\npublic:\n    vector<int> maximumLengthOfRanges(vector<int>& nums) {\n        vector<int> result(size(nums));\n        vector<int> stk = {-1};\n        nums.emplace_back(numeric_limits<int>::max());\n        for (int i = 0; i < size(nums); ++i) {\n            while (stk.back() != -1 && nums[stk.back()] < nums[i]) {\n                const int j = stk.back(); stk.pop_back();\n                result[j] = (i - 1) - stk.back();\n            }\n            stk.emplace_back(i);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# mono stack\nclass Solution(object):\n    def maximumLengthOfRanges(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = [0]*len(nums)\n        stk = [-1]\n        nums.append(float(\"inf\"))\n        for i, x in enumerate(nums):\n            while stk[-1] != -1 and nums[stk[-1]] < x:\n                j = stk.pop()\n                result[j] = (i-1)-stk[-1]\n            stk.append(i)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

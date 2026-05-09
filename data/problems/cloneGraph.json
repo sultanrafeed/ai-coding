@@ -1,0 +1,25 @@
+{
+  "id": "acc5ce4c-77ee-4cec-90d5-77e7dad1f1dd",
+  "slug": "cloneGraph",
+  "title": "Clonegraph",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(n)\n\n/**\n * Definition for undirected graph.\n * struct UndirectedGraphNode {\n *     int label;\n *     vector<UndirectedGraphNode *> neighbors;\n *     UndirectedGraphNode(int x) : label(x) {};\n * };\n */\nclass Solution {\n    public:\n        UndirectedGraphNode *cloneGraph(UndirectedGraphNode *node) {\n            if(!node)\n                return nullptr;\n            unordered_map<const UndirectedGraphNode *, UndirectedGraphNode *> copied;\n            copied[node] = new UndirectedGraphNode(node->label);\n            queue<const UndirectedGraphNode *> q;\n            q.push(node);\n            while(!q.empty()) {\n                auto node = q.front();\n                q.pop();\n\n                for(auto n : node->neighbors) {\n                    if(copied.find(n) == copied.end()) {\n                        copied[n] = new UndirectedGraphNode(n->label);\n                        q.push(n);\n                    }\n\n                    copied[node]->neighbors.push_back(copied[n]);\n                }\n            }\n\n            return copied[node];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

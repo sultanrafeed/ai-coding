@@ -1,0 +1,34 @@
+{
+  "id": "50ad6032-8351-4a71-bc19-22b6a334a795",
+  "slug": "minimum-number-of-frogs-croaking",
+  "title": "Minimum Number of Frogs Croaking",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given the string <code>croakOfFrogs</code>, which represents a combination of the string <code>&quot;croak&quot;</code> from different frogs, that is, multiple frogs can croak at the same time, so multiple <code>&quot;croak&quot;</code> are mixed.</p>\n\n<p><em>Return the minimum number of </em>different<em> frogs to finish all the croaks in the given string.</em></p>\n\n<p>A valid <code>&quot;croak&quot;</code> means a frog is printing five letters <code>&#39;c&#39;</code>, <code>&#39;r&#39;</code>, <code>&#39;o&#39;</code>, <code>&#39;a&#39;</code>, and <code>&#39;k&#39;</code> <strong>sequentially</strong>. The frogs have to print all five letters to finish a croak. If the given string is not a combination of a valid <code>&quot;croak&quot;</code> return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> croakOfFrogs = &quot;croakcroak&quot;\n<strong>Output:</strong> 1 \n<strong>Explanation:</strong> One frog yelling &quot;croak<strong>&quot;</strong> twice.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> croakOfFrogs = &quot;crcoakroak&quot;\n<strong>Output:</strong> 2 \n<strong>Explanation:</strong> The minimum number of frogs is two. \nThe first frog could yell &quot;<strong>cr</strong>c<strong>oak</strong>roak&quot;.\nThe second frog could yell later &quot;cr<strong>c</strong>oak<strong>roak</strong>&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> croakOfFrogs = &quot;croakcrook&quot;\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> The given string is an invalid combination of &quot;croak<strong>&quot;</strong> from different frogs.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= croakOfFrogs.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>croakOfFrogs</code> is either <code>&#39;c&#39;</code>, <code>&#39;r&#39;</code>, <code>&#39;o&#39;</code>, <code>&#39;a&#39;</code>, or <code>&#39;k&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minNumberOfFrogs(string croakOfFrogs) {\n        static const string S = \"croak\";\n        vector<int> lookup(5);\n        int result = 0;\n        for (const auto& c : croakOfFrogs) {\n            int i = S.find(c);\n            ++lookup[i];\n            if (lookup[(i - 1 + lookup.size()) % lookup.size()]) {\n                --lookup[(i - 1 + lookup.size()) % lookup.size()];\n            } else if (i == 0) {\n                ++result;\n            } else {\n                return -1;\n            }\n        }\n        return result == lookup.back() ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minNumberOfFrogs(self, croakOfFrogs):\n        \"\"\"\n        :type croakOfFrogs: str\n        :rtype: int\n        \"\"\"\n        S = \"croak\"\n        lookup = [0]*len(S)\n        result = 0\n        for c in croakOfFrogs:\n            i = S.find(c)\n            lookup[i] += 1\n            if lookup[i-1]:\n                lookup[i-1] -= 1\n            elif i == 0:\n                result += 1\n            else:\n                return -1\n        return result if result == lookup[-1] else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

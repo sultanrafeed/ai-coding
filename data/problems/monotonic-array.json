@@ -1,0 +1,39 @@
+{
+  "id": "a306eba6-c63c-48a5-9968-5128d3a027ee",
+  "slug": "monotonic-array",
+  "title": "Monotonic Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>An array is <strong>monotonic</strong> if it is either monotone increasing or monotone decreasing.</p>\n\n<p>An array <code>nums</code> is monotone increasing if for all <code>i &lt;= j</code>, <code>nums[i] &lt;= nums[j]</code>. An array <code>nums</code> is monotone decreasing if for all <code>i &lt;= j</code>, <code>nums[i] &gt;= nums[j]</code>.</p>\n\n<p>Given an integer array <code>nums</code>, return <code>true</code><em> if the given array is monotonic, or </em><code>false</code><em> otherwise</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,2,3]\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [6,5,4,4]\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,3,2]\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>5</sup> &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,2,3]\n[6,5,4,4]\n[1,3,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isMonotonic(vector<int>& A) {\n        bool inc = false, dec = false;\n        for (int i = 0; i + 1 < A.size(); ++i) {\n            if (A[i] < A[i + 1]) {\n                inc = true;\n            } else if (A[i] > A[i + 1]) {\n                dec = true;\n            }\n        }\n        return !inc || !dec;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def isMonotonic(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: bool\n        \"\"\"\n        inc, dec = False, False\n        for i in xrange(len(A)-1):\n            if A[i] < A[i+1]:\n                inc = True\n            elif A[i] > A[i+1]:\n                dec = True\n        return not inc or not dec",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

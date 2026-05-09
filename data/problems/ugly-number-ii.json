@@ -1,0 +1,36 @@
+{
+  "id": "4fa4b8af-1e54-4b2b-a7b8-4fe873cf61cc",
+  "slug": "ugly-number-ii",
+  "title": "Ugly Number II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>An <strong>ugly number</strong> is a positive integer whose prime factors are limited to <code>2</code>, <code>3</code>, and <code>5</code>.</p>\n\n<p>Given an integer <code>n</code>, return <em>the</em> <code>n<sup>th</sup></code> <em><strong>ugly number</strong></em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 10\n<strong>Output:</strong> 12\n<strong>Explanation:</strong> [1, 2, 3, 4, 5, 6, 8, 9, 10, 12] is the sequence of the first 10 ugly numbers.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 1\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> 1 has no prime factors, therefore all of its prime factors are limited to 2, 3, and 5.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 1690</code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "math",
+    "dynamic-programming",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// DP solution. (12ms)\nclass Solution {\npublic:\n    int nthUglyNumber(int n) {\n        vector<int> uglies(n);\n        uglies[0] = 1;\n    \n        int f2 = 2, f3 = 3, f5 = 5;\n        int idx2 = 0, idx3 = 0, idx5 = 0;\n    \n        for (int i = 1; i < n; ++i) {\n            int min_val = min(min(f2, f3), f5);\n            uglies[i] = min_val;\n    \n            if (min_val == f2) {\n                f2 = 2 * uglies[++idx2];\n            }\n            if (min_val == f3) {\n                f3 = 3 * uglies[++idx3];\n            }\n            if (min_val == f5) {\n                f5 = 5 * uglies[++idx5];\n            }\n        }\n    \n        return uglies[n - 1];\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// Heap solution. (148ms)\nclass Solution2 {\npublic:\n    int nthUglyNumber(int n) {\n        long long ugly_number = 0;\n        priority_queue<long long , vector<long long>, greater<long long>> heap;\n        \n        heap.emplace(1);\n        for (int i = 0; i < n; ++i) {\n            ugly_number = heap.top();\n            heap.pop();\n            if (ugly_number % 2 == 0) {\n                heap.emplace(ugly_number * 2);\n            } else if (ugly_number % 3 == 0) {\n                heap.emplace(ugly_number * 2);\n                heap.emplace(ugly_number * 3);\n            } else {\n                heap.emplace(ugly_number * 2);\n                heap.emplace(ugly_number * 3);\n                heap.emplace(ugly_number * 5);\n            }\n        }\n        return ugly_number;   \n    }\n};\n\n// BST solution.\nclass Solution3 {\npublic:\n    int nthUglyNumber(int n) {\n        long long ugly_number = 0;\n        set<long long> bst;\n        \n        bst.emplace(1);\n        for (int i = 0; i < n; ++i) {\n            ugly_number = *bst.cbegin();\n            bst.erase(bst.cbegin());\n            if (ugly_number % 2 == 0) {\n                bst.emplace(ugly_number * 2);\n            } else if (ugly_number % 3 == 0) {\n                bst.emplace(ugly_number * 2);\n                bst.emplace(ugly_number * 3);\n            } else {\n                bst.emplace(ugly_number * 2);\n                bst.emplace(ugly_number * 3);\n                bst.emplace(ugly_number * 5);\n            }\n        }\n        return ugly_number;   \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport heapq\n\nclass Solution(object):\n    # @param {integer} n\n    # @return {integer}\n    def nthUglyNumber(self, n):\n        ugly_number = 0\n\n        heap = []\n        heapq.heappush(heap, 1)\n        for _ in xrange(n):\n            ugly_number = heapq.heappop(heap)\n            if ugly_number % 2 == 0:\n                heapq.heappush(heap, ugly_number * 2)\n            elif ugly_number % 3 == 0:\n                heapq.heappush(heap, ugly_number * 2)\n                heapq.heappush(heap, ugly_number * 3)\n            else:\n                heapq.heappush(heap, ugly_number * 2)\n                heapq.heappush(heap, ugly_number * 3)\n                heapq.heappush(heap, ugly_number * 5)\n\n        return ugly_number\n\n    def nthUglyNumber2(self, n):\n        ugly = [1]\n        i2 = i3 = i5 = 0\n        while len(ugly) < n:\n            while ugly[i2] * 2 <= ugly[-1]: i2 += 1\n            while ugly[i3] * 3 <= ugly[-1]: i3 += 1\n            while ugly[i5] * 5 <= ugly[-1]: i5 += 1\n            ugly.append(min(ugly[i2] * 2, ugly[i3] * 3, ugly[i5] * 5))\n        return ugly[-1]\n\n    def nthUglyNumber3(self, n):\n        q2, q3, q5 = [2], [3], [5]\n        ugly = 1\n        for u in heapq.merge(q2, q3, q5):\n            if n == 1:\n                return ugly\n            if u > ugly:\n                ugly = u\n                n -= 1\n                q2 += 2 * u,\n                q3 += 3 * u,\n                q5 += 5 * u,\n\n\nclass Solution2(object):\n    ugly = sorted(2**a * 3**b * 5**c\n                  for a in range(32) for b in range(20) for c in range(14))\n\n    def nthUglyNumber(self, n):\n        return self.ugly[n-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

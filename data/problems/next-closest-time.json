@@ -1,0 +1,42 @@
+{
+  "id": "5834a266-b4f9-44de-ac87-5d973a64315d",
+  "slug": "next-closest-time",
+  "title": "Next Closest Time",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "backtracking",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"19:34\"\n\"23:59\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string nextClosestTime(string time) {\n        static const vector<int> mins = { 600, 60, 10, 1 };\n        auto npos = time.find(':');\n        auto curr = stoi(time.substr(0, npos)) * 60 +\n                    stoi(time.substr(npos + 1));\n        string result = \"0000\";\n        for (int i = 1, d = 0; i <= 1440 && d < 4; ++i) {\n            int m = (curr + i) % 1440;\n            for (d = 0; d < 4; ++d) {\n                result[d] = '0' + m / mins[d]; m %= mins[d];\n                if (time.find(result[d]) == string::npos) {\n                    break;\n                }\n            }\n        }\n        return result.substr(0, 2) + ':' + result.substr(2, 2);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def nextClosestTime(self, time):\n        \"\"\"\n        :type time: str\n        :rtype: str\n        \"\"\"\n        h, m = time.split(\":\")\n        curr = int(h) * 60 + int(m)\n        result = None\n        for i in xrange(curr+1, curr+1441):\n            t = i % 1440\n            h, m = t // 60, t % 60\n            result = \"%02d:%02d\" % (h, m)\n            if set(result) <= set(time):\n                break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

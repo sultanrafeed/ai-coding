@@ -1,0 +1,40 @@
+{
+  "id": "3ce214e0-6376-4d93-bb41-00fa149ec222",
+  "slug": "valid-tic-tac-toe-state",
+  "title": "Valid Tic-Tac-Toe State",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a Tic-Tac-Toe board as a string array <code>board</code>, return <code>true</code> if and only if it is possible to reach this board position during the course of a valid tic-tac-toe game.</p>\n\n<p>The board is a <code>3 x 3</code> array that consists of characters <code>&#39; &#39;</code>, <code>&#39;X&#39;</code>, and <code>&#39;O&#39;</code>. The <code>&#39; &#39;</code> character represents an empty square.</p>\n\n<p>Here are the rules of Tic-Tac-Toe:</p>\n\n<ul>\n\t<li>Players take turns placing characters into empty squares <code>&#39; &#39;</code>.</li>\n\t<li>The first player always places <code>&#39;X&#39;</code> characters, while the second player always places <code>&#39;O&#39;</code> characters.</li>\n\t<li><code>&#39;X&#39;</code> and <code>&#39;O&#39;</code> characters are always placed into empty squares, never filled ones.</li>\n\t<li>The game ends when there are three of the same (non-empty) character filling any row, column, or diagonal.</li>\n\t<li>The game also ends if all squares are non-empty.</li>\n\t<li>No more moves can be played if the game is over.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/05/15/tictactoe1-grid.jpg\" style=\"width: 253px; height: 253px;\" />\n<pre>\n<strong>Input:</strong> board = [&quot;O  &quot;,&quot;   &quot;,&quot;   &quot;]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> The first player always plays &quot;X&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/05/15/tictactoe2-grid.jpg\" style=\"width: 253px; height: 253px;\" />\n<pre>\n<strong>Input:</strong> board = [&quot;XOX&quot;,&quot; X &quot;,&quot;   &quot;]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> Players take turns making moves.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/05/15/tictactoe4-grid.jpg\" style=\"width: 253px; height: 253px;\" />\n<pre>\n<strong>Input:</strong> board = [&quot;XOX&quot;,&quot;O O&quot;,&quot;XOX&quot;]\n<strong>Output:</strong> true\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>board.length == 3</code></li>\n\t<li><code>board[i].length == 3</code></li>\n\t<li><code>board[i][j]</code> is either <code>&#39;X&#39;</code>, <code>&#39;O&#39;</code>, or <code>&#39; &#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"O  \",\"   \",\"   \"]\n[\"XOX\",\" X \",\"   \"]\n[\"XOX\",\"O O\",\"XOX\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool validTicTacToe(vector<string>& board) {\n        const auto FIRST = 'X', SECOND = 'O';\n        const auto x_count =\n            accumulate(board.cbegin(), board.cend(), 0,\n                       [&FIRST](int accu, const string& s) {\n                           return accu + count(s.cbegin(), s.cend(), FIRST);\n                       });\n        const auto o_count =\n            accumulate(board.cbegin(), board.cend(), 0,\n                       [&SECOND](int accu, const string& s) {\n                           return accu + count(s.cbegin(), s.cend(), SECOND);\n                       });\n        if (o_count != x_count - 1 && o_count != x_count) {\n            return false;\n        }\n        if (isWin(board, FIRST) && o_count != x_count - 1) {\n            return false;\n        }\n        if (isWin(board, SECOND) && o_count != x_count) {\n            return false;\n        }\n        return true;\n    }\n\nprivate:\n    bool isWin(const vector<string>& board, char player) {\n        for (int i = 0; i < board.size(); ++i) {\n            if (all_of(board[i].cbegin(), board[i].cend(),\n                       [&player](const char& c) {\n                           return c == player;\n                       })) {\n                return true;\n            }\n            if (all_of(board.cbegin(), board.cend(),\n                       [&i, &player](const string& row) {\n                           return row[i] == player;\n                       })) {\n                return true;\n            }\n        }\n\n        return (player == board[1][1] &&\n                board[1][1] == board[0][0] &&\n                board[0][0] == board[2][2]) ||\n               (player == board[1][1] &&\n                board[1][1] == board[0][2] &&\n                board[0][2] == board[2][0]);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def validTicTacToe(self, board):\n        \"\"\"\n        :type board: List[str]\n        :rtype: bool\n        \"\"\"\n        def win(board, player):\n            for i in xrange(3):\n                if all(board[i][j] == player for j in xrange(3)):\n                    return True\n                if all(board[j][i] == player for j in xrange(3)):\n                    return True\n\n            return (player == board[1][1] == board[0][0] == board[2][2] or \\\n                    player == board[1][1] == board[0][2] == board[2][0])\n\n        FIRST, SECOND = ('X', 'O')\n        x_count = sum(row.count(FIRST) for row in board)\n        o_count = sum(row.count(SECOND) for row in board)\n        if o_count not in {x_count-1, x_count}: return False\n        if win(board, FIRST) and x_count-1 != o_count: return False\n        if win(board, SECOND) and x_count != o_count: return False\n\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

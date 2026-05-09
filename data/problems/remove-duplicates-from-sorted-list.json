@@ -1,0 +1,39 @@
+{
+  "id": "b148c014-21cf-45f4-9404-35b0182e7ba1",
+  "slug": "remove-duplicates-from-sorted-list",
+  "title": "Remove Duplicates from Sorted List",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the <code>head</code> of a sorted linked list, <em>delete all duplicates such that each element appears only once</em>. Return <em>the linked list <strong>sorted</strong> as well</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/01/04/list1.jpg\" style=\"width: 302px; height: 242px;\" />\n<pre>\n<strong>Input:</strong> head = [1,1,2]\n<strong>Output:</strong> [1,2]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/01/04/list2.jpg\" style=\"width: 542px; height: 222px;\" />\n<pre>\n<strong>Input:</strong> head = [1,1,2,3,3]\n<strong>Output:</strong> [1,2,3]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the list is in the range <code>[0, 300]</code>.</li>\n\t<li><code>-100 &lt;= Node.val &lt;= 100</code></li>\n\t<li>The list is guaranteed to be <strong>sorted</strong> in ascending order.</li>\n</ul>\n",
+  "patterns": [
+    "linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,2]\n[1,1,2,3,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode* deleteDuplicates(ListNode* head) {\n        auto iter = head;\n        while (iter) {\n            auto runner = iter->next;\n            while (runner && runner->val == iter->val) {\n                runner = runner->next;\n            }\n            iter->next = runner;\n            iter = runner;\n        }\n        return head; \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass ListNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.next = None\n\n\nclass Solution(object):\n    def deleteDuplicates(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        cur = head\n        while cur:\n            runner = cur.next\n            while runner and runner.val == cur.val:\n                runner = runner.next\n            cur.next = runner\n            cur = runner\n        return head\n\n    def deleteDuplicates2(self, head):\n        \"\"\"\n        :type head: ListNode\n        :rtype: ListNode\n        \"\"\"\n        if not head: return head\n        if head.next:\n            if head.val == head.next.val:\n                head = self.deleteDuplicates2(head.next)\n            else:\n                head.next = self.deleteDuplicates2(head.next)\n        return head",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

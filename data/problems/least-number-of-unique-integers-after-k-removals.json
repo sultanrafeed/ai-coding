@@ -1,0 +1,37 @@
+{
+  "id": "f1f06be7-45ff-47c0-aac5-e67e0940752c",
+  "slug": "least-number-of-unique-integers-after-k-removals",
+  "title": "Least Number of Unique Integers after K Removals",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers&nbsp;<code>arr</code>&nbsp;and an integer <code>k</code>.&nbsp;Find the <em>least number of unique integers</em>&nbsp;after removing <strong>exactly</strong> <code>k</code> elements<b>.</b></p>\r\n\r\n<ol>\r\n</ol>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong class=\"example\">Example 1:</strong></p>\r\n\r\n<pre>\r\n<strong>Input: </strong>arr = [5,5,4], k = 1\r\n<strong>Output: </strong>1\r\n<strong>Explanation</strong>: Remove the single 4, only 5 is left.\r\n</pre>\r\n<strong class=\"example\">Example 2:</strong>\r\n\r\n<pre>\r\n<strong>Input: </strong>arr = [4,3,1,1,3,3,2], k = 3\r\n<strong>Output: </strong>2\r\n<strong>Explanation</strong>: Remove 4, 2 and either one of the two 1s or three 3s. 1 and 3 will be left.</pre>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong>Constraints:</strong></p>\r\n\r\n<ul>\r\n\t<li><code>1 &lt;= arr.length&nbsp;&lt;= 10^5</code></li>\r\n\t<li><code>1 &lt;= arr[i] &lt;= 10^9</code></li>\r\n\t<li><code>0 &lt;= k&nbsp;&lt;= arr.length</code></li>\r\n</ul>",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "sorting",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int findLeastNumOfUniqueInts(vector<int>& arr, int k) {\n        const auto& count = counter(arr);\n        const auto& count_count = counter(count);\n        int result = count.size();\n        for (int c = 1; c <= arr.size(); ++c) {\n            if (!count_count.count(c)) {\n                continue;\n            }\n            if (k < c * count_count.at(c)) {\n                result -= k / c;\n                break;\n            }\n            k -= c * count_count.at(c);\n            result -= count_count.at(c);\n        }\n        return result;\n    }\n\nprivate:\n    unordered_map<int, int> counter(const vector<int>& arr) {\n        unordered_map<int, int> result;\n        for (const auto& i : arr) {\n            ++result[i];\n        }\n        return result;\n    }\n    \n    unordered_map<int, int> counter(const unordered_map<int, int>& count) {\n        unordered_map<int, int> result;\n        for (const auto& [_, i] : count) {\n            ++result[i];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def findLeastNumOfUniqueInts(self, arr, k):\n        \"\"\"\n        :type arr: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        count = collections.Counter(arr)\n        result, count_count = len(count), collections.Counter(count.itervalues())\n        for c in xrange(1, len(arr)+1): \n            if k < c*count_count[c]:\n                result -= k//c\n                break\n            k -= c*count_count[c]\n            result -= count_count[c]                \n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

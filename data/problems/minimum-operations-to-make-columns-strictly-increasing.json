@@ -1,0 +1,35 @@
+{
+  "id": "c3bacc77-a992-4300-bc59-67867127068c",
+  "slug": "minimum-operations-to-make-columns-strictly-increasing",
+  "title": "Minimum Operations to Make Columns Strictly Increasing",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <code>m x n</code> matrix <code>grid</code> consisting of <b>non-negative</b> integers.</p>\n\n<p>In one operation, you can increment the value of any <code>grid[i][j]</code> by 1.</p>\n\n<p>Return the <strong>minimum</strong> number of operations needed to make all columns of <code>grid</code> <strong>strictly increasing</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[3,2],[1,3],[3,4],[0,1]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">15</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>To make the <code>0<sup>th</sup></code> column strictly increasing, we can apply 3 operations on <code>grid[1][0]</code>, 2 operations on <code>grid[2][0]</code>, and 6 operations on <code>grid[3][0]</code>.</li>\n\t<li>To make the <code>1<sup>st</sup></code> column strictly increasing, we can apply 4 operations on <code>grid[3][1]</code>.</li>\n</ul>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/11/10/firstexample.png\" style=\"width: 200px; height: 347px;\" /></div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[3,2,1],[2,1,0],[1,2,3]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">12</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>To make the <code>0<sup>th</sup></code> column strictly increasing, we can apply 2 operations on <code>grid[1][0]</code>, and 4 operations on <code>grid[2][0]</code>.</li>\n\t<li>To make the <code>1<sup>st</sup></code> column strictly increasing, we can apply 2 operations on <code>grid[1][1]</code>, and 2 operations on <code>grid[2][1]</code>.</li>\n\t<li>To make the <code>2<sup>nd</sup></code> column strictly increasing, we can apply 2 operations on <code>grid[1][2]</code>.</li>\n</ul>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/11/10/secondexample.png\" style=\"width: 300px; height: 257px;\" /></div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 50</code></li>\n\t<li><code>0 &lt;= grid[i][j] &lt; 2500</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<div class=\"spoiler\">\n<div>\n<pre>\n\n&nbsp;</pre>\n</div>\n</div>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    int minimumOperations(vector<vector<int>>& grid) {\n        int result = 0;\n        for (int i = 0; i + 1 < size(grid); ++i) {\n            for (int j = 0; j < size(grid[0]); ++j) {\n                if (grid[i][j] + 1 <= grid[i + 1][j]) {\n                    continue;\n                }\n                result += (grid[i][j] + 1) - grid[i + 1][j];\n                grid[i + 1][j] = grid[i][j] + 1;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def minimumOperations(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        result = 0\n        for i in xrange(len(grid)-1):\n            for j in xrange(len(grid[0])):\n                if grid[i][j]+1 <= grid[i+1][j]:\n                    continue\n                result += (grid[i][j]+1)-grid[i+1][j]\n                grid[i+1][j] = grid[i][j]+1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

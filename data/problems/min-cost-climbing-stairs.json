@@ -1,0 +1,40 @@
+{
+  "id": "c6c66cb1-c84f-42b9-b79b-2f5de1dce284",
+  "slug": "min-cost-climbing-stairs",
+  "title": "Min Cost Climbing Stairs",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>cost</code> where <code>cost[i]</code> is the cost of <code>i<sup>th</sup></code> step on a staircase. Once you pay the cost, you can either climb one or two steps.</p>\n\n<p>You can either start from the step with index <code>0</code>, or the step with index <code>1</code>.</p>\n\n<p>Return <em>the minimum cost to reach the top of the floor</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> cost = [10,<u>15</u>,20]\n<strong>Output:</strong> 15\n<strong>Explanation:</strong> You will start at index 1.\n- Pay 15 and climb two steps to reach the top.\nThe total cost is 15.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> cost = [<u>1</u>,100,<u>1</u>,1,<u>1</u>,100,<u>1</u>,<u>1</u>,100,<u>1</u>]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> You will start at index 0.\n- Pay 1 and climb two steps to reach index 2.\n- Pay 1 and climb two steps to reach index 4.\n- Pay 1 and climb two steps to reach index 6.\n- Pay 1 and climb one step to reach index 7.\n- Pay 1 and climb two steps to reach index 9.\n- Pay 1 and climb one step to reach the top.\nThe total cost is 6.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= cost.length &lt;= 1000</code></li>\n\t<li><code>0 &lt;= cost[i] &lt;= 999</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[10,15,20]\n[1,100,1,1,1,100,1,1,100,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minCostClimbingStairs(vector<int>& cost) {\n        vector<int> dp(3);\n        for (int i = cost.size() - 1; i >= 0; --i) {\n            dp[i % 3] = cost[i] + \n                        min(dp[(i + 1) % 3],\n                            dp[(i + 2) % 3]);\n        }\n        return min(dp[0], dp[1]);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minCostClimbingStairs(self, cost):\n        \"\"\"\n        :type cost: List[int]\n        :rtype: int\n        \"\"\"\n        dp = [0] * 3\n        for i in reversed(xrange(len(cost))):\n            dp[i%3] = cost[i] + min(dp[(i+1)%3], dp[(i+2)%3])\n        return min(dp[0], dp[1])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

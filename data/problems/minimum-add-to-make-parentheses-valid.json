@@ -1,0 +1,41 @@
+{
+  "id": "734182fe-f359-47fd-b59c-6755ff631928",
+  "slug": "minimum-add-to-make-parentheses-valid",
+  "title": "Minimum Add to Make Parentheses Valid",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A parentheses string is valid if and only if:</p>\n\n<ul>\n\t<li>It is the empty string,</li>\n\t<li>It can be written as <code>AB</code> (<code>A</code> concatenated with <code>B</code>), where <code>A</code> and <code>B</code> are valid strings, or</li>\n\t<li>It can be written as <code>(A)</code>, where <code>A</code> is a valid string.</li>\n</ul>\n\n<p>You are given a parentheses string <code>s</code>. In one move, you can insert a parenthesis at any position of the string.</p>\n\n<ul>\n\t<li>For example, if <code>s = &quot;()))&quot;</code>, you can insert an opening parenthesis to be <code>&quot;(<strong>(</strong>)))&quot;</code> or a closing parenthesis to be <code>&quot;())<strong>)</strong>)&quot;</code>.</li>\n</ul>\n\n<p>Return <em>the minimum number of moves required to make </em><code>s</code><em> valid</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;())&quot;\n<strong>Output:</strong> 1\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;(((&quot;\n<strong>Output:</strong> 3\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 1000</code></li>\n\t<li><code>s[i]</code> is either <code>&#39;(&#39;</code> or <code>&#39;)&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "stack",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"())\"\n\"(((\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minAddToMakeValid(string S) {\n        int add = 0, bal = 0;\n        for (const auto& c : S) {\n            bal += c == '(' ? 1 : -1;\n            if (bal == -1) {\n                ++add;\n                ++bal;\n            }\n        }\n        return add + bal;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minAddToMakeValid(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: int\n        \"\"\"\n        add, bal, = 0, 0\n        for c in S:\n            bal += 1 if c == '(' else -1\n            if bal == -1:\n                add += 1\n                bal += 1\n        return add + bal",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

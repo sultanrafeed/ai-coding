@@ -1,0 +1,41 @@
+{
+  "id": "d247966a-013f-4f79-85d9-b0012c3c5d2c",
+  "slug": "maximum-possible-number-by-binary-concatenation",
+  "title": "Maximum Possible Number by Binary Concatenation",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array of integers <code>nums</code> of size 3.</p>\n\n<p>Return the <strong>maximum</strong> possible number whose <em>binary representation</em> can be formed by <strong>concatenating</strong> the <em>binary representation</em> of <strong>all</strong> elements in <code>nums</code> in some order.</p>\n\n<p><strong>Note</strong> that the binary representation of any number <em>does not</em> contain leading zeros.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3]</span></p>\n\n<p><strong>Output:</strong> 30</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Concatenate the numbers in the order <code>[3, 1, 2]</code> to get the result <code>&quot;11110&quot;</code>, which is the binary representation of 30.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,8,16]</span></p>\n\n<p><strong>Output:</strong> 1296</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Concatenate the numbers in the order <code>[2, 8, 16]</code> to get the result <code>&quot;10100010000&quot;</code>, which is the binary representation of 1296.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>nums.length == 3</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 127</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "bit-manipulation",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3]\n[2,8,16]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * logr * logn)\n// Space: O(nlogr)\n\n// sort\nclass Solution {\npublic:\n    int maxGoodNumber(vector<int>& nums) {\n        const auto& to_binary = [](int x) {\n            string result;\n            for (; x; x >>= 1) {\n                result.push_back(x & 1 ? '1' : '0');\n            }\n            reverse(begin(result), end(result));\n            return result;\n        };\n\n        vector<string> bins(size(nums));\n        for (int i = 0; i < size(nums); ++i) {\n            bins[i] = to_binary(nums[i]);\n        }\n        sort(begin(bins), end(bins), [](const auto& a, const auto& b) {\n            return (a + b) > (b + a);\n        });\n        string result;\n        for (const auto& x : bins) {\n            result += x;\n        }\n        return stoi(result, nullptr, 2);\n    }\n};\n\n// Time:  O(n! * nlogr)\n// Space: O(nlogr)\n// brute force\nclass Solution2 {\npublic:\n    int maxGoodNumber(vector<int>& nums) {\n        const auto& to_binary = [](int x) {\n            string result;\n            for (; x; x >>= 1) {\n                result.push_back(x & 1 ? '1' : '0');\n            }\n            reverse(begin(result), end(result));\n            return result;\n        };\n\n        vector<int> idxs(size(nums));\n        iota(begin(idxs), end(idxs), 0);\n        int result = 0;\n        do {\n            string curr;\n            for (const auto& i : idxs) {\n                curr += to_binary(nums[i]);\n            }\n            result = max(result, stoi(curr, nullptr, 2));\n        } while (next_permutation(begin(idxs), end(idxs)));\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * logr * logn)\n# Space: O(nlogr)\n\n# sort\nclass Solution(object):\n    def maxGoodNumber(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return int(\"\".join(sorted(map(lambda x: bin(x)[2:], nums), cmp=lambda x, y: (x+y > y+x)-(x+y < y+x), reverse=True)), 2)\n\n\n# Time:  O(n! * nlogr)\n# Space: O(nlogr)\nimport itertools\n\n\n# brute force\nclass Solution2(object):\n    def maxGoodNumber(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return max(int(\"\".join(x), 2) for x in itertools.permutations(map(lambda x: bin(x)[2:], nums)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

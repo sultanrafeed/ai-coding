@@ -1,0 +1,34 @@
+{
+  "id": "f04ce23b-146f-4071-beef-1000f324ae3d",
+  "slug": "single-row-keyboard",
+  "title": "Single-Row Keyboard",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int calculateTime(string keyboard, string word) {\n        unordered_map<char, int> lookup;\n        for (int i = 0; i < keyboard.length(); ++i) {\n            lookup[keyboard[i]] = i;\n        }\n        int result = 0, prev = 0;\n        for (const auto& c : word) {\n            result += abs(lookup[c] - prev);\n            prev = lookup[c];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def calculateTime(self, keyboard, word):\n        \"\"\"\n        :type keyboard: str\n        :type word: str\n        :rtype: int\n        \"\"\"\n        lookup = {c:i for i, c in enumerate(keyboard)}\n        result, prev = 0, 0\n        for c in word:\n            result += abs(lookup[c]-prev)\n            prev = lookup[c]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

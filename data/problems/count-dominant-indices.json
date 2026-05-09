@@ -1,0 +1,34 @@
+{
+  "id": "953a4f27-eb57-45e4-9f95-d54016378572",
+  "slug": "count-dominant-indices",
+  "title": "Count Dominant Indices",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> of length <code>n</code>.</p>\n\n<p>An element at index <code>i</code> is called <strong>dominant</strong> if: <code>nums[i] &gt; average(nums[i + 1], nums[i + 2], ..., nums[n - 1])</code></p>\n\n<p>Your task is to count the number of indices <code>i</code> that are <strong>dominant</strong>.</p>\n\n<p>The <strong>average</strong> of a set of numbers is the value obtained by adding all the numbers together and dividing the sum by the total number of numbers.</p>\n\n<p><strong>Note</strong>: The <strong>rightmost</strong> element of any array is <strong>not</strong> <strong>dominant</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [5,4,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>At index <code>i = 0</code>, the value 5 is dominant as <code>5 &gt; average(4, 3) = 3.5</code>.</li>\n\t<li>At index <code>i = 1</code>, the value 4 is dominant over the subarray <code>[3]</code>.</li>\n\t<li>Index <code>i = 2</code> is not dominant as there are no elements to its right. Thus, the answer is 2.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [4,1,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>At index <code>i = 0</code>, the value 4 is dominant over the subarray <code>[1, 2]</code>.</li>\n\t<li>At index <code>i = 1</code>, the value 1 is not dominant.</li>\n\t<li>Index <code>i = 2</code> is not dominant as there are no elements to its right. Thus, the answer is 1.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 100</code>​​​​​​​</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    int dominantIndices(vector<int>& nums) {\n        int result = 0, total = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            if (i * nums[(size(nums) - 1) - i] > total) {\n                ++result;\n            }\n            total += nums[(size(nums) - 1) - i];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def dominantIndices(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = total = 0\n        for i in xrange(len(nums)):\n            if i*nums[~i] > total:\n                result += 1\n            total += nums[~i]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "7da1e001-b67b-4d06-ba87-9afcb8d11ebc",
+  "slug": "the-maze",
+  "title": "The Maze",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,0,1,0,0],[0,0,0,0,0],[0,0,0,1,0],[1,1,0,1,1],[0,0,0,0,0]]\n[0,4]\n[4,4]\n[[0,0,1,0,0],[0,0,0,0,0],[0,0,0,1,0],[1,1,0,1,1],[0,0,0,0,0]]\n[0,4]\n[3,2]\n[[0,0,0,0,0],[1,1,0,0,1],[0,0,0,0,0],[0,1,0,0,1],[0,1,0,0,0]]\n[4,3]\n[0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(max(r, c) * w)\n// Space: O(w)\n\nclass Solution {\npublic:\n    bool hasPath(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {\n        static const vector<vector<int>> dirs = {{-1, 0}, {0, 1}, {0, -1}, {1, 0}};\n        queue<node> q;\n        unordered_set<int> visited;\n        q.emplace(0, start);\n\n        while (!q.empty()) {\n            int dist = 0;\n            vector<int> node;\n            tie(dist, node) = q.front();\n            q.pop();\n            if (visited.count(hash(maze, node))) {\n                continue;\n            }\n            if (node[0] == destination[0] &&\n                node[1] == destination[1]) {\n                return true;\n            }\n\n            visited.emplace(hash(maze, node));\n            for (const auto& dir : dirs) {\n                int neighbor_dist = 0;\n                vector<int> neighbor;\n                tie(neighbor_dist, neighbor) = findNeighbor(maze, node, dir);\n                q.emplace(dist + neighbor_dist, neighbor);\n            }\n        }\n\n        return false;\n    }\n\nprivate:\n    using node = pair<int, vector<int>>;\n\n    node findNeighbor(const vector<vector<int>>& maze,\n                      const vector<int>& node, const vector<int>& dir) {\n        vector<int> cur_node = node;\n        int dist = 0;\n    \n        while (0 <= cur_node[0] + dir[0] && cur_node[0] + dir[0] < maze.size() &&\n               0 <= cur_node[1] + dir[1] && cur_node[1] + dir[1] < maze[0].size() &&\n               !maze[cur_node[0] + dir[0]][cur_node[1] + dir[1]]) {\n            cur_node[0] += dir[0];\n            cur_node[1] += dir[1];\n            ++dist;\n        }\n        return {dist, cur_node};\n    }\n    \n    int hash(const vector<vector<int>>& maze, const vector<int>& node) {\n        return node[0] * maze[0].size() + node[1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(max(r, c) * w)\n# Space: O(w)\n\nimport collections\n\n\nclass Solution(object):\n    def hasPath(self, maze, start, destination):\n        \"\"\"\n        :type maze: List[List[int]]\n        :type start: List[int]\n        :type destination: List[int]\n        :rtype: bool\n        \"\"\"\n        def neighbors(maze, node):\n            for i, j in [(-1, 0), (0, 1), (0, -1), (1, 0)]:\n                x, y = node\n                while 0 <= x + i < len(maze) and \\\n                      0 <= y + j < len(maze[0]) and \\\n                      not maze[x+i][y+j]:\n                    x += i\n                    y += j\n                yield x, y\n\n        start, destination = tuple(start), tuple(destination)\n        queue = collections.deque([start])\n        visited = set()\n        while queue:\n            node = queue.popleft()\n            if node in visited: continue\n            if node == destination:\n                return True\n            visited.add(node)\n            for neighbor in neighbors(maze, node):\n                queue.append(neighbor)\n\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

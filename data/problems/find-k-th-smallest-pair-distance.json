@@ -1,0 +1,36 @@
+{
+  "id": "de8fdfe2-9cbd-4d04-9966-318bf19f63e9",
+  "slug": "find-k-th-smallest-pair-distance",
+  "title": "Find K-th Smallest Pair Distance",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>The <strong>distance of a pair</strong> of integers <code>a</code> and <code>b</code> is defined as the absolute difference between <code>a</code> and <code>b</code>.</p>\n\n<p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the</em> <code>k<sup>th</sup></code> <em>smallest <strong>distance among all the pairs</strong></em> <code>nums[i]</code> <em>and</em> <code>nums[j]</code> <em>where</em> <code>0 &lt;= i &lt; j &lt; nums.length</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,3,1], k = 1\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Here are all the pairs:\n(1,3) -&gt; 2\n(1,1) -&gt; 0\n(3,1) -&gt; 2\nThen the 1<sup>st</sup> smallest distance pair is (1,1), and its distance is 0.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,1], k = 2\n<strong>Output:</strong> 0\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,6,1], k = 3\n<strong>Output:</strong> 5\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums.length</code></li>\n\t<li><code>2 &lt;= n &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= n * (n - 1) / 2</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn + nlogw), n = len(nums), w = max(nums) - min(nums)\n// Space: O(1)\n\n// Binary search with sliding window solution\nclass Solution {\npublic:\n    int smallestDistancePair(vector<int>& nums, int k) {\n        sort(nums.begin(), nums.end());\n        int left = 0, right = nums.back() - nums.front() + 1;\n        while (left < right) {\n            const auto mid = left + (right - left) / 2;\n            if (possible(mid, nums, k)) {\n                right = mid;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n\nprivate:\n    bool possible(const int guess, const vector<int>& nums, const int k) {\n        int count = 0, left = 0;\n        for (int right = 0; right < nums.size(); ++right) {\n            while ((nums[right] - nums[left]) > guess) {\n                ++left;\n            }\n            count += right - left;\n        }\n        return count >= k;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn + nlogw), n = len(nums), w = max(nums)-min(nums)\n# Space: O(1)\n\nclass Solution(object):\n    def smallestDistancePair(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        # Sliding window solution\n        def possible(guess, nums, k):\n            count, left = 0, 0\n            for right, num in enumerate(nums):\n                while num-nums[left] > guess:\n                    left += 1\n                count += right-left\n            return count >= k\n\n        nums.sort()\n        left, right = 0, nums[-1]-nums[0]+1\n        while left < right:\n            mid = left + (right-left)/2\n            if possible(mid, nums, k):\n                right = mid\n            else:\n                left = mid+1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

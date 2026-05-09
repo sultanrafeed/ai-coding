@@ -1,0 +1,36 @@
+{
+  "id": "2ea842c7-f022-4ae3-9535-c8c1363625b7",
+  "slug": "design-bitset",
+  "title": "Design Bitset",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A <strong>Bitset</strong> is a data structure that compactly stores bits.</p>\n\n<p>Implement the <code>Bitset</code> class:</p>\n\n<ul>\n\t<li><code>Bitset(int size)</code> Initializes the Bitset with <code>size</code> bits, all of which are <code>0</code>.</li>\n\t<li><code>void fix(int idx)</code> Updates the value of the bit at the index <code>idx</code> to <code>1</code>. If the value was already <code>1</code>, no change occurs.</li>\n\t<li><code>void unfix(int idx)</code> Updates the value of the bit at the index <code>idx</code> to <code>0</code>. If the value was already <code>0</code>, no change occurs.</li>\n\t<li><code>void flip()</code> Flips the values of each bit in the Bitset. In other words, all bits with value <code>0</code> will now have value <code>1</code> and vice versa.</li>\n\t<li><code>boolean all()</code> Checks if the value of <strong>each</strong> bit in the Bitset is <code>1</code>. Returns <code>true</code> if it satisfies the condition, <code>false</code> otherwise.</li>\n\t<li><code>boolean one()</code> Checks if there is <strong>at least one</strong> bit in the Bitset with value <code>1</code>. Returns <code>true</code> if it satisfies the condition, <code>false</code> otherwise.</li>\n\t<li><code>int count()</code> Returns the <strong>total number</strong> of bits in the Bitset which have value <code>1</code>.</li>\n\t<li><code>String toString()</code> Returns the current composition of the Bitset. Note that in the resultant string, the character at the <code>i<sup>th</sup></code> index should coincide with the value at the <code>i<sup>th</sup></code> bit of the Bitset.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;Bitset&quot;, &quot;fix&quot;, &quot;fix&quot;, &quot;flip&quot;, &quot;all&quot;, &quot;unfix&quot;, &quot;flip&quot;, &quot;one&quot;, &quot;unfix&quot;, &quot;count&quot;, &quot;toString&quot;]\n[[5], [3], [1], [], [], [0], [], [], [0], [], []]\n<strong>Output</strong>\n[null, null, null, null, false, null, null, true, null, 2, &quot;01010&quot;]\n\n<strong>Explanation</strong>\nBitset bs = new Bitset(5); // bitset = &quot;00000&quot;.\nbs.fix(3);     // the value at idx = 3 is updated to 1, so bitset = &quot;00010&quot;.\nbs.fix(1);     // the value at idx = 1 is updated to 1, so bitset = &quot;01010&quot;. \nbs.flip();     // the value of each bit is flipped, so bitset = &quot;10101&quot;. \nbs.all();      // return False, as not all values of the bitset are 1.\nbs.unfix(0);   // the value at idx = 0 is updated to 0, so bitset = &quot;00101&quot;.\nbs.flip();     // the value of each bit is flipped, so bitset = &quot;11010&quot;. \nbs.one();      // return True, as there is at least 1 index with value 1.\nbs.unfix(0);   // the value at idx = 0 is updated to 0, so bitset = &quot;01010&quot;.\nbs.count();    // return 2, as there are 2 bits with value 1.\nbs.toString(); // return &quot;01010&quot;, which is the composition of bitset.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= size &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= idx &lt;= size - 1</code></li>\n\t<li>At most <code>10<sup>5</sup></code> calls will be made <strong>in total</strong> to <code>fix</code>, <code>unfix</code>, <code>flip</code>, <code>all</code>, <code>one</code>, <code>count</code>, and <code>toString</code>.</li>\n\t<li>At least one call will be made to <code>all</code>, <code>one</code>, <code>count</code>, or <code>toString</code>.</li>\n\t<li>At most <code>5</code> calls will be made to <code>toString</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:     O(n)\n//        fix:      O(1)\n//        unfix:    O(1)\n//        flip:     O(1)\n//        all:      O(1)\n//        one:      O(1)\n//        count:    O(1)\n//        toString: O(n)\n// Space: O(n)\n\n// design\nclass Bitset {\npublic:\n    Bitset(int size)\n      : lookup_(size) {\n        \n    }\n    \n    void fix(int idx) {\n        if (lookup_[idx] == flip_) {\n            lookup_[idx] = !lookup_[idx];\n            ++cnt_;\n        }\n    }\n    \n    void unfix(int idx) {\n         if (lookup_[idx] != flip_) {\n            lookup_[idx] = !lookup_[idx];\n            --cnt_;\n        }\n    }\n    \n    void flip() {\n        flip_ = !flip_;\n        cnt_ = size(lookup_) - cnt_;\n    }\n    \n    bool all() {\n        return cnt_ == size(lookup_);\n    }\n    \n    bool one() {\n        return cnt_ >= 1;\n    }\n    \n    int count() {\n        return cnt_;\n    }\n    \n    string toString() {\n        string result(size(lookup_), '0');\n        for (int i = 0; i < size(result); ++i) {\n            result[i] = (lookup_[i] != flip_) ? '1' : '0';\n        }\n        return result;\n    }\n\nprivate:\n    vector<bool> lookup_;\n    bool flip_ = false;\n    int cnt_ = 0;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:     O(n)\n#        fix:      O(1)\n#        unfix:    O(1)\n#        flip:     O(1)\n#        all:      O(1)\n#        one:      O(1)\n#        count:    O(1)\n#        toString: O(n)\n# Space: O(n)\n\n# design\nclass Bitset(object):\n\n    def __init__(self, size):\n        \"\"\"\n        :type size: int\n        \"\"\"\n        self.__lookup = [False]*size\n        self.__flip = False\n        self.__cnt = 0\n\n    def fix(self, idx):\n        \"\"\"\n        :type idx: int\n        :rtype: None\n        \"\"\"\n        if self.__lookup[idx] == self.__flip:\n            self.__lookup[idx] = not self.__lookup[idx]\n            self.__cnt += 1\n            \n    def unfix(self, idx):\n        \"\"\"\n        :type idx: int\n        :rtype: None\n        \"\"\"\n        if self.__lookup[idx] != self.__flip:\n            self.__lookup[idx] = not self.__lookup[idx]\n            self.__cnt -= 1\n\n    def flip(self):\n        \"\"\"\n        :rtype: None\n        \"\"\"\n        self.__flip = not self.__flip\n        self.__cnt = len(self.__lookup)-self.__cnt\n        \n\n    def all(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return self.__cnt == len(self.__lookup)\n\n    def one(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return self.__cnt >= 1\n\n    def count(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__cnt\n\n    def toString(self):\n        \"\"\"\n        :rtype: str\n        \"\"\"\n        result = ['']*len(self.__lookup)\n        for i, x in enumerate(self.__lookup):\n            result[i] = '1' if x != self.__flip else '0'\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "7418e8dd-d59c-454f-a18f-343393735f72",
+  "slug": "find-the-derangement-of-an-array",
+  "title": "Find the Derangement of An Array",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findDerangement(int n) {\n        static const int M = 1000000007;\n        long long mul = 1, sum = 0;\n        for (int i = n; i >= 0; --i) {\n            sum = (sum + M + (i % 2 == 0 ? 1 : -1) * mul) % M;\n            mul = (mul * i) % M;\n        }\n        return static_cast<int>(sum);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findDerangement(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        M = 1000000007\n        mul, total = 1, 0\n        for i in reversed(xrange(n+1)):\n            total = (total + M + (1 if i % 2 == 0 else -1) * mul) % M\n            mul = (mul * i) % M\n        return total",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

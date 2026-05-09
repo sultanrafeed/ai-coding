@@ -1,0 +1,38 @@
+{
+  "id": "e58643c0-3ca6-428d-bec5-fac3e0d1d697",
+  "slug": "closest-subsequence-sum",
+  "title": "Closest Subsequence Sum",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> and an integer <code>goal</code>.</p>\n\n<p>You want to choose a subsequence of <code>nums</code> such that the sum of its elements is the closest possible to <code>goal</code>. That is, if the sum of the subsequence&#39;s elements is <code>sum</code>, then you want to <strong>minimize the absolute difference</strong> <code>abs(sum - goal)</code>.</p>\n\n<p>Return <em>the <strong>minimum</strong> possible value of</em> <code>abs(sum - goal)</code>.</p>\n\n<p>Note that a subsequence of an array is an array formed by removing some elements <strong>(possibly all or none)</strong> of the original array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,-7,3,5], goal = 6\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Choose the whole array as a subsequence, with a sum of 6.\nThis is equal to the goal, so the absolute difference is 0.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [7,-9,15,-2], goal = -5\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> Choose the subsequence [7,-9,-2], with a sum of -4.\nThe absolute difference is abs(-4 - (-5)) = abs(1) = 1, which is the minimum.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3], goal = -7\n<strong>Output:</strong> 7\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 40</code></li>\n\t<li><code>-10<sup>7</sup> &lt;= nums[i] &lt;= 10<sup>7</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= goal &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "dynamic-programming",
+    "bit-manipulation",
+    "sorting",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^(n/2))\n// Space: O(2^(n/2))\n\nclass Solution {\npublic:\n    int minAbsDifference(vector<int>& nums, int goal) {\n        int mx = 0, mn = 0;\n        for (const auto& x : nums) {\n            if (x > 0) {\n                mx += x;\n            } else if (x < 0) {\n                mn += x;\n            }\n        }\n        if (goal > mx) {\n            return goal - mx;\n        }\n        if (goal < mn) {\n            return mn - goal;\n        }\n        int result = abs(goal);\n        unordered_set<int> sums1{0};\n        for (auto i = 0; i < size(nums) / 2; ++i) {\n            for (const auto& x : vector<int>(cbegin(sums1), cend(sums1))) {\n                if (!sums1.emplace(x + nums[i]).second) {\n                    continue;\n                }\n                result = min(result, abs(goal - x - nums[i]));  // case of right half part is 0\n            }\n        }\n        vector<int> sorted_sums1(cbegin(sums1), cend(sums1));  // Space: O(2^(n/2))\n        sort(begin(sorted_sums1), end(sorted_sums1));  // Time: O((n/2) * 2^(n/2)) = O(n * 2^(n/2))\n        unordered_set<int> sums2{0};\n        for (int i = size(nums) / 2; i < size(nums); ++i) {\n            for (const auto& x : vector<int>(cbegin(sums2), cend(sums2))) {\n                if (!sums2.emplace(x + nums[i]).second) {\n                    continue;\n                }\n                auto cit = lower_bound(cbegin(sorted_sums1), cend(sorted_sums1), goal - x - nums[i]);  // Time: O(2^(n/2)) * O(n/2)\n                if (cit != cend(sorted_sums1)) {\n                    result = min(result, abs(goal - x - nums[i] - *cit));\n                }\n                if (cit != cbegin(sorted_sums1)) {\n                    result = min(result, abs(goal - x - nums[i] - *prev(cit)));\n                }\n                if (result == 0) {\n                    return result;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^(n/2))\n# Space: O(2^(n/2))\n\nimport bisect\n\n\nclass Solution(object):\n    def minAbsDifference(self, nums, goal):\n        \"\"\"\n        :type nums: List[int]\n        :type goal: int\n        :rtype: int\n        \"\"\"\n        mx, mn = sum(x for x in nums if x > 0), sum(x for x in nums if x < 0)\n        if goal > mx:\n            return goal-mx\n        if goal < mn:\n            return mn-goal\n        result = abs(goal)\n        sums1 = set([0])\n        for i in xrange(len(nums)//2):\n            for x in list(sums1):\n                if x+nums[i] in sums1:\n                    continue\n                sums1.add(x+nums[i])\n                result = min(result, abs(goal-x-nums[i]))  # case of right half part is 0\n        sorted_sums1 = sorted(sums1)  # Time: O((n/2) * 2^(n/2)) = O(n * 2^(n/2)), Space: O(2^(n/2))\n        sums2 = set([0])\n        for i in xrange(len(nums)//2, len(nums)):\n            for x in list(sums2):\n                if x+nums[i] in sums2:\n                    continue\n                sums2.add(x+nums[i])\n                ni = bisect.bisect_left(sorted_sums1, goal-x-nums[i])  # Time: O(2^(n/2)) * O(n/2)\n                if ni < len(sorted_sums1):\n                    result = min(result, abs(goal-x-nums[i]-sorted_sums1[ni]))\n                if ni > 0:\n                    result = min(result, abs(goal-x-nums[i]-sorted_sums1[ni-1]))\n                if result == 0:\n                    return result\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

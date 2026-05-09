@@ -1,0 +1,34 @@
+{
+  "id": "21e9dcdc-57e2-46c2-889b-8a7e60b97163",
+  "slug": "count-symmetric-integers",
+  "title": "  Count Symmetric Integers",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given two positive integers <code>low</code> and <code>high</code>.</p>\n\n<p>An integer <code>x</code> consisting of <code>2 * n</code> digits is <strong>symmetric</strong> if the sum of the first <code>n</code> digits of <code>x</code> is equal to the sum of the last <code>n</code> digits of <code>x</code>. Numbers with an odd number of digits are never symmetric.</p>\n\n<p>Return <em>the <strong>number of symmetric</strong> integers in the range</em> <code>[low, high]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> low = 1, high = 100\n<strong>Output:</strong> 9\n<strong>Explanation:</strong> There are 9 symmetric integers between 1 and 100: 11, 22, 33, 44, 55, 66, 77, 88, and 99.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> low = 1200, high = 1230\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> There are 4 symmetric integers between 1200 and 1230: 1203, 1212, 1221, and 1230.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= low &lt;= high &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(rlogr)\n// Space: O(r)\n\n// brute force, memoization\nstatic const int MAX_R = 10000;\nvector<int> LOOKUP(MAX_R, -1);\nclass Solution {\npublic:\n    int countSymmetricIntegers(int low, int high) {\n        const auto& check = [](int x) {\n            if (LOOKUP[x - 1] == -1) {\n                const auto& digits = to_string(x);\n                if (size(digits) % 2) {\n                    LOOKUP[x - 1] = 0;\n                } else {\n                    int total1 = 0;\n                    for (int i = 0; i < size(digits) / 2; ++i) {\n                        total1 += digits[i] - '0';\n                    }\n                    int total2 = 0;\n                    for (int i = size(digits) / 2; i < size(digits); ++i) {\n                        total2 += digits[i] - '0';\n                    }\n                    LOOKUP[x - 1] = total1 == total2 ? 1 : 0;\n                }\n            }\n            return LOOKUP[x - 1];\n        };\n\n        int result = 0;\n        for (int i = low; i <= high; ++i) {\n            result += check(i);\n        }\n        return result;\n    }  \n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(rlogr)\n# Space: O(r)\n\n# brute force, memoization\nMAX_R = 10**4\nLOOKUP = [-1]*MAX_R\nclass Solution(object):\n    def countSymmetricIntegers(self, low, high):\n        \"\"\"\n        :type low: int\n        :type high: int\n        :rtype: int\n        \"\"\"\n        def check(x):\n            if LOOKUP[x-1] == -1:\n                digits = map(int, str(x))\n                if len(digits)%2:\n                    LOOKUP[x-1] = 0\n                else:\n                    LOOKUP[x-1] = int(sum(digits[i] for i in xrange(len(digits)//2)) == sum(digits[i] for i in xrange(len(digits)//2, len(digits))))\n            return LOOKUP[x-1]\n\n        return sum(check(x) for x in xrange(low, high+1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

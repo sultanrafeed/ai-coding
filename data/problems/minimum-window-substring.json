@@ -1,0 +1,41 @@
+{
+  "id": "5f042d39-908e-4c92-bdf3-372acef64419",
+  "slug": "minimum-window-substring",
+  "title": "Minimum Window Substring",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given two strings <code>s</code> and <code>t</code> of lengths <code>m</code> and <code>n</code> respectively, return <em>the <strong>minimum window</strong></em> <span data-keyword=\"substring-nonempty\"><strong><em>substring</em></strong></span><em> of </em><code>s</code><em> such that every character in </em><code>t</code><em> (<strong>including duplicates</strong>) is included in the window</em>. If there is no such substring, return <em>the empty string </em><code>&quot;&quot;</code>.</p>\n\n<p>The testcases will be generated such that the answer is <strong>unique</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;ADOBECODEBANC&quot;, t = &quot;ABC&quot;\n<strong>Output:</strong> &quot;BANC&quot;\n<strong>Explanation:</strong> The minimum window substring &quot;BANC&quot; includes &#39;A&#39;, &#39;B&#39;, and &#39;C&#39; from string t.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;a&quot;, t = &quot;a&quot;\n<strong>Output:</strong> &quot;a&quot;\n<strong>Explanation:</strong> The entire string s is the minimum window.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;a&quot;, t = &quot;aa&quot;\n<strong>Output:</strong> &quot;&quot;\n<strong>Explanation:</strong> Both &#39;a&#39;s from t must be included in the window.\nSince the largest window of s only has one &#39;a&#39;, return empty string.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == s.length</code></li>\n\t<li><code>n == t.length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> and <code>t</code> consist of uppercase and lowercase English letters.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong> Could you find an algorithm that runs in <code>O(m + n)</code> time?</p>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"ADOBECODEBANC\"\n\"ABC\"\n\"a\"\n\"a\"\n\"a\"\n\"aa\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(k)\n\nclass Solution {\npublic:\n    string minWindow(string s, string t) {\n        unordered_map<int, int> count;\n        for (const auto& c : t) {\n            ++count[c];\n        }\n        int remain = t.length();\n        int left = -1, right = -1;\n        for (int i = 0, j = 0; j < s.length(); ++j) {\n            remain -= count[s[j]]-- > 0;\n            if (remain) {\n                continue;\n            }\n            while (count[s[i]] < 0) {\n                ++count[s[i++]];\n            }\n            if (right == -1 || j - i + 1 < right - left + 1) {\n                left = i;\n                right = j;\n            }\n        }\n        return left >= 0 ? s.substr(left, right - left + 1) : \"\";\n    }\n};\n\n// Time:  O(n)\n// Space: O(k)\nclass Solution2 {\npublic:\n    string minWindow(string s, string t) {\n        if (s.empty() || s.length() < t.length()) {\n            return \"\";\n        }\n\n        const int ASCII_MAX = 256;\n        vector<int> exp_cnt(ASCII_MAX, 0);\n        vector<int> cur_cnt(ASCII_MAX, 0);\n\n        int cnt = 0;\n        int start = 0;\n        int min_start = 0;\n        int min_width = numeric_limits<int>::max();\n\n        for (const auto& c : t) {\n            ++exp_cnt[c];\n        }\n\n        for (int i = 0; i < s.length(); ++i) {\n            if (exp_cnt[s[i]] > 0) {\n                ++cur_cnt[s[i]];\n                if (cur_cnt[s[i]] <= exp_cnt[s[i]]) {  // Counting expected elements.\n                    ++cnt;\n                }\n            }\n            if (cnt == t.size()) {  // If window meets the requirement.\n                while (exp_cnt[s[start]] == 0 ||  // Adjust left bound of window.\n                       cur_cnt[s[start]] > exp_cnt[s[start]]) {\n                    --cur_cnt[s[start]];\n                    ++start;\n                }\n\n                if (min_width > i - start + 1) {  // Update minimum window.\n                    min_width = i - start + 1;\n                    min_start = start;\n                }\n            }\n        }\n\n        if (min_width == numeric_limits<int>::max()) {\n            return \"\";\n        }\n\n        return s.substr(min_start, min_width);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(k), k is the number of different characters\n\nimport collections\n\n\nclass Solution(object):\n    def minWindow(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: str\n        \"\"\"\n        count, remain = collections.Counter(t), len(t)\n        i, left, right = 0, -1, -1\n        for j, c in enumerate(s):\n            remain -= count[c] > 0\n            count[c] -= 1\n            if remain:\n                continue\n            while count[s[i]] < 0:  # greedily discard uneeds\n                count[s[i]] += 1\n                i += 1\n            if right == -1 or j-i+1 < right-left+1:\n                left, right = i, j\n        return s[left:right+1]\n\n\n# Time:  O(n)\n# Space: O(k), k is the number of different characters\nclass Solution2(object):\n    def minWindow(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: str\n        \"\"\"\n        current_count = [0 for i in xrange(52)]\n        expected_count = [0 for i in xrange(52)]\n\n        for char in t:\n            expected_count[ord(char) - ord('a')] += 1\n\n        i, count, start, min_width, min_start = 0, 0, 0, float(\"inf\"), 0\n        while i < len(s):\n            current_count[ord(s[i]) - ord('a')] += 1\n            if current_count[ord(s[i]) - ord('a')] <= expected_count[ord(s[i]) - ord('a')]:\n                count += 1\n\n            if count == len(t):\n                while expected_count[ord(s[start]) - ord('a')] == 0 or \\\n                      current_count[ord(s[start]) - ord('a')] > expected_count[ord(s[start]) - ord('a')]:\n                    current_count[ord(s[start]) - ord('a')] -= 1\n                    start += 1\n\n                if min_width > i - start + 1:\n                    min_width = i - start + 1\n                    min_start = start\n            i += 1\n\n        if min_width == float(\"inf\"):\n            return \"\"\n\n        return s[min_start:min_start + min_width]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

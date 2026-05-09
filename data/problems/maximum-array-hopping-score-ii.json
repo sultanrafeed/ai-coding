@@ -1,0 +1,36 @@
+{
+  "id": "fc69d0df-8de8-4809-8e71-601c683c17c6",
+  "slug": "maximum-array-hopping-score-ii",
+  "title": "Maximum Array Hopping Score II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "stack",
+    "greedy",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// prefix sum, greedy\nclass Solution {\npublic:\n    long long maxScore(vector<int>& nums) {\n        int64_t result = 0;\n        for (int i = size(nums) - 1, mx = 0; i >= 1; --i) {\n            mx = max(mx, nums[i]);\n            result += mx;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# prefix sum, greedy\nclass Solution(object):\n    def maxScore(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = mx = 0\n        for i in reversed(xrange(1, len(nums))):\n            mx = max(mx, nums[i])\n            result += mx\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

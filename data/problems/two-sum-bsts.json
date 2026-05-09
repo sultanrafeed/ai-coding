@@ -1,0 +1,39 @@
+{
+  "id": "8ccbb30d-b93b-4a60-9d3b-b740070a908c",
+  "slug": "two-sum-bsts",
+  "title": "Two Sum BSTs",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "binary-search",
+    "stack",
+    "tree",
+    "depth-first-search",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    bool twoSumBSTs(TreeNode* root1, TreeNode* root2, int target) {\n        Iterator<TreeNode*> left(root1, true), right(root2, false);\n        while (*left && *right) {\n            if ((*left)->val + (*right)->val < target) {\n                ++left;\n            } else if ((*left)->val + (*right)->val > target) {\n                ++right;\n            } else {\n                return true;\n            }\n        }\n        return false;\n    }\n\nprivate:\n    template<typename T>\n    class Iterator {\n    public:\n        Iterator(T root, bool asc)\n         : stack_{{root, false}}\n         , asc_{asc}\n         , curr_{} {\n             ++(*this);\n        }\n        \n        Iterator& operator++() {\n            while (!stack_.empty()) {\n                T root; bool is_visited;\n                tie(root, is_visited) = stack_.back(); stack_.pop_back();\n                if (!root) {\n                    continue;\n                }\n                if (is_visited) {\n                    curr_ = root;\n                    return *this;\n                }\n                if (asc_) {\n                    stack_.emplace_back(root->right, false);\n                    stack_.emplace_back(root, true);\n                    stack_.emplace_back(root->left, false);\n                } else {\n                    stack_.emplace_back(root->left, false);\n                    stack_.emplace_back(root, true);\n                    stack_.emplace_back(root->right, false);\n                }\n            }\n            curr_ = T{};\n            return *this;\n        }\n        \n        const T& operator*() const {\n            return curr_;\n        }\n        \n    private:\n        vector<pair<T, bool>> stack_;\n        bool asc_;\n        T curr_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    def twoSumBSTs(self, root1, root2, target):\n        \"\"\"\n        :type root1: TreeNode\n        :type root2: TreeNode\n        :type target: int\n        :rtype: bool\n        \"\"\"\n        def inorder_gen(root, asc=True):\n            result, stack = [], [(root, False)]\n            while stack:\n                root, is_visited = stack.pop()\n                if root is None:\n                    continue\n                if is_visited:\n                    yield root.val\n                else:\n                    if asc:\n                        stack.append((root.right, False))\n                        stack.append((root, True))\n                        stack.append((root.left, False))\n                    else:\n                        stack.append((root.left, False))\n                        stack.append((root, True))\n                        stack.append((root.right, False))\n        \n        left_gen, right_gen = inorder_gen(root1, True), inorder_gen(root2, False)\n        left, right = next(left_gen), next(right_gen)\n        while left is not None and right is not None:\n            if left + right < target:\n                left = next(left_gen)\n            elif left + right > target:\n                right = next(right_gen)\n            else:\n                return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

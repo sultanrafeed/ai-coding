@@ -1,0 +1,41 @@
+{
+  "id": "2f301a27-55fa-4066-b565-4d0693d3709e",
+  "slug": "convert-doubly-linked-list-to-array-ii",
+  "title": "Convert Doubly Linked List to Array II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "linked-list",
+    "doubly-linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5]\n5\n[4,5,6,7,8]\n8",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// linked list\nclass Solution {\npublic:\n\tvector<int> toArray(Node *node){\n        for (; node->prev; node = node->prev);\n        vector<int> result;\n        for (; node; node = node->next) {\n            result.emplace_back(node->val);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# linked list\nclass Solution:\n    def toArray(self, node):\n        \"\"\"\n        :type head: Node\n        :rtype: List[int]\n        \"\"\"\n        while node.prev:\n            node = node.prev\n        result = []\n        while node:\n            result.append(node.val)\n            node = node.next\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

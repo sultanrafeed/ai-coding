@@ -1,0 +1,44 @@
+{
+  "id": "44a15d3f-fad6-40fc-9e78-40953c6ab3b1",
+  "slug": "sum-of-floored-pairs",
+  "title": "Sum of Floored Pairs",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, return the sum of <code>floor(nums[i] / nums[j])</code> for all pairs of indices <code>0 &lt;= i, j &lt; nums.length</code> in the array. Since the answer may be too large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>The <code>floor()</code> function returns the integer part of the division.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,5,9]\n<strong>Output:</strong> 10\n<strong>Explanation:</strong>\nfloor(2 / 5) = floor(2 / 9) = floor(5 / 9) = 0\nfloor(2 / 2) = floor(5 / 5) = floor(9 / 9) = 1\nfloor(5 / 2) = 2\nfloor(9 / 2) = 4\nfloor(9 / 5) = 1\nWe calculate the floor of the division for every pair of indices in the array then sum them up.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [7,7,7,7,7,7,7]\n<strong>Output:</strong> 49\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "binary-search",
+    "counting",
+    "enumeration",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,5,9]\n[7,7,7,7,7,7,7]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n/1+n/2+...+n/n) = O(nlogn), n is the max of nums\n// Space: O(n)\n\nclass Solution {\npublic:\n    int sumOfFlooredPairs(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n        vector<int> prefix(*max_element(cbegin(nums), cend(nums)) + 1);\n        unordered_map<int, int> count;\n        for (const auto& num : nums) {\n            ++count[num];\n        }\n        for (const auto& [num, cnt] : count) {\n            for (int j = num; j < size(prefix); j += num) {\n                prefix[j] += cnt;\n            }\n        }\n        for (int i = 0; i + 1 < size(prefix); ++i) {\n            prefix[i + 1] += prefix[i];\n        }\n        return accumulate(cbegin(nums), cend(nums), 0,\n                          [&prefix](int total, int x) {\n                              return (total + prefix[x]) % MOD;\n                          });\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n/1+n/2+...+n/n) = O(nlogn), n is the max of nums\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def sumOfFlooredPairs(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        prefix, counter = [0]*(max(nums)+1), collections.Counter(nums)\n        for num, cnt in counter.iteritems():\n            for j in xrange(num, len(prefix), num):\n                prefix[j] += counter[num]\n        for i in xrange(len(prefix)-1):\n            prefix[i+1] += prefix[i]\n        return reduce(lambda total, num: (total+prefix[num])%MOD, nums, 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

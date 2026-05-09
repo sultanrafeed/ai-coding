@@ -1,0 +1,41 @@
+{
+  "id": "76cde76e-4f4b-4591-810f-d9d98df67243",
+  "slug": "binary-tree-longest-consecutive-sequence",
+  "title": "Binary Tree Longest Consecutive Sequence",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,null,3,2,4,null,null,null,5]\n[2,null,3,2,null,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    int longestConsecutive(TreeNode* root) {\n        int max_len = 0;\n        longestConsecutiveHelper(root, &max_len);\n        return max_len;\n    }\n\n    int longestConsecutiveHelper(TreeNode *root, int *max_len) {\n        if (!root) {\n            return 0;\n        }\n\n        const int left_len = longestConsecutiveHelper(root->left, max_len);\n        const int right_len = longestConsecutiveHelper(root->right, max_len);\n\n        int cur_len = 1;\n        if (root->left && root->left->val == root->val + 1) {\n            cur_len = max(cur_len, left_len + 1);\n        }\n        if (root->right && root->right->val == root->val + 1) {\n            cur_len = max(cur_len, right_len + 1);\n        }\n        *max_len = max(*max_len, max(cur_len, max(left_len, right_len)));\n        return cur_len;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def longestConsecutive(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        self.max_len = 0\n\n        def longestConsecutiveHelper(root):\n            if not root:\n                return 0\n\n            left_len = longestConsecutiveHelper(root.left)\n            right_len = longestConsecutiveHelper(root.right)\n\n            cur_len = 1\n            if root.left and root.left.val == root.val + 1:\n                cur_len = max(cur_len, left_len + 1)\n            if root.right and root.right.val == root.val + 1:\n                cur_len = max(cur_len, right_len + 1)\n\n            self.max_len = max(self.max_len, cur_len)\n\n            return cur_len\n\n        longestConsecutiveHelper(root)\n        return self.max_len",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

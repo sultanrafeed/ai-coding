@@ -1,0 +1,34 @@
+{
+  "id": "976a14de-37fd-48c4-9f6e-5ef6cae64914",
+  "slug": "base-7",
+  "title": "Base 7",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer <code>num</code>, return <em>a string of its <strong>base 7</strong> representation</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> num = 100\n<strong>Output:</strong> \"202\"\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> num = -7\n<strong>Output:</strong> \"-10\"\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-10<sup>7</sup> &lt;= num &lt;= 10<sup>7</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string convertToBase7(int num) {\n        if (num < 0) {\n            return string(\"-\").append(convertToBase7(-num));\n        }\n        string result;\n        while (num) {\n            result.append(to_string(num % 7));\n            num /= 7;\n        }\n        reverse(result.begin(), result.end());\n        return result.empty() ? \"0\" : result;\n    }\n};\n\nclass Solution2 {\npublic:\n    string convertToBase7(int num) {\n        if (num < 0) {\n            return string(\"-\").append(convertToBase7(-num));\n        }\n        if (num < 7) {\n            return to_string(num);\n        }\n        return convertToBase7(num / 7).append(to_string(num % 7));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def convertToBase7(self, num):\n        if num < 0:\n            return '-' + self.convertToBase7(-num)\n        result = ''\n        while num:\n            result = str(num % 7) + result\n            num //= 7\n        return result if result else '0'\n\n\nclass Solution2(object):\n    def convertToBase7(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: str\n        \"\"\"\n        if num < 0:\n            return '-' + self.convertToBase7(-num)\n        if num < 7:\n            return str(num)\n        return self.convertToBase7(num // 7) + str(num % 7)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

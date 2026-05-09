@@ -1,0 +1,41 @@
+{
+  "id": "b812c0d8-935f-47f4-9bb4-7c9573b4303f",
+  "slug": "making-file-names-unique",
+  "title": "Making File Names Unique",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of strings <code>names</code> of size <code>n</code>. You will create <code>n</code> folders in your file system <strong>such that</strong>, at the <code>i<sup>th</sup></code> minute, you will create a folder with the name <code>names[i]</code>.</p>\n\n<p>Since two files <strong>cannot</strong> have the same name, if you enter a folder name that was previously used, the system will have a suffix addition to its name in the form of <code>(k)</code>, where, <code>k</code> is the <strong>smallest positive integer</strong> such that the obtained name remains unique.</p>\n\n<p>Return <em>an array of strings of length </em><code>n</code> where <code>ans[i]</code> is the actual name the system will assign to the <code>i<sup>th</sup></code> folder when you create it.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> names = [&quot;pes&quot;,&quot;fifa&quot;,&quot;gta&quot;,&quot;pes(2019)&quot;]\n<strong>Output:</strong> [&quot;pes&quot;,&quot;fifa&quot;,&quot;gta&quot;,&quot;pes(2019)&quot;]\n<strong>Explanation:</strong> Let&#39;s see how the file system creates folder names:\n&quot;pes&quot; --&gt; not assigned before, remains &quot;pes&quot;\n&quot;fifa&quot; --&gt; not assigned before, remains &quot;fifa&quot;\n&quot;gta&quot; --&gt; not assigned before, remains &quot;gta&quot;\n&quot;pes(2019)&quot; --&gt; not assigned before, remains &quot;pes(2019)&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> names = [&quot;gta&quot;,&quot;gta(1)&quot;,&quot;gta&quot;,&quot;avalon&quot;]\n<strong>Output:</strong> [&quot;gta&quot;,&quot;gta(1)&quot;,&quot;gta(2)&quot;,&quot;avalon&quot;]\n<strong>Explanation:</strong> Let&#39;s see how the file system creates folder names:\n&quot;gta&quot; --&gt; not assigned before, remains &quot;gta&quot;\n&quot;gta(1)&quot; --&gt; not assigned before, remains &quot;gta(1)&quot;\n&quot;gta&quot; --&gt; the name is reserved, system adds (k), since &quot;gta(1)&quot; is also reserved, systems put k = 2. it becomes &quot;gta(2)&quot;\n&quot;avalon&quot; --&gt; not assigned before, remains &quot;avalon&quot;\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> names = [&quot;onepiece&quot;,&quot;onepiece(1)&quot;,&quot;onepiece(2)&quot;,&quot;onepiece(3)&quot;,&quot;onepiece&quot;]\n<strong>Output:</strong> [&quot;onepiece&quot;,&quot;onepiece(1)&quot;,&quot;onepiece(2)&quot;,&quot;onepiece(3)&quot;,&quot;onepiece(4)&quot;]\n<strong>Explanation:</strong> When the last folder is created, the smallest positive valid k is 4, and it becomes &quot;onepiece(4)&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= names.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= names[i].length &lt;= 20</code></li>\n\t<li><code>names[i]</code> consists of lowercase English letters, digits, and/or round brackets.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"pes\",\"fifa\",\"gta\",\"pes(2019)\"]\n[\"gta\",\"gta(1)\",\"gta\",\"avalon\"]\n[\"onepiece\",\"onepiece(1)\",\"onepiece(2)\",\"onepiece(3)\",\"onepiece\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<string> getFolderNames(vector<string>& names) {\n        unordered_map<string, int> count;\n        vector<string> result;\n        unordered_set<string> lookup;\n        for (const auto& name : names) {\n            auto& c = count[name];\n            string name_with_suffix;\n            do {\n                name_with_suffix = c ? name + \"(\" + to_string(c) + \")\" : name;\n                ++c;\n            } while (lookup.count(name_with_suffix));\n            result.emplace_back(name_with_suffix);\n            lookup.emplace(move(name_with_suffix));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def getFolderNames(self, names):\n        \"\"\"\n        :type names: List[str]\n        :rtype: List[str]\n        \"\"\"\n        count = collections.Counter()\n        result, lookup = [], set()\n        for name in names:\n            while True:\n                name_with_suffix = \"{}({})\".format(name, count[name]) if count[name] else name\n                count[name] += 1\n                if name_with_suffix not in lookup:\n                    break\n            result.append(name_with_suffix)\n            lookup.add(name_with_suffix)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

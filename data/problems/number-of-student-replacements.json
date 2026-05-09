@@ -1,0 +1,40 @@
+{
+  "id": "cc43308d-db90-4b53-95fc-5e5b496931ed",
+  "slug": "number-of-student-replacements",
+  "title": "Number of Student Replacements",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,1,2]\n[2,2,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// simulation\nclass Solution {\npublic:\n    int totalReplacements(vector<int>& ranks) {\n        int result = -1;\n        int mn = numeric_limits<int>::max();\n        for (const auto& x : ranks) {\n            if (x >= mn) {\n                continue;\n            }\n            mn = x;\n            ++result;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# simulation\nclass Solution(object):\n    def totalReplacements(self, ranks):\n        \"\"\"\n        :type ranks: List[int]\n        :rtype: int\n        \"\"\"\n        result = -1\n        mn = float(\"inf\")\n        for x in ranks:\n            if x >= mn:\n                continue\n            mn = x\n            result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

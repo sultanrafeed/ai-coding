@@ -1,0 +1,36 @@
+{
+  "id": "c365dc26-31cc-4ce4-b787-0ad7f2aca7bd",
+  "slug": "moving-stones-until-consecutive-ii",
+  "title": "Moving Stones Until Consecutive II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There are some stones in different positions on the X-axis. You are given an integer array <code>stones</code>, the positions of the stones.</p>\n\n<p>Call a stone an <strong>endpoint stone</strong> if it has the smallest or largest position. In one move, you pick up an <strong>endpoint stone</strong> and move it to an unoccupied position so that it is no longer an <strong>endpoint stone</strong>.</p>\n\n<ul>\n\t<li>In particular, if the stones are at say, <code>stones = [1,2,5]</code>, you cannot move the endpoint stone at position <code>5</code>, since moving it to any position (such as <code>0</code>, or <code>3</code>) will still keep that stone as an endpoint stone.</li>\n</ul>\n\n<p>The game ends when you cannot make any more moves (i.e., the stones are in three consecutive positions).</p>\n\n<p>Return <em>an integer array </em><code>answer</code><em> of length </em><code>2</code><em> where</em>:</p>\n\n<ul>\n\t<li><code>answer[0]</code> <em>is the minimum number of moves you can play, and</em></li>\n\t<li><code>answer[1]</code> <em>is the maximum number of moves you can play</em>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> stones = [7,4,9]\n<strong>Output:</strong> [1,2]\n<strong>Explanation:</strong> We can move 4 -&gt; 8 for one move to finish the game.\nOr, we can move 9 -&gt; 5, 4 -&gt; 6 for two moves to finish the game.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> stones = [6,5,4,3,10]\n<strong>Output:</strong> [2,3]\n<strong>Explanation:</strong> We can move 3 -&gt; 8 then 10 -&gt; 7 to finish the game.\nOr, we can move 3 -&gt; 7, 4 -&gt; 8, 5 -&gt; 9 to finish the game.\nNotice we cannot move 10 -&gt; 2 to finish the game, because that would be an illegal move.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= stones.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= stones[i] &lt;= 10<sup>9</sup></code></li>\n\t<li>All the values of <code>stones</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "sliding-window",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> numMovesStonesII(vector<int>& stones) {\n        sort(stones.begin(), stones.end());\n        int left = 0, min_moves = numeric_limits<int>::max();\n        int max_moves = max(*stones.crbegin() - stones[1], *next(stones.crbegin(), 1) - stones[0]) -\n                        (stones.size() - 2);\n        for (int right = 0; right < stones.size(); ++right) {\n            while (stones[right] - stones[left] + 1 > stones.size()) {  // find window size <= len(stones)\n                ++left;\n            }\n            if (stones.size() - (right - left + 1) == 1 &&\n                stones[right] - stones[left] + 1 == stones.size() - 1) {\n                min_moves = min(min_moves, 2);  // case (1, 2, 3, 4), 7\n            } else {\n                // move stones not in this window\n                min_moves = min(min_moves, static_cast<int>(stones.size()) - (right - left + 1));\n            }\n        }\n        return {min_moves, max_moves};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def numMovesStonesII(self, stones):\n        \"\"\"\n        :type stones: List[int]\n        :rtype: List[int]\n        \"\"\"\n        stones.sort()\n        left, min_moves = 0, float(\"inf\")\n        max_moves = max(stones[-1]-stones[1], stones[-2]-stones[0]) - (len(stones)-2)\n        for right in xrange(len(stones)):\n            while stones[right]-stones[left]+1 > len(stones): # find window size <= len(stones)\n                left += 1\n            if len(stones)-(right-left+1) == 1 and stones[right]-stones[left]+1 == len(stones)-1:\n                min_moves = min(min_moves, 2)  # case (1, 2, 3, 4), 7\n            else:\n                min_moves = min(min_moves, len(stones)-(right-left+1))  # move stones not in this window\n        return [min_moves, max_moves]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

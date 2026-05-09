@@ -1,0 +1,35 @@
+{
+  "id": "3fc3886e-d3f0-4051-baba-09bca0d54ec3",
+  "slug": "median-of-a-row-wise-sorted-matrix",
+  "title": "Median of a Row Wise Sorted Matrix",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logr * mlogn), r = O(right-left+1) = O(10^6), O(logr) = O(20)\n// Space: O(1)\n\n// binary search\nclass Solution {\npublic:\n    int matrixMedian(vector<vector<int>>& grid) {\n        const auto& check = [&](int x) {\n            return accumulate(cbegin(grid), cend(grid), 0,\n                              [&](const auto& total, const auto& curr) {\n                                  return total + distance(cbegin(curr), upper_bound(cbegin(curr), cend(curr), x));\n                              }) > size(grid) * size(grid[0]) / 2;\n        };\n\n        int left = min_element(cbegin(grid), cend(grid), [](const auto& a, const auto& b) { return a.front() < b.front(); })->front();\n        int right = max_element(cbegin(grid), cend(grid), [](const auto& a, const auto& b) { return a.back() < b.back(); })->back();\n        while (left <= right) {\n            const int mid = left + (right - left) / 2;\n            if (check(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logr * mlogn), r = O(right-left+1) = O(10^6), O(logr) = O(20)\n# Space: O(1)\n\nimport bisect\n\n\n# binary search\nclass Solution(object):\n    def matrixMedian(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def check(x):\n            return sum(bisect_right(row, x) for row in grid) > (len(grid)*len(grid[0]))//2\n\n        left, right = min(row[0] for row in grid), max(row[-1] for row in grid)\n        while left <= right:\n            mid = left + (right-left)//2\n            if check(mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

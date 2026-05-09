@@ -1,0 +1,40 @@
+{
+  "id": "48dcb61b-e214-401b-926b-f152995404f1",
+  "slug": "count-substrings-with-only-one-distinct-letter",
+  "title": "Count Substrings with Only One Distinct Letter",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"aaaba\"\n\"aaaaaaaaaa\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countLetters(string S) {\n        int result = S.length();\n        int left = 0;\n        for (int right = 1; right < S.length(); ++right) {\n            if (S[right] == S[left]) {\n                result += right - left;\n            } else {\n                left = right;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def countLetters(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: int\n        \"\"\"\n        result = len(S)\n        left = 0\n        for right in xrange(1, len(S)):\n            if S[right] == S[left]:\n                result += right-left\n            else:\n                left = right\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

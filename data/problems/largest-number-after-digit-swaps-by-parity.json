@@ -1,0 +1,34 @@
+{
+  "id": "c8a311d0-3551-4f2c-87c3-bfe5badd6ff6",
+  "slug": "largest-number-after-digit-swaps-by-parity",
+  "title": "Largest Number After Digit Swaps by Parity",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a positive integer <code>num</code>. You may swap any two digits of <code>num</code> that have the same <strong>parity</strong> (i.e. both odd digits or both even digits).</p>\n\n<p>Return<em> the <strong>largest</strong> possible value of </em><code>num</code><em> after <strong>any</strong> number of swaps.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 1234\n<strong>Output:</strong> 3412\n<strong>Explanation:</strong> Swap the digit 3 with the digit 1, this results in the number 3214.\nSwap the digit 2 with the digit 4, this results in the number 3412.\nNote that there may be other sequences of swaps but it can be shown that 3412 is the largest possible number.\nAlso note that we may not swap the digit 4 with the digit 1 since they are of different parities.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 65875\n<strong>Output:</strong> 87655\n<strong>Explanation:</strong> Swap the digit 8 with the digit 6, this results in the number 85675.\nSwap the first digit 5 with the digit 7, this results in the number 87655.\nNote that there may be other sequences of swaps but it can be shown that 87655 is the largest possible number.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "sorting",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// counting sort\nclass Solution {\npublic:\n    int largestInteger(int num) {\n        const auto& count = [](auto num) {\n            vector<int> cnt(10);\n            for (; num; num /= 10) {\n                ++cnt[num % 10];\n            }\n            return cnt;\n        };\n        \n        auto cnt = count(num);\n        int result = 0;\n        vector<int> digit = {0, 1};\n        for (int64_t base = 1; num; num /= 10, base *= 10) {\n            const auto parity = (num % 10) % 2;\n            for (; !cnt[digit[parity]] ; digit[parity] += 2);\n            --cnt[digit[parity]];\n            result += digit[parity] * base;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# counting sort\nclass Solution(object):\n    def largestInteger(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: int\n        \"\"\"\n        def count(num):\n            cnt = [0]*10\n            while num:\n                num, d = divmod(num, 10)\n                cnt[d] += 1\n            return cnt\n\n        cnt = count(num)\n        result = 0\n        digit = [0, 1]\n        base = 1\n        while num:\n            num, d = divmod(num, 10)\n            while not cnt[digit[d%2]]:\n                digit[d%2] += 2\n            cnt[digit[d%2]] -= 1\n            result += digit[d%2]*base\n            base *= 10\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

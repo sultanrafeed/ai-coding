@@ -1,0 +1,41 @@
+{
+  "id": "8dbc5311-a233-4aa5-96b1-a9745e3b0cae",
+  "slug": "super-egg-drop",
+  "title": "Super Egg Drop",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given <code>k</code> identical eggs and you have access to a building with <code>n</code> floors labeled from <code>1</code> to <code>n</code>.</p>\n\n<p>You know that there exists a floor <code>f</code> where <code>0 &lt;= f &lt;= n</code> such that any egg dropped at a floor <strong>higher</strong> than <code>f</code> will <strong>break</strong>, and any egg dropped <strong>at or below</strong> floor <code>f</code> will <strong>not break</strong>.</p>\n\n<p>Each move, you may take an unbroken egg and drop it from any floor <code>x</code> (where <code>1 &lt;= x &lt;= n</code>). If the egg breaks, you can no longer use it. However, if the egg does not break, you may <strong>reuse</strong> it in future moves.</p>\n\n<p>Return <em>the <strong>minimum number of moves</strong> that you need to determine <strong>with certainty</strong> what the value of </em><code>f</code> is.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> k = 1, n = 2\n<strong>Output:</strong> 2\n<strong>Explanation: </strong>\nDrop the egg from floor 1. If it breaks, we know that f = 0.\nOtherwise, drop the egg from floor 2. If it breaks, we know that f = 1.\nIf it does not break, then we know f = 2.\nHence, we need at minimum 2 moves to determine with certainty what the value of f is.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> k = 2, n = 6\n<strong>Output:</strong> 3\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> k = 3, n = 14\n<strong>Output:</strong> 4\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= k &lt;= 100</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "binary-search",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "1\n2\n2\n6\n3\n14",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(klogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int superEggDrop(int K, int N) {\n        int left = 1, right = N;\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (check(mid, K, N)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n\nprivate:\n    bool check(int n, int K, int N) {\n\t// let f(n, K) be the max number of floors could be solved by n moves and K eggs,\n\t// we want to do binary search to find min of n, s.t. f(n, K) >= N,\n\t// if we use one move to drop egg with X floors\n\t// 1. if it breaks, we can search new X in the range [X-f(n-1, K-1), X-1]\n\t// 2. if it doesn't break, we can search new X in the range [X+1, X+f(n-1, K)]\n\t// => f(n, K) = (X+f(n-1, K))-(X-f(n-1, K-1))+1 = f(n-1, K)+f(n-1, K-1)+1\n\t// => (1) f(n, K)   = f(n-1, K)  +1+f(n-1, K-1)\n\t//    (2) f(n, K-1) = f(n-1, K-1)+1+f(n-1, K-2)\n\t// let g(n, K) = f(n, K)-f(n, K-1), and we subtract (1) by (2)\n\t// => g(n, K) = g(n-1, K)+g(n-1, K-1), obviously, it is binomial coefficient\n\t// => C(n, K) = g(n, K) = f(n, K)-f(n, K-1),\n\t//    which also implies if we have one more egg with n moves and x-1 eggs, we can have more C(n, x) floors solvable\n\t// => f(n, K) = C(n, K)+f(n, K-1) = C(n, K) + C(n, K-1) + ... + C(n, 1) + f(n, 0) = sum(C(n, k) for k in [1, K])\n\t// => all we have to do is to check sum(C(n, k) for k in [1, K]) >= N,\n\t//    if true, there must exist a 1-to-1 mapping from each F in [1, N] to each success and failure sequence of every C(n, k) combinations for k in [1, K]\n        int total = 0, c = 1;\n        for (int k = 1; k <= K; ++k) {\n            c *= n - k + 1;\n            c /= k;\n            total += c;\n            if (total >= N) {\n                return true;\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(klogn)\n# Space: O(1)\n\nclass Solution(object):\n    def superEggDrop(self, K, N):\n        \"\"\"\n        :type K: int\n        :type N: int\n        :rtype: int\n        \"\"\"\n        def check(n, K, N):\n            # let f(n, K) be the max number of floors could be solved by n moves and K eggs,\n            # we want to do binary search to find min of n, s.t. f(n, K) >= N,\n            # if we use one move to drop egg with X floors\n            # 1. if it breaks, we can search new X in the range [X-f(n-1, K-1), X-1]\n            # 2. if it doesn't break, we can search new X in the range [X+1, X+f(n-1, K)]\n            # => f(n, K) = (X+f(n-1, K))-(X-f(n-1, K-1))+1 = f(n-1, K)+f(n-1, K-1)+1\n            # => (1) f(n, K)   = f(n-1, K)  +1+f(n-1, K-1)\n            #    (2) f(n, K-1) = f(n-1, K-1)+1+f(n-1, K-2)\n            # let g(n, K) = f(n, K)-f(n, K-1), and we subtract (1) by (2)\n            # => g(n, K) = g(n-1, K)+g(n-1, K-1), obviously, it is binomial coefficient\n            # => C(n, K) = g(n, K) = f(n, K)-f(n, K-1),\n            #    which also implies if we have one more egg with n moves and x-1 eggs, we can have more C(n, x) floors solvable\n            # => f(n, K) = C(n, K)+f(n, K-1) = C(n, K) + C(n, K-1) + ... + C(n, 1) + f(n, 0) = sum(C(n, k) for k in [1, K])\n            # => all we have to do is to check sum(C(n, k) for k in [1, K]) >= N,\n            #    if true, there must exist a 1-to-1 mapping from each F in [1, N] to each success and failure sequence of every C(n, k) combinations for k in [1, K]\n            total, c = 0, 1\n            for k in xrange(1, K+1):\n                c *= n-k+1\n                c //= k\n                total += c\n                if total >= N:\n                    return True\n            return False\n\n        left, right = 1, N\n        while left <= right:\n            mid = left + (right-left)//2\n            if check(mid, K, N):\n                right = mid-1\n            else:\n                left = mid+1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

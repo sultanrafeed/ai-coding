@@ -1,0 +1,35 @@
+{
+  "id": "4462b3e8-fa10-42e0-ab20-12fc7a9f43e7",
+  "slug": "maximum-number-of-darts-inside-of-a-circular-dartboard",
+  "title": "Maximum Number of Darts Inside of a Circular Dartboard",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Alice is throwing <code>n</code> darts on a very large wall. You are given an array <code>darts</code> where <code>darts[i] = [x<sub>i</sub>, y<sub>i</sub>]</code> is the position of the <code>i<sup>th</sup></code> dart that Alice threw on the wall.</p>\n\n<p>Bob knows the positions of the <code>n</code> darts on the wall. He wants to place a dartboard of radius <code>r</code> on the wall so that the maximum number of darts that Alice throws lie&nbsp;on the dartboard.</p>\n\n<p>Given the integer <code>r</code>, return <em>the maximum number of darts that can lie on the dartboard</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/04/29/sample_1_1806.png\" style=\"width: 248px; height: 211px;\" />\n<pre>\n<strong>Input:</strong> darts = [[-2,0],[2,0],[0,2],[0,-2]], r = 2\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> Circle dartboard with center in (0,0) and radius = 2 contain all points.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/04/29/sample_2_1806.png\" style=\"width: 306px; height: 244px;\" />\n<pre>\n<strong>Input:</strong> darts = [[-3,0],[3,0],[2,6],[5,4],[0,9],[7,8]], r = 5\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> Circle dartboard with center in (0,4) and radius = 5 contain all points except the point (7,8).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= darts.length &lt;= 100</code></li>\n\t<li><code>darts[i].length == 2</code></li>\n\t<li><code>-10<sup>4</sup> &lt;= x<sub>i</sub>, y<sub>i</sub> &lt;= 10<sup>4</sup></code></li>\n\t<li>All the <code>darts</code>&nbsp;are unique</li>\n\t<li><code>1 &lt;= r &lt;= 5000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "geometry"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2 * logn)\n// Space: O(n)\n\n// angle sweep solution\n// great explanation:\n// https://leetcode.com/problems/maximum-number-of-darts-inside-of-a-circular-dartboard/discuss/636345/Python-O(n3)-and-O(n2logn)-solution-explained-in-detail-with-pictures\nclass Solution {\npublic:\n    int numPoints(vector<vector<int>>& points, int r) {\n        int result = 0;\n        for (int i = 0; i < points.size(); ++i) {\n            result = max(result, countPoints(points, r, i));\n        }\n        return result;\n    }\n\nprivate:\n    int countPoints(const vector<vector<int>>& points, int r, int i) {\n        vector<pair<double, bool>> angles;\n        for (int j = 0; j < points.size(); ++j) {\n            if (j == i) {\n                continue;\n            }\n            int dx = points[i][0] - points[j][0];\n            int dy = points[i][1] - points[j][1];\n            const auto d = sqrt(dx * dx + dy * dy);\n            if (d > 2 * r) {\n                continue;\n            }\n            const auto delta = acos(d / (2 * r));\n            const auto angle = atan2(dy, dx);\n            angles.emplace_back(angle - delta, false);\n            angles.emplace_back(angle + delta, true);\n        }\n        sort(begin(angles), end(angles));\n        int result = 1, count = 1;\n        for (const auto& [_, is_closed] : angles) {  // angle sweep\n            if (!is_closed) {\n                ++count;\n            } else {\n                --count;\n            }\n            result = max(result, count);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2 * logn)\n# Space: O(n)\n\nimport math\n\n\n# angle sweep solution\n# great explanation:\n# https://leetcode.com/problems/maximum-number-of-darts-inside-of-a-circular-dartboard/discuss/636345/Python-O(n3)-and-O(n2logn)-solution-explained-in-detail-with-pictures\nclass Solution(object):\n    def numPoints(self, points, r):\n        \"\"\"\n        :type points: List[List[int]]\n        :type r: int\n        :rtype: int\n        \"\"\"\n        def count_points(points, r, i):\n            angles = []\n            for j in xrange(len(points)):\n                if i == j:\n                    continue\n                dx, dy = points[i][0]-points[j][0], points[i][1]-points[j][1]\n                d = math.sqrt(dx**2 + dy**2)\n                if d > 2*r:\n                    continue\n                delta, angle = math.acos(d/(2*r)), math.atan2(dy, dx)\n                angles.append((angle-delta, 0)), angles.append((angle+delta, 1))\n            angles.sort()\n            result, count = 1, 1\n            for _, is_closed in angles:  # angle sweep\n                if not is_closed:\n                    count += 1\n                else:\n                    count -= 1\n                result = max(result, count)\n            return result\n\n        return max(count_points(points, r, i) for i in xrange(len(points)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,33 @@
+{
+  "id": "c3eb5c73-50e0-48e0-81c0-854155cf2bf1",
+  "slug": "count-equal-and-divisible-pairs-in-an-array",
+  "title": "Count Equal and Divisible Pairs in an Array",
+  "difficulty": "easy",
+  "descriptionHtml": "Given a <strong>0-indexed</strong> integer array <code>nums</code> of length <code>n</code> and an integer <code>k</code>, return <em>the <strong>number of pairs</strong></em> <code>(i, j)</code> <em>where</em> <code>0 &lt;= i &lt; j &lt; n</code>, <em>such that</em> <code>nums[i] == nums[j]</code> <em>and</em> <code>(i * j)</code> <em>is divisible by</em> <code>k</code>.\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,1,2,2,2,1,3], k = 2\n<strong>Output:</strong> 4\n<strong>Explanation:</strong>\nThere are 4 pairs that meet all the requirements:\n- nums[0] == nums[6], and 0 * 6 == 0, which is divisible by 2.\n- nums[2] == nums[3], and 2 * 3 == 6, which is divisible by 2.\n- nums[2] == nums[4], and 2 * 4 == 8, which is divisible by 2.\n- nums[3] == nums[4], and 3 * 4 == 12, which is divisible by 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4], k = 1\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Since no value in nums is repeated, there are no pairs (i,j) that meet all the requirements.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i], k &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogk + n * sqrt(k))\n// Space: O(n + sqrt(k)), number of factors of k is at most sqrt(k)\n\n// math, number theory\nclass Solution {\npublic:\n    int countPairs(vector<int>& nums, int k) {\n        unordered_map<int, vector<int>> idxs;\n        for (int i = 0; i < size(nums); ++i) {\n            idxs[nums[i]].emplace_back(i);\n        }\n        int result = 0;\n        for (const auto& [_, idx] : idxs) {\n            unordered_map<int, int> gcds;\n            for (const auto& i : idx) {\n                const int gcd_i = gcd(i, k);\n                for (const auto& [gcd_j, cnt] : gcds) {\n                    if (gcd_i * gcd_j % k == 0) {\n                        result += cnt;\n                    }\n                }\n                ++gcds[gcd_i];\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogk + n * sqrt(k)^2) = O(n * k)\n// Space: O(n * sqrt(k)), number of factors of k is at most sqrt(k)\n// math, number theory\nclass Solution2 {\npublic:\n    int countPairs(vector<int>& nums, int k) {\n        unordered_map<int, unordered_map<int, int>> cnts;\n        for (int i = 0; i < size(nums); ++i) {\n            ++cnts[nums[i]][gcd(i, k)];\n        }\n        int result = 0;\n        for (const auto& [_, cnt] : cnts) {\n            for (const auto& [x, c1] : cnt) {\n                for (const auto& [y, c2] : cnt) {\n                    if (x > y || x * y % k) {\n                        continue;\n                    }\n                    result += (x != y) ? c1 * c2 : c1 * (c1 - 1) / 2;\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n)\n// brute force\nclass Solution3 {\npublic:\n    int countPairs(vector<int>& nums, int k) {\n        unordered_map<int, vector<int>> idxs;\n        for (int i = 0; i < size(nums); ++i) {\n            idxs[nums[i]].emplace_back(i);\n        }\n        int result = 0;\n        for (const auto& [_, idx] : idxs) {\n            for (int i = 0; i < size(idx); ++i) {\n                for (int j = i + 1; j < size(idx); ++j) {\n                    if (idx[i] * idx[j] % k == 0) {\n                        ++result;\n                    }\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogk + n * sqrt(k))\n# Space: O(n + sqrt(k)), number of factors of k is at most sqrt(k)\n\nimport collections\n\n\n# math, number theory\nclass Solution(object):\n    def countPairs(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def gcd(x, y):\n            while y:\n                x, y = y, x%y\n            return x\n    \n        idxs = collections.defaultdict(list)\n        for i, x in enumerate(nums):\n            idxs[x].append(i)\n        result = 0\n        for idx in idxs.itervalues():\n            gcds = collections.Counter()\n            for i in idx:\n                gcd_i = gcd(i, k)\n                result += sum(cnt for gcd_j, cnt in gcds.iteritems() if gcd_i*gcd_j%k == 0)\n                gcds[gcd_i] += 1\n        return result\n\n\n# Time:  O(nlogk + n * sqrt(k)^2) = O(n * k)\n# Space: O(n * sqrt(k)), number of factors of k is at most sqrt(k)\nimport collections\n\n\n# math, number theory\nclass Solution2(object):\n    def countPairs(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def gcd(x, y):\n            while y:\n                x, y = y, x%y\n            return x\n    \n        cnts = collections.defaultdict(collections.Counter)\n        for i, x in enumerate(nums):\n            cnts[x][gcd(i, k)] += 1\n        result = 0\n        for cnt in cnts.itervalues():\n            for x in cnt.iterkeys():\n                for y in cnt.iterkeys():\n                    if x > y or x*y%k:\n                        continue\n                    result += cnt[x]*cnt[y] if x != y else cnt[x]*(cnt[x]-1)//2\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(n)\nimport collections\n\n\n# brute force\nclass Solution3(object):\n    def countPairs(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        idxs = collections.defaultdict(list)\n        for i, x in enumerate(nums):\n            idxs[x].append(i)\n        return sum(idx[i]*idx[j]%k == 0 for idx in idxs.itervalues() for i in xrange(len(idx)) for j in xrange(i+1, len(idx)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

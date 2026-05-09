@@ -1,0 +1,42 @@
+{
+  "id": "ed7133d0-0734-4928-9df8-45fee26fd2f6",
+  "slug": "unique-3-digit-even-numbers",
+  "title": "Unique 3-Digit Even Numbers",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an array of digits called <code>digits</code>. Your task is to determine the number of <strong>distinct</strong> three-digit even numbers that can be formed using these digits.</p>\n\n<p><strong>Note</strong>: Each <em>copy</em> of a digit can only be used <strong>once per number</strong>, and there may <strong>not</strong> be leading zeros.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">digits = [1,2,3,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">12</span></p>\n\n<p><strong>Explanation:</strong> The 12 distinct 3-digit even numbers that can be formed are 124, 132, 134, 142, 214, 234, 312, 314, 324, 342, 412, and 432. Note that 222 cannot be formed because there is only 1 copy of the digit 2.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">digits = [0,2,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong> The only 3-digit even numbers that can be formed are 202 and 220. Note that the digit 2 can be used twice because it appears twice in the array.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">digits = [6,6,6]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong> Only 666 can be formed.</p>\n</div>\n\n<p><strong class=\"example\">Example 4:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">digits = [1,3,5]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong> No even 3-digit numbers can be formed.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= digits.length &lt;= 10</code></li>\n\t<li><code>0 &lt;= digits[i] &lt;= 9</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "recursion",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4]\n[0,2,2]\n[6,6,6]\n[1,3,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// freq table, combinatorics\nclass Solution {\npublic:\n    int totalNumbers(vector<int>& digits) {\n        vector<int> cnt(10);\n        for (const auto& x : digits) {\n            ++cnt[x];\n        }\n        int odd = 0, even = 0;\n        for (int i = 0; i < size(cnt); ++i) {\n            if (cnt[i] == 0) {\n                continue;\n            }\n            if (i % 2) {\n                ++odd;\n            } else {\n                ++even;\n            }\n        }\n\n        int result = 0;\n        // 3 same digits\n        for (int i = 2; i < size(cnt); i += 2) {\n            if (cnt[i] >= 3) {\n                ++result;  // eee\n            }\n        }\n        // 3 distinct digits\n        result += even * (odd + even - 1) * (odd + even - 2);  // xye\n        if (cnt[0]) {\n            result -= 1 * (even - 1) * (odd + even - 2);  // 0xe\n        }\n        // 2 same digits, 1 different digit\n        for (int i = 0; i < size(cnt); ++i) {\n            if (cnt[i] < 2) {\n                continue;\n            }\n            if (i == 0) {\n                result += (odd + even) - 1;  // x00\n            } else if (i % 2) {\n                result += even;  // ooe\n            } else {\n                result += 3 * (even - 1) - (cnt[0] != 0 ? 1 : 0);  // eeE, eEe, Eee excluding 0ee\n                result += 2 * odd;  // eoe, oee\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# freq table, combinatorics\nclass Solution(object):\n    def totalNumbers(self, digits):\n        \"\"\"\n        :type digits: List[int]\n        :rtype: int\n        \"\"\"\n        cnt = [0]*10\n        for x in digits:\n            cnt[x] += 1\n        even = sum(cnt[i] != 0 for i in xrange(0, len(cnt), 2))\n        odd = sum(cnt[i] != 0 for i in xrange(1, len(cnt), 2))\n        result = 0\n        # 3 same digits\n        for i in xrange(2, len(cnt), 2):\n            if cnt[i] >= 3:\n                result += 1  # eee\n        # 3 distinct digits\n        result += even*(odd+even-1)*(odd+even-2)  # xye\n        if cnt[0]:\n            result -= 1*(even-1)*(odd+even-2)  # 0xe\n        # 2 same digits, 1 different digit\n        for i in xrange(len(cnt)):\n            if cnt[i] < 2:\n                continue\n            if i == 0:\n                result += (odd+even)-1  # x00\n            elif i%2:\n                result += even  # ooe\n            else:\n                result += 3*(even-1)-int(cnt[0] != 0)  # eeE, eEe, Eee excluding 0ee\n                result += 2*odd  # eoe, oee\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "f5a0f13a-a9b1-4438-90ab-ae3702d39fc2",
+  "slug": "solve-the-equation",
+  "title": "Solve the Equation",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Solve a given equation and return the value of <code>&#39;x&#39;</code> in the form of a string <code>&quot;x=#value&quot;</code>. The equation contains only <code>&#39;+&#39;</code>, <code>&#39;-&#39;</code> operation, the variable <code>&#39;x&#39;</code> and its coefficient. You should return <code>&quot;No solution&quot;</code> if there is no solution for the equation, or <code>&quot;Infinite solutions&quot;</code> if there are infinite solutions for the equation.</p>\n\n<p>If there is exactly one solution for the equation, we ensure that the value of <code>&#39;x&#39;</code> is an integer.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> equation = &quot;x+5-3+x=6+x-2&quot;\n<strong>Output:</strong> &quot;x=2&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> equation = &quot;x=x&quot;\n<strong>Output:</strong> &quot;Infinite solutions&quot;\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> equation = &quot;2x=x&quot;\n<strong>Output:</strong> &quot;x=0&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= equation.length &lt;= 1000</code></li>\n\t<li><code>equation</code> has exactly one <code>&#39;=&#39;</code>.</li>\n\t<li><code>equation</code> consists of integers with an absolute value in the range <code>[0, 100]</code> without any leading zeros, and the variable <code>&#39;x&#39;</code>.</li>\n\t<li>The input is generated that if there is a single solution, it will be an integer.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    string solveEquation(string equation) {\n        auto a = 0, b = 0;\n        auto side = 1;\n        int submatches[] = { 1, 2, 3, 4 };\n        auto e = regex(\"(=)|([-+]?)(\\\\d*)(x?)\");\n        for (regex_token_iterator<string::iterator> it(equation.begin(), equation.end(), e, submatches), end;\n             it != end;) {\n            auto eq = (it++)->str();\n            auto sign = (it++)->str();\n            auto num = (it++)->str();\n            auto isx = (it++)->str();\n            if (!eq.empty()) {\n                side = -1;\n            } else if (!isx.empty()) {\n                a += side * stoi(sign + \"1\") * stoi(num.empty() ? \"1\" : num);\n            } else if (!num.empty()) {\n                b -= side * stoi(sign + num);\n            }\n        }\n        return a != 0 ? \"x=\" + to_string(b / a) : b != 0 ? \"No solution\" : \"Infinite solutions\";\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution2 {\npublic:\n    string solveEquation(string equation) {\n        equation = regex_replace(equation, regex(\"(^|[+=-])x\"), \"$011x\");\n\n        auto pos = equation.find('=');\n        auto l = coef(equation.substr(0, pos));\n        auto r = coef(equation.substr(pos + 1));\n\n        auto a = l.first - r.first;\n        auto b = r.second - l.second;\n\n        return a != 0 ? \"x=\" + to_string(b / a) : b != 0 ? \"No solution\" : \"Infinite solutions\";\n    }\n\nprivate:\n    pair<int, int> coef(string s) {\n        auto a = 0, b = 0;\n        auto e = regex(\"(^|[+-])\\\\d+x?\");\n        for (regex_token_iterator<string::iterator> it(s.begin(), s.end(), e), end;\n             it != end; ++it) {\n            (it->str().back() == 'x' ? a : b) += stoi(*it);\n        }\n        return {a, b};\n    } \n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport re\n\n\nclass Solution(object):\n    def solveEquation(self, equation):\n        \"\"\"\n        :type equation: str\n        :rtype: str\n        \"\"\"\n        a, b, side = 0, 0, 1\n        for eq, sign, num, isx in re.findall('(=)|([-+]?)(\\d*)(x?)', equation):\n            if eq:\n                side = -1\n            elif isx:\n                a += side * int(sign + '1') * int(num or 1)\n            elif num:\n                b -= side * int(sign + num)\n        return 'x=%d' % (b / a) if a else 'No solution' if b else 'Infinite solutions'",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

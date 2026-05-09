@@ -1,0 +1,39 @@
+{
+  "id": "93bb08eb-2ade-47ba-a975-aa0ffec4a195",
+  "slug": "insert-into-a-sorted-circular-linked-list",
+  "title": "Insert into a Sorted Circular Linked List",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,4,1]\n2\n[]\n1\n[1]\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n/*\n// Definition for a Node.\nclass Node {\npublic:\n    int val;\n    Node* next;\n\n    Node() {}\n\n    Node(int _val, Node* _next) {\n        val = _val;\n        next = _next;\n    }\n};\n*/\nclass Solution {\npublic:\n    Node* insert(Node* head, int insertVal) {\n        if (head == nullptr) {\n            auto node = new Node(insertVal, nullptr);\n            node->next = node;\n            return node;\n        }\n        auto curr = head;\n        while (true) {\n            if (curr->val < curr->next->val) {\n                if (curr->val <= insertVal &&\n                    insertVal <= curr->next->val) {\n                    insertAfter(curr, insertVal);\n                    break;\n                }\n            } else if (curr->val > curr->next->val) {\n                if (curr->val <= insertVal ||\n                    insertVal <= curr->next->val) {\n                    insertAfter(curr, insertVal);\n                    break;\n                }\n            } else {\n                if (curr->next == head) {\n                    insertAfter(curr, insertVal);\n                    break;\n                }\n            }\n            curr = curr->next;\n        }\n        return head; \n    }\n\nprivate:\n    void insertAfter(Node *node, int val) {\n        node->next = new Node(val, node->next);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Node(object):\n    def __init__(self, val, next):\n        self.val = val\n        self.next = next\n\n\nclass Solution(object):\n    def insert(self, head, insertVal):\n        \"\"\"\n        :type head: Node\n        :type insertVal: int\n        :rtype: Node\n        \"\"\"\n        def insertAfter(node, val):\n            node.next = Node(val, node.next)\n        \n        if not head:\n            node = Node(insertVal, None)\n            node.next = node\n            return node\n\n        curr = head\n        while True:\n            if curr.val < curr.next.val:\n                if curr.val <= insertVal and \\\n                   insertVal <= curr.next.val:\n                    insertAfter(curr, insertVal)\n                    break\n            elif curr.val > curr.next.val:\n                if curr.val <= insertVal or \\\n                   insertVal <= curr.next.val:\n                    insertAfter(curr, insertVal)\n                    break\n            else:\n                if curr.next == head:\n                    insertAfter(curr, insertVal)\n                    break\n            curr = curr.next\n        return head",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

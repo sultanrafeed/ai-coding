@@ -1,0 +1,42 @@
+{
+  "id": "a96aa7e7-cd1f-42dd-b360-8af6f0a40b20",
+  "slug": "match-substring-after-replacement",
+  "title": "Match Substring After Replacement",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two strings <code>s</code> and <code>sub</code>. You are also given a 2D character array <code>mappings</code> where <code>mappings[i] = [old<sub>i</sub>, new<sub>i</sub>]</code> indicates that you may perform the following operation <strong>any</strong> number of times:</p>\n\n<ul>\n\t<li><strong>Replace</strong> a character <code>old<sub>i</sub></code> of <code>sub</code> with <code>new<sub>i</sub></code>.</li>\n</ul>\n\n<p>Each character in <code>sub</code> <strong>cannot</strong> be replaced more than once.</p>\n\n<p>Return <code>true</code><em> if it is possible to make </em><code>sub</code><em> a substring of </em><code>s</code><em> by replacing zero or more characters according to </em><code>mappings</code>. Otherwise, return <code>false</code>.</p>\n\n<p>A <strong>substring</strong> is a contiguous non-empty sequence of characters within a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;fool3e7bar&quot;, sub = &quot;leet&quot;, mappings = [[&quot;e&quot;,&quot;3&quot;],[&quot;t&quot;,&quot;7&quot;],[&quot;t&quot;,&quot;8&quot;]]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Replace the first &#39;e&#39; in sub with &#39;3&#39; and &#39;t&#39; in sub with &#39;7&#39;.\nNow sub = &quot;l3e7&quot; is a substring of s, so we return true.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;fooleetbar&quot;, sub = &quot;f00l&quot;, mappings = [[&quot;o&quot;,&quot;0&quot;]]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> The string &quot;f00l&quot; is not a substring of s and no replacements can be made.\nNote that we cannot replace &#39;0&#39; with &#39;o&#39;.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;Fool33tbaR&quot;, sub = &quot;leetd&quot;, mappings = [[&quot;e&quot;,&quot;3&quot;],[&quot;t&quot;,&quot;7&quot;],[&quot;t&quot;,&quot;8&quot;],[&quot;d&quot;,&quot;b&quot;],[&quot;p&quot;,&quot;b&quot;]]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Replace the first and second &#39;e&#39; in sub with &#39;3&#39; and &#39;d&#39; in sub with &#39;b&#39;.\nNow sub = &quot;l33tb&quot; is a substring of s, so we return true.\n\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= sub.length &lt;= s.length &lt;= 5000</code></li>\n\t<li><code>0 &lt;= mappings.length &lt;= 1000</code></li>\n\t<li><code>mappings[i].length == 2</code></li>\n\t<li><code>old<sub>i</sub> != new<sub>i</sub></code></li>\n\t<li><code>s</code> and <code>sub</code> consist of uppercase and lowercase English letters and digits.</li>\n\t<li><code>old<sub>i</sub></code> and <code>new<sub>i</sub></code> are either uppercase or lowercase English letters or digits.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "string-matching"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"fool3e7bar\"\n\"leet\"\n[[\"e\",\"3\"],[\"t\",\"7\"],[\"t\",\"8\"]]\n\"fooleetbar\"\n\"f00l\"\n[[\"o\",\"0\"]]\n\"Fool33tbaR\"\n\"leetd\"\n[[\"e\",\"3\"],[\"t\",\"7\"],[\"t\",\"8\"],[\"d\",\"b\"],[\"p\",\"b\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k), n = len(s), k = len(sub)\n// Space: O(m), m = len(mappings)\n\n// brute force\nclass Solution {\npublic:\n    bool matchReplacement(string s, string sub, vector<vector<char>>& mappings) {\n        const auto& f = [](char c) {\n            return ::isdigit(c) ? c - '0' : (::islower(c) ? c - 'a' + 10 : c - 'A' + 36);\n        };\n        vector<vector<bool>> lookup(62, vector<bool>(62));\n        for (const auto& m : mappings) {\n            lookup[f(m[0])][f(m[1])] = true;\n        }\n        transform(begin(s), end(s), begin(s), f);\n        transform(begin(sub), end(sub), begin(sub), f);\n        const auto& check = [&](int i) {\n            for (int j = 0; j < size(sub); ++j) {\n                if (sub[j] != s[i + j] && (!lookup[sub[j]][s[i + j]])) {\n                    return false;\n                }\n            }\n            return true;\n        };\n        for (int i = 0; i < size(s) - size(sub) + 1; ++i) {\n            if (check(i)) {\n                return true;\n            }\n        }\n        return false;\n    }\n};\n\n// Time:  O(n * k), n = len(s), k = len(sub)\n// Space: O(m), m = len(mappings)\n// brute force\nclass Solution2 {\npublic:\n    bool matchReplacement(string s, string sub, vector<vector<char>>& mappings) {\n        unordered_map<char, unordered_set<char>> lookup;\n        for (const auto& m : mappings) {\n            lookup[m[0]].emplace(m[1]);\n        }\n        const auto& check = [&](int i) {\n            for (int j = 0; j < size(sub); ++j) {\n                if (sub[j] != s[i + j] && (!lookup.count(sub[j]) || !lookup[sub[j]].count(s[i + j]))) {\n                    return false;\n                }\n            }\n            return true;\n        };\n        for (int i = 0; i < size(s) - size(sub) + 1; ++i) {\n            if (check(i)) {\n                return true;\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k), n = len(s), k = len(sub)\n# Space: O(m), m = len(mappings)\n\nimport collections\n\n\n# brute force\nclass Solution(object):\n    def matchReplacement(self, s, sub, mappings):\n        \"\"\"\n        :type s: str\n        :type sub: str\n        :type mappings: List[List[str]]\n        :rtype: bool\n        \"\"\"\n        def transform(x):\n            return ord(x)-ord('0') if x.isdigit() else ord(x)-ord('a')+10 if x.islower() else ord(x)-ord('A')+36\n\n        def check(i):\n            return all(sub[j] == s[i+j] or lookup[sub[j]][s[i+j]] for j in xrange(len(sub)))\n            \n        lookup = [[0]*62 for _ in xrange(62)]\n        for a, b in mappings:\n            lookup[transform(a)][transform(b)] = 1\n        s = map(transform, s)\n        sub = map(transform, sub)\n        return any(check(i) for i in xrange(len(s)-len(sub)+1))\n\n\n# Time:  O(n * k), n = len(s), k = len(sub)\n# Space: O(m), m = len(mappings)\nimport collections\n\n\n# brute force\nclass Solution2(object):\n    def matchReplacement(self, s, sub, mappings):\n        \"\"\"\n        :type s: str\n        :type sub: str\n        :type mappings: List[List[str]]\n        :rtype: bool\n        \"\"\"\n        def check(i):\n            return all(sub[j] == s[i+j] or (sub[j], s[i+j]) in lookup for j in xrange(len(sub)))\n            \n        lookup = set()\n        for a, b in mappings:\n            lookup.add((a, b))\n        return any(check(i) for i in xrange(len(s)-len(sub)+1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

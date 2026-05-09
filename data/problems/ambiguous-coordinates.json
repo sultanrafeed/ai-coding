@@ -1,0 +1,35 @@
+{
+  "id": "e0091884-267f-47c1-8bf7-cf4485eb6f11",
+  "slug": "ambiguous-coordinates",
+  "title": "Ambiguous Coordinates",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>We had some 2-dimensional coordinates, like <code>&quot;(1, 3)&quot;</code> or <code>&quot;(2, 0.5)&quot;</code>. Then, we removed all commas, decimal points, and spaces and ended up with the string s.</p>\n\n<ul>\n\t<li>For example, <code>&quot;(1, 3)&quot;</code> becomes <code>s = &quot;(13)&quot;</code> and <code>&quot;(2, 0.5)&quot;</code> becomes <code>s = &quot;(205)&quot;</code>.</li>\n</ul>\n\n<p>Return <em>a list of strings representing all possibilities for what our original coordinates could have been</em>.</p>\n\n<p>Our original representation never had extraneous zeroes, so we never started with numbers like <code>&quot;00&quot;</code>, <code>&quot;0.0&quot;</code>, <code>&quot;0.00&quot;</code>, <code>&quot;1.0&quot;</code>, <code>&quot;001&quot;</code>, <code>&quot;00.01&quot;</code>, or any other number that can be represented with fewer digits. Also, a decimal point within a number never occurs without at least one digit occurring before it, so we never started with numbers like <code>&quot;.1&quot;</code>.</p>\n\n<p>The final answer list can be returned in any order. All coordinates in the final answer have exactly one space between them (occurring after the comma.)</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;(123)&quot;\n<strong>Output:</strong> [&quot;(1, 2.3)&quot;,&quot;(1, 23)&quot;,&quot;(1.2, 3)&quot;,&quot;(12, 3)&quot;]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;(0123)&quot;\n<strong>Output:</strong> [&quot;(0, 1.23)&quot;,&quot;(0, 12.3)&quot;,&quot;(0, 123)&quot;,&quot;(0.1, 2.3)&quot;,&quot;(0.1, 23)&quot;,&quot;(0.12, 3)&quot;]\n<strong>Explanation:</strong> 0.0, 00, 0001 or 00.01 are not allowed.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;(00011)&quot;\n<strong>Output:</strong> [&quot;(0, 0.011)&quot;,&quot;(0.001, 1)&quot;]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>4 &lt;= s.length &lt;= 12</code></li>\n\t<li><code>s[0] == &#39;(&#39;</code> and <code>s[s.length - 1] == &#39;)&#39;</code>.</li>\n\t<li>The rest of <code>s</code> are digits.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "backtracking",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^4)\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    vector<string> ambiguousCoordinates(string S) {\n        vector<string> result;\n        for (int i = 1; i < S.length() - 2; ++i) {\n            const auto& lefts = make(S, 1, i);\n            const auto& rights = make(S, i + 1, S.length() - 2 - i);\n            for (const auto& left : lefts) {\n                for (const auto& right : rights) {\n                    string s;\n                    s += \"(\";\n                    s += left;\n                    s += \", \";\n                    s += right;\n                    s += \")\";\n                    result.emplace_back(move(s));\n                }\n            }\n        }\n        return result;\n    }\n\nprivate:\n    // Time:  O(n^2)\n    // Space: O(n^2)\n    vector<string> make(const string& S, int i, int n) {\n        vector<string> result;\n        for (int d = 1; d <= n; ++d) {\n            const auto& left = S.substr(i, d);\n            const auto& right = S.substr(i + d, n - d);\n            if ((left.front() != '0' || left == \"0\") &&\n                 right.back() != '0') {\n                string s;\n                s += left;\n                s += (!right.empty() ? \".\" : \"\");\n                s += right;\n                result.emplace_back(move(s));\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^4)\n# Space: O(n)\n\nimport itertools\n\n\nclass Solution(object):\n    def ambiguousCoordinates(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: List[str]\n        \"\"\"\n        def make(S, i, n):\n            for d in xrange(1, n+1):\n                left = S[i:i+d]\n                right = S[i+d:i+n]\n                if ((not left.startswith('0') or left == '0')\n                        and (not right.endswith('0'))):\n                    yield \"\".join([left, '.' if right else '', right])\n\n        return [\"({}, {})\".format(*cand)\n                for i in xrange(1, len(S)-2)\n                for cand in itertools.product(make(S, 1, i),\n                                              make(S, i+1, len(S)-2-i))]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

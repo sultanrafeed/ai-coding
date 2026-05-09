@@ -1,0 +1,31 @@
+{
+  "id": "4ba8a30d-0b19-4055-8931-0d13f75a68b6",
+  "slug": "repeat-string",
+  "title": "Repeat String",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"hello\"\n2\n\"code\"\n3\n\"js\"\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n * t)\n// Space: O(n * t)\n\ndeclare global {\n    interface String {\n        replicate(times: number): string;\n    }\n}\n\n// string\nString.prototype.replicate = function(times: number) {\n    let result = \"\";\n    for (let curr = this; times !== 0; times >>= 1) {\n        if (times & 1) {\n            result += curr;\n        }\n        curr += curr;\n    }\n    return result;\n}\n\n// Time:  O(n * t)\n// Space: O(n * t)\n// string\nString.prototype.replicate = function(times: number) {\n    return new Array(times).fill(this).join('');\n}",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

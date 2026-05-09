@@ -1,0 +1,40 @@
+{
+  "id": "df21219c-57f1-4b39-bb7a-c2d3fc4e8f26",
+  "slug": "counting-elements",
+  "title": "Counting Elements",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3]\n[1,1,3,3,5,5,7,7]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int countElements(vector<int>& arr) {\n        unordered_set<int> lookup(cbegin(arr), cend(arr));\n        return count_if(cbegin(arr), cend(arr),\n                        [&lookup](const auto& x) {\n                            return lookup.count(x + 1);\n                        });\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int countElements(vector<int>& arr) {\n        sort(begin(arr), end(arr));\n        int result = 0, l = 1;\n        for (int i = 0; i + 1 < arr.size(); ++i) {\n            if (arr[i] == arr[i + 1]) {\n                ++l;\n                continue;\n            }\n            if (arr[i] + 1 == arr[i + 1]) {\n                result += l;\n            }\n            l = 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def countElements(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        lookup = set(arr)\n        return sum(1 for x in arr if x+1 in lookup)\n\n\n# Time:  O(nlogn)\n# Space: O(1)\nclass Solution(object):\n    def countElements(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        arr.sort()\n        result, l = 0, 1\n        for i in xrange(len(arr)-1):\n            if arr[i] == arr[i+1]:\n                l += 1\n                continue\n            if arr[i]+1 == arr[i+1]:\n                result += l\n            l = 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

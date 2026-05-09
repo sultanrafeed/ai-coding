@@ -1,0 +1,39 @@
+{
+  "id": "78ffceeb-9bb9-4d4c-8989-3b5e439afacf",
+  "slug": "elements-in-array-after-removing-and-replacing-elements",
+  "title": "Elements in Array After Removing and Replacing Elements",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[0,1,2]\n[[0,2],[2,0],[3,2],[5,0]]\n[2]\n[[0,0],[1,0],[2,0],[3,0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> elementInNums(vector<int>& nums, vector<vector<int>>& queries) {\n        vector<int> result;\n        for (const auto& q : queries) {\n            const int t = q[0] % (2 * size(nums)), i = q[1];\n            if (t + i < size(nums)) {\n                result.emplace_back(nums[t + i]);\n            } else if (i < t - static_cast<int>(size(nums))) {\n                result.emplace_back(nums[i]);\n            } else {\n                result.emplace_back(-1);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def elementInNums(self, nums, queries):\n        \"\"\"\n        :type nums: List[int]\n        :type queries: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        for t, i in queries:\n            t %= 2*len(nums)\n            if t+i < len(nums):\n                result.append(nums[t+i])\n            elif i < t-len(nums):\n                result.append(nums[i])\n            else:\n                result.append(-1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

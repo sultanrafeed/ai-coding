@@ -1,0 +1,39 @@
+{
+  "id": "9a560edf-f9fc-41db-8610-8aac92755a41",
+  "slug": "remove-interval",
+  "title": "Remove Interval",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,2],[3,4],[5,7]]\n[1,6]\n[[0,5]]\n[2,3]\n[[-5,-4],[-3,-2],[1,2],[3,5],[8,9]]\n[-1,4]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<vector<int>> removeInterval(vector<vector<int>>& intervals, vector<int>& toBeRemoved) {\n        vector<vector<int>> result;\n        for (const auto& interval : intervals) {\n            vector<pair<int, int>> tmp = {{interval[0], min(toBeRemoved[0], interval[1])},\n                                          {max(interval[0], toBeRemoved[1]), interval[1]}};\n            for (const auto& [x, y] : tmp) {\n                if (x < y) {\n                    result.push_back({x, y});\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def removeInterval(self, intervals, toBeRemoved):\n        \"\"\"\n        :type intervals: List[List[int]]\n        :type toBeRemoved: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        A, B = toBeRemoved\n        return [[x, y] for a, b in intervals\n                for x, y in ((a, min(A, b)), (max(a, B), b))\n                if x < y]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "d8afb06e-a770-4329-9ca6-b840fcadc719",
+  "slug": "equalize-strings-by-adding-or-removing-characters-at-ends",
+  "title": "Equalize Strings by Adding or Removing Characters at Ends",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "binary-search",
+    "dynamic-programming",
+    "sliding-window",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abcde\"\n\"cdef\"\n\"axxy\"\n\"yabx\"\n\"xyz\"\n\"xyz\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((n + m) * log(min(n, m)))\n// Space: O(min(n, m))\n\n// binary search, rolling hash\nclass Solution {\npublic:\n    int minOperations(string initial, string target) {\n        const auto& binary_search_right = [](auto left, auto right, const auto& check) {\n            while (left <= right) {\n                const auto mid = left + (right - left) / 2;\n                if (!check(mid)) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            }\n            return right;\n        };\n\n        const auto& rolling_hash = [](const auto& s, int l, auto& lookup, bool check) {\n            static const int MOD = 1e9 + 7, P = 113;\n    \n            int64_t h = 0, pw = 1;\n            for (int i = 0; i < size(s); ++i) {\n                h = (h * P + (s[i] - 'a')) % MOD;\n                if (i < l - 1) {\n                    pw = (pw * P) % MOD;\n                    continue;\n                }\n                if (!check) {\n                    lookup.emplace(h);\n                } else if (lookup.count(h)) {\n                    return true;\n                }\n                h = ((h - (s[i - (l - 1)] - 'a') * pw % MOD) + MOD) % MOD;\n            }\n            return false;\n        };\n\n        const auto& check = [&](int l) {\n            unordered_set<int> lookup;\n            rolling_hash(target, l, lookup, false);\n            return rolling_hash(initial, l, lookup, true);\n        };\n\n        if (size(initial) < size(target)) {\n            swap(initial, target);\n        }\n        return size(initial) + size(target) - 2 * binary_search_right(1, min(size(initial), size(target)), check);\n    }\n};\n\n// Time:  O(n * m)\n// Space: O(1)\n// dp\nclass Solution2 {\npublic:\n    int minOperations(string initial, string target) {\n        int result = 0;\n        for (int k = 0; k < 2; ++k) {\n            for (int i = k; i < size(initial); ++i) {\n                int curr = 0;\n                for (int j = 0; j < min(size(initial) - i, size(target)); ++j) {\n                    curr = initial[i + j] == target[j] ? curr + 1 : 0;\n                    result = max(result, curr);\n                }\n            }\n            swap(initial, target);\n        }\n        return size(initial) + size(target) - 2 * result;\n    }\n};\n\n// Time:  O(n * m)\n// Space: O(min(n, m))\n// dp\nclass Solution3 {\npublic:\n    int minOperations(string initial, string target) {\n        if (size(initial) < size(target)) {\n            swap(initial, target);\n        }\n        int result = 0;\n        vector<int> dp(size(target) + 1);\n        for (int i = 0; i < size(initial); ++i) {\n            for (int j = size(target) - 1; j >= 0; --j) {\n                dp[j + 1] = initial[i] == target[j] ? dp[j] + 1 : 0;\n            }\n            result = max(result, ranges::max(dp));\n        }\n        return size(initial) + size(target) - 2 * result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((n + m) * log(min(n, m)))\n# Space: O(min(n, m))\n\n# binary search, rolling hash\nclass Solution(object):\n    def minOperations(self, initial, target):\n        \"\"\"\n        :type initial: str\n        :type target: str\n        :rtype: int\n        \"\"\"\n        def binary_search_right(left, right, check):\n            while left <= right:\n                mid = left+(right-left)//2\n                if not check( mid):\n                    right = mid-1\n                else:\n                    left = mid+1\n            return right\n        \n        def rolling_hash(s, l, lookup, check):\n            MOD, P = 10**9+7, 113\n            h = 0\n            pw = pow(P, l-1, MOD)\n            for i in xrange(len(s)):\n                h = (h*P+(ord(s[i])-ord('a')))%MOD\n                if i < l-1:\n                    continue\n                if not check:\n                    lookup.add(h)\n                elif h in lookup:\n                    return True\n                h = (h-(ord(s[i-(l-1)])-ord('a'))*pw)%MOD\n            return False\n                    \n        def check(l):\n            lookup = set()\n            rolling_hash(target, l, lookup, False)\n            return rolling_hash(initial, l, lookup, True)\n\n        if len(initial) < len(target):\n            initial, target = target, initial\n        return len(initial)+len(target)-2*binary_search_right(1, min(len(initial), min(target)), check)\n\n\n# Time:  O(n * m)\n# Space: O(1)\n# dp\nclass Solution2(object):\n    def minOperations(self, initial, target):\n        \"\"\"\n        :type initial: str\n        :type target: str\n        :rtype: int\n        \"\"\"\n        result = 0\n        for k in xrange(2):\n            for i in xrange(k, len(initial)):\n                curr = 0\n                for j in xrange(min(len(initial)-i, len(target))):\n                    curr = curr+1 if initial[i+j] == target[j] else 0\n                    result = max(result, curr)\n            initial, target = target, initial\n        return len(initial)+len(target)-2*result\n\n\n# Time:  O(n * m)\n# Space: O(min(n, m))\n# dp\nclass Solution3(object):\n    def minOperations(self, initial, target):\n        \"\"\"\n        :type initial: str\n        :type target: str\n        :rtype: int\n        \"\"\"\n        if len(initial) < len(target):\n            initial, target = target, initial\n        result = 0\n        dp = [0]*(len(target)+1)\n        for i in xrange(len(initial)):\n            for j in reversed(xrange(len(target))):\n                dp[j+1] = dp[j]+1 if initial[i] == target[j] else 0\n            result = max(result, max(dp))\n        return len(initial)+len(target)-2*result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

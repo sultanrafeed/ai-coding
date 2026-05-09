@@ -1,0 +1,35 @@
+{
+  "id": "967e8f86-7b9c-41d1-8c10-30da8f14de12",
+  "slug": "number-of-digit-one",
+  "title": "Number of Digit One",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, count <em>the total number of digit </em><code>1</code><em> appearing in all non-negative integers less than or equal to</em> <code>n</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 13\n<strong>Output:</strong> 6\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 0\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= n &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn) = O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countDigitOne(int n) {\n        static const int DIGIT = 1;\n\n        int is_zero = (DIGIT == 0) ? 1 : 0;\n        int result = is_zero;\n        for (int64_t base = 1; n >= base; base *= 10) {\n            result += (n / (10 * base) - is_zero) * base +\n                      min(base, max(n % (10 * base) - DIGIT * base + 1, 0l));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def countDigitOne(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        DIGIT = 1\n        is_zero = int(DIGIT == 0)\n        result = is_zero\n        base = 1\n        while n >= base:\n            result += (n//(10*base)-is_zero)*base + \\\n                      min(base, max(n%(10*base) - DIGIT*base + 1, 0))\n            base *= 10\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

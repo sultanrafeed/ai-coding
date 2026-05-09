@@ -1,0 +1,42 @@
+{
+  "id": "cf761bf5-0906-4b80-99c2-b08c65823178",
+  "slug": "minimum-operations-to-make-the-array-alternating",
+  "title": "Minimum Operations to Make the Array Alternating",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> array <code>nums</code> consisting of <code>n</code> positive integers.</p>\n\n<p>The array <code>nums</code> is called <strong>alternating</strong> if:</p>\n\n<ul>\n\t<li><code>nums[i - 2] == nums[i]</code>, where <code>2 &lt;= i &lt;= n - 1</code>.</li>\n\t<li><code>nums[i - 1] != nums[i]</code>, where <code>1 &lt;= i &lt;= n - 1</code>.</li>\n</ul>\n\n<p>In one <strong>operation</strong>, you can choose an index <code>i</code> and <strong>change</strong> <code>nums[i]</code> into <strong>any</strong> positive integer.</p>\n\n<p>Return <em>the <strong>minimum number of operations</strong> required to make the array alternating</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,1,3,2,4,3]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong>\nOne way to make the array alternating is by converting it to [3,1,3,<u><strong>1</strong></u>,<u><strong>3</strong></u>,<u><strong>1</strong></u>].\nThe number of operations required in this case is 3.\nIt can be proven that it is not possible to make the array alternating in less than 3 operations. \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,2,2,2]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong>\nOne way to make the array alternating is by converting it to [1,2,<u><strong>1</strong></u>,2,<u><strong>1</strong></u>].\nThe number of operations required in this case is 2.\nNote that the array cannot be converted to [<u><strong>2</strong></u>,2,2,2,2] because in this case nums[0] == nums[1] which violates the conditions of an alternating array.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,1,3,2,4,3]\n[1,2,2,2,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table\nclass Solution {\npublic:\n    int minimumOperations(vector<int>& nums) {\n        const auto& find_top1_and_top2 = [](const auto& cnt) {\n            int top1 = -1, top2 = -1;\n            for (const auto& [k, v] : cnt) {\n                if (top1 == -1 || v >= cnt.at(top1)) {\n                    top2 = top1;\n                    top1 = k;\n                } else if (top2 == -1 || v > cnt.at(top2)) {\n                    top2 = k;\n                }\n            }\n            return make_pair(top1, top2);\n        };\n\n        unordered_map<int, int> even;\n        for (int i = 0; i < size(nums); i += 2) {\n            ++even[nums[i]];\n        }\n        unordered_map<int, int> odd;\n        for (int i = 1; i < size(nums); i += 2) {\n            ++odd[nums[i]];\n        }\n        const auto& [even_top1, even_top2] = find_top1_and_top2(even);\n        const auto& [odd_top1, odd_top2] = find_top1_and_top2(odd);\n        if (even_top1 != odd_top1) {\n            return size(nums) - even[even_top1] - (odd_top1 != -1 ? odd[odd_top1] : 0);\n        }\n        return min(size(nums) - even[even_top1] - (odd_top2 != -1 ? odd[odd_top2] : 0),\n                   size(nums) - odd[odd_top1] - (even_top2 != -1 ? even[even_top2] : 0));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def minimumOperations(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        even_top = collections.Counter(nums[i] for i in xrange(0, len(nums), 2)).most_common(2)  # Time: O(nlogk)\n        odd_top = collections.Counter(nums[i] for i in xrange(1, len(nums), 2)).most_common(2)  # Time: O(nlogk)\n        if not odd_top or even_top[0][0] != odd_top[0][0]:\n            return len(nums)-even_top[0][1]-(odd_top[0][1] if odd_top else 0)\n        return min(len(nums)-even_top[0][1]-(odd_top[1][1] if len(odd_top) == 2 else 0),\n                   len(nums)-odd_top[0][1]-(even_top[1][1] if len(even_top) == 2 else 0))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

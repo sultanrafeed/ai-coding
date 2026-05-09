@@ -1,0 +1,39 @@
+{
+  "id": "bac16d18-0ccb-43bc-9599-70f16df60eb9",
+  "slug": "delivering-boxes-from-storage-to-ports",
+  "title": "Delivering Boxes from Storage to Ports",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You have the task of delivering some boxes from storage to their ports using only one ship. However, this ship has a <strong>limit</strong> on the <strong>number of boxes</strong> and the <strong>total weight</strong> that it can carry.</p>\n\n<p>You are given an array <code>boxes</code>, where <code>boxes[i] = [ports<sub>​​i</sub>​, weight<sub>i</sub>]</code>, and three integers <code>portsCount</code>, <code>maxBoxes</code>, and <code>maxWeight</code>.</p>\n\n<ul>\n\t<li><code>ports<sub>​​i</sub></code> is the port where you need to deliver the <code>i<sup>th</sup></code> box and <code>weights<sub>i</sub></code> is the weight of the <code>i<sup>th</sup></code> box.</li>\n\t<li><code>portsCount</code> is the number of ports.</li>\n\t<li><code>maxBoxes</code> and <code>maxWeight</code> are the respective box and weight limits of the ship.</li>\n</ul>\n\n<p>The boxes need to be delivered <strong>in the order they are given</strong>. The ship will follow these steps:</p>\n\n<ul>\n\t<li>The ship will take some number of boxes from the <code>boxes</code> queue, not violating the <code>maxBoxes</code> and <code>maxWeight</code> constraints.</li>\n\t<li>For each loaded box <strong>in order</strong>, the ship will make a <strong>trip</strong> to the port the box needs to be delivered to and deliver it. If the ship is already at the correct port, no <strong>trip</strong> is needed, and the box can immediately be delivered.</li>\n\t<li>The ship then makes a return <strong>trip</strong> to storage to take more boxes from the queue.</li>\n</ul>\n\n<p>The ship must end at storage after all the boxes have been delivered.</p>\n\n<p>Return <em>the <strong>minimum</strong> number of <strong>trips</strong> the ship needs to make to deliver all boxes to their respective ports.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> boxes = [[1,1],[2,1],[1,1]], portsCount = 2, maxBoxes = 3, maxWeight = 3\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The optimal strategy is as follows: \n- The ship takes all the boxes in the queue, goes to port 1, then port 2, then port 1 again, then returns to storage. 4 trips.\nSo the total number of trips is 4.\nNote that the first and third boxes cannot be delivered together because the boxes need to be delivered in order (i.e. the second box needs to be delivered at port 2 before the third box).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> boxes = [[1,2],[3,3],[3,1],[3,1],[2,4]], portsCount = 3, maxBoxes = 3, maxWeight = 6\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The optimal strategy is as follows: \n- The ship takes the first box, goes to port 1, then returns to storage. 2 trips.\n- The ship takes the second, third and fourth boxes, goes to port 3, then returns to storage. 2 trips.\n- The ship takes the fifth box, goes to port 2, then returns to storage. 2 trips.\nSo the total number of trips is 2 + 2 + 2 = 6.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> boxes = [[1,4],[1,2],[2,1],[2,1],[3,2],[3,4]], portsCount = 3, maxBoxes = 6, maxWeight = 7\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The optimal strategy is as follows:\n- The ship takes the first and second boxes, goes to port 1, then returns to storage. 2 trips.\n- The ship takes the third and fourth boxes, goes to port 2, then returns to storage. 2 trips.\n- The ship takes the fifth and sixth boxes, goes to port 3, then returns to storage. 2 trips.\nSo the total number of trips is 2 + 2 + 2 = 6.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= boxes.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= portsCount, maxBoxes, maxWeight &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= ports<sub>​​i</sub> &lt;= portsCount</code></li>\n\t<li><code>1 &lt;= weights<sub>i</sub> &lt;= maxWeight</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "segment-tree",
+    "queue",
+    "heap-priority-queue",
+    "prefix-sum",
+    "monotonic-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int boxDelivering(vector<vector<int>>& boxes, int portsCount, int maxBoxes, int maxWeight) {\n        vector<int> dp(size(boxes) + 1);\n        int left = 0, cost = 1, curr = 0;\n        for (int right = 0; right < size(boxes); ++right) {\n            if (right == 0 || boxes[right][0] != boxes[right - 1][0]) {\n                ++cost;\n            }\n            curr += boxes[right][1];\n            while (right - left + 1 > maxBoxes ||\n                   curr > maxWeight ||\n                   (left + 1 < right + 1 && dp[left + 1] == dp[left])) {  // greedily drop box to make cost as smaller as possible\n                curr -= boxes[left][1];\n                if (boxes[left + 1][0] != boxes[left][0]) {\n                    --cost;\n                }\n                ++left;\n            }\n            dp[right + 1] = dp[(left - 1) + 1] + cost;\n        }\n        return dp[size(boxes)];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def boxDelivering(self, boxes, portsCount, maxBoxes, maxWeight):\n        \"\"\"\n        :type boxes: List[List[int]]\n        :type portsCount: int\n        :type maxBoxes: int\n        :type maxWeight: int\n        :rtype: int\n        \"\"\"\n        dp = [0]*(len(boxes)+1)\n        left, cost, curr = 0, 1, 0\n        for right in xrange(len(boxes)):\n            if right == 0 or boxes[right][0] != boxes[right-1][0]:\n                cost += 1\n            curr += boxes[right][1]\n            while right-left+1 > maxBoxes or \\\n                  curr > maxWeight or \\\n                  (left+1 < right+1 and dp[left+1] == dp[left]):  # greedily drop box to make cost as smaller as possible\n                curr -= boxes[left][1]\n                if boxes[left+1][0] != boxes[left][0]:\n                    cost -= 1\n                left += 1\n            dp[right+1] = dp[(left-1)+1] + cost\n        return dp[len(boxes)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

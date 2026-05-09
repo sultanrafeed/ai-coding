@@ -1,0 +1,35 @@
+{
+  "id": "623cdea8-69b9-4ebd-8253-0ec2467005e4",
+  "slug": "sentence-similarity-iii",
+  "title": "Sentence Similarity III",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two strings <code>sentence1</code> and <code>sentence2</code>, each representing a <strong>sentence</strong> composed of words. A sentence is a list of <strong>words</strong> that are separated by a <strong>single</strong> space with no leading or trailing spaces. Each word consists of only uppercase and lowercase English characters.</p>\n\n<p>Two sentences <code>s1</code> and <code>s2</code> are considered <strong>similar</strong> if it is possible to insert an arbitrary sentence (<em>possibly empty</em>) inside one of these sentences such that the two sentences become equal. <strong>Note</strong> that the inserted sentence must be separated from existing words by spaces.</p>\n\n<p>For example,</p>\n\n<ul>\n\t<li><code>s1 = &quot;Hello Jane&quot;</code> and <code>s2 = &quot;Hello my name is Jane&quot;</code> can be made equal by inserting <code>&quot;my name is&quot;</code> between <code>&quot;Hello&quot;</code><font face=\"monospace\"> </font>and <code>&quot;Jane&quot;</code><font face=\"monospace\"> in s1.</font></li>\n\t<li><font face=\"monospace\"><code>s1 = &quot;Frog cool&quot;</code> </font>and<font face=\"monospace\"> <code>s2 = &quot;Frogs are cool&quot;</code> </font>are <strong>not</strong> similar, since although there is a sentence <code>&quot;s are&quot;</code> inserted into <code>s1</code>, it is not separated from <code>&quot;Frog&quot;</code> by a space.</li>\n</ul>\n\n<p>Given two sentences <code>sentence1</code> and <code>sentence2</code>, return <strong>true</strong> if <code>sentence1</code> and <code>sentence2</code> are <strong>similar</strong>. Otherwise, return <strong>false</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">sentence1 = &quot;My name is Haley&quot;, sentence2 = &quot;My Haley&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><code>sentence2</code> can be turned to <code>sentence1</code> by inserting &quot;name is&quot; between &quot;My&quot; and &quot;Haley&quot;.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">sentence1 = &quot;of&quot;, sentence2 = &quot;A lot of words&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>No single sentence can be inserted inside one of the sentences to make it equal to the other.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">sentence1 = &quot;Eating right now&quot;, sentence2 = &quot;Eating&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><code>sentence2</code> can be turned to <code>sentence1</code> by inserting &quot;right now&quot; at the end of the sentence.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= sentence1.length, sentence2.length &lt;= 100</code></li>\n\t<li><code>sentence1</code> and <code>sentence2</code> consist of lowercase and uppercase English letters and spaces.</li>\n\t<li>The words in <code>sentence1</code> and <code>sentence2</code> are separated by a single space.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool areSentencesSimilar(string sentence1, string sentence2) {\n        if (size(sentence1) > size(sentence2)) {\n            swap(sentence1, sentence2);\n        }\n        int count = 0;\n        for (int step = 0; step < 2; ++step) {\n            for (int i = 0; i <= size(sentence1); ++i) {\n                char c1 = i != size(sentence1) ? sentence1[step == 0 ? i : size(sentence1) - 1 - i] : ' ';\n                char c2 = i != size(sentence2) ? sentence2[step == 0 ? i : size(sentence2) - 1 - i] : ' ';\n                if (c1 != c2) {\n                    break;\n                }\n                if (c1 == ' ') {\n                    ++count;\n                }\n            }\n        }\n        return count >= count_if(cbegin(sentence1), cend(sentence1),\n                                 [](char x) { return x == ' '; }) + 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def areSentencesSimilar(self, sentence1, sentence2):\n        \"\"\"\n        :type sentence1: str\n        :type sentence2: str\n        :rtype: bool\n        \"\"\"\n        if len(sentence1) > len(sentence2):\n            sentence1, sentence2 = sentence2, sentence1\n        count = 0\n        for idx in (lambda x:x, lambda x:-1-x):\n            for i in xrange(len(sentence1)+1):\n                c1 = sentence1[idx(i)] if i != len(sentence1) else ' '\n                c2 = sentence2[idx(i)] if i != len(sentence2) else ' '\n                if c1 != c2:\n                    break\n                if c1 == ' ':\n                    count += 1\n        return count >= sentence1.count(' ')+1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

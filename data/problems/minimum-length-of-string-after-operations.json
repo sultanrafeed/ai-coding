@@ -1,0 +1,35 @@
+{
+  "id": "f6799e71-f4fc-454e-b03c-c7c508132849",
+  "slug": "minimum-length-of-string-after-operations",
+  "title": "Minimum Length of String After Operations",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a string <code>s</code>.</p>\n\n<p>You can perform the following process on <code>s</code> <strong>any</strong> number of times:</p>\n\n<ul>\n\t<li>Choose an index <code>i</code> in the string such that there is <strong>at least</strong> one character to the left of index <code>i</code> that is equal to <code>s[i]</code>, and <strong>at least</strong> one character to the right that is also equal to <code>s[i]</code>.</li>\n\t<li>Delete the <strong>closest</strong> occurrence of <code>s[i]</code> located to the <strong>left</strong> of <code>i</code>.</li>\n\t<li>Delete the <strong>closest</strong> occurrence of <code>s[i]</code> located to the <strong>right</strong> of <code>i</code>.</li>\n</ul>\n\n<p>Return the <strong>minimum</strong> length of the final string <code>s</code> that you can achieve.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abaacbcbb&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong><br />\nWe do the following operations:</p>\n\n<ul>\n\t<li>Choose index 2, then remove the characters at indices 0 and 3. The resulting string is <code>s = &quot;bacbcbb&quot;</code>.</li>\n\t<li>Choose index 3, then remove the characters at indices 0 and 5. The resulting string is <code>s = &quot;acbcb&quot;</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;aa&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong><br />\nWe cannot perform any operations, so we return the length of the original string.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 2 * 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists only of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// freq table\nclass Solution {\npublic:\n    int minimumLength(string s) {\n        vector<int> cnt(26);\n        for (const auto& x : s) {\n            ++cnt[x - 'a'];\n        }\n        return accumulate(cbegin(cnt), cend(cnt), 0, [](const auto& accu, const auto& x) {\n            return accu + (x ? 2 - x % 2 : 0);\n        });\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# freq table\nclass Solution(object):\n    def minimumLength(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        cnt = [0]*26\n        for x in s:\n            cnt[ord(x)-ord('a')] += 1\n        return sum(2-x%2 for x in cnt if x)\n\n\n# Time:  O(n)\n# Space: O(26)\nimport collections\n\n\n# freq table\nclass Solution2(object):\n    def minimumLength(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        return sum(2-x%2 for x in collections.Counter(s).itervalues())",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

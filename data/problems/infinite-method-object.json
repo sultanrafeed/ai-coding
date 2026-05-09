@@ -1,0 +1,31 @@
+{
+  "id": "8676f183-b85e-4703-af2c-ec867c1dd720",
+  "slug": "infinite-method-object",
+  "title": "Infinite Method Object",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abc123\"\n\".-qw73n|^2It\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// proxy\nfunction createInfiniteObject(): Record<string, () => string> {\n    return new Proxy({}, {\n        get(_, prop) {\n            return () => prop;\n        }\n    });\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

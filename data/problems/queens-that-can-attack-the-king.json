@@ -1,0 +1,41 @@
+{
+  "id": "724ba429-2ba1-401e-91a1-2fbf0b795293",
+  "slug": "queens-that-can-attack-the-king",
+  "title": "Queens That Can Attack the King",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>On a <strong>0-indexed</strong> <code>8 x 8</code> chessboard, there can be multiple black queens and one white king.</p>\n\n<p>You are given a 2D integer array <code>queens</code> where <code>queens[i] = [xQueen<sub>i</sub>, yQueen<sub>i</sub>]</code> represents the position of the <code>i<sup>th</sup></code> black queen on the chessboard. You are also given an integer array <code>king</code> of length <code>2</code> where <code>king = [xKing, yKing]</code> represents the position of the white king.</p>\n\n<p>Return <em>the coordinates of the black queens that can directly attack the king</em>. You may return the answer in <strong>any order</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/12/21/chess1.jpg\" style=\"width: 400px; height: 400px;\" />\n<pre>\n<strong>Input:</strong> queens = [[0,1],[1,0],[4,0],[0,4],[3,3],[2,4]], king = [0,0]\n<strong>Output:</strong> [[0,1],[1,0],[3,3]]\n<strong>Explanation:</strong> The diagram above shows the three queens that can directly attack the king and the three queens that cannot attack the king (i.e., marked with red dashes).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/12/21/chess2.jpg\" style=\"width: 400px; height: 400px;\" />\n<pre>\n<strong>Input:</strong> queens = [[0,0],[1,1],[2,2],[3,4],[3,5],[4,4],[4,5]], king = [3,3]\n<strong>Output:</strong> [[2,2],[3,4],[4,4]]\n<strong>Explanation:</strong> The diagram above shows the three queens that can directly attack the king and the three queens that cannot attack the king (i.e., marked with red dashes).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= queens.length &lt; 64</code></li>\n\t<li><code>queens[i].length == king.length == 2</code></li>\n\t<li><code>0 &lt;= xQueen<sub>i</sub>, yQueen<sub>i</sub>, xKing, yKing &lt; 8</code></li>\n\t<li>All the given positions are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,1],[1,0],[4,0],[0,4],[3,3],[2,4]]\n[0,0]\n[[0,0],[1,1],[2,2],[3,4],[3,5],[4,4],[4,5]]\n[3,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\nprivate:\n    template <typename T>\n    struct PairHash {\n        size_t operator()(const pair<T, T>& p) const {\n            size_t seed = 0;\n            seed ^= std::hash<T>{}(p.first)  + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            seed ^= std::hash<T>{}(p.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            return seed;\n        }\n    };\n\npublic:\n    vector<vector<int>> queensAttacktheKing(vector<vector<int>>& queens, vector<int>& king) {\n        static const vector<pair<int, int>> directions =\n          {{-1, 0}, {0, 1}, {1, 0}, {0, -1},\n           {-1, 1}, {1, 1}, {1, -1}, {-1, -1}};\n        vector<vector<int>> result;\n        unordered_set<pair<int, int>, PairHash<int>> lookup;\n        for (const auto& queen : queens) {\n            lookup.emplace(queen[0], queen[1]);\n        }\n        for (const auto& [dx, dy] : directions) {\n            for (int i = 1; i <= 7; ++i) {\n                int x = king[0] + dx * i;\n                int y = king[1] + dy * i;\n                if (lookup.count(make_pair(x, y))) {\n                    result.push_back({x, y});\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def queensAttacktheKing(self, queens, king):\n        \"\"\"\n        :type queens: List[List[int]]\n        :type king: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        dirctions = [(-1, 0), (0, 1), (1, 0), (0, -1),\n                     (-1, 1), (1, 1), (1, -1), (-1, -1)]\n        result = []\n        lookup = {(i, j) for i, j in queens}\n        for dx, dy in dirctions:\n            for i in xrange(1, 8):\n                x, y = king[0] + dx*i, king[1] + dy*i\n                if (x, y) in lookup:\n                    result.append([x, y])\n                    break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

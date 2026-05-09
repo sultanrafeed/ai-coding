@@ -1,0 +1,41 @@
+{
+  "id": "726a3bb2-da24-4b43-af4e-f5943c7b343f",
+  "slug": "lonely-pixel-ii",
+  "title": "Lonely Pixel II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[\"W\",\"B\",\"W\",\"B\",\"B\",\"W\"],[\"W\",\"B\",\"W\",\"B\",\"B\",\"W\"],[\"W\",\"B\",\"W\",\"B\",\"B\",\"W\"],[\"W\",\"W\",\"B\",\"W\",\"B\",\"W\"]]\n3\n[[\"W\",\"W\",\"B\"],[\"W\",\"W\",\"B\"],[\"W\",\"W\",\"B\"]]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    int findBlackPixel(vector<vector<char>>& picture, int N) {\n        vector<int> rows = vector<int>(picture.size());\n        vector<int> cols = vector<int>(picture[0].size());\n\n        unordered_map<string, int> lookup;\n        vector<string> srows;\n        for (int i = 0; i < picture.size(); ++i) {\n            string s;\n            for (int j = 0; j < picture[0].size(); ++j) {\n                if (picture[i][j] == 'B') {\n                    ++rows[i];\n                    ++cols[j];\n                }\n                s.push_back(picture[i][j]);\n            }\n            ++lookup[s];\n            srows.emplace_back(move(s));\n        }\n\n        int result = 0;\n        for (int i = 0; i < picture.size(); ++i) {\n            if (rows[i] == N && lookup[srows[i]] == N) {\n                for (int j = 0; j < picture[0].size(); ++j) {\n                     result += picture[i][j] == 'B' && cols[j] == N;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\nimport collections\n\n\nclass Solution(object):\n    def findBlackPixel(self, picture, N):\n        \"\"\"\n        :type picture: List[List[str]]\n        :type N: int\n        :rtype: int\n        \"\"\"\n        rows, cols = [0] * len(picture),  [0] * len(picture[0])\n        lookup = collections.defaultdict(int)\n        for i in xrange(len(picture)):\n            for j in xrange(len(picture[0])):\n                if picture[i][j] == 'B':\n                    rows[i] += 1\n                    cols[j] += 1\n            lookup[tuple(picture[i])] += 1\n\n        result = 0\n        for i in xrange(len(picture)):\n            if rows[i] == N and lookup[tuple(picture[i])] == N:\n                for j in xrange(len(picture[0])):\n                     result += picture[i][j] == 'B' and cols[j] == N\n        return result\n\n\nclass Solution2(object):\n    def findBlackPixel(self, picture, N):\n        \"\"\"\n        :type picture: List[List[str]]\n        :type N: int\n        :rtype: int\n        \"\"\"\n        lookup = collections.Counter(map(tuple, picture))\n        cols = [col.count('B') for col in zip(*picture)]\n        return sum(N * zip(row, cols).count(('B', N)) \\\n                   for row, cnt in lookup.iteritems() \\\n                   if cnt == N == row.count('B'))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

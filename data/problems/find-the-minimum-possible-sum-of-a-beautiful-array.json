@@ -1,0 +1,34 @@
+{
+  "id": "1148757a-b799-4165-9ba3-b6fccd442b57",
+  "slug": "find-the-minimum-possible-sum-of-a-beautiful-array",
+  "title": "Find the Minimum Possible Sum of a Beautiful Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given positive integers <code>n</code> and <code>target</code>.</p>\n\n<p>An array <code>nums</code> is <strong>beautiful</strong> if it meets the following conditions:</p>\n\n<ul>\n\t<li><code>nums.length == n</code>.</li>\n\t<li><code>nums</code> consists of pairwise <strong>distinct</strong> <strong>positive</strong> integers.</li>\n\t<li>There doesn&#39;t exist two <strong>distinct</strong> indices, <code>i</code> and <code>j</code>, in the range <code>[0, n - 1]</code>, such that <code>nums[i] + nums[j] == target</code>.</li>\n</ul>\n\n<p>Return <em>the <strong>minimum</strong> possible sum that a beautiful array could have modulo </em><code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2, target = 3\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> We can see that nums = [1,3] is beautiful.\n- The array nums has length n = 2.\n- The array nums consists of pairwise distinct positive integers.\n- There doesn&#39;t exist two distinct indices, i and j, with nums[i] + nums[j] == 3.\nIt can be proven that 4 is the minimum possible sum that a beautiful array could have.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 3, target = 3\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> We can see that nums = [1,3,4] is beautiful.\n- The array nums has length n = 3.\n- The array nums consists of pairwise distinct positive integers.\n- There doesn&#39;t exist two distinct indices, i and j, with nums[i] + nums[j] == 3.\nIt can be proven that 8 is the minimum possible sum that a beautiful array could have.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 1, target = 1\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> We can see, that nums = [1] is beautiful.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= target &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// constructive algorithms, math\nclass Solution {\npublic:\n    long long minimumPossibleSum(int n, int target) {\n        const auto& arithmetic_progression_sum  = [](const int64_t a, const int64_t d, const int64_t n) {\n            return (a + (a + (n - 1) * d)) * n / 2;\n        };\n\n        const auto a = min(target / 2, n), b = n - a;\n        return arithmetic_progression_sum(1, 1, a) + arithmetic_progression_sum(target, 1, b);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "class Solution(object):\n    def minimumPossibleSum(self, n, target):\n        \"\"\"\n        :type n: int\n        :type target: int\n        :rtype: int\n        \"\"\"\n        def arithmetic_progression_sum(a, d, n):\n            return (a+(a+(n-1)*d))*n//2\n    \n        a = min(target//2, n)\n        b = n-a\n        return arithmetic_progression_sum(1, 1, a)+arithmetic_progression_sum(target, 1, b)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

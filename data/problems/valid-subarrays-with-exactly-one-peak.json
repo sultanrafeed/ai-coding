@@ -1,0 +1,40 @@
+{
+  "id": "f8e344ec-8620-4958-bf93-7b6d2b4a0935",
+  "slug": "valid-subarrays-with-exactly-one-peak",
+  "title": "Valid Subarrays With Exactly One Peak",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,3,2]\n1\n[7,8,9]\n2\n[4,3,5,1]\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// combinatorics, two pointers\nclass Solution {\npublic:\n    long long validSubarrays(vector<int>& nums, int k) {\n        int64_t result = 0, left = -1, l = 0;\n        for (int64_t right = 1; right + 1 < size(nums); ++right) {\n            if (!(nums[right - 1] < nums[right] && nums[right] > nums[right + 1])) {\n                continue;\n            }\n            const auto& r = min(right - left, static_cast<int64_t>(k + 1));\n            result += l * r;\n            left = right;\n            l = r;\n        }\n        result += l * min(static_cast<int64_t>(size(nums)) - left, static_cast<int64_t>(k + 1));\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# combinatorics, two pointers\nclass Solution(object):\n    def validSubarrays(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result, left, l = 0, -1, 0\n        for right in xrange(1, len(nums)-1):\n            if not nums[right-1] < nums[right] > nums[right+1]:\n                continue\n            r = min(right-left, k+1)\n            result += l*r\n            left, l = right, r\n        result += l*min(len(nums)-left, k+1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

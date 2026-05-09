@@ -1,0 +1,35 @@
+{
+  "id": "40f76e06-8ea9-4802-9f03-c419bd2edc93",
+  "slug": "final-prices-with-a-special-discount-in-a-shop",
+  "title": "Final Prices With a Special Discount in a Shop",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>prices</code> where <code>prices[i]</code> is the price of the <code>i<sup>th</sup></code> item in a shop.</p>\n\n<p>There is a special discount for items in the shop. If you buy the <code>i<sup>th</sup></code> item, then you will receive a discount equivalent to <code>prices[j]</code> where <code>j</code> is the minimum index such that <code>j &gt; i</code> and <code>prices[j] &lt;= prices[i]</code>. Otherwise, you will not receive any discount at all.</p>\n\n<p>Return an integer array <code>answer</code> where <code>answer[i]</code> is the final price you will pay for the <code>i<sup>th</sup></code> item of the shop, considering the special discount.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [8,4,6,2,3]\n<strong>Output:</strong> [4,2,4,2,3]\n<strong>Explanation:</strong> \nFor item 0 with price[0]=8 you will receive a discount equivalent to prices[1]=4, therefore, the final price you will pay is 8 - 4 = 4.\nFor item 1 with price[1]=4 you will receive a discount equivalent to prices[3]=2, therefore, the final price you will pay is 4 - 2 = 2.\nFor item 2 with price[2]=6 you will receive a discount equivalent to prices[3]=2, therefore, the final price you will pay is 6 - 2 = 4.\nFor items 3 and 4 you will not receive any discount at all.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [1,2,3,4,5]\n<strong>Output:</strong> [1,2,3,4,5]\n<strong>Explanation:</strong> In this case, for all items, you will not receive any discount at all.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [10,1,1,6]\n<strong>Output:</strong> [9,0,1,6]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= prices.length &lt;= 500</code></li>\n\t<li><code>1 &lt;= prices[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "stack",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> finalPrices(vector<int>& prices) {\n        vector<int> stk;\n        for (int i = 0; i < prices.size(); ++i) {\n            while (!stk.empty() && prices[stk.back()] >= prices[i]) {\n                prices[stk.back()] -= prices[i];\n                stk.pop_back();\n            }\n            stk.emplace_back(i);\n        }\n        return prices;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def finalPrices(self, prices):\n        \"\"\"\n        :type prices: List[int]\n        :rtype: List[int]\n        \"\"\"\n        stk = []\n        for i, p in enumerate(prices):\n            while stk and prices[stk[-1]] >= p:\n                prices[stk.pop()] -= p\n            stk.append(i)\n        return prices",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

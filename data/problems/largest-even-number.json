@@ -1,0 +1,33 @@
+{
+  "id": "bc8b3cf0-a41a-4d67-b9dd-2b10975956c3",
+  "slug": "largest-even-number",
+  "title": "Largest Even Number",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a string <code>s</code> consisting only of the characters <code>&#39;1&#39;</code> and <code>&#39;2&#39;</code>.</p>\n\n<p>You may delete any number of characters from <code>s</code> without changing the order of the remaining characters.</p>\n\n<p>Return the <strong>largest possible resultant string</strong> that represents an <strong>even</strong> integer. If there is no such string, return the empty string <code>&quot;&quot;</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;1112&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;1112&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The string already represents the largest possible even number, so no deletions are needed.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;221&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;22&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Deleting <code>&#39;1&#39;</code> results in the largest possible even number which is equal to 22.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;1&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>There is no way to get an even number.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>s</code> consists only of the characters <code>&#39;1&#39;</code> and <code>&#39;2&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    string largestEven(string s) {\n        while (!empty(s) && s.back() == '1') {\n            s.pop_back();\n        }\n        return s;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# math\nclass Solution(object):\n    def largestEven(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        result = list(s)\n        while result and result[-1] == '1':\n            result.pop()\n        return \"\".join(result)\n\n\n# Time:  O(n)\n# Space: O(1)\n# math\nclass Solution2(object):\n    def largestEven(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        return s.rstrip('1')",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

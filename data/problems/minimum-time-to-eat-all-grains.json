@@ -1,0 +1,36 @@
+{
+  "id": "eaa3260d-86fb-4b63-b8f3-0f8099c27858",
+  "slug": "minimum-time-to-eat-all-grains",
+  "title": "Minimum Time to Eat All Grains",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(mlogm + nlogn + (m + n) * logr), r = 2*(max(max(hens), max(grains))-min(min(hens), min(grains))\n// Space: O(1)\n\n// binary search, greedy\nclass Solution {\npublic:\n    int minimumTime(vector<int>& hens, vector<int>& grains) {\n        const auto& check = [&](const int x) {\n            int i = 0;\n            for (const auto& h : hens) {\n                int c = x;\n                if (h - grains[i] > x) {\n                    return false;\n                } else if (h - grains[i] > 0) {\n                    const int d = h - grains[i];\n                    c = max(x - 2 * d, (x - d) / 2);  // # max(go left then right, go right then left)\n                }\n                for (; i < size(grains) && grains[i] <= h + c; ++i);\n                if (i == size(grains)) {\n                    return true;\n                }\n            }\n            return false;\n        };\n\n        sort(begin(hens), end(hens));\n        sort(begin(grains), end(grains));\n        int left = 0, right = 2 * (max(hens.back(), grains.back()) - min(hens.front(), grains.front()));\n        while (left <= right) {\n            const int mid = left + (right - left) / 2;\n            if (check(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(mlogm + nlogn + (m + n) * logr), r = 2*(max(max(hens), max(grains))-min(min(hens), min(grains))\n# Space: O(1)\n\n# binary search, greedy\nclass Solution(object):\n    def minimumTime(self, hens, grains):\n        \"\"\"\n        :type hens: List[int]\n        :type grains: List[int]\n        :rtype: int\n        \"\"\"\n        def check(x):\n            i = 0\n            for h in hens:\n                if h-grains[i] > x:\n                    return False\n                elif h-grains[i] > 0:\n                    d = h-grains[i]\n                    c = max(x-2*d, (x-d)//2)  # max(go left then right, go right then left)\n                else:\n                    c = x                   \n                while i < len(grains) and grains[i] <= h+c:\n                    i += 1\n                if i == len(grains):\n                    return True\n            return False\n    \n        hens.sort()\n        grains.sort()\n        left, right = 0, 2*(max(grains[-1], hens[-1])-min(grains[0], hens[0]))\n        while left <= right:\n            mid = left+(right-left)//2\n            if check(mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

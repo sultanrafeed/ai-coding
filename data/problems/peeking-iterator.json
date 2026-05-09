@@ -1,0 +1,41 @@
+{
+  "id": "2579e821-166e-4115-8d55-1d01e57ce090",
+  "slug": "peeking-iterator",
+  "title": "Peeking Iterator",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Design an iterator that supports the <code>peek</code> operation on an existing iterator in addition to the <code>hasNext</code> and the <code>next</code> operations.</p>\n\n<p>Implement the <code>PeekingIterator</code> class:</p>\n\n<ul>\n\t<li><code>PeekingIterator(Iterator&lt;int&gt; nums)</code> Initializes the object with the given integer iterator <code>iterator</code>.</li>\n\t<li><code>int next()</code> Returns the next element in the array and moves the pointer to the next element.</li>\n\t<li><code>boolean hasNext()</code> Returns <code>true</code> if there are still elements in the array.</li>\n\t<li><code>int peek()</code> Returns the next element in the array <strong>without</strong> moving the pointer.</li>\n</ul>\n\n<p><strong>Note:</strong> Each language may have a different implementation of the constructor and <code>Iterator</code>, but they all support the <code>int next()</code> and <code>boolean hasNext()</code> functions.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;PeekingIterator&quot;, &quot;next&quot;, &quot;peek&quot;, &quot;next&quot;, &quot;next&quot;, &quot;hasNext&quot;]\n[[[1, 2, 3]], [], [], [], [], []]\n<strong>Output</strong>\n[null, 1, 2, 2, 3, false]\n\n<strong>Explanation</strong>\nPeekingIterator peekingIterator = new PeekingIterator([1, 2, 3]); // [<u><strong>1</strong></u>,2,3]\npeekingIterator.next();    // return 1, the pointer moves to the next element [1,<u><strong>2</strong></u>,3].\npeekingIterator.peek();    // return 2, the pointer does not move [1,<u><strong>2</strong></u>,3].\npeekingIterator.next();    // return 2, the pointer moves to the next element [1,2,<u><strong>3</strong></u>]\npeekingIterator.next();    // return 3, the pointer moves to the next element [1,2,3]\npeekingIterator.hasNext(); // return False\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>\n\t<li>All the calls to <code>next</code> and <code>peek</code> are valid.</li>\n\t<li>At most <code>1000</code> calls will be made to <code>next</code>, <code>hasNext</code>, and <code>peek</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> How would you extend your design to be generic and work with all types, not just integer?",
+  "patterns": [
+    "array",
+    "design",
+    "iterator"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"PeekingIterator\",\"next\",\"peek\",\"next\",\"next\",\"hasNext\"]\n[[[1,2,3]],[],[],[],[],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1) per peek(), next(), hasNext()\n// Space: O(1)\n\n// Below is the interface for Iterator, which is already defined for you.\n// **DO NOT** modify the interface for Iterator.\nclass Iterator {\n    struct Data;\n\tData* data;\npublic:\n\tIterator(const vector<int>& nums);\n\tIterator(const Iterator& iter);\n\tvirtual ~Iterator();\n\t// Returns the next element in the iteration.\n\tint next();\n\t// Returns true if the iteration has more elements.\n\tbool hasNext() const;\n};\n\n\nclass PeekingIterator : public Iterator {\npublic:\n    PeekingIterator(const vector<int>& nums) : Iterator(nums), has_next_(Iterator::hasNext()) {\n        // Initialize any member here.\n        // **DO NOT** save a copy of nums and manipulate it directly.\n        // You should only use the Iterator interface methods.\n    }\n\n    // Returns the next element in the iteration without advancing the iterator.\n    int peek() {\n        if (!has_peeked_) {\n            has_peeked_ = true;\n            val_ = Iterator::next();\n        }\n        return val_;\n    }\n\n    // hasNext() and next() should behave the same as in the Iterator interface.\n    // Override them if needed.\n    int next() {\n        val_ = peek();\n        has_peeked_ = false;\n        has_next_ = Iterator::hasNext();\n        return val_;\n    }\n\n    bool hasNext() const {\n        return has_next_;\n    }\n\nprivate:\n    int val_;\n    bool has_next_;\n    bool has_peeked_ = false;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1) per peek(), next(), hasNext()\n# Space: O(1)\n\nclass PeekingIterator(object):\n    def __init__(self, iterator):\n        \"\"\"\n        Initialize your data structure here.\n        :type iterator: Iterator\n        \"\"\"\n        self.iterator = iterator\n        self.val_ = None\n        self.has_next_ = iterator.hasNext()\n        self.has_peeked_ = False\n\n\n    def peek(self):\n        \"\"\"\n        Returns the next element in the iteration without advancing the iterator.\n        :rtype: int\n        \"\"\"\n        if not self.has_peeked_:\n            self.has_peeked_ = True\n            self.val_ = self.iterator.next()\n        return self.val_\n\n    def next(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        self.val_ = self.peek()\n        self.has_peeked_ = False\n        self.has_next_ = self.iterator.hasNext()\n        return self.val_\n\n    def hasNext(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return self.has_next_",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "71958aef-6cd7-4212-8c0d-13bf57509e82",
+  "slug": "remove-nodes-from-linked-list",
+  "title": "Remove Nodes From Linked List",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given the <code>head</code> of a linked list.</p>\n\n<p>Remove every node which has a node with a greater value anywhere to the right side of it.</p>\n\n<p>Return <em>the </em><code>head</code><em> of the modified linked list.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/10/02/drawio.png\" style=\"width: 631px; height: 51px;\" />\n<pre>\n<strong>Input:</strong> head = [5,2,13,3,8]\n<strong>Output:</strong> [13,8]\n<strong>Explanation:</strong> The nodes that should be removed are 5, 2 and 3.\n- Node 13 is to the right of node 5.\n- Node 13 is to the right of node 2.\n- Node 8 is to the right of node 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> head = [1,1,1,1]\n<strong>Output:</strong> [1,1,1,1]\n<strong>Explanation:</strong> Every node has value 1, so no nodes are removed.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of the nodes in the given list is in the range <code>[1, 10<sup>5</sup>]</code>.</li>\n\t<li><code>1 &lt;= Node.val &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "linked-list",
+    "stack",
+    "recursion",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// mono stack\nclass Solution {\npublic:\n    ListNode* removeNodes(ListNode* head) {\n        vector<ListNode *> stk;\n        for (; head; head = head->next) {\n            while (!empty(stk) && stk.back()->val < head->val) {\n                stk.pop_back();\n            }\n            if (!empty(stk)) {\n                stk.back()->next = head;\n            }\n            stk.emplace_back(head);\n        }\n        return stk[0];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass ListNode(object):\n    def __init__(self, val=0, next=None):\n        pass\n\n\n# mono stack\nclass Solution(object):\n    def removeNodes(self, head):\n        \"\"\"\n        :type head: Optional[ListNode]\n        :rtype: Optional[ListNode]\n        \"\"\"\n        stk = []\n        while head:\n            while stk and stk[-1].val < head.val:\n                stk.pop()\n            if stk:\n                stk[-1].next = head\n            stk.append(head)\n            head = head.next\n        return stk[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

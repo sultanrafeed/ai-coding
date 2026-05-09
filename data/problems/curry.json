@@ -1,0 +1,31 @@
+{
+  "id": "3d7eaff2-9b11-484a-8125-b86748b80590",
+  "slug": "curry",
+  "title": "Curry",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "function sum(a, b, c) { return a + b + c; }\n[[1],[2],[3]]\nfunction sum(a, b, c) { return a + b + c; }\n[[1,2],[3]]\nfunction sum(a, b, c) { return a + b + c; }\n[[],[],[1,2,3]]\nfunction life() { return 42; }\n[[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nfunction curry(fn: Function): Function {\n    let result = [];\n    return function curried(...args) {\n        result.push(...args);\n        if (result.length < fn.length) {\n            return curried;\n        }\n        return fn(...result);\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

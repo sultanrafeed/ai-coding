@@ -1,0 +1,34 @@
+{
+  "id": "fc08d40a-b3b9-4f76-b110-9cbc6e91d31e",
+  "slug": "permutations-iii",
+  "title": "Permutations III",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * n!)\n// Space: O(n)\n\n// backtracking, bitmasks\nclass Solution {\npublic:\n    vector<vector<int>> permute(int n) {\n        vector<vector<int>> result;\n        vector<int> curr; curr.reserve(n);\n        const function<void (int)> backtracking = [&](int lookup) {\n            if (size(curr) == n) {\n                result.emplace_back(curr);\n                return;\n            }\n            for (int i = 1; i <= n; ++i) {\n                if ((lookup & (1 << (i - 1))) || (!empty(curr) && curr.back() % 2 == i % 2)) {\n                    continue;\n                }\n                curr.emplace_back(i);\n                backtracking(lookup ^ (1 << (i - 1)));\n                curr.pop_back();\n            }\n        };\n\n        backtracking(0);\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * n!)\n# Space: O(n)\n\n# backtracking, bitmasks\nclass Solution(object):\n    def permute(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[List[int]]\n        \"\"\"\n        def backtracking(lookup):\n            if len(curr) == n:\n                result.append(curr[:])\n                return\n            for i in xrange(1, n+1):\n                if lookup&(1<<(i-1)) or (curr and curr[-1]%2 == i%2):\n                    continue\n                curr.append(i)\n                backtracking(lookup^(1<<(i-1)))\n                curr.pop()\n    \n        result, curr = [], []\n        backtracking(0)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

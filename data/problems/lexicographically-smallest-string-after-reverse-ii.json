@@ -1,0 +1,43 @@
+{
+  "id": "507ad30c-7072-4e5c-8b1b-03ab269ee067",
+  "slug": "lexicographically-smallest-string-after-reverse-ii",
+  "title": "Lexicographically Smallest String After Reverse II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "binary-search",
+    "rolling-hash",
+    "suffix-array",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"dcab\"\n\"abba\"\n\"zxy\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// rolling hash, binary search\nclass Solution {\npublic:\n    string lexSmallest(string s) {\n        static const int64_t MOD = 1e9 + 7;\n        static const int64_t B = 29;\n        const int n = size(s);\n\n        const auto& binary_search = [](auto left, auto right, const auto& check) {\n            while (left <= right) {\n                const auto mid = left + (right - left) / 2;\n                if (check(mid)) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            }\n            return left;\n        };\n\n        vector<int64_t> prefix(n + 1);\n        for (int i = 0; i + 1 < size(prefix); ++i) {\n            prefix[i + 1] = (prefix[i] * B + s[i]) % MOD;\n        }\n        vector<int64_t> suffix(n + 1);\n        for (int i = size(suffix) - 2; i >= 0; --i) {\n            suffix[i] = (suffix[i + 1] * B + s[i]) % MOD;\n        }\n        vector<int64_t> base(n + 1, 1);\n        for (int i = 0; i + 1 < size(base); ++i) {\n            base[i + 1] = (base[i] * B) % MOD;\n        }\n\n        const auto& get_prefix_hash = [&](int l, int r) {\n            if (l > r) {\n                return static_cast<int64_t>(0);\n            }\n            return (prefix[r + 1] - prefix[l] * base[r - l + 1] % MOD + MOD) % MOD;\n        };\n\n        const auto& get_suffix_hash = [&](int l, int r) {\n            if (l > r) {\n                return static_cast<int64_t>(0);\n            }\n            return (suffix[l] - suffix[r + 1] * base[r - l + 1] % MOD + MOD) % MOD;\n        };\n\n        const auto& get_total_hash = [&](int k, int t, int l) {\n            if (!t) {\n                return l <= k\n                    ? get_suffix_hash(k - l, k - 1)\n                    : ((get_suffix_hash(0, k - 1) * base[l - k]) % MOD + get_prefix_hash(k, l - 1)) % MOD;\n            }\n            const auto& nk = n - k;\n            return l <= nk\n                ? get_prefix_hash(0, l - 1)\n                : ((get_prefix_hash(0, nk - 1) * base[l - nk]) % MOD + get_suffix_hash(n - (l - nk), n - 1)) % MOD;\n        };\n\n        const auto& get_char = [&](int k, int t, int idx) {\n            if (!t) {\n                return idx < k\n                    ? s[(k - 1) - idx]\n                    : s[idx];\n            }\n            return idx < n - k\n                ? s[idx]\n                : s[(n - 1) - (idx - (n - k))];\n        };\n    \n        int best_k = 1, best_i = 0;\n        auto is_less = [&](int k, int i) {\n            const auto& idx = binary_search(0, n - 1, [&](int x) {\n                return get_total_hash(k, i, x + 1) != get_total_hash(best_k, best_i, x + 1);\n            });\n            return idx != n && get_char(k, i, idx) < get_char(best_k, best_i, idx);\n        };\n        const auto& mn = ranges::min(s);\n        for (int k = 1; k <= n; ++k) {\n            if (s[k - 1] != mn) {\n                continue;\n            }\n            if (is_less(k, 0)) {\n                best_k = k;\n                best_i = 0;\n            }\n        }\n        for (int k = 1; k <= n; ++k) {\n            if (!(s[size(s) - k] >= s.back())) {\n                continue;\n            }\n            if (is_less(k, 1)) {\n                best_k = k;\n                best_i = 1;\n            }\n        }\n        string result(s);\n        if (!best_i) {\n            reverse(begin(result), begin(result) + best_k);\n        } else {\n            reverse(begin(result) + (size(result) - best_k), end(result));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\n# rolling hash, binary search\nclass Solution(object):\n    def lexSmallest(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        MOD = 10**9+7\n        B = 29\n        def binary_search(left, right, check):\n            while left <= right:\n                mid = left+(right-left)//2\n                if check(mid):\n                    right = mid-1\n                else:\n                    left = mid+1\n            return left\n\n        def get_prefix_hash(l, r):\n            return (prefix[r+1]-prefix[l]*base[r-l+1])%MOD if l <= r else 0\n\n        def get_suffix_hash(l, r):\n            return (suffix[l]-suffix[r+1]*base[r-l+1])%MOD if l <= r else 0\n        \n        def get_total_hash(k, t, l):\n            if not t:\n                return get_suffix_hash(k-l, k-1) if l <= k else ((get_suffix_hash(0, k-1))*base[l-k]+get_prefix_hash(k, l-1))%MOD\n            nk = len(s)-k\n            return get_prefix_hash(0, l-1) if l <= nk else ((get_prefix_hash(0, nk-1))*base[l-nk]+get_suffix_hash(len(s)-(l-nk), len(s)-1))%MOD\n\n        def get_char(k, t, idx):\n            if not t:\n                return s[(k-1)-idx] if idx < k else s[idx]\n            return s[idx] if idx < len(s)-k else s[(len(s)-1)-(idx-(len(s)-k))]\n\n        def is_less(k, i):\n            idx = binary_search(0, len(s)-1, lambda x: get_total_hash(k, i, x+1) != get_total_hash(best_k, best_i, x+1))\n            return idx != len(s) and get_char(k, i, idx) < get_char(best_k, best_i, idx)\n\n        prefix = [0]*(len(s)+1)\n        for i in xrange(len(prefix)-1):\n            prefix[i+1] = (prefix[i]*B+ord(s[i]))%MOD\n        suffix = [0]*(len(s)+1)\n        for i in reversed(xrange(len(suffix)-1)):\n            suffix[i] = (suffix[i+1]*B+ord(s[i]))%MOD\n        base = [1]*(len(s)+1)\n        for i in xrange(len(base)-1):\n            base[i+1] = (base[i]*B)%MOD\n        best_k, best_i = 1, 0\n        mn = min(s)\n        for k in xrange(1, len(s)+1):\n            if s[k-1] != mn:\n                continue\n            if is_less(k, 0):\n                best_k, best_i = k, 0\n        for k in xrange(1, len(s)+1):\n            if not s[-k] >= s[-1]:\n                continue\n            if is_less(k, 1):\n                best_k, best_i = k, 1\n        return s[:best_k][::-1]+s[best_k:] if not best_i else s[:-best_k]+s[-best_k:][::-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

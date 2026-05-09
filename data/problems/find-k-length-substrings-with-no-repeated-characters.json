@@ -1,0 +1,41 @@
+{
+  "id": "6f09fed1-d1b6-495a-90b6-eeef2f7dee80",
+  "slug": "find-k-length-substrings-with-no-repeated-characters",
+  "title": "Find K-Length Substrings With No Repeated Characters",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"havefunonleetcode\"\n5\n\"home\"\n5",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(k)\n\nclass Solution {\npublic:\n    int numKLenSubstrNoRepeats(string S, int K) {\n        int result = 0, i = 0;\n        unordered_set<int> lookup;\n        for (int j = 0; j < S.length(); ++j) {\n            while (lookup.count(S[j])) {\n                lookup.erase(S[i]);\n                ++i;\n            }\n            lookup.emplace(S[j]);\n            result += int(j - i + 1 >= K);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(k)\n\nclass Solution(object):\n    def numKLenSubstrNoRepeats(self, S, K):\n        \"\"\"\n        :type S: str\n        :type K: int\n        :rtype: int\n        \"\"\"\n        result, i = 0, 0\n        lookup = set()\n        for j in xrange(len(S)):\n            while S[j] in lookup:\n                lookup.remove(S[i])\n                i += 1\n            lookup.add(S[j])\n            result += j-i+1 >= K\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

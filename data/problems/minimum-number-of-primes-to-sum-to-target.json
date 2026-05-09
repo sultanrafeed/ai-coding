@@ -1,0 +1,36 @@
+{
+  "id": "e4fc3558-0407-471d-908c-62e0e92a0316",
+  "slug": "minimum-number-of-primes-to-sum-to-target",
+  "title": "Minimum Number of Primes to Sum to Target",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(min(mlogm, n) + nlog(log(min(mlogm, n))) + m * n) = O(nlog(log(min(m, n))) + m * n)\n// Space: O(n)\n\n// number theory, knapsack dp\nclass Solution {\npublic:\n    int minNumberOfPrimes(int n, int m) {\n        static const int INF = numeric_limits<int>::max();\n\n        vector<bool> is_prime(n + 1, true);\n        vector<int> dp(n + 1, INF);\n        dp[0] = 0;\n        for (int i = 2, cnt = 0; i <= n; ++i) {\n            if (!is_prime[i]) {\n                continue;\n            }\n            for (int j = i + i; j <= n; j += i) {\n                is_prime[j] = false;\n            }\n            for (int j = i; j <= n; ++j) {\n                if (dp[j - i] != INF) {\n                    dp[j] = min(dp[j], dp[j - i] + 1);\n                }\n            }\n            if (++cnt == m) {\n                break;\n            }\n        }\n        return dp[n] != INF ? dp[n] : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(min(mlogm, n) + nlog(log(min(mlogm, n))) + m * n) = O(nlog(log(min(m, n))) + m * n)\n# Space: O(n)\n\n# number theory, knapsack dp\nclass Solution(object):\n    def minNumberOfPrimes(self, n, m):\n        \"\"\"\n        :type n: int\n        :type m: int\n        :rtype: int\n        \"\"\"\n        is_prime = [True]*(n+1)\n        cnt = 0\n        dp = [float(\"inf\")]*(n+1)\n        dp[0] = 0\n        for i in xrange(2, n+1):\n            if not is_prime[i]:\n                continue\n            for j in xrange(i+i, n+1, i):\n                is_prime[j] = False\n            for j in xrange(i, n+1):\n                dp[j] = min(dp[j], dp[j-i]+1)\n            cnt += 1\n            if cnt == m:\n                break\n        return dp[n] if dp[n] != float(\"inf\") else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

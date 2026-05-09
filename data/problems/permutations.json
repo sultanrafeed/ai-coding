@@ -1,0 +1,34 @@
+{
+  "id": "b26b4fc6-4952-49d0-b249-541980ccaf14",
+  "slug": "permutations",
+  "title": "Permutations",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array <code>nums</code> of distinct integers, return all the possible <span data-keyword=\"permutation-array\">permutations</span>. You can return the answer in <strong>any order</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> nums = [1,2,3]\n<strong>Output:</strong> [[1,2,3],[1,3,2],[2,1,3],[2,3,1],[3,1,2],[3,2,1]]\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> nums = [0,1]\n<strong>Output:</strong> [[0,1],[1,0]]\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> nums = [1]\n<strong>Output:</strong> [[1]]\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 6</code></li>\n\t<li><code>-10 &lt;= nums[i] &lt;= 10</code></li>\n\t<li>All the integers of <code>nums</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3]\n[0,1]\n[1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n * n!)\n# Space: O(n)\n\nclass Solution(object):\n    # @param num, a list of integer\n    # @return a list of lists of integers\n    def permute(self, num):\n        result = []\n        used = [False] * len(num)\n        self.permuteRecu(result, used, [], num)\n        return result\n\n    def permuteRecu(self, result, used, cur, num):\n        if len(cur) == len(num):\n            result.append(cur[:])\n            return\n        for i in xrange(len(num)):\n            if not used[i]:\n                used[i] = True\n                cur.append(num[i])\n                self.permuteRecu(result, used, cur, num)\n                cur.pop()\n                used[i] = False\n\n\n# Time:  O(n^2 * n!)\n# Space: O(n^2)\nclass Solution2(object):\n    def permute(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[List[int]]\n        \"\"\"\n        res = []\n        self.dfs(nums, [], res)\n        return res\n\n    def dfs(self, nums, path, res):\n        if not nums:\n            res.append(path)\n\n        for i in xrange(len(nums)):\n            # e.g., [1, 2, 3]: 3! = 6 cases\n            # idx -> nums, path\n            # 0 -> [2, 3], [1] -> 0: [3], [1, 2] -> [], [1, 2, 3]\n            #                  -> 1: [2], [1, 3] -> [], [1, 3, 2]\n            #\n            # 1 -> [1, 3], [2] -> 0: [3], [2, 1] -> [], [2, 1, 3]\n            #                  -> 1: [1], [2, 3] -> [], [2, 3, 1]\n            #\n            # 2 -> [1, 2], [3] -> 0: [2], [3, 1] -> [], [3, 1, 2]\n            #                  -> 1: [1], [3, 2] -> [], [3, 2, 1]\n            self.dfs(nums[:i] + nums[i+1:], path + [nums[i]], res)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

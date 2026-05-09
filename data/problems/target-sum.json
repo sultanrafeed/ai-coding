@@ -1,0 +1,35 @@
+{
+  "id": "8cf029cb-5cbb-4f36-b026-1ec6b11bac8e",
+  "slug": "target-sum",
+  "title": "Target Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> and an integer <code>target</code>.</p>\n\n<p>You want to build an <strong>expression</strong> out of nums by adding one of the symbols <code>&#39;+&#39;</code> and <code>&#39;-&#39;</code> before each integer in nums and then concatenate all the integers.</p>\n\n<ul>\n\t<li>For example, if <code>nums = [2, 1]</code>, you can add a <code>&#39;+&#39;</code> before <code>2</code> and a <code>&#39;-&#39;</code> before <code>1</code> and concatenate them to build the expression <code>&quot;+2-1&quot;</code>.</li>\n</ul>\n\n<p>Return the number of different <strong>expressions</strong> that you can build, which evaluates to <code>target</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,1,1,1], target = 3\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> There are 5 ways to assign symbols to make the sum of nums be target 3.\n-1 + 1 + 1 + 1 + 1 = 3\n+1 - 1 + 1 + 1 + 1 = 3\n+1 + 1 - 1 + 1 + 1 = 3\n+1 + 1 + 1 - 1 + 1 = 3\n+1 + 1 + 1 + 1 - 1 = 3\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1], target = 1\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 20</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 1000</code></li>\n\t<li><code>0 &lt;= sum(nums[i]) &lt;= 1000</code></li>\n\t<li><code>-1000 &lt;= target &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * S)\n// Space: O(S)\n\nclass Solution {\npublic:\n    int findTargetSumWays(vector<int>& nums, int S) {\n        // sum(P) - sum(N) = S\n        //       <=>\n        // 2 * sum(P) = S + sum(nums)\n        int sum = accumulate(nums.begin(), nums.end(), 0);\n        if (sum < S || (S + sum) % 2) {\n            return 0;\n        }\n        return subsetSum(nums, (S + sum) / 2); \n    }   \n\nprivate:\n    int subsetSum(vector<int>& nums, int S) {\n        vector<int> dp(S + 1);\n        dp[0] = 1;\n        for (const auto& n : nums) {\n            for (int i = S; i >= n; --i) {\n                dp[i] += dp[i - n];\n            }\n        }\n        return dp.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * S)\n# Space: O(S)\n\nimport collections\n\n\nclass Solution(object):\n    def findTargetSumWays(self, nums, S):\n        \"\"\"\n        :type nums: List[int]\n        :type S: int\n        :rtype: int\n        \"\"\"\n        def subsetSum(nums, S):\n            dp = collections.defaultdict(int)\n            dp[0] = 1\n            for n in nums:\n                for i in reversed(xrange(n, S+1)):\n                    if i-n in dp:\n                        dp[i] += dp[i-n]\n            return dp[S]\n\n        total = sum(nums)\n        if total < S or (S + total) % 2: return 0\n        P = (S + total) // 2\n        return subsetSum(nums, P)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

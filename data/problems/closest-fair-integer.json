@@ -1,0 +1,40 @@
+{
+  "id": "7f93f42b-b0c2-46d3-8e93-b8d98f3f8ed4",
+  "slug": "closest-fair-integer",
+  "title": "Closest Fair Integer",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "2\n403",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(logn)\n\n// constructive algorithms, greedy\nclass Solution {\npublic:\n    int closestFair(int n) {\n        const auto& digits = to_string(n);\n        string result;\n        if (size(digits) % 2 == 0) {\n            vector<int> left(2);\n            for (const auto& d : digits) {\n                ++left[(d - '0') % 2];\n            }\n            if (left[0] == size(digits) / 2) {\n                return n;\n            }\n            for (int i = size(digits) - 1; i >= size(digits) / 2; --i) {\n                --left[(digits[i] - '0') % 2];\n                vector<int> right = {static_cast<int>(size(digits)) / 2 - left[0],\n                                     static_cast<int>(size(digits)) / 2 - left[1]};\n                if (any_of(cbegin(right), cend(right), [](const auto& x) { return x < 0; })) {\n                    continue;\n                }\n                const char d = (right[((digits[i] + 1) - '0') % 2] - 1 >= 0) ? digits[i] + 1 : digits[i] + 2;\n                if (d > '9') {\n                    continue;\n                }\n                --right[(d - '0') % 2];\n                result.append(digits, 0, i);\n                result.append(1, d);\n                result.append(right[0], '0');\n                result.append(right[1], '1');\n                break;\n            }\n        }\n        if (empty(result)) {\n            const int l = size(digits) / 2 + 1;\n            result.append(1, '1');\n            result.append(l, '0');\n            result.append(l - 1, '1');\n        }\n        return stoi(result);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(logn)\n\n# constructive algorithms, greedy\nclass Solution(object):\n    def closestFair(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        digits = map(int, str(n))\n        result = []\n        if len(digits)%2 == 0:            \n            left = [0]*2\n            for d in digits:\n                left[d%2] += 1\n            if left[0] == len(digits)//2:\n                return n\n            for i in reversed(xrange(len(digits)//2, len(digits))):\n                left[digits[i]%2] -= 1\n                right = [len(digits)//2-left[0], len(digits)//2-left[1]]\n                if any(x < 0 for x in right):\n                    continue\n                d = digits[i]+1 if right[(digits[i]+1)%2]-1 >= 0 else digits[i]+2\n                if d > 9:\n                    continue\n                right[d%2] -= 1\n                result = digits[:i]+[d]+[0]*right[0]+[1]*right[1]\n                break\n        if not result:\n            l = len(digits)//2+1\n            result = [1]+[0]*l+[1]*(l-1)\n        return int(\"\".join(map(str, result)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

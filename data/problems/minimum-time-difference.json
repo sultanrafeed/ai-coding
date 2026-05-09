@@ -1,0 +1,42 @@
+{
+  "id": "0396c875-1fcc-4bad-b354-c7903a0b88dd",
+  "slug": "minimum-time-difference",
+  "title": "Minimum Time Difference",
+  "difficulty": "medium",
+  "descriptionHtml": "Given a list of 24-hour clock time points in <strong>&quot;HH:MM&quot;</strong> format, return <em>the minimum <b>minutes</b> difference between any two time-points in the list</em>.\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> timePoints = [\"23:59\",\"00:00\"]\n<strong>Output:</strong> 1\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> timePoints = [\"00:00\",\"23:59\",\"00:00\"]\n<strong>Output:</strong> 0\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= timePoints.length &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>timePoints[i]</code> is in the format <strong>&quot;HH:MM&quot;</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "string",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"23:59\",\"00:00\"]\n[\"00:00\",\"23:59\",\"00:00\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int findMinDifference(vector<string>& timePoints) {\n        static const int N = 60 * 24;\n        vector<int> minutes;\n        for (const auto& t : timePoints) {\n            minutes.emplace_back(stoi(t.substr(0, 2)) * 60 + stoi(t.substr(3)));\n        }\n        sort(minutes.begin(), minutes.end());\n        int result = numeric_limits<int>::max();\n        for (int i = 0; i < timePoints.size(); ++i) {\n            result = min(result, (N + minutes[(i + 1) % timePoints.size()] - minutes[i]) % N);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass Solution(object):\n    def findMinDifference(self, timePoints):\n        \"\"\"\n        :type timePoints: List[str]\n        :rtype: int\n        \"\"\"\n        minutes = map(lambda x: int(x[:2]) * 60 + int(x[3:]), timePoints)\n        minutes.sort()\n        return min((y - x) % (24 * 60)  \\\n                   for x, y in zip(minutes, minutes[1:] + minutes[:1]))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

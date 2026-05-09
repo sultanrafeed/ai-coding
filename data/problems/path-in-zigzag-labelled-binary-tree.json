@@ -1,0 +1,35 @@
+{
+  "id": "b23d8ea6-3973-49a5-a887-9982f3110757",
+  "slug": "path-in-zigzag-labelled-binary-tree",
+  "title": "Path In Zigzag Labelled Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>In an infinite binary tree where every node has two children, the nodes are labelled in row order.</p>\n\n<p>In the odd numbered rows (ie., the first, third, fifth,...), the labelling is left to right, while in the even numbered rows (second, fourth, sixth,...), the labelling is right to left.</p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/06/24/tree.png\" style=\"width: 300px; height: 138px;\" /></p>\n\n<p>Given the <code>label</code> of a node in this tree, return the labels in the path from the root of the tree to the&nbsp;node with that <code>label</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> label = 14\n<strong>Output:</strong> [1,3,4,14]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> label = 26\n<strong>Output:</strong> [1,2,6,10,26]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= label &lt;= 10^6</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(logn)\n\nclass Solution {\npublic:\n    vector<int> pathInZigZagTree(int label) {\n        int count = 1;\n        while (count <= label) {\n          count *= 2;\n        }\n        vector<int> result;\n        for (; label >= 1; label /= 2, count /= 2) {\n            result.emplace_back(label);\n            label = (count / 2) + ((count - 1) - label);\n        }\n        reverse(result.begin(), result.end());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(logn)\n\nclass Solution(object):\n    def pathInZigZagTree(self, label):\n        \"\"\"\n        :type label: int\n        :rtype: List[int]\n        \"\"\"\n        count = 2**label.bit_length()\n        result = []\n        while label >= 1:\n            result.append(label)\n            label = ((count//2) + ((count-1)-label)) // 2\n            count //= 2\n        result.reverse()\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

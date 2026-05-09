@@ -1,0 +1,35 @@
+{
+  "id": "bf70a4d3-22d0-48a4-9525-625f597f2ad5",
+  "slug": "number-of-subarrays-with-lcm-equal-to-k",
+  "title": "Number of Subarrays With LCM Equal to K",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the number of <strong>subarrays</strong> of </em><code>nums</code><em> where the least common multiple of the subarray&#39;s elements is </em><code>k</code>.</p>\n\n<p>A <strong>subarray</strong> is a contiguous non-empty sequence of elements within an array.</p>\n\n<p>The <strong>least common multiple of an array</strong> is the smallest positive integer that is divisible by all the array elements.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,6,2,7,1], k = 6\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The subarrays of nums where 6 is the least common multiple of all the subarray&#39;s elements are:\n- [<u><strong>3</strong></u>,<u><strong>6</strong></u>,2,7,1]\n- [<u><strong>3</strong></u>,<u><strong>6</strong></u>,<u><strong>2</strong></u>,7,1]\n- [3,<u><strong>6</strong></u>,2,7,1]\n- [3,<u><strong>6</strong></u>,<u><strong>2</strong></u>,7,1]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3], k = 2\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> There are no subarrays of nums where 2 is the least common multiple of all the subarray&#39;s elements.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i], k &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * sqrt(k) * logk)\n// Space: O(sqrt(k))\n\n// dp\nclass Solution {\npublic:\n    int subarrayLCM(vector<int>& nums, int k) {\n        int result = 0;\n        unordered_map<int, int> dp;\n        for (const auto& x: nums) {\n            unordered_map<int, int> new_dp;\n            if (k % x == 0) {\n                ++dp[x];\n                for (const auto& [l, cnt] : dp) {\n                    new_dp[lcm(l, x)] += cnt;\n                }\n            }\n            dp = new_dp;\n            result += dp[k];\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(1)\n// brute force\nclass Solution2 {\npublic:\n    int subarrayLCM(vector<int>& nums, int k) {\n        int result = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            for (int j = i, l = 1; j < size(nums); ++j) {\n                if (k % nums[j]) {\n                    break;\n                }\n                l = lcm(l, nums[j]);\n                result += static_cast<int>(l == k);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * sqrt(k) * logk)\n# Space: O(sqrt(k))\n\nimport collections\n\n\n# dp\nclass Solution(object):\n    def subarrayLCM(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def gcd(a, b):\n            while b:\n                a, b = b, a%b\n            return a\n\n        def lcm(a, b):\n            return a//gcd(a, b)*b\n\n        result = 0\n        dp = collections.Counter()\n        for x in nums:\n            new_dp = collections.Counter()\n            if k%x == 0:\n                dp[x] += 1\n                for l, cnt in dp.iteritems():\n                    new_dp[lcm(l, x)] += cnt\n            dp = new_dp\n            result += dp[k]\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(1)\n# brute force\nclass Solution2(object):\n    def subarrayLCM(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def gcd(a, b):\n            while b:\n                a, b = b, a%b\n            return a\n\n        def lcm(a, b):\n            return a//gcd(a, b)*b\n\n        result = 0\n        for i in xrange(len(nums)):\n            l = 1\n            for j in xrange(i, len(nums)):\n                if k%nums[j]:\n                    break\n                l = lcm(l, nums[j])\n                result += int(l == k)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

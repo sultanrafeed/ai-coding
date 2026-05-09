@@ -1,0 +1,40 @@
+{
+  "id": "d5c4122e-0bf5-4045-b8ee-2144a77da390",
+  "slug": "maximum-increasing-triplet-value",
+  "title": "Maximum Increasing Triplet Value",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,6,9]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// bst, prefix sum\nclass Solution {\npublic:\n    int maximumTripletValue(vector<int>& nums) {\n        set<int> left;\n        vector<int> right(size(nums));\n        for (int i = size(nums) - 2; i >= 1; --i) {\n            right[i] = max(right[i + 1], nums[i + 1]);\n        }\n        int result = 0;\n        for (int i = 1; i + 1 < size(nums); ++i) {\n            left.emplace(nums[i - 1]);\n            auto it = left.lower_bound(nums[i]);\n            if (it != cbegin(left) && right[i] > nums[i]) {\n                result = max(result, *prev(it) - nums[i] + right[i]);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// bst\nclass Solution2 {\npublic:\n    int maximumTripletValue(vector<int>& nums) {\n        multiset<int> left, right(cbegin(nums) + 1, cend(nums));\n        int result = 0;\n        for (int i = 1; i + 1 < size(nums); ++i) {\n            left.emplace(nums[i - 1]);\n            right.erase(right.find(nums[i]));\n            auto it = left.lower_bound(nums[i]);\n            if (it != cbegin(left) && *rbegin(right) > nums[i]) {\n                result = max(result, *prev(it) - nums[i] + *rbegin(right));\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nfrom sortedcontainers import SortedList\n\n\n# sorted list, prefix sum\nclass Solution(object):\n    def maximumTripletValue(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left = SortedList()\n        right = [0]*len(nums)\n        for i in reversed(xrange(1, len(nums)-1)):\n            right[i] = max(right[i+1], nums[i+1])\n        result = 0\n        for i in xrange(1, len(nums)-1):\n            left.add(nums[i-1])\n            j = left.bisect_left(nums[i])\n            if j-1 >= 0 and right[i] > nums[i]:\n                result = max(result, left[j-1]-nums[i]+right[i])\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nfrom sortedcontainers import SortedList\n\n\n# sorted list\nclass Solution2(object):\n    def maximumTripletValue(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left = SortedList()\n        right = SortedList(nums[i] for i in xrange(1, len(nums)))\n        result = 0\n        for i in xrange(1, len(nums)-1):\n            left.add(nums[i-1])\n            right.remove(nums[i])\n            j = left.bisect_left(nums[i])\n            if j-1 >= 0 and right[-1] > nums[i]:\n                result = max(result, left[j-1]-nums[i]+right[-1])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

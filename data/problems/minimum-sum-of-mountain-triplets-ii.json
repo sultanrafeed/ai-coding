@@ -1,0 +1,33 @@
+{
+  "id": "d909c832-97b2-458c-a7f5-a6d288cbd68b",
+  "slug": "minimum-sum-of-mountain-triplets-ii",
+  "title": "Minimum Sum of Mountain Triplets II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> array <code>nums</code> of integers.</p>\n\n<p>A triplet of indices <code>(i, j, k)</code> is a <strong>mountain</strong> if:</p>\n\n<ul>\n\t<li><code>i &lt; j &lt; k</code></li>\n\t<li><code>nums[i] &lt; nums[j]</code> and <code>nums[k] &lt; nums[j]</code></li>\n</ul>\n\n<p>Return <em>the <strong>minimum possible sum</strong> of a mountain triplet of</em> <code>nums</code>. <em>If no such triplet exists, return</em> <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [8,6,1,5,3]\n<strong>Output:</strong> 9\n<strong>Explanation:</strong> Triplet (2, 3, 4) is a mountain triplet of sum 9 since: \n- 2 &lt; 3 &lt; 4\n- nums[2] &lt; nums[3] and nums[4] &lt; nums[3]\nAnd the sum of this triplet is nums[2] + nums[3] + nums[4] = 9. It can be shown that there are no mountain triplets with a sum of less than 9.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,4,8,7,10,2]\n<strong>Output:</strong> 13\n<strong>Explanation:</strong> Triplet (1, 3, 5) is a mountain triplet of sum 13 since: \n- 1 &lt; 3 &lt; 5\n- nums[1] &lt; nums[3] and nums[5] &lt; nums[3]\nAnd the sum of this triplet is nums[1] + nums[3] + nums[5] = 13. It can be shown that there are no mountain triplets with a sum of less than 13.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [6,5,4,3,4,5]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> It can be shown that there are no mountain triplets in nums.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>8</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// prefix sum\nclass Solution {\npublic:\n    int minimumSum(vector<int>& nums) {\n        static const int INF = numeric_limits<int>::max();\n\n        vector<int> right(size(nums), INF);\n        for (int i = size(nums) - 1, curr = INF; i >= 0; --i) {\n            right[i] = curr;\n            curr = min(curr, nums[i]);\n        }\n        int result = INF;\n        for (int i = 0, curr = INF; i < size(nums); ++i) {\n            if (curr < nums[i] && nums[i] > right[i]) {\n                result = min(result, curr + nums[i] + right[i]);\n            }\n            curr = min(curr, nums[i]);\n        }\n        return result != INF ? result : -1;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// prefix sum\nclass Solution2 {\npublic:\n    int minimumSum(vector<int>& nums) {\n        static const int INF = numeric_limits<int>::max();\n\n        vector<int> left(size(nums), INF);\n        for (int i = 0, curr = INF; i < size(nums); ++i) {\n            left[i] = curr;\n            curr = min(curr, nums[i]);\n        }\n        vector<int> right(size(nums), INF);\n        for (int i = size(nums) - 1, curr = INF; i >= 0; --i) {\n            right[i] = curr;\n            curr = min(curr, nums[i]);\n        }\n        int result = INF;\n        for (int i = 0; i < size(nums); ++i) {\n            if (left[i] < nums[i] && nums[i] > right[i]) {\n                result = min(result, left[i] + nums[i] + right[i]);\n            }\n        }\n        return result != INF ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# prefix sum\nclass Solution(object):\n    def minimumSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        INF = float(\"inf\")\n\n        right = [INF]*len(nums)\n        curr = INF\n        for i in reversed(xrange(len(nums))):\n            right[i] = curr\n            curr = min(curr, nums[i])\n        result = curr = INF\n        for i in xrange(len(nums)):\n            if curr < nums[i] > right[i]:\n                result = min(result, curr+nums[i]+right[i])\n            curr = min(curr, nums[i])\n        return result if result != INF else -1\n\n\n# Time:  O(n)\n# Space: O(n)\n# prefix sum\nclass Solution2(object):\n    def minimumSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        INF = float(\"inf\")\n\n        left = [INF]*len(nums)\n        curr = INF\n        for i in xrange(len(nums)):\n            left[i] = curr\n            curr = min(curr, nums[i])\n        right = [INF]*len(nums)\n        curr = INF\n        for i in reversed(xrange(len(nums))):\n            right[i] = curr\n            curr = min(curr, nums[i])\n        result = INF\n        for i in xrange(len(nums)):\n            if left[i] < nums[i] > right[i]:\n                result = min(result, left[i]+nums[i]+right[i])\n        return result if result != INF else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

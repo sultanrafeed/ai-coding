@@ -1,0 +1,37 @@
+{
+  "id": "14bc5e48-47bc-438c-912f-9c022b23fcfb",
+  "slug": "intersection-of-two-arrays",
+  "title": "Intersection of Two Arrays",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two integer arrays <code>nums1</code> and <code>nums2</code>, return <em>an array of their <span data-keyword=\"array-intersection\">intersection</span></em>. Each element in the result must be <strong>unique</strong> and you may return the result in <strong>any order</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,2,2,1], nums2 = [2,2]\n<strong>Output:</strong> [2]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [4,9,5], nums2 = [9,4,9,8,4]\n<strong>Output:</strong> [9,4]\n<strong>Explanation:</strong> [4,9] is also accepted.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums1.length, nums2.length &lt;= 1000</code></li>\n\t<li><code>0 &lt;= nums1[i], nums2[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "two-pointers",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m + n)\n// Space: O(min(m, n))\n\n// Hash solution.\nclass Solution {\npublic:\n    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {\n        if (nums1.size() > nums2.size()) {\n            return intersection(nums2, nums1);\n        }\n\n        unordered_set<int> lookup{nums1.cbegin(), nums1.cend()};\n\n        vector<int> result;\n        for (const auto& i : nums2) {\n            if (lookup.count(i)) {\n                result.emplace_back(i);\n                lookup.erase(i);\n            }\n        }\n\n        return result;\n    }\n};\n\n\n// Time:  O(max(m, n) * log(max(m, n)))\n// Space: O(1)\n// Binary search solution.\nclass Solution2 {\npublic:\n    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {\n        if (nums1.size() > nums2.size()) {\n            return intersection(nums2, nums1);\n        }\n\n        sort(nums1.begin(), nums1.end());\n        sort(nums2.begin(), nums2.end());\n\n        vector<int> result;\n        auto it = nums2.cbegin();\n        for (const auto& i : nums1) {\n            it = lower_bound(it, nums2.cend(), i);\n            if (it != nums2.end() && *it == i) {\n                result.emplace_back(*it);\n                it = upper_bound(it, nums2.cend(), i);\n            }\n        }\n        \n        return result;\n    }\n};\n\n\n// Time:  O(max(m, n) * log(max(m, n)))\n// Space: O(1)\n// Two pointers solution.\nclass Solution3 {\npublic:\n    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {\n        vector<int> result;\n        sort(nums1.begin(), nums1.end());\n        sort(nums2.begin(), nums2.end());\n        auto it1 = nums1.cbegin(), it2 = nums2.cbegin();\n        while (it1 != nums1.cend() && it2 != nums2.cend()) {\n            if (*it1 < *it2) {\n                ++it1;\n            } else if (*it1 > *it2) {\n                ++it2;\n            } else {\n                if (result.empty() || result.back() != *it1) {\n                    result.emplace_back(*it1);\n                }\n                ++it1, ++it2;\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(mlogm + nlogn)\n// Space: O(m + n)\nclass Solution4 {\npublic:\n    vector<int> intersection(vector<int>& nums1, vector<int>& nums2) {\n        vector<int> result;\n        sort(begin(nums1), end(nums1)); sort(begin(nums2), end(nums2));\n        set_intersection(cbegin(nums1), cend(nums1), cbegin(nums2), cend(nums2), back_inserter(result));\n        result.erase(unique(begin(result), end(result)), end(result));\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m + n)\n# Space: O(min(m, n))\n\nclass Solution(object):\n    def intersection(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: List[int]\n        \"\"\"\n        if len(nums1) > len(nums2):\n            return self.intersection(nums2, nums1)\n\n        lookup = set()\n        for i in nums1:\n            lookup.add(i)\n\n        res = []\n        for i in nums2:\n            if i in lookup:\n                res += i,\n                lookup.discard(i)\n\n        return res\n\n    def intersection2(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: List[int]\n        \"\"\"\n        return list(set(nums1) & set(nums2))\n\n\n# Time:  O(max(m, n) * log(max(m, n)))\n# Space: O(1)\n# Binary search solution.\nclass Solution2(object):\n    def intersection(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: List[int]\n        \"\"\"\n        if len(nums1) > len(nums2):\n            return self.intersection(nums2, nums1)\n\n        def binary_search(compare, nums, left, right, target):\n            while left < right:\n                mid = left + (right - left) / 2\n                if compare(nums[mid], target):\n                    right = mid\n                else:\n                    left = mid + 1\n            return left\n\n        nums1.sort(), nums2.sort()\n\n        res = []\n        left = 0\n        for i in nums1:\n            left = binary_search(lambda x, y: x >= y, nums2, left, len(nums2), i)\n            if left != len(nums2) and nums2[left] == i:\n                res += i,\n                left = binary_search(lambda x, y: x > y, nums2, left, len(nums2), i)\n\n        return res\n\n\n# Time:  O(max(m, n) * log(max(m, n)))\n# Space: O(1)\n# Two pointers solution.\nclass Solution3(object):\n    def intersection(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: List[int]\n        \"\"\"\n        nums1.sort(), nums2.sort()\n        res = []\n\n        it1, it2 = 0, 0\n        while it1 < len(nums1) and it2 < len(nums2):\n            if nums1[it1] < nums2[it2]:\n                it1 += 1\n            elif nums1[it1] > nums2[it2]:\n                it2 += 1\n            else:\n                if not res or res[-1] != nums1[it1]:\n                    res += nums1[it1],\n                it1 += 1\n                it2 += 1\n\n        return res",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

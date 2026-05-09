@@ -1,0 +1,33 @@
+{
+  "id": "8d6e41e9-c2bc-4b9c-a41d-db949bd77ef9",
+  "slug": "element-appearing-more-than-25-in-sorted-array",
+  "title": "Element Appearing More Than 25% In Sorted Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer array <strong>sorted</strong> in non-decreasing order, there is exactly one integer in the array that occurs more than 25% of the time, return that integer.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,2,2,6,6,6,6,7,10]\n<strong>Output:</strong> 6\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,1]\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= arr[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findSpecialInteger(vector<int>& arr) {\n        for (const auto& x : {arr[arr.size() / 4], arr[arr.size() / 2], arr[arr.size() * 3 / 4]}) {\n            if (distance(lower_bound(arr.cbegin(), arr.cend(), x),\n                         upper_bound(arr.cbegin(), arr.cend(), x)) * 4 > arr.size()) {\n                return x;\n            }\n        }\n        return -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nimport bisect\n\n\nclass Solution(object):\n    def findSpecialInteger(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        for x in [arr[len(arr)//4], arr[len(arr)//2], arr[len(arr)*3//4]]:\n            if (bisect.bisect_right(arr, x) - bisect.bisect_left(arr, x)) * 4 > len(arr):\n                return x\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

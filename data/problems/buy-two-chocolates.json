@@ -1,0 +1,35 @@
+{
+  "id": "b49b4749-801b-4517-a6a1-fc3210ba5de8",
+  "slug": "buy-two-chocolates",
+  "title": "Buy Two Chocolates",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>prices</code> representing the prices of various chocolates in a store. You are also given a single integer <code>money</code>, which represents your initial amount of money.</p>\n\n<p>You must buy <strong>exactly</strong> two chocolates in such a way that you still have some <strong>non-negative</strong> leftover money. You would like to minimize the sum of the prices of the two chocolates you buy.</p>\n\n<p>Return <em>the amount of money you will have leftover after buying the two chocolates</em>. If there is no way for you to buy two chocolates without ending up in debt, return <code>money</code>. Note that the leftover must be non-negative.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [1,2,2], money = 3\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Purchase the chocolates priced at 1 and 2 units respectively. You will have 3 - 3 = 0 units of money afterwards. Thus, we return 0.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> prices = [3,2,3], money = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> You cannot buy 2 chocolates without going in debt, so we return 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= prices.length &lt;= 50</code></li>\n\t<li><code>1 &lt;= prices[i] &lt;= 100</code></li>\n\t<li><code>1 &lt;= money &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    int buyChoco(vector<int>& prices, int money) {\n        const auto& min_idx = [&](int exclude) {\n            int j = -1;\n            for (int i = 0; i < size(prices); ++i) {\n                if (i != exclude && (j == -1 || prices[j] > prices[i])) {\n                    j = i;\n                }\n            }\n            return j;\n        };\n    \n        const auto& i = min_idx(-1);\n        const auto& j = min_idx(i);\n        return prices[i] + prices[j] <= money ? money - (prices[i] + prices[j]) : money;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def buyChoco(self, prices, money):\n        \"\"\"\n        :type prices: List[int]\n        :type money: int\n        :rtype: int\n        \"\"\"\n        i = min(xrange(len(prices)), key=lambda x: prices[x])\n        j = min((j for j in xrange(len(prices)) if j != i), key=lambda x: prices[x])\n        return money-(prices[i]+prices[j]) if prices[i]+prices[j] <= money else money",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

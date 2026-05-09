@@ -1,0 +1,44 @@
+{
+  "id": "2f9d7388-d051-4364-a967-ff287148fb82",
+  "slug": "random-pick-with-blacklist",
+  "title": "Random Pick with Blacklist",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer <code>n</code> and an array of <strong>unique</strong> integers <code>blacklist</code>. Design an algorithm to pick a random integer in the range <code>[0, n - 1]</code> that is <strong>not</strong> in <code>blacklist</code>. Any integer that is in the mentioned range and not in <code>blacklist</code> should be <strong>equally likely</strong> to be returned.</p>\n\n<p>Optimize your algorithm such that it minimizes the number of calls to the <strong>built-in</strong> random function of your language.</p>\n\n<p>Implement the <code>Solution</code> class:</p>\n\n<ul>\n\t<li><code>Solution(int n, int[] blacklist)</code> Initializes the object with the integer <code>n</code> and the blacklisted integers <code>blacklist</code>.</li>\n\t<li><code>int pick()</code> Returns a random integer in the range <code>[0, n - 1]</code> and not in <code>blacklist</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;Solution&quot;, &quot;pick&quot;, &quot;pick&quot;, &quot;pick&quot;, &quot;pick&quot;, &quot;pick&quot;, &quot;pick&quot;, &quot;pick&quot;]\n[[7, [2, 3, 5]], [], [], [], [], [], [], []]\n<strong>Output</strong>\n[null, 0, 4, 1, 6, 1, 0, 4]\n\n<strong>Explanation</strong>\nSolution solution = new Solution(7, [2, 3, 5]);\nsolution.pick(); // return 0, any integer from [0,1,4,6] should be ok. Note that for every call of pick,\n                 // 0, 1, 4, and 6 must be equally likely to be returned (i.e., with probability 1/4).\nsolution.pick(); // return 4\nsolution.pick(); // return 1\nsolution.pick(); // return 6\nsolution.pick(); // return 1\nsolution.pick(); // return 0\nsolution.pick(); // return 4\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>9</sup></code></li>\n\t<li><code>0 &lt;= blacklist.length &lt;= min(10<sup>5</sup>, n - 1)</code></li>\n\t<li><code>0 &lt;= blacklist[i] &lt; n</code></li>\n\t<li>All the values of <code>blacklist</code> are <strong>unique</strong>.</li>\n\t<li>At most <code>2 * 10<sup>4</sup></code> calls will be made to <code>pick</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "binary-search",
+    "sorting",
+    "randomized"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"Solution\",\"pick\",\"pick\",\"pick\",\"pick\",\"pick\",\"pick\",\"pick\"]\n[[7,[2,3,5]],[],[],[],[],[],[],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor: O(b)\n//        pick: O(1)\n// Space: O(b)\n\nclass Solution {\npublic:\n    Solution(int N, vector<int> blacklist) :\n        n_(N - blacklist.size()) {\n        unordered_set<int> whitelist;\n        for (int i = n_; i < N; ++i) {\n            whitelist.emplace(i);\n        }\n        for (const auto& black : blacklist) {\n            whitelist.erase(black);\n        }\n        auto white = whitelist.cbegin();\n        for (const auto& black : blacklist) {\n            if (black < n_) {\n                lookup_[black] = *(white++);\n            }\n        }\n    }\n\n    int pick() {\n        int index = rand() % n_;\n        return lookup_.count(index) ? lookup_[index] : index;\n    }\n\nprivate:\n    int n_;\n    unordered_map<int, int> lookup_;\n};\n\n// Time:  ctor: O(blogb)\n//        pick: O(logb)\n// Space: O(b)\nclass Solution2 {\npublic:\n    Solution(int N, vector<int> blacklist) :\n        n_(N - blacklist.size()),\n        blacklist_(blacklist) {\n\t\t\n        sort(blacklist_.begin(), blacklist_.end());\n    }\n\n    int pick() {\n        int index = rand() % n_;\n        int left = 0, right = blacklist_.size() - 1;\n        while (left <= right) {\n            auto mid = left + (right - left) / 2;\n            if (index + mid < blacklist_[mid]) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return index + left;\n    }\n\nprivate:        \n    int n_;\n    vector<int> blacklist_;\n};\n\n/**\n * Your Solution object will be instantiated and called as such:\n * Solution obj = new Solution(N, blacklist);\n * int param_1 = obj.pick();\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor: O(b)\n#        pick: O(1)\n# Space: O(b)\n\nimport random\n\n\nclass Solution(object):\n    \n    def __init__(self, N, blacklist):\n        \"\"\"\n        :type N: int\n        :type blacklist: List[int]\n        \"\"\"\n        self.__n = N-len(blacklist)\n        self.__lookup = {}\n        white = iter(set(range(self.__n, N))-set(blacklist))\n        for black in blacklist:\n            if black < self.__n:\n                self.__lookup[black] = next(white)\n        \n        \n    def pick(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        index = random.randint(0, self.__n-1)\n        return self.__lookup[index] if index in self.__lookup else index\n\n\n# Time:  ctor: O(blogb)\n#        pick: O(logb)\n# Space: O(b)\nimport random\n\nclass Solution2(object):\n    \n    def __init__(self, N, blacklist):\n        \"\"\"\n        :type N: int\n        :type blacklist: List[int]\n        \"\"\"\n        self.__n = N-len(blacklist)\n        blacklist.sort()\n        self.__blacklist = blacklist\n        \n    def pick(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        index = random.randint(0, self.__n-1)\n        left, right = 0, len(self.__blacklist)-1\n        while left <= right:\n            mid = left+(right-left)//2\n            if index+mid < self.__blacklist[mid]:\n                right = mid-1\n            else:\n                left = mid+1\n        return index+left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

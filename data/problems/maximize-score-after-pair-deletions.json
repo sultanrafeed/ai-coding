@@ -1,0 +1,40 @@
+{
+  "id": "9fc8b818-22bf-412b-a477-b9a9284e140b",
+  "slug": "maximize-score-after-pair-deletions",
+  "title": "Maximize Score After Pair Deletions",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,4,1]\n[5,-1,4,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    int maxScore(vector<int>& nums) {\n        const int total = accumulate(cbegin(nums), cend(nums), 0);\n        if (size(nums) % 2) {\n            return total - ranges::min(nums);\n        }\n        int mn = numeric_limits<int>::max();\n        for (int i = 0; i + 1 < size(nums); ++i) {\n            mn = min(mn, nums[i] + nums[i + 1]);\n        }\n        return total - mn;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def maxScore(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return sum(nums)-min(nums) if len(nums)%2 else sum(nums)-min(nums[i]+nums[i+1] for i in xrange(len(nums)-1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

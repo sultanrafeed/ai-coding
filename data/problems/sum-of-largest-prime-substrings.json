@@ -1,0 +1,43 @@
+{
+  "id": "ab7470b2-52a5-4f3a-a4ef-00425ad26d1c",
+  "slug": "sum-of-largest-prime-substrings",
+  "title": "Sum of Largest Prime Substrings",
+  "difficulty": "medium",
+  "descriptionHtml": "<p data-end=\"157\" data-start=\"30\">Given a string <code>s</code>, find the sum of the <strong>3 largest unique <span data-keyword=\"prime-number\">prime numbers</span></strong> that can be formed using any of its<strong> <span data-keyword=\"substring\">substrings</span></strong>.</p>\n\n<p data-end=\"269\" data-start=\"166\">Return the <strong>sum</strong> of the three largest unique prime numbers that can be formed. If fewer than three exist, return the sum of <strong>all</strong> available primes. If no prime numbers can be formed, return 0.</p>\n\n<p data-end=\"370\" data-is-last-node=\"\" data-is-only-node=\"\" data-start=\"271\"><strong data-end=\"280\" data-start=\"271\">Note:</strong> Each prime number should be counted only <strong>once</strong>, even if it appears in <strong>multiple</strong> substrings. Additionally, when converting a substring to an integer, any leading zeros are ignored.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;12234&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1469</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li data-end=\"136\" data-start=\"16\">The unique prime numbers formed from the substrings of <code>&quot;12234&quot;</code> are 2, 3, 23, 223, and 1223.</li>\n\t<li data-end=\"226\" data-start=\"137\">The 3 largest primes are 1223, 223, and 23. Their sum is 1469.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;111&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">11</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li data-end=\"339\" data-start=\"244\">The unique prime number formed from the substrings of <code>&quot;111&quot;</code> is 11.</li>\n\t<li data-end=\"412\" data-is-last-node=\"\" data-start=\"340\">Since there is only one prime number, the sum is 11.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li data-end=\"39\" data-start=\"18\"><code>1 &lt;= s.length &lt;= 10</code></li>\n\t<li data-end=\"68\" data-is-last-node=\"\" data-start=\"40\"><code>s</code> consists of only digits.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "math",
+    "string",
+    "sorting",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"12234\"\n\"111\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2 * sqrt(r))\n// Space: O(n^2)\n\n// number theory, quick select\nclass Solution {\npublic:\n    long long sumOfLargestPrimes(string s) {\n        static const int COUNT = 3;\n\n        const auto& is_prime = [](int64_t n) {\n            if (n == 1) {\n                return false;\n            }\n            if (n == 2 || n == 3) {\n                return true;\n            }\n            if (n % 2 == 0 || n % 3 == 0) {\n                return false;\n            }\n            for (int64_t i = 5; i < n; i += 6) {\n                if (i * i > n) {\n                    break;\n                }\n                if (n % i == 0 || n % (i + 2) == 0) {\n                    return false;\n                }\n            }\n            return true;\n        };\n\n        unordered_set<int64_t> primes_set;\n        for (int i = 0; i < size(s); ++i) {\n            int64_t curr = 0;\n            for (int j = i; j < size(s); ++j) {\n                curr = curr * 10 + (s[j] - '0');\n                if (is_prime(curr)) {\n                    primes_set.emplace(curr);\n                }\n            }\n        }\n        vector<int64_t> primes(cbegin(primes_set), cend(primes_set));\n        const int d = min(static_cast<int>(size(primes)), 3);\n        nth_element(begin(primes), begin(primes) + d, end(primes), greater<int64_t>());\n        return accumulate(cbegin(primes), cbegin(primes) + d, 0ll);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2 * sqrt(r))\n# Space: O(n^2)\n\nimport random\n\n\n# number theory, quick select\nclass Solution(object):\n    def sumOfLargestPrimes(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        COUNT = 3\n        def nth_element(nums, n, left=0, compare=lambda a, b: a < b):\n            def tri_partition(nums, left, right, target, compare):\n                mid = left\n                while mid <= right:\n                    if nums[mid] == target:\n                        mid += 1\n                    elif compare(nums[mid], target):\n                        nums[left], nums[mid] = nums[mid], nums[left]\n                        left += 1\n                        mid += 1\n                    else:\n                        nums[mid], nums[right] = nums[right], nums[mid]\n                        right -= 1\n                return left, right\n            \n            right = len(nums)-1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)\n                if pivot_left <= n <= pivot_right:\n                    return\n                elif pivot_left > n:\n                    right = pivot_left-1\n                else:  # pivot_right < n.\n                    left = pivot_right+1\n\n        def is_prime(n):\n            if n == 1:\n                return False\n            if n in (2, 3):\n                return True\n            if n%2 == 0 or n%3 == 0:\n                return False\n            for i in xrange(5, n, 6):\n                if i*i > n:\n                    break\n                if n%i == 0 or n%(i+2) == 0:\n                    return False\n            return True\n    \n        primes_set = set()\n        for i in xrange(len(s)):\n            curr = 0\n            for j in xrange(i, len(s)):\n                curr = curr*10+int(s[j])\n                if is_prime(curr):\n                    primes_set.add(curr)\n        primes = list(primes_set)\n        d = min(len(primes), COUNT)\n        nth_element(primes, d, compare=lambda a, b: a > b)\n        return sum(primes[i] for i in xrange(d))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "4d23c79c-6bf6-44ff-ac88-fd83cfee80bf",
+  "slug": "maximum-sum-bst-in-binary-tree",
+  "title": "Maximum Sum BST in Binary Tree",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a <strong>binary tree</strong> <code>root</code>, return <em>the maximum sum of all keys of <strong>any</strong> sub-tree which is also a Binary Search Tree (BST)</em>.</p>\n\n<p>Assume a BST is defined as follows:</p>\n\n<ul>\n\t<li>The left subtree of a node contains only nodes with keys <strong>less than</strong> the node&#39;s key.</li>\n\t<li>The right subtree of a node contains only nodes with keys <strong>greater than</strong> the node&#39;s key.</li>\n\t<li>Both the left and right subtrees must also be binary search trees.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/01/30/sample_1_1709.png\" style=\"width: 320px; height: 250px;\" /></p>\n\n<pre>\n<strong>Input:</strong> root = [1,4,3,2,4,2,5,null,null,null,null,null,null,4,6]\n<strong>Output:</strong> 20\n<strong>Explanation:</strong> Maximum sum in a valid Binary search tree is obtained in root node with key equal to 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/01/30/sample_2_1709.png\" style=\"width: 134px; height: 180px;\" /></p>\n\n<pre>\n<strong>Input:</strong> root = [4,3,null,1,2]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> Maximum sum in a valid Binary search tree is obtained in a single root node with key equal to 2.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> root = [-4,-2,-5]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> All values are negatives. Return an empty BST.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 4 * 10<sup>4</sup>]</code>.</li>\n\t<li><code>-4 * 10<sup>4</sup> &lt;= Node.val &lt;= 4 * 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "dynamic-programming",
+    "tree",
+    "depth-first-search",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,4,3,2,4,2,5,null,null,null,null,null,null,4,6]\n[4,3,null,1,2]\n[-4,-2,-5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\n\n// dfs solution with stack\nclass Solution {\npublic:\n    int maxSumBST(TreeNode* root) {\n        using RET = tuple<bool, int, int, int>;\n        int result = 0;\n        RET ret;\n        vector<tuple<TreeNode*, shared_ptr<vector<RET>>, RET *>> stk = {{root, nullptr, &ret}};\n        while (!stk.empty()) {\n            const auto [node, tmp, ret] = stk.back(); stk.pop_back();\n            if (tmp) {\n                const auto& [lvalid, lsum, lmin, lmax] = (*tmp)[0];\n                const auto& [rvalid, rsum, rmin, rmax] = (*tmp)[1];\n                if (lvalid && rvalid && lmax < node->val && node->val < rmin) {\n                    const auto& total = lsum + node->val + rsum;\n                    result = max(result, total);\n                    *ret = {true, total, min(lmin, node->val), max(node->val, rmax)};\n                    continue;\n                }\n                *ret = {false, 0, 0, 0};\n                continue;\n            }\n            if (!node) {\n                *ret = {true, 0,\n                        numeric_limits<int>::max(),\n                        numeric_limits<int>::min()};\n                continue;\n            }\n            const auto& new_tmp = make_shared<vector<RET>>(2);\n            stk.emplace_back(node, new_tmp, ret);\n            stk.emplace_back(node->right, nullptr, &((*new_tmp)[1]));\n            stk.emplace_back(node->left, nullptr, &((*new_tmp)[0]));\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\n// dfs solution with recursion\nclass Solution2 {\npublic:\n    int maxSumBST(TreeNode* root) {\n        int result = 0;\n        dfs(root, &result);\n        return result;\n    }\n\nprivate:\n    tuple<bool, int, int, int> dfs(TreeNode *node, int *result) {\n        if (!node) {\n            return {true, 0,\n                    numeric_limits<int>::max(),\n                    numeric_limits<int>::min()};\n        }\n        const auto& [lvalid, lsum, lmin, lmax] = dfs(node->left, result);\n        const auto& [rvalid, rsum, rmin, rmax] = dfs(node->right, result);\n        if (lvalid && rvalid && lmax < node->val && node->val < rmin) {\n            const auto& total = lsum + node->val + rsum;\n            *result = max(*result, total);\n            return {true, total, min(lmin, node->val), max(node->val, rmax)};\n        }\n        return {false, 0, 0, 0};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\n# dfs solution with stack\nclass Solution(object):\n    def maxSumBST(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        result = 0\n        stk = [[root, None, []]]\n        while stk:\n            node, tmp, ret = stk.pop()\n            if tmp:\n                lvalid, lsum, lmin, lmax = tmp[0]\n                rvalid, rsum, rmin, rmax = tmp[1]\n                if lvalid and rvalid and lmax < node.val < rmin:\n                    total = lsum + node.val + rsum\n                    result = max(result, total)\n                    ret[:] = [True, total, min(lmin, node.val), max(node.val, rmax)]\n                    continue\n                ret[:] = [False, 0, 0, 0]\n                continue\n            if not node:\n                ret[:] = [True, 0, float(\"inf\"), float(\"-inf\")]\n                continue\n            new_tmp = [[], []]\n            stk.append([node, new_tmp, ret])\n            stk.append([node.right, None, new_tmp[1]])\n            stk.append([node.left, None, new_tmp[0]])\n        return result\n\n\n# Time:  O(n)\n# Space: O(h)\n# dfs solution with recursion\nclass Solution2(object):\n    def maxSumBST(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: int\n        \"\"\"\n        def dfs(node, result):\n            if not node:\n                return True, 0, float(\"inf\"), float(\"-inf\")\n            lvalid, lsum, lmin, lmax = dfs(node.left, result)\n            rvalid, rsum, rmin, rmax = dfs(node.right, result)\n            if lvalid and rvalid and lmax < node.val < rmin:\n                total = lsum + node.val + rsum\n                result[0] = max(result[0], total)\n                return True, total, min(lmin, node.val), max(node.val, rmax)\n            return False, 0, 0, 0\n\n        result = [0]\n        dfs(root, result)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

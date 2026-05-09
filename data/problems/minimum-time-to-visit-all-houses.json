@@ -1,0 +1,34 @@
+{
+  "id": "9a183f92-1637-4e16-81fd-4cde2577416b",
+  "slug": "minimum-time-to-visit-all-houses",
+  "title": "Minimum Time to Visit All Houses",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + q)\n// Space: O(n)\n\n// prefix sum\nclass Solution {\npublic:\n    long long minTotalTime(vector<int>& forward, vector<int>& backward, vector<int>& queries) {\n        vector<int64_t> prefix1((2 * size(forward) - 1) + 1);\n        for (int i = 0; i < 2 * size(forward) - 1; ++i) {\n            prefix1[i + 1] = prefix1[i] + forward[i % size(forward)];\n        }\n        vector<int64_t> prefix2((2 * size(backward) - 1) + 1);\n        for (int i = 0; i < 2 * size(backward) - 1; ++i) {\n            prefix2[i + 1] = prefix2[i] + backward[i % size(backward)];\n        }\n        int64_t result = 0;\n        int prev = 0;\n        for (const auto& q : queries) {\n            if (prev > q) {\n                result += min(prefix1[q + size(forward)] - prefix1[prev], prefix2[prev + 1] - prefix2[q + 1]);\n            } else {\n                result += min(prefix1[q] - prefix1[prev], prefix2[prev + size(forward) + 1] - prefix2[q + 1]);\n            }\n            prev = q;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + q)\n# Space: O(n)\n\n# prefix sum\nclass Solution(object):\n    def minTotalTime(self, forward, backward, queries):\n        \"\"\"\n        :type forward: List[int]\n        :type backward: List[int]\n        :type queries: List[int]\n        :rtype: int\n        \"\"\"\n        prefix1 = [0]*((2*len(forward)-1)+1)\n        for i in xrange(2*len(forward)-1):\n            prefix1[i+1] = prefix1[i]+forward[i%len(forward)]\n        prefix2 = [0]*((2*len(backward)-1)+1)\n        for i in xrange(2*len(backward)-1):\n            prefix2[i+1] = prefix2[i]+backward[i%len(backward)]\n        result = prev = 0\n        for q in queries:\n            if prev > q:\n                result += min(prefix1[q+len(forward)]-prefix1[prev], prefix2[prev+1]-prefix2[q+1])\n            else:\n                result += min(prefix1[q]-prefix1[prev], prefix2[prev+len(forward)+1]-prefix2[q+1])\n            prev = q\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

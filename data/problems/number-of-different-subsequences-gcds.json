@@ -1,0 +1,42 @@
+{
+  "id": "e292148a-f745-4fb7-bafa-c9cd870f6886",
+  "slug": "number-of-different-subsequences-gcds",
+  "title": "Number of Different Subsequences GCDs",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an array <code>nums</code> that consists of positive integers.</p>\n\n<p>The <strong>GCD</strong> of a sequence of numbers is defined as the greatest integer that divides <strong>all</strong> the numbers in the sequence evenly.</p>\n\n<ul>\n\t<li>For example, the GCD of the sequence <code>[4,6,16]</code> is <code>2</code>.</li>\n</ul>\n\n<p>A <strong>subsequence</strong> of an array is a sequence that can be formed by removing some elements (possibly none) of the array.</p>\n\n<ul>\n\t<li>For example, <code>[2,5,10]</code> is a subsequence of <code>[1,2,1,<strong><u>2</u></strong>,4,1,<u><strong>5</strong></u>,<u><strong>10</strong></u>]</code>.</li>\n</ul>\n\n<p>Return <em>the <strong>number</strong> of <strong>different</strong> GCDs among all <strong>non-empty</strong> subsequences of</em> <code>nums</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/17/image-1.png\" style=\"width: 149px; height: 309px;\" />\n<pre>\n<strong>Input:</strong> nums = [6,10,3]\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The figure shows all the non-empty subsequences and their GCDs.\nThe different GCDs are 6, 10, 3, 2, and 1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,15,40,5,6]\n<strong>Output:</strong> 7\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 2 * 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "counting",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[6,10,3]\n[5,15,40,5,6]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + m * (1 + 1/2 + 1/3 + ... + 1/m)) = O(n + mlogm), m is max of nums\n// Space: O(n)\n\nclass Solution {\npublic:\n    int countDifferentSubsequenceGCDs(vector<int>& nums) {\n        unordered_set<int> nums_set(cbegin(nums), cend(nums));\n        int max_num = *max_element(cbegin(nums), cend(nums));\n        int result = 0;\n        for (int i = 1; i <= max_num; ++i) {\n            int d = 0;\n            for (int x = i; x <= max_num; x += i) {\n                if (!nums_set.count(x)) {\n                    continue;\n                }\n                d = gcd(d, x);  // total time: O(log(min(d, x)) = O(logd), where d keeps the same or gets smaller\n                if (d == i) {\n                    ++result;\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + m * (1 + 1/2 + 1/3 + ... + 1/m)) = O(n + mlogm), m is max of nums\n# Space: O(n)\n\nimport fractions\n\n\nclass Solution(object):\n    def countDifferentSubsequenceGCDs(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        max_num, nums_set = max(nums), set(nums)\n        result = 0\n        for i in xrange(1, max_num+1):\n            d = 0\n            for x in xrange(i, max_num+1, i):\n                if x not in nums_set:\n                    continue\n                d = fractions.gcd(d, x)  # total time: O(log(min(d, x)) = O(logd), where d keeps the same or gets smaller\n                if d == i:\n                    result += 1\n                    break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

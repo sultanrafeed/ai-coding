@@ -1,0 +1,34 @@
+{
+  "id": "70b6433b-0d4a-4845-8b8f-96b5d65366ba",
+  "slug": "count-number-of-homogenous-substrings",
+  "title": "Count Number of Homogenous Substrings",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code>, return <em>the number of <strong>homogenous</strong> substrings of </em><code>s</code><em>.</em> Since the answer may be too large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>A string is <strong>homogenous</strong> if all the characters of the string are the same.</p>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters within a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abbcccaa&quot;\n<strong>Output:</strong> 13\n<strong>Explanation:</strong> The homogenous substrings are listed as below:\n&quot;a&quot;   appears 3 times.\n&quot;aa&quot;  appears 1 time.\n&quot;b&quot;   appears 2 times.\n&quot;bb&quot;  appears 1 time.\n&quot;c&quot;   appears 3 times.\n&quot;cc&quot;  appears 2 times.\n&quot;ccc&quot; appears 1 time.\n3 + 1 + 2 + 1 + 3 + 2 + 1 = 13.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;xy&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The homogenous substrings are &quot;x&quot; and &quot;y&quot;.</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;zzzzz&quot;\n<strong>Output:</strong> 15\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists of lowercase letters.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space; O(1)\n\nclass Solution {\npublic:\n    int countHomogenous(string s) {\n        static const int MOD = 1e9 + 7;\n        int cnt = 0, result = 0;\n        for (int i = 0; i < size(s); ++i) {\n            if (i > 0 && s[i - 1] == s[i]) {\n                ++cnt;\n            } else {\n                cnt = 1;\n            }\n            result = (result + cnt) % MOD;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def countHomogenous(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result = cnt = 0\n        for i in xrange(len(s)):\n            if i and s[i-1] == s[i]:\n                cnt += 1\n            else:\n                cnt = 1\n            result = (result+cnt)%MOD\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

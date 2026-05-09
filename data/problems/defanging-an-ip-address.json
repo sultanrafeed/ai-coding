@@ -1,0 +1,33 @@
+{
+  "id": "f675a671-e0c9-4cd4-a362-df870a15fff3",
+  "slug": "defanging-an-ip-address",
+  "title": "Defanging an IP Address",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a valid (IPv4) IP <code>address</code>, return a defanged version of that IP address.</p>\r\n\r\n<p>A <em>defanged&nbsp;IP address</em>&nbsp;replaces every period <code>&quot;.&quot;</code> with <code>&quot;[.]&quot;</code>.</p>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong class=\"example\">Example 1:</strong></p>\r\n<pre><strong>Input:</strong> address = \"1.1.1.1\"\r\n<strong>Output:</strong> \"1[.]1[.]1[.]1\"\r\n</pre><p><strong class=\"example\">Example 2:</strong></p>\r\n<pre><strong>Input:</strong> address = \"255.100.50.0\"\r\n<strong>Output:</strong> \"255[.]100[.]50[.]0\"\r\n</pre>\r\n<p>&nbsp;</p>\r\n<p><strong>Constraints:</strong></p>\r\n\r\n<ul>\r\n\t<li>The given <code>address</code> is a valid IPv4 address.</li>\r\n</ul>",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string defangIPaddr(string address) {\n        string result;\n        for (const auto& c : address) {\n            if (c == '.') {\n                result += \"[.]\";\n            } else {\n                result.push_back(c);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def defangIPaddr(self, address):\n        \"\"\"\n        :type address: str\n        :rtype: str\n        \"\"\"\n        result = []\n        for c in address:\n            if c == '.':\n                result.append(\"[.]\")\n            else:\n                result.append(c)\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

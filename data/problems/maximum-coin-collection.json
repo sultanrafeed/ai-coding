@@ -1,0 +1,40 @@
+{
+  "id": "370c7d7f-65eb-487b-a598-c55943d1ac26",
+  "slug": "maximum-coin-collection",
+  "title": "Maximum Coin Collection ",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,-2,-10,3]\n[-5,10,0,1]\n[1,-1,-1,-1]\n[0,3,4,-5]\n[-5,-4,-3]\n[-1,2,3]\n[-3,-3,-3]\n[9,-2,4]\n[-10]\n[-2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// dp\nclass Solution {\npublic:\n    long long maxCoins(vector<int>& lane1, vector<int>& lane2) {\n        int64_t NEG_INF = numeric_limits<int64_t>::min();\n        int64_t result = NEG_INF, dp1 = NEG_INF, dp12 = NEG_INF, dp121 = NEG_INF;\n        for (int i = 0; i < size(lane1); ++i) {\n            dp1 = max(dp1, static_cast<int64_t>(0)) + lane1[i];\n            dp12 = max(max(dp12, static_cast<int64_t>(0)) + lane2[i], dp1);\n            dp121 = max(max(dp121, static_cast<int64_t>(0)) + lane1[i], dp12);\n            result = max({result, dp1, dp121});\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# dp\nclass Solution(object):\n    def maxCoins(self, lane1, lane2):\n        \"\"\"\n        :type lane1: List[int]\n        :type lane2: List[int]\n        :rtype: int\n        \"\"\"\n        result = dp1 = dp12 = dp121 = float(\"-inf\")\n        for i in xrange(len(lane1)):\n            dp1 = max(dp1, 0)+lane1[i]\n            dp12 = max(max(dp12, 0)+lane2[i], dp1)\n            dp121 = max(max(dp121, 0)+lane1[i], dp12)\n            result = max(result, dp1, dp121)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

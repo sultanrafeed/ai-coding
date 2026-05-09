@@ -1,0 +1,37 @@
+{
+  "id": "49382f48-65be-4651-8cfc-a3f90c7309ee",
+  "slug": "maximum-product-of-the-length-of-two-palindromic-subsequences",
+  "title": "Maximum Product of the Length of Two Palindromic Subsequences",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code>, find two <strong>disjoint palindromic subsequences</strong> of <code>s</code> such that the <strong>product</strong> of their lengths is <strong>maximized</strong>. The two subsequences are <strong>disjoint</strong> if they do not both pick a character at the same index.</p>\n\n<p>Return <em>the <strong>maximum</strong> possible <strong>product</strong> of the lengths of the two palindromic subsequences</em>.</p>\n\n<p>A <strong>subsequence</strong> is a string that can be derived from another string by deleting some or no characters without changing the order of the remaining characters. A string is <strong>palindromic</strong> if it reads the same forward and backward.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"example-1\" src=\"https://assets.leetcode.com/uploads/2021/08/24/two-palindromic-subsequences.png\" style=\"width: 550px; height: 124px;\" />\n<pre>\n<strong>Input:</strong> s = &quot;leetcodecom&quot;\n<strong>Output:</strong> 9\n<strong>Explanation</strong>: An optimal solution is to choose &quot;ete&quot; for the 1<sup>st</sup> subsequence and &quot;cdc&quot; for the 2<sup>nd</sup> subsequence.\nThe product of their lengths is: 3 * 3 = 9.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;bb&quot;\n<strong>Output:</strong> 1\n<strong>Explanation</strong>: An optimal solution is to choose &quot;b&quot; (the first character) for the 1<sup>st</sup> subsequence and &quot;b&quot; (the second character) for the 2<sup>nd</sup> subsequence.\nThe product of their lengths is: 1 * 1 = 1.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;accbcaxxcxx&quot;\n<strong>Output:</strong> 25\n<strong>Explanation</strong>: An optimal solution is to choose &quot;accca&quot; for the 1<sup>st</sup> subsequence and &quot;xxcxx&quot; for the 2<sup>nd</sup> subsequence.\nThe product of their lengths is: 5 * 5 = 25.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= s.length &lt;= 12</code></li>\n\t<li><code>s</code> consists of lowercase English letters only.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming",
+    "backtracking",
+    "bit-manipulation",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(3^n)\n// Space: O(2^n)\n\nclass Solution {\npublic:\n    int maxProduct(string s) {\n        vector<int> dp(1 << size(s));\n        for (int mask = 0; mask < size(dp); ++mask) {\n            dp[mask] = palindromic_subsequence_length(s, mask);\n        }\n        int result = 0;\n        for (int mask = 0; mask < size(dp); ++mask) {\n            if (dp[mask] * (size(s) - dp[mask]) <= result) {  // optimize\n                continue;\n            }\n            // submask enumeration:\n            // => sum(nCr(n, k) * 2^k for k in xrange(n+1)) = (1 + 2)^n = 3^n\n            // => Time: O(3^n), see https://cp-algorithms.com/algebra/all-submasks.html\n            const int inverse_mask = (size(dp) - 1) ^ mask;\n            for (int submask = inverse_mask; submask; submask = (submask - 1) & inverse_mask) {\n                result = max(result, dp[mask] * dp[submask]);\n            }\n        }\n        return result;\n    }\n\nprivate:\n    int palindromic_subsequence_length(const string& s, int mask) {\n        int result = 0;\n        int left = 0, right = size(s) - 1;\n        int left_bit = 1 << left, right_bit = 1 << right;\n        while (left <= right) {\n            if ((mask & left_bit) == 0) {\n                ++left, left_bit <<= 1;\n            } else if ((mask & right_bit) == 0) {\n                --right, right_bit >>= 1;\n            } else if (s[left] == s[right]) {\n                result += (left == right) ? 1 : 2;\n                ++left, left_bit <<= 1;\n                --right, right_bit >>= 1;\n            } else {\n                return 0;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(3^n)\n# Space: O(2^n)\n\nclass Solution(object):\n    def maxProduct(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        def palindromic_subsequence_length(s, mask):\n            result = 0\n            left, right = 0, len(s)-1\n            left_bit, right_bit = 1<<left, 1<<right\n            while left <= right:\n                if mask&left_bit == 0:\n                    left, left_bit = left+1, left_bit<<1\n                elif mask&right_bit == 0:\n                    right, right_bit = right-1, right_bit>>1\n                elif s[left] == s[right]:\n                    result += 1 if left == right else 2\n                    left, left_bit = left+1, left_bit<<1\n                    right, right_bit = right-1, right_bit>>1\n                else:\n                    return 0\n            return result\n        \n        dp = [palindromic_subsequence_length(s, mask) for mask in xrange(1<<len(s))]\n        result = 0\n        for mask in xrange(len(dp)):\n            if dp[mask]*(len(s)-dp[mask]) <= result:  # optimize\n                continue\n            # submask enumeration:\n            # => sum(nCr(n, k) * 2^k for k in xrange(n+1)) = (1 + 2)^n = 3^n\n            # => Time: O(3^n), see https://cp-algorithms.com/algebra/all-submasks.html\n            submask = inverse_mask = (len(dp)-1)^mask\n            while submask:\n                result = max(result, dp[mask]*dp[submask])\n                submask = (submask-1)&inverse_mask\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

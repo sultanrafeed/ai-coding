@@ -1,0 +1,43 @@
+{
+  "id": "01967ded-2549-4620-8dec-9a3a55cad2be",
+  "slug": "my-calendar-i",
+  "title": "My Calendar I",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are implementing a program to use as your calendar. We can add a new event if adding the event will not cause a <strong>double booking</strong>.</p>\n\n<p>A <strong>double booking</strong> happens when two events have some non-empty intersection (i.e., some moment is common to both events.).</p>\n\n<p>The event can be represented as a pair of integers <code>startTime</code> and <code>endTime</code> that represents a booking on the half-open interval <code>[startTime, endTime)</code>, the range of real numbers <code>x</code> such that <code>startTime &lt;= x &lt; endTime</code>.</p>\n\n<p>Implement the <code>MyCalendar</code> class:</p>\n\n<ul>\n\t<li><code>MyCalendar()</code> Initializes the calendar object.</li>\n\t<li><code>boolean book(int startTime, int endTime)</code> Returns <code>true</code> if the event can be added to the calendar successfully without causing a <strong>double booking</strong>. Otherwise, return <code>false</code> and do not add the event to the calendar.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;MyCalendar&quot;, &quot;book&quot;, &quot;book&quot;, &quot;book&quot;]\n[[], [10, 20], [15, 25], [20, 30]]\n<strong>Output</strong>\n[null, true, false, true]\n\n<strong>Explanation</strong>\nMyCalendar myCalendar = new MyCalendar();\nmyCalendar.book(10, 20); // return True\nmyCalendar.book(15, 25); // return False, It can not be booked because time 15 is already booked by another event.\nmyCalendar.book(20, 30); // return True, The event can be booked, as the first event takes every time less than 20, but not including 20.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= start &lt; end &lt;= 10<sup>9</sup></code></li>\n\t<li>At most <code>1000</code> calls will be made to <code>book</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "design",
+    "segment-tree",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"MyCalendar\",\"book\",\"book\",\"book\"]\n[[],[10,20],[15,25],[20,30]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass MyCalendar {\npublic:\n    MyCalendar() {\n        \n    }\n    \n    bool book(int s, int e) {\n        auto next = books_.lower_bound(s);\n        if (next != books_.end() && next->first < e) {\n            return false;\n        }\n        if (next != books_.begin() && s < (--next)->second) {\n            return false;\n        }\n        books_[s] = e;\n        return true;\n    }\n    \nprivate:\n    map<int, int> books_;\n\n};\n\n/**\n * Your MyCalendar object will be instantiated and called as such:\n * MyCalendar obj = new MyCalendar();\n * bool param_1 = obj.book(start,end);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn) on average, O(n^2) on worst case\n# Space: O(n)\n\nclass Node(object):\n    def __init__(self, start, end):\n        self.__start = start\n        self.__end = end\n        self.__left = None\n        self.__right = None\n\n\n    def insert(self, node):\n        if node.__start >= self.__end:\n            if not self.__right:\n                self.__right = node\n                return True\n            return self.__right.insert(node)\n        elif node.__end <= self.__start:\n            if not self.__left:\n                self.__left = node\n                return True\n            return self.__left.insert(node)\n        else:\n            return False\n\n\nclass MyCalendar(object):\n    def __init__(self):\n        self.__root = None\n\n\n    def book(self, start, end):\n        \"\"\"\n        :type start: int\n        :type end: int\n        :rtype: bool\n        \"\"\"\n        if self.__root is None:\n            self.__root = Node(start, end)\n            return True\n        return self.root.insert(Node(start, end))\n\n\n# Time:  O(n^2)\n# Space: O(n)\nclass MyCalendar2(object):\n\n    def __init__(self):\n        self.__calendar = []\n\n\n    def book(self, start, end):\n        \"\"\"\n        :type start: int\n        :type end: int\n        :rtype: bool\n        \"\"\"\n        for i, j in self.__calendar:\n            if start < j and end > i:\n                return False\n        self.__calendar.append((start, end))\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

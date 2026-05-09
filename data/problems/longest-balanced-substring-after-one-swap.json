@@ -1,0 +1,37 @@
+{
+  "id": "a9a4fa14-6e92-4425-a45f-e63fee00b2a5",
+  "slug": "longest-balanced-substring-after-one-swap",
+  "title": "Longest Balanced Substring After One Swap",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a binary string <code>s</code> consisting only of characters <code>&#39;0&#39;</code> and <code>&#39;1&#39;</code>.</p>\n\n<p>A string is <strong>balanced</strong> if it contains an <strong>equal</strong> number of <code>&#39;0&#39;</code>s and <code>&#39;1&#39;</code>s.</p>\n\n<p>You can perform <strong>at most one</strong> swap between any two characters in <code>s</code>. Then, you select a <strong>balanced</strong> <span data-keyword=\"substring\">substring</span> from <code>s</code>.</p>\n\n<p>Return an integer representing the <strong>maximum</strong> length of the <strong>balanced</strong> substring you can select.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;100001&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Swap <code>&quot;10<u><strong>0</strong></u>00<u><strong>1</strong></u>&quot;</code>. The string becomes <code>&quot;101000&quot;</code>.</li>\n\t<li>Select the substring <code>&quot;<u><strong>1010</strong></u>00&quot;</code>, which is balanced because it has two <code>&#39;0&#39;</code>s and two <code>&#39;1&#39;</code>s.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;111&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose not to perform any swaps.</li>\n\t<li>Select the empty substring, which is balanced because it has zero <code>&#39;0&#39;</code>s and zero <code>&#39;1&#39;</code>s.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists only of the characters <code>&#39;0&#39;</code> and <code>&#39;1&#39;</code>.</li>\n</ul>\n",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"100001\"\n\"111\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// hash table\nclass Solution {\npublic:\n    int longestBalanced(string s) {\n        int cnt0 = count(cbegin(s), cend(s), '0');\n        int cnt1 = size(s) - cnt0;\n        if (cnt0 < cnt1) {\n            swap(cnt0, cnt1);\n            for (auto& x : s) {\n                x = (x == '1') ? '0' : '1';\n            }\n        }\n        unordered_map<int, vector<int>> lookup;\n        lookup[0] = {-1};\n        int result = 0;\n        for (int i = 0, bal = 0; i < size(s); i++) {\n            bal += s[i] == '1' ? +1 : -1;\n            if (size(lookup[bal]) != 2) {\n                lookup[bal].emplace_back(i);\n            }\n            result = max(result, i - lookup[bal][0]);     \n            for (const auto& j : lookup[bal + 2]) {\n                if ((i - j - 2) / 2 != cnt1) {\n                    result = max(result, i - j);\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# hash table\nclass Solution(object):\n    def longestBalanced(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        cnt0 = s.count('0')\n        cnt1 = len(s)-cnt0\n        if cnt0 < cnt1:\n            cnt0, cnt1 = cnt1, cnt0\n            s = \"\".join('0' if x == '1' else '1' for x in s)\n        result = bal = 0\n        lookup = collections.defaultdict(list)\n        lookup[0].append(-1)\n        for i, x in enumerate(s):\n            bal += +1 if x == '1' else -1\n            if len(lookup[bal]) != 2:\n                lookup[bal].append(i)\n            result = max(result, i-lookup[bal][0])\n            for j in lookup[bal+2]:\n                if (i-j-2)//2 != cnt1:\n                    result = max(result, i-j)\n                    break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

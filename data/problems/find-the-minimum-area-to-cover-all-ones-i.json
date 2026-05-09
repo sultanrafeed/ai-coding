@@ -1,0 +1,34 @@
+{
+  "id": "08cb3e52-07b5-45ed-8eb5-3f98422aa1a4",
+  "slug": "find-the-minimum-area-to-cover-all-ones-i",
+  "title": "Find the Minimum Area to Cover All Ones I",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a 2D <strong>binary</strong> array <code>grid</code>. Find a rectangle with horizontal and vertical sides with the<strong> smallest</strong> area, such that all the 1&#39;s in <code>grid</code> lie inside this rectangle.</p>\n\n<p>Return the <strong>minimum</strong> possible area of the rectangle.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[0,1,0],[1,0,1]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/05/08/examplerect0.png\" style=\"padding: 10px; background: rgb(255, 255, 255); border-radius: 0.5rem; width: 279px; height: 198px;\" /></p>\n\n<p>The smallest rectangle has a height of 2 and a width of 3, so it has an area of <code>2 * 3 = 6</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">grid = [[1,0],[0,0]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/05/08/examplerect1.png\" style=\"padding: 10px; background: rgb(255, 255, 255); border-radius: 0.5rem; width: 204px; height: 201px;\" /></p>\n\n<p>The smallest rectangle has both height and width 1, so its area is <code>1 * 1 = 1</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= grid.length, grid[i].length &lt;= 1000</code></li>\n\t<li><code>grid[i][j]</code> is either 0 or 1.</li>\n\t<li>The input is generated such that there is at least one 1 in <code>grid</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * m)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    int minimumArea(vector<vector<int>>& grid) {\n        int min_r = size(grid);\n        int max_r = -1;\n        int min_c = size(grid[0]);\n        int max_c = -1;\n        for (int i = 0; i < size(grid); ++i) {\n            for (int j = 0; j < size(grid[0]); ++j) {\n                if (grid[i][j] == 0) {\n                    continue;\n                }\n                min_r = min(min_r, i);\n                max_r = max(max_r, i);\n                min_c = min(min_c, j);\n                max_c = max(max_c, j);\n            }\n        }\n        return (max_r - min_r + 1) * (max_c - min_c + 1);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * m)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def minimumArea(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        min_r, max_r, min_c, max_c = len(grid), -1, len(grid[0]), -1\n        for i in xrange(len(grid)):\n            for j in xrange(len(grid[0])):\n                if grid[i][j] == 0:\n                    continue\n                min_r, max_r, min_c, max_c = min(min_r, i), max(max_r, i), min(min_c, j), max(max_c, j)\n        return (max_r-min_r+1)*(max_c-min_c+1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

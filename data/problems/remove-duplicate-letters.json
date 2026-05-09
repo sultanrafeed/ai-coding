@@ -1,0 +1,36 @@
+{
+  "id": "04b86a9c-6fb2-4056-a810-1da25e3d07a2",
+  "slug": "remove-duplicate-letters",
+  "title": "Remove Duplicate Letters",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code>, remove duplicate letters so that every letter appears once and only once. You must make sure your result is <span data-keyword=\"lexicographically-smaller-string\"><strong>the smallest in lexicographical order</strong></span> among all possible results.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;bcabc&quot;\n<strong>Output:</strong> &quot;abc&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;cbacdcbc&quot;\n<strong>Output:</strong> &quot;acdb&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Note:</strong> This question is the same as 1081: <a href=\"https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/\" target=\"_blank\">https://leetcode.com/problems/smallest-subsequence-of-distinct-characters/</a></p>\n",
+  "patterns": [
+    "string",
+    "stack",
+    "greedy",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(k), k is size of the alphabet\n\n// vector solution, need to know size of the alphabet in advance (4ms)\nclass Solution {\npublic:\n    string removeDuplicateLetters(string s) {\n        const int k = 26;\n        vector<int> remaining(k);\n        for (const auto& c : s) {\n            ++remaining[c - 'a'];\n        }\n\n        vector<bool> in_stack(k);\n        string stk;\n        for (const auto& c : s) {\n            if (!in_stack[c - 'a']) {\n                while (!stk.empty() && stk.back() > c && remaining[stk.back() - 'a']) {\n                    in_stack[stk.back() - 'a'] = false;\n                    stk.pop_back();\n                }\n                stk.push_back(c);\n                in_stack[c - 'a'] = true;\n            }\n            --remaining[c - 'a'];\n        }\n        return stk; \n    }\n};\n\n// Time:  O(n)\n// Space: O(k), k is size of the alphabet\n// hash solution, no need to know size of the alphabet in advance (16ms)\nclass Solution2 {\npublic:\n    string removeDuplicateLetters(string s) {\n        unordered_map<char, int> remaining;\n        for (const auto& c : s) {\n            ++remaining[c];\n        }\n\n        unordered_set<char> in_stack;\n        string stk;\n        for (const auto& c : s) {\n            if (!in_stack.count(c)) {\n                while (!stk.empty() && stk.back() > c && remaining[stk.back()]) {\n                    in_stack.erase(stk.back());\n                    stk.pop_back();\n                }\n                stk.push_back(c);\n                in_stack.emplace(c);\n            }\n            --remaining[c];\n        }\n        return stk; \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(k), k is size of the alphabet\n\nfrom collections import Counter\n\n\nclass Solution(object):\n    def removeDuplicateLetters(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        remaining = Counter(s)\n\n        in_stack, stk = set(), []\n        for c in s:\n            if c not in in_stack:\n                while stk and stk[-1] > c and remaining[stk[-1]]:\n                    in_stack.remove(stk.pop())\n                stk += c\n                in_stack.add(c)\n            remaining[c] -= 1\n        return \"\".join(stk)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

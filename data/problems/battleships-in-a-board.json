@@ -1,0 +1,35 @@
+{
+  "id": "20af288c-0b05-4bd8-9612-ece92df976bf",
+  "slug": "battleships-in-a-board",
+  "title": "Battleships in a Board",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an <code>m x n</code> matrix <code>board</code> where each cell is a battleship <code>&#39;X&#39;</code> or empty <code>&#39;.&#39;</code>, return <em>the number of the <strong>battleships</strong> on</em> <code>board</code>.</p>\n\n<p><strong>Battleships</strong> can only be placed horizontally or vertically on <code>board</code>. In other words, they can only be made of the shape <code>1 x k</code> (<code>1</code> row, <code>k</code> columns) or <code>k x 1</code> (<code>k</code> rows, <code>1</code> column), where <code>k</code> can be of any size. At least one horizontal or vertical cell separates between two battleships (i.e., there are no adjacent battleships).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img height=\"333\" src=\"https://assets.leetcode.com/uploads/2024/06/21/image.png\" width=\"333\" />\n<pre>\n<strong>Input:</strong> board = [[&quot;X&quot;,&quot;.&quot;,&quot;.&quot;,&quot;X&quot;],[&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;X&quot;],[&quot;.&quot;,&quot;.&quot;,&quot;.&quot;,&quot;X&quot;]]\n<strong>Output:</strong> 2\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> board = [[&quot;.&quot;]]\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == board.length</code></li>\n\t<li><code>n == board[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 200</code></li>\n\t<li><code>board[i][j]</code> is either <code>&#39;.&#39;</code> or <code>&#39;X&#39;</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong> Could you do it in one-pass, using only <code>O(1)</code> extra memory and without modifying the values <code>board</code>?</p>\n",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countBattleships(vector<vector<char>>& board) {\n        if (board.empty() || board[0].empty()) {\n            return 0;\n        }\n\n        int cnt = 0;\n        for (int i = 0; i < board.size(); ++i) {\n            for (int j = 0; j < board[0].size(); ++j) {\n                cnt += board[i][j] == 'X' &&\n                       (i == 0 || board[i - 1][j] != 'X') &&\n                       (j == 0 || board[i][j - 1] != 'X');\n            }\n        }\n        return cnt;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\n\nclass Solution(object):\n    def countBattleships(self, board):\n        \"\"\"\n        :type board: List[List[str]]\n        :rtype: int\n        \"\"\"\n        if not board or not board[0]:\n            return 0\n\n        cnt = 0\n        for i in xrange(len(board)):\n            for j in xrange(len(board[0])):\n                cnt += int(board[i][j] == 'X' and\n                           (i == 0 or board[i - 1][j] != 'X') and\n                           (j == 0 or board[i][j - 1] != 'X'))\n        return cnt",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

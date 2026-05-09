@@ -1,0 +1,35 @@
+{
+  "id": "a9464c5f-cb68-44d5-a50c-e380b9138318",
+  "slug": "taking-maximum-energy-from-the-mystic-dungeon",
+  "title": "Taking Maximum Energy From the Mystic Dungeon",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>In a mystic dungeon, <code>n</code> magicians are standing in a line. Each magician has an attribute that gives you energy. Some magicians can give you negative energy, which means taking energy from you.</p>\n\n<p>You have been cursed in such a way that after absorbing energy from magician <code>i</code>, you will be instantly transported to magician <code>(i + k)</code>. This process will be repeated until you reach the magician where <code>(i + k)</code> does not exist.</p>\n\n<p>In other words, you will choose a starting point and then teleport with <code>k</code> jumps until you reach the end of the magicians&#39; sequence, <strong>absorbing all the energy</strong> during the journey.</p>\n\n<p>You are given an array <code>energy</code> and an integer <code>k</code>. Return the <strong>maximum</strong> possible energy you can gain.</p>\n\n<p><strong>Note</strong> that when you reach a magician, you <em>must</em> take energy from them, whether it is negative or positive energy.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\" style=\"\n    border-color: var(--border-tertiary);\n    border-left-width: 2px;\n    color: var(--text-secondary);\n    font-size: .875rem;\n    margin-bottom: 1rem;\n    margin-top: 1rem;\n    overflow: visible;\n    padding-left: 1rem;\n\">\n<p><strong>Input:</strong> <span class=\"example-io\" style=\"\n    font-family: Menlo,sans-serif;\n    font-size: 0.85rem;\n\"> energy = [5,2,-10,-5,1], k = 3</span></p>\n\n<p><strong>Output:</strong><span class=\"example-io\" style=\"\n    font-family: Menlo,sans-serif;\n    font-size: 0.85rem;\n\"> 3</span></p>\n\n<p><strong>Explanation:</strong> We can gain a total energy of 3 by starting from magician 1 absorbing 2 + 1 = 3.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\" style=\"\n    border-color: var(--border-tertiary);\n    border-left-width: 2px;\n    color: var(--text-secondary);\n    font-size: .875rem;\n    margin-bottom: 1rem;\n    margin-top: 1rem;\n    overflow: visible;\n    padding-left: 1rem;\n\">\n<p><strong>Input:</strong><span class=\"example-io\" style=\"\n    font-family: Menlo,sans-serif;\n    font-size: 0.85rem;\n\"> energy = [-2,-3,-1], k = 2</span></p>\n\n<p><strong>Output:</strong><span class=\"example-io\" style=\"\n    font-family: Menlo,sans-serif;\n    font-size: 0.85rem;\n\"> -1</span></p>\n\n<p><strong>Explanation:</strong> We can gain a total energy of -1 by starting from magician 2.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= energy.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-1000 &lt;= energy[i] &lt;= 1000</code></li>\n\t<li><code>1 &lt;= k &lt;= energy.length - 1</code></li>\n</ul>\n\n<p>&nbsp;</p>\n​​​​​​",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    int maximumEnergy(vector<int>& energy, int k) {\n        int result = numeric_limits<int>::min();\n        for (int i = 0; i < k; ++i) {\n            int curr = 0;\n            for (int j = size(energy) - 1 - i; j >= 0; j -= k) {\n                curr += energy[j];\n                result = max(result, curr);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def maximumEnergy(self, energy, k):\n        \"\"\"\n        :type energy: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = float(\"-inf\")\n        for i in xrange(k):\n            curr = 0\n            for j in reversed(xrange(((len(energy)-i)-1)%k, len(energy)-i, k)):  # xrange(len(energy)-1-i, -1, -k)\n                curr += energy[j]\n                result = max(result, curr)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

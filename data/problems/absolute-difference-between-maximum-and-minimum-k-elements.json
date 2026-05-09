@@ -1,0 +1,34 @@
+{
+  "id": "e35c55ee-d20c-4b27-a6e2-8fd36ee13f8e",
+  "slug": "absolute-difference-between-maximum-and-minimum-k-elements",
+  "title": "Absolute Difference Between Maximum and Minimum K Elements",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> and an integer <code>k</code>.</p>\n\n<p>Find the absolute difference between:</p>\n\n<ul>\n\t<li>the <strong>sum</strong> of the <code>k</code> <strong>largest</strong> elements in the array; and</li>\n\t<li>the <strong>sum</strong> of the <code>k</code> <strong>smallest</strong> elements in the array.</li>\n</ul>\n\n<p>Return an integer denoting this difference.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [5,2,2,4], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The <code>k = 2</code> largest elements are 4 and 5. Their sum is <code>4 + 5 = 9</code>.</li>\n\t<li>The <code>k = 2</code> smallest elements are 2 and 2. Their sum is <code>2 + 2 = 4</code>.</li>\n\t<li>The absolute difference is <code>abs(9 - 4) = 5</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [100], k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The largest element is 100.</li>\n\t<li>The smallest element is 100.</li>\n\t<li>The absolute difference is <code>abs(100 - 100) = 0</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n == nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 100</code></li>\n\t<li><code>1 &lt;= k &lt;= n</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// quick select\nclass Solution {\npublic:\n    int absDifference(vector<int>& nums, int k) {\n        nth_element(begin(nums), begin(nums) + (k - 1), end(nums));\n        const auto& total1 = accumulate(cbegin(nums), cbegin(nums) + k, 0);\n        nth_element(begin(nums), begin(nums) + (k - 1), end(nums), greater<int>());\n        const auto& total2 = accumulate(cbegin(nums), cbegin(nums) + k, 0);\n        return abs(total1 - total2);\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\n// sort\nclass Solution2 {\npublic:\n    int absDifference(vector<int>& nums, int k) {\n        sort(begin(nums), end(nums));\n        const auto& total1 = accumulate(cbegin(nums), cbegin(nums) + k, 0);\n        const auto& total2 = accumulate(cbegin(nums) + (size(nums) - k), cend(nums), 0);\n        return abs(total1 - total2);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport random\n\n\n# quick select\nclass Solution(object):\n    def absDifference(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def nth_element(nums, n, left=0, compare=lambda a, b: a < b):\n            def tri_partition(nums, left, right, target, compare):\n                mid = left\n                while mid <= right:\n                    if nums[mid] == target:\n                        mid += 1\n                    elif compare(nums[mid], target):\n                        nums[left], nums[mid] = nums[mid], nums[left]\n                        left += 1\n                        mid += 1\n                    else:\n                        nums[mid], nums[right] = nums[right], nums[mid]\n                        right -= 1\n                return left, right\n            \n            right = len(nums)-1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)\n                if pivot_left <= n <= pivot_right:\n                    return\n                elif pivot_left > n:\n                    right = pivot_left-1\n                else:  # pivot_right < n.\n                    left = pivot_right+1\n\n        nth_element(nums, k-1)\n        total1 = sum(nums[i] for i in xrange(k))\n        nth_element(nums, k-1, compare=lambda a, b: a > b)\n        total2 = sum(nums[i] for i in xrange(k))\n        return abs(total1-total2)\n\n\n# Time:  O(nlogn)\n# Space: O(1)\n# sort\nclass Solution2(object):\n    def absDifference(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        nums.sort()\n        return abs(sum(nums[i] for i in xrange(k))-sum(nums[~i] for i in xrange(k)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

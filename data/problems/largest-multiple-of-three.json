@@ -1,0 +1,37 @@
+{
+  "id": "62cf4e9c-ccc3-4e98-86a2-8dede7b5d0ce",
+  "slug": "largest-multiple-of-three",
+  "title": "Largest Multiple of Three",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an array of digits <code>digits</code>, return <em>the largest multiple of <strong>three</strong> that can be formed by concatenating some of the given digits in <strong>any order</strong></em>. If there is no answer return an empty string.</p>\n\n<p>Since the answer may not fit in an integer data type, return the answer as a string. Note that the returning answer must not contain unnecessary leading zeros.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> digits = [8,1,9]\n<strong>Output:</strong> &quot;981&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> digits = [8,6,7,1,0]\n<strong>Output:</strong> &quot;8760&quot;\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> digits = [1]\n<strong>Output:</strong> &quot;&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= digits.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= digits[i] &lt;= 9</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string largestMultipleOfThree(vector<int>& digits) {\n        static const unordered_map<int, vector<vector<int>>> lookup = {\n            {0, {}},\n            {1, {{1}, {4}, {7}, {2, 2}, {5, 2}, {5, 5}, {8, 2}, {8, 5}, {8, 8}}},\n            {2, {{2}, {5}, {8}, {1, 1}, {4, 1}, {4, 4}, {7, 1}, {7, 4}, {7, 7}}}\n        };\n        unordered_map<int, int> count = counter(digits);\n        const auto& r = accumulate(cbegin(digits), cend(digits), 0) % 3;\n        for (const auto& deletes : lookup.at(r)) {\n            if (remove(deletes, &count)) {\n                break;\n            }\n        }\n        string result;\n        for (int d = 9; d >= 0; --d) {\n            result += string(count[d], '0' + d);\n        }\n        return !result.empty() && result[0] == '0' ? \"0\" : result;\n    }\n\nprivate:\n    bool remove(const vector<int>& deletes, unordered_map<int, int> *count) {\n        const auto& delete_count = counter(deletes);\n        if (all_of(cbegin(delete_count), cend(delete_count),\n                   [&count](const auto& kvp) {\n                       return (*count)[kvp.first] >= kvp.second;\n                   })) {\n            for (const auto& [k, v] : delete_count) {\n                (*count)[k] -= v;\n            }\n            return true;\n        }\n        return false;\n    }\n    \n    unordered_map<int, int> counter(const vector<int> & digits) {\n        unordered_map<int, int> result;\n        for (const auto& i : digits) {\n            ++result[i];\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    string largestMultipleOfThree(vector<int>& digits) {\n        unordered_map<int, int> count = counter(digits);\n        const auto& r = accumulate(cbegin(digits), cend(digits), 0) % 3;\n        if (r) {\n            bool is_found = false;\n            for (int i = 0; i < 10; ++i) {\n                vector<int> deletes = {i};\n                if (remove(deletes, r, &count)) {\n                    is_found = true;\n                    break;\n                }\n            }\n            if (!is_found) {\n                for (int i = 0; i < 10; ++i) {\n                    for (int j = 0; j <= i; ++j) {\n                        vector<int> deletes = {i, j};\n                        if (remove(deletes, r, &count)) {\n                            break;\n                        }\n                    }\n                }\n            }\n        }\n        string result;\n        for (int d = 9; d >= 0; --d) {\n            result += string(count[d], '0' + d);\n        }\n        return !result.empty() && result[0] == '0' ? \"0\" : result;\n    }\n\nprivate:\n    bool remove(const vector<int>& deletes, int r, unordered_map<int, int> *count) {\n        const auto& delete_count = counter(deletes);\n        if (accumulate(cbegin(deletes), cend(deletes), 0) % 3 == r &&\n            all_of(cbegin(delete_count), cend(delete_count),\n                   [&count](const auto& kvp) {\n                       return (*count)[kvp.first] >= kvp.second;\n                   })) {\n            for (const auto& [k, v] : delete_count) {\n                (*count)[k] -= v;\n            }\n            return true;\n        }\n        return false;\n    }\n    \n    unordered_map<int, int> counter(const vector<int> & digits) {\n        unordered_map<int, int> result;\n        for (const auto& i : digits) {\n            ++result[i];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def largestMultipleOfThree(self, digits):\n        \"\"\"\n        :type digits: List[int]\n        :rtype: str\n        \"\"\"\n        lookup = {0: [],\n                  1: [(1,), (4,), (7,), (2, 2), (5, 2), (5, 5), (8, 2), (8, 5), (8, 8)],\n                  2: [(2,), (5,), (8,), (1, 1), (4, 1), (4, 4), (7, 1), (7, 4), (7, 7)]}\n        count = collections.Counter(digits)\n        for deletes in lookup[sum(digits)%3]:\n            delete_count = collections.Counter(deletes)\n            if all(count[k] >= v for k, v in delete_count.iteritems()):\n                for k, v in delete_count.iteritems():\n                    count[k] -= v\n                break\n        result = \"\".join(str(d)*count[d] for d in reversed(xrange(10)))\n        return \"0\" if result and result[0] == '0' else result\n    \n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def largestMultipleOfThree(self, digits):\n        \"\"\"\n        :type digits: List[int]\n        :rtype: str\n        \"\"\"\n        def candidates_gen(r):\n            if r == 0:\n                return\n            for i in xrange(10):\n                yield [i]\n            for i in xrange(10):\n                for j in xrange(i+1):\n                    yield [i, j]\n\n        count, r = collections.Counter(digits), sum(digits)%3\n        for deletes in candidates_gen(r):\n            delete_count = collections.Counter(deletes)\n            if sum(deletes)%3 == r and \\\n               all(count[k] >= v for k, v in delete_count.iteritems()):\n                for k, v in delete_count.iteritems():\n                    count[k] -= v\n                break\n        result = \"\".join(str(d)*count[d] for d in reversed(xrange(10)))\n        return \"0\" if result and result[0] == '0' else result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

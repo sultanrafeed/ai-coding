@@ -1,0 +1,35 @@
+{
+  "id": "9beafbf8-c5e4-4491-8019-52b70193a032",
+  "slug": "the-two-sneaky-numbers-of-digitville",
+  "title": "The Two Sneaky Numbers of Digitville",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>In the town of Digitville, there was a list of numbers called <code>nums</code> containing integers from <code>0</code> to <code>n - 1</code>. Each number was supposed to appear <strong>exactly once</strong> in the list, however, <strong>two</strong> mischievous numbers sneaked in an <em>additional time</em>, making the list longer than usual.<!-- notionvc: c37cfb04-95eb-4273-85d5-3c52d0525b95 --></p>\n\n<p>As the town detective, your task is to find these two sneaky numbers. Return an array of size <strong>two</strong> containing the two numbers (in <em>any order</em>), so peace can return to Digitville.<!-- notionvc: 345db5be-c788-4828-9836-eefed31c982f --></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [0,1,1,0]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[0,1]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The numbers 0 and 1 each appear twice in the array.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [0,3,2,1,3,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[2,3]</span></p>\n\n<p><strong>Explanation: </strong></p>\n\n<p>The numbers 2 and 3 each appear twice in the array.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [7,1,5,4,3,4,6,0,9,5,8,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[4,5]</span></p>\n\n<p><strong>Explanation: </strong></p>\n\n<p>The numbers 4 and 5 each appear twice in the array.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li data-stringify-border=\"0\" data-stringify-indent=\"1\"><code>2 &lt;= n &lt;= 100</code></li>\n\t<li data-stringify-border=\"0\" data-stringify-indent=\"1\"><code>nums.length == n + 2</code></li>\n\t<li data-stringify-border=\"0\" data-stringify-indent=\"1\"><code data-stringify-type=\"code\">0 &lt;= nums[i] &lt; n</code></li>\n\t<li data-stringify-border=\"0\" data-stringify-indent=\"1\">The input is generated such that <code>nums</code> contains <strong>exactly</strong> two repeated elements.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// bit manipulation\nclass Solution {\npublic:\n    vector<int> getSneakyNumbers(vector<int>& nums) {\n        const int n = size(nums) - 2;\n        const auto& f = [&](const auto& check) {\n            int result = 0;\n            for (const auto& x : nums) {\n                if (check(x)) {\n                    result ^= x;\n                }\n            }\n            for (int i = 0; i < n; ++i) {\n                if (check(i)) {\n                    result ^= i;\n                }\n            }\n            return result;\n        };\n\n        const int x_xor_y = f([](int x) { return true; });\n        const int bit = x_xor_y & -x_xor_y;\n        return {f([&](int x) { return (x & bit) == 0; }), f([&](int x) { return (x & bit) != 0; })};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport itertools\n\n\n# bit manipulation\nclass Solution(object):\n    def getSneakyNumbers(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        def f(check):\n            return reduce(lambda accu, x: accu^x, (x for x in itertools.chain(nums, xrange(n)) if check(x)), 0)\n\n        n = len(nums)-2\n        x_xor_y = f(lambda _: True)\n        bit = x_xor_y&-x_xor_y\n        return [f(lambda x: x&bit == 0), f(lambda x: x&bit != 0)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

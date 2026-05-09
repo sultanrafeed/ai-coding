@@ -1,0 +1,44 @@
+{
+  "id": "80fffe81-ecb0-4e7b-a6c4-f35d86941b70",
+  "slug": "minimum-runes-to-add-to-cast-spell",
+  "title": "Minimum Runes to Add to Cast Spell",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "breadth-first-search",
+    "union-find",
+    "graph",
+    "topological-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "6\n[0]\n[0,1,2,3]\n[1,2,3,0]\n7\n[3,5]\n[0,1,2,3,5]\n[1,2,0,4,6]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// tarjan's algorithm, SCC, strongly connected compoenents\nclass Solution {\npublic:\n    int minRunesToAdd(int n, vector<int>& crystals, vector<int>& flowFrom, vector<int>& flowTo) {\n        vector<vector<int>> adj(n);\n        for (int i = 0; i < size(flowFrom); ++i) {\n            adj[flowFrom[i]].emplace_back(flowTo[i]);\n        }\n        const auto& sccs = strongly_connected_components(adj);\n        vector<int> lookup(n, -1);\n        for (int i = 0; i < size(sccs); ++i) {\n            for (const auto& x : sccs[i]) {\n                lookup[x] = i;\n            }\n        }\n        vector<bool> result(size(sccs));\n        for (int u = 0; u < n; ++u) {\n            for (const auto& v : adj[u]) {\n                if (lookup[v] != lookup[u]) {\n                    result[lookup[v]] = true;\n                }\n            }\n        }\n        for (const auto& x : crystals) {\n            result[lookup[x]] = true;\n        }\n        return accumulate(cbegin(result), cend(result), 0, [](const auto& accu, const auto& x) {\n            return accu + !x;\n        });\n    }\n\nprivate:\n    // reference: https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm\n    vector<vector<int>> strongly_connected_components(const vector<vector<int>>& adj) {\n        int index_counter = 0;\n        vector<int> index(size(adj), -1), lowlinks(size(adj), -1);\n        vector<int> stack;\n        vector<bool> stack_set(size(adj));\n        vector<vector<int>> result;\n        for (int v = 0; v < size(adj); ++v) {\n            if (index[v] == -1) {\n                strongconnect(adj, v, index_counter, index, lowlinks, stack, stack_set, result);\n            }\n        }\n        return result;\n    }\n\n    void strongconnect(const auto& adj, int v, auto& index_counter, auto& index, auto& lowlinks, auto& stack, auto& stack_set, auto& result) {\n        index[v] = index_counter;\n        lowlinks[v] = index_counter;\n        ++index_counter;\n        stack_set[v] = true;\n        stack.emplace_back(v);\n        for (const auto& w : adj[v]) {\n            if (index[w] == -1) {\n                strongconnect(adj, w, index_counter, index, lowlinks, stack, stack_set, result);\n                lowlinks[v] = min(lowlinks[v], lowlinks[w]);\n            } else if (stack_set[w]) {\n                lowlinks[v] = min(lowlinks[v], index[w]);\n            }\n        }\n        if (lowlinks[v] == index[v]) {\n            vector<int> connected_component;\n            int w = -1;\n            while (w != v) {\n                w = stack.back(); stack.pop_back();\n                stack_set[w] = false;\n                connected_component.emplace_back(w);\n            }\n            result.emplace_back(move(connected_component));\n        }\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# tarjan's algorithm, SCC, strongly connected compoenents\n# reference: https://en.wikipedia.org/wiki/Tarjan%27s_strongly_connected_components_algorithm\ndef strongly_connected_components(adj):  # Time: O(|V| + |E|) = O(N + 2N) = O(N), Space: O(|V|) = O(N)\n    def strongconnect(v):\n        index[v] = index_counter[0]\n        lowlinks[v] = index_counter[0]\n        index_counter[0] += 1\n        stack_set[v] = True\n        stack.append(v)\n        for w in adj[v]:\n            if index[w] == -1:\n                strongconnect(w)\n                lowlinks[v] = min(lowlinks[v], lowlinks[w])\n            elif stack_set[w]:\n                lowlinks[v] = min(lowlinks[v], index[w])\n        if lowlinks[v] == index[v]:\n            connected_component = []\n            w = None\n            while w != v:\n                w = stack.pop()\n                stack_set[w] = False\n                connected_component.append(w)\n            result.append(connected_component)\n\n    index_counter, index, lowlinks = [0], [-1]*len(adj), [-1]*len(adj)\n    stack, stack_set = [], [False]*len(adj)\n    result = []\n    for v in xrange(len(adj)):\n        if index[v] == -1:\n            strongconnect(v)\n    return result\n\n\nclass Solution(object):\n    def minRunesToAdd(self, n, crystals, flowFrom, flowTo):\n        \"\"\"\n        :type n: int\n        :type crystals: List[int]\n        :type flowFrom: List[int]\n        :type flowTo: List[int]\n        :rtype: int\n        \"\"\"\n        adj = [[] for _ in xrange(n)]\n        for i in xrange(len(flowFrom)):\n            adj[flowFrom[i]].append(flowTo[i])\n        lookup = [-1]*n\n        sccs = strongly_connected_components(adj)\n        for i, scc in enumerate(sccs):\n            for x in scc:\n                lookup[x] = i\n        result = [False]*len(sccs)\n        for u in xrange(n):\n            for v in adj[u]:\n                if lookup[v] != lookup[u]:\n                    result[lookup[v]] = True\n        for x in crystals:\n            result[lookup[x]] = True\n        return sum(not x for x in result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

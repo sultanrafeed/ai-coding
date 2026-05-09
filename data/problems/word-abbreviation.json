@@ -1,0 +1,37 @@
+{
+  "id": "7f3760be-de0d-463f-a67c-73ac9d560e0d",
+  "slug": "word-abbreviation",
+  "title": "Word Abbreviation",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "greedy",
+    "trie",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l) ~ O(n^2 * l^2)\n// Space: O(n * l)\n\nclass Solution {\npublic:\n    vector<string> wordsAbbreviation(vector<string>& dict) {\n        unordered_map<string, unordered_set<string>> abbr_to_word;\n        unordered_map<string, string> word_to_abbr;\n\n        for (const auto& word : dict) {\n            const auto prefix = word.substr(0, 1);\n            abbr_to_word[toAbbr(prefix, word)].emplace(word);\n        }\n\n        for (const auto& kvp : abbr_to_word) {\n            if (kvp.second.size() > 1) {\n                for (const auto& word : kvp.second) {\n                    for (int i = 2; i < word.length(); ++i) {\n                        const auto prefix = word.substr(0, i);\n                        if (isUnique(prefix, kvp.second)) {\n                            word_to_abbr[word] = toAbbr(prefix, word);\n                            break;\n                        }\n                    }\n                }\n            } else {\n                word_to_abbr[*kvp.second.begin()] = kvp.first;\n            }\n        }\n\n        vector<string> result;\n        for (const auto& word : dict) {\n            result.emplace_back(word_to_abbr[word]);\n        }\n        return result;\n    }\n\nprivate:\n    bool isUnique(const string& prefix, const unordered_set<string>& words) {\n        return 1 == count_if(words.begin(), words.end(),\n                             [&prefix](const string& word) {\n                                 return !word.compare(0, prefix.length(), prefix);\n                             });\n    }\n\n    string toAbbr(const string& prefix, const string& word) {\n        string abbr = prefix;\n        abbr += to_string(word.length() - 1 - prefix.length());\n        abbr += word.back();\n        return abbr.length() < word.length() ? abbr : word;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l) ~ O(n^2 * l^2)\n# Space: O(n * l)\n\nimport collections\n\n\nclass Solution(object):\n    def wordsAbbreviation(self, dict):\n        \"\"\"\n        :type dict: List[str]\n        :rtype: List[str]\n        \"\"\"\n        def isUnique(prefix, words):\n            return sum(word.startswith(prefix) for word in words) == 1\n\n        def toAbbr(prefix, word):\n            abbr = prefix + str(len(word) - 1 - len(prefix)) + word[-1]\n            return abbr if len(abbr) < len(word) else word\n\n        abbr_to_word = collections.defaultdict(set)\n        word_to_abbr = {}\n\n        for word in dict:\n            prefix = word[:1]\n            abbr_to_word[toAbbr(prefix, word)].add(word)\n\n        for abbr, conflicts in abbr_to_word.iteritems():\n            if len(conflicts) > 1:\n                for word in conflicts:\n                    for i in xrange(2, len(word)):\n                        prefix = word[:i]\n                        if isUnique(prefix, conflicts):\n                            word_to_abbr[word] = toAbbr(prefix, word)\n                            break\n            else:\n                word_to_abbr[conflicts.pop()] = abbr\n\n        return [word_to_abbr[word] for word in dict]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

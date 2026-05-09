@@ -1,0 +1,44 @@
+{
+  "id": "f513a109-27cf-44a8-9a32-e74273751814",
+  "slug": "word-break",
+  "title": "Word Break",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code> and a dictionary of strings <code>wordDict</code>, return <code>true</code> if <code>s</code> can be segmented into a space-separated sequence of one or more dictionary words.</p>\n\n<p><strong>Note</strong> that the same word in the dictionary may be reused multiple times in the segmentation.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;leetcode&quot;, wordDict = [&quot;leet&quot;,&quot;code&quot;]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Return true because &quot;leetcode&quot; can be segmented as &quot;leet code&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;applepenapple&quot;, wordDict = [&quot;apple&quot;,&quot;pen&quot;]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Return true because &quot;applepenapple&quot; can be segmented as &quot;apple pen apple&quot;.\nNote that you are allowed to reuse a dictionary word.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;catsandog&quot;, wordDict = [&quot;cats&quot;,&quot;dog&quot;,&quot;sand&quot;,&quot;and&quot;,&quot;cat&quot;]\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 300</code></li>\n\t<li><code>1 &lt;= wordDict.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= wordDict[i].length &lt;= 20</code></li>\n\t<li><code>s</code> and <code>wordDict[i]</code> consist of only lowercase English letters.</li>\n\t<li>All the strings of <code>wordDict</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "dynamic-programming",
+    "trie",
+    "memoization"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"leetcode\"\n[\"leet\",\"code\"]\n\"applepenapple\"\n[\"apple\",\"pen\"]\n\"catsandog\"\n[\"cats\",\"dog\",\"sand\",\"and\",\"cat\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l^2), l is the max length of the words.\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool wordBreak(string s, unordered_set<string>& wordDict) {\n        const int n = s.length();\n\n        size_t max_len = 0;\n        for (const auto& str: wordDict) {\n            max_len = max(max_len, str.length());\n        }\n\n        vector<bool> canBreak(n + 1, false);\n        canBreak[0] = true;\n        for (int i = 1; i <= n; ++i) {\n            for (int l = 1; l <= max_len && i - l >= 0; ++l) {\n                if (canBreak[i - l] && wordDict.count(s.substr(i - l, l))) {\n                    canBreak[i] = true;\n                    break;\n                }\n            }\n        }\n\n        return canBreak[n];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l^2)\n# Space: O(n)\n\nclass Solution(object):\n    def wordBreak(self, s, wordDict):\n        \"\"\"\n        :type s: str\n        :type wordDict: Set[str]\n        :rtype: bool\n        \"\"\"\n        n = len(s)\n\n        max_len = 0\n        for string in wordDict:\n            max_len = max(max_len, len(string))\n\n        can_break = [False for _ in xrange(n + 1)]\n        can_break[0] = True\n        for i in xrange(1, n + 1):\n            for l in xrange(1, min(i, max_len) + 1):\n                if can_break[i-l] and s[i-l:i] in wordDict:\n                    can_break[i] = True\n                    break\n\n        return can_break[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

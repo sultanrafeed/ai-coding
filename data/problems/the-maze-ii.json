@@ -1,0 +1,45 @@
+{
+  "id": "48b4ec0a-8458-4a74-9990-db62d4348491",
+  "slug": "the-maze-ii",
+  "title": "The Maze II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "breadth-first-search",
+    "graph",
+    "heap-priority-queue",
+    "matrix",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,0,1,0,0],[0,0,0,0,0],[0,0,0,1,0],[1,1,0,1,1],[0,0,0,0,0]]\n[0,4]\n[4,4]\n[[0,0,1,0,0],[0,0,0,0,0],[0,0,0,1,0],[1,1,0,1,1],[0,0,0,0,0]]\n[0,4]\n[3,2]\n[[0,0,0,0,0],[1,1,0,0,1],[0,0,0,0,0],[0,1,0,0,1],[0,1,0,0,0]]\n[4,3]\n[0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(max(r, c) * wlogw)\n// Space: O(w)\n\nclass Solution {\npublic:\n    int shortestDistance(vector<vector<int>>& maze, vector<int>& start, vector<int>& destination) {\n        static const vector<vector<int>> dirs = {{-1, 0}, {0, 1}, {0, -1}, {1, 0}};\n        priority_queue<node, vector<node>, greater<node>> heap;\n        unordered_set<int> visited;\n        heap.emplace(0, start);\n\n        while (!heap.empty()) {\n            int dist = 0;\n            vector<int> node;\n            tie(dist, node) = heap.top();\n            heap.pop();\n            if (visited.count(hash(maze, node))) {\n                continue;\n            }\n            if (node[0] == destination[0] &&\n                node[1] == destination[1]) {\n                return dist;\n            }\n\n            visited.emplace(hash(maze, node));\n            for (const auto& dir : dirs) {\n                int neighbor_dist = 0;\n                vector<int> neighbor;\n                tie(neighbor_dist, neighbor) = findNeighbor(maze, node, dir);\n                heap.emplace(dist + neighbor_dist, neighbor);\n            }\n        }\n\n        return -1;\n    }\n\nprivate:\n    using node = pair<int, vector<int>>;\n\n    node findNeighbor(const vector<vector<int>>& maze,\n                      const vector<int>& node, const vector<int>& dir) {\n        vector<int> cur_node = node;\n        int dist = 0;\n    \n        while (0 <= cur_node[0] + dir[0] && cur_node[0] + dir[0] < maze.size() &&\n               0 <= cur_node[1] + dir[1] && cur_node[1] + dir[1] < maze[0].size() &&\n               !maze[cur_node[0] + dir[0]][cur_node[1] + dir[1]]) {\n            cur_node[0] += dir[0];\n            cur_node[1] += dir[1];\n            ++dist;\n        }\n        return {dist, cur_node};\n    }\n    \n    int hash(const vector<vector<int>>& maze, const vector<int>& node) {\n        return node[0] * maze[0].size() + node[1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(max(r, c) * wlogw)\n# Space: O(w)\n\nimport heapq\n\n\nclass Solution(object):\n    def shortestDistance(self, maze, start, destination):\n        \"\"\"\n        :type maze: List[List[int]]\n        :type start: List[int]\n        :type destination: List[int]\n        :rtype: int\n        \"\"\"\n        start, destination = tuple(start), tuple(destination)\n\n        def neighbors(maze, node):\n            for dir in [(-1, 0), (0, 1), (0, -1), (1, 0)]:\n                cur_node, dist = list(node), 0\n                while 0 <= cur_node[0]+dir[0] < len(maze) and \\\n                      0 <= cur_node[1]+dir[1] < len(maze[0]) and \\\n                      not maze[cur_node[0]+dir[0]][cur_node[1]+dir[1]]:\n                    cur_node[0] += dir[0]\n                    cur_node[1] += dir[1]\n                    dist += 1\n                yield dist, tuple(cur_node)\n\n        heap = [(0, start)]\n        visited = set()\n        while heap:\n            dist, node = heapq.heappop(heap)\n            if node in visited: continue\n            if node == destination:\n                return dist\n            visited.add(node)\n            for neighbor_dist, neighbor in neighbors(maze, node):\n                heapq.heappush(heap, (dist+neighbor_dist, neighbor))\n\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

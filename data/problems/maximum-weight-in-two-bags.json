@@ -1,0 +1,40 @@
+{
+  "id": "b477c36f-ff24-4373-beb7-fe196e06b188",
+  "slug": "maximum-weight-in-two-bags",
+  "title": "Maximum Weight in Two Bags",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,4,3,2]\n5\n4\n[3,6,4,8]\n9\n7\n[5,7]\n2\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * w1 * w2)\n// Space: O(w1 * w2)\n\n// dp, bitset\nclass Solution {\npublic:\n    int maxWeight(vector<int>& weights, int w1, int w2) {\n        static const int MAX_W = 300;\n\n        vector<bitset<MAX_W + 1>> dp(w1 + 1), new_dp(w1 + 1);\n        dp[0][0] = 1;\n        for (const auto& w : weights) {\n            for (int i = 0; i <= w1; ++i) {\n                new_dp[i] = dp[i] | (i - w >= 0 ? dp[i - w] : 0) | (dp[i] << w);\n            }\n            swap(dp, new_dp);\n        }\n        int result = 0;\n        for (int i = 0; i <= w1; ++i) {\n            for (int j = w2; j >= 0; --j) {\n                if (dp[i][j]) {\n                    result = max(result, i + j);\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n * w1 * w2)\n// Space: O(w1 * w2)\n// dp\nclass Solution2 {\npublic:\n    int maxWeight(vector<int>& weights, int w1, int w2) {\n        vector<vector<bool>> dp(w1 + 1, vector<bool>(w2 + 1)), new_dp(w1 + 1, vector<bool>(w2 + 1));\n        dp[0][0] = true;\n        for (const auto& w : weights) {\n            for (int i = 0; i <= w1; ++i) {\n                for (int j = 0; j <= w2; ++j) {\n                    new_dp[i][j] = dp[i][j] || (i - w >= 0 && dp[i - w][j]) || (j - w >= 0 && dp[i][j - w]);\n                }\n            }\n            swap(dp, new_dp);\n        }\n        int result = 0;\n        for (int i = 0; i <= w1; ++i) {\n            for (int j = w2; j >= 0; --j) {\n                if (dp[i][j]) {\n                    result = max(result, i + j);\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * w1 * w2)\n# Space: O(w1 * w2)\n\n# dp\nclass Solution(object):\n    def maxWeight(self, weights, w1, w2):\n        \"\"\"\n        :type weights: List[int]\n        :type w1: int\n        :type w2: int\n        :rtype: int\n        \"\"\"\n        dp = [[False]*(w2+1) for _ in xrange(w1+1)]\n        dp[0][0] = True\n        for w in weights:\n            dp = [[dp[i][j] or (i-w >= 0 and dp[i-w][j]) or (j-w >= 0 and dp[i][j-w]) for j in xrange(w2+1)] for i in xrange(w1+1)]\n        result = 0\n        for i in xrange(w1+1):\n            for j in reversed(xrange(w2+1)):\n                if dp[i][j]:\n                    result = max(result, i+j)\n                    break\n        return result\n\n\n# Time:  O(n * w1 * w2)\n# Space: O(w1 * w2)\n# dp\nclass Solution2(object):\n    def maxWeight(self, weights, w1, w2):\n        \"\"\"\n        :type weights: List[int]\n        :type w1: int\n        :type w2: int\n        :rtype: int\n        \"\"\"\n        dp = [[False]*(w2+1) for _ in xrange(w1+1)]\n        dp[0][0] = True\n        for w in weights:\n            dp = [[dp[i][j] or (i-w >= 0 and dp[i-w][j]) or (j-w >= 0 and dp[i][j-w]) for j in xrange(w2+1)] for i in xrange(w1+1)]\n        return max(i+j for i in xrange(w1+1) for j in xrange(w2+1) if dp[i][j])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

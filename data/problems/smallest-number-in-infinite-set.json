@@ -1,0 +1,42 @@
+{
+  "id": "40e1f49a-3202-4a12-b202-ba18856ece1a",
+  "slug": "smallest-number-in-infinite-set",
+  "title": "Smallest Number in Infinite Set",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You have a set which contains all positive integers <code>[1, 2, 3, 4, 5, ...]</code>.</p>\n\n<p>Implement the <code>SmallestInfiniteSet</code> class:</p>\n\n<ul>\n\t<li><code>SmallestInfiniteSet()</code> Initializes the <strong>SmallestInfiniteSet</strong> object to contain <strong>all</strong> positive integers.</li>\n\t<li><code>int popSmallest()</code> <strong>Removes</strong> and returns the smallest integer contained in the infinite set.</li>\n\t<li><code>void addBack(int num)</code> <strong>Adds</strong> a positive integer <code>num</code> back into the infinite set, if it is <strong>not</strong> already in the infinite set.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;SmallestInfiniteSet&quot;, &quot;addBack&quot;, &quot;popSmallest&quot;, &quot;popSmallest&quot;, &quot;popSmallest&quot;, &quot;addBack&quot;, &quot;popSmallest&quot;, &quot;popSmallest&quot;, &quot;popSmallest&quot;]\n[[], [2], [], [], [], [1], [], [], []]\n<strong>Output</strong>\n[null, null, 1, 2, 3, null, 1, 4, 5]\n\n<strong>Explanation</strong>\nSmallestInfiniteSet smallestInfiniteSet = new SmallestInfiniteSet();\nsmallestInfiniteSet.addBack(2);    // 2 is already in the set, so no change is made.\nsmallestInfiniteSet.popSmallest(); // return 1, since 1 is the smallest number, and remove it from the set.\nsmallestInfiniteSet.popSmallest(); // return 2, and remove it from the set.\nsmallestInfiniteSet.popSmallest(); // return 3, and remove it from the set.\nsmallestInfiniteSet.addBack(1);    // 1 is added back to the set.\nsmallestInfiniteSet.popSmallest(); // return 1, since 1 was added back to the set and\n                                   // is the smallest number, and remove it from the set.\nsmallestInfiniteSet.popSmallest(); // return 4, and remove it from the set.\nsmallestInfiniteSet.popSmallest(); // return 5, and remove it from the set.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num &lt;= 1000</code></li>\n\t<li>At most <code>1000</code> calls will be made <strong>in total</strong> to <code>popSmallest</code> and <code>addBack</code>.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "design",
+    "heap-priority-queue",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"SmallestInfiniteSet\",\"addBack\",\"popSmallest\",\"popSmallest\",\"popSmallest\",\"addBack\",\"popSmallest\",\"popSmallest\",\"popSmallest\"]\n[[],[2],[],[],[],[1],[],[],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:        O(1)\n//        popSmallest: O(logn)\n//        addBack:     O(logn)\n// Space: O(n)\n\n// bst\nclass SmallestInfiniteSet {\npublic:\n    SmallestInfiniteSet() {\n        \n    }\n    \n    int popSmallest() {\n        if (!empty(bst_)) {\n            const int result = *cbegin(bst_);\n            bst_.erase(result);\n            return result;\n        }\n        return n_++;\n    }\n    \n    void addBack(int num) {\n        if (num >= n_) {\n            return;\n        }\n        bst_.emplace(num);\n    }\n\nprivate:\n    int n_ = 1;\n    set<int> bst_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:        O(1)\n#        popSmallest: O(logn)\n#        addBack:     O(logn)\n# Space: O(n)\n\nimport heapq\n\n\n# heap\nclass SmallestInfiniteSet(object):\n\n    def __init__(self):\n        self.__n = 1\n        self.__lookup = set()\n        self.__min_heap = []\n\n    def popSmallest(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        if self.__min_heap:\n            result = heapq.heappop(self.__min_heap)\n            self.__lookup.remove(result)\n            return result\n        result = self.__n\n        self.__n += 1\n        return result\n\n    def addBack(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: None\n        \"\"\"\n        if num >= self.__n or num in self.__lookup:\n            return\n        self.__lookup.add(num)\n        heapq.heappush(self.__min_heap, num)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

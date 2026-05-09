@@ -1,0 +1,42 @@
+{
+  "id": "6b639b8f-a4fc-4080-841b-4cb3b4a9dae0",
+  "slug": "count-pairs-in-two-arrays",
+  "title": "Count Pairs in Two Arrays",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,1,2,1]\n[1,2,1,2]\n[1,10,6,2]\n[1,4,1,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    long long countPairs(vector<int>& nums1, vector<int>& nums2) {\n        for (int i = 0; i < size(nums1); ++i) {\n            nums1[i] -= nums2[i];\n        }\n        sort(begin(nums1), end(nums1));\n        long long result = 0;\n        int left = 0, right = size(nums1) - 1;\n        while (left < right) {\n            if (nums1[left] > 0 || -nums1[left] < nums1[right]) {\n                result += right - left;\n                --right;\n            } else {\n                ++left;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def countPairs(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        for i in xrange(len(nums1)):\n            nums1[i] -= nums2[i]\n        nums1.sort()\n        result = 0\n        left, right = 0, len(nums1)-1\n        while left < right:\n            if nums1[left] > 0 or -nums1[left] < nums1[right]:\n                result += right-left\n                right -= 1\n            else:\n                left += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

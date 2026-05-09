@@ -1,0 +1,34 @@
+{
+  "id": "c45b5b70-55a7-4648-9f60-fb15dd8103fc",
+  "slug": "minimum-operations-to-achieve-at-least-k-peaks",
+  "title": "Minimum Operations to Achieve At Least K Peaks",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a ​​​​​​​circular integer array​​​​​​​ <code>nums</code> of length <code>n</code>.</p>\n\n<p>An index <code>i</code> is a <strong>peak</strong> if its value is <strong>strictly greater</strong> than its neighbors:</p>\n\n<ul>\n\t<li>The <strong>previous</strong> neighbor of <code>i</code> is <code>nums[i - 1]</code> if <code>i &gt; 0</code>, otherwise <code>nums[n - 1]</code>.</li>\n\t<li>The <strong>next</strong> neighbor of <code>i</code> is <code>nums[i + 1]</code> if <code>i &lt; n - 1</code>, otherwise <code>nums[0]</code>.</li>\n</ul>\n\n<p>You are allowed to perform the following operation <strong>any</strong> number of times:</p>\n\n<ul>\n\t<li>Choose any index <code>i</code> and <strong>increase</strong> <code>nums[i]</code> by 1.</li>\n</ul>\n\n<p>Return an integer denoting the <strong>minimum</strong> number of operations required to make the array contain <strong>at least</strong> <code>k</code> peaks. If it is impossible, return -1.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,1,2], k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>To achieve at least <code>k = 1</code> peak, we can increase <code>nums[2] = 2</code> to 3.</li>\n\t<li>After this operation, <code>nums[2] = 3</code> is strictly greater than its neighbors <code>nums[0] = 2</code> and <code>nums[1] = 1</code>.</li>\n\t<li>Therefore, the minimum number of operations required is 1.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [4,5,3,6], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The array already contains at least <code>k = 2</code> peaks with zero operations.</li>\n\t<li>Index 1: <code>nums[1] = 5</code> is strictly greater than its neighbors <code>nums[0] = 4</code> and <code>nums[2] = 3</code>.</li>\n\t<li>Index 3: <code>nums[3] = 6</code> is strictly greater than its neighbors <code>nums[2] = 3</code> and <code>nums[0] = 4</code>.</li>\n\t<li>Therefore, the minimum number of operations required is 0.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,7,3], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>It is impossible to have at least <code>k = 2</code> peaks in this array. Therefore, the answer is -1.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= n == nums.length &lt;= 5000</code></li>\n\t<li><code>-10<sup>5</sup> &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= k &lt;= n</code>​​​​​​​</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + klogn)\n// Space: O(n)\n\n// greedy, heap, doubly linked list\nclass Solution {\npublic:\n    int minOperations(vector<int>& nums, int k) {\n        if (2 * k > size(nums)) {\n            return -1;\n        }\n        if (!k) {\n            return 0;\n        }\n        vector<bool> lookup(size(nums));\n        vector<int> left(size(nums)), right(size(nums)), cost(size(nums));\n        vector<pair<int, int>> pairs(size(nums));\n        for (int i = 0; i < size(nums); ++i) {\n            left[i] = (size(nums) + (i - 1)) % size(nums);\n            right[i] = (size(nums) + (i + 1)) % size(nums);\n            cost[i] = max((max(nums[left[i]], nums[right[i]]) + 1) - nums[i], 0);\n            pairs[i] = pair(cost[i], i);\n        }\n        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> min_heap(cbegin(pairs), cend(pairs));\n        int result = 0;\n        while (!empty(min_heap)) {\n            const auto [c, i] = min_heap.top(); min_heap.pop();\n            if (lookup[i]) {\n                continue;\n            }\n            result += c;\n            if (!--k) {\n                break;\n            }\n            cost[i] = cost[left[i]] + cost[right[i]] - cost[i];\n            min_heap.emplace(cost[i], i);\n            lookup[left[i]] = lookup[right[i]] = true;\n            left[i] = left[left[i]];\n            right[i] = right[right[i]];\n            right[left[i]] = left[right[i]] = i;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + klogn)\n# Space: O(n)\n\nimport heapq\n\n\n# greedy, heap, doubly linked list\nclass Solution(object):\n    def minOperations(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        if 2*k > len(nums):\n            return -1\n        if not k:\n            return 0\n        lookup = [False]*len(nums)\n        left = [(i-1)%len(nums) for i in xrange(len(nums))]\n        right = [(i+1)%len(nums) for i in xrange(len(nums))]\n        cost = [max((max(nums[left[i]], nums[right[i]])+1)-nums[i], 0) for i in xrange(len(nums))]\n        min_heap = [(cost[i], i) for i in xrange(len(nums))]\n        heapq.heapify(min_heap)\n        result = 0\n        while min_heap:\n            c, i = heapq.heappop(min_heap)\n            if lookup[i]:\n                continue\n            result += c\n            k -= 1\n            if not k:\n                break\n            cost[i] = cost[left[i]]+cost[right[i]]-cost[i]\n            heapq.heappush(min_heap, (cost[i], i))\n            lookup[left[i]] = lookup[right[i]] = True\n            left[i] = left[left[i]]\n            right[i] = right[right[i]]\n            right[left[i]] = left[right[i]] = i\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

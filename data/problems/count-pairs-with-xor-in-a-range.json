@@ -1,0 +1,35 @@
+{
+  "id": "f10a8e12-a468-487e-ab31-da089ac7fea5",
+  "slug": "count-pairs-with-xor-in-a-range",
+  "title": "Count Pairs With XOR in a Range",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a <strong>(0-indexed)</strong> integer array <code>nums</code> and two integers <code>low</code> and <code>high</code>, return <em>the number of <strong>nice pairs</strong></em>.</p>\r\n\r\n<p>A <strong>nice pair</strong> is a pair <code>(i, j)</code> where <code>0 &lt;= i &lt; j &lt; nums.length</code> and <code>low &lt;= (nums[i] XOR nums[j]) &lt;= high</code>.</p>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong class=\"example\">Example 1:</strong></p>\r\n\r\n<pre>\r\n<strong>Input:</strong> nums = [1,4,2,7], low = 2, high = 6\r\n<strong>Output:</strong> 6\r\n<strong>Explanation:</strong> All nice pairs (i, j) are as follows:\r\n    - (0, 1): nums[0] XOR nums[1] = 5 \r\n    - (0, 2): nums[0] XOR nums[2] = 3\r\n    - (0, 3): nums[0] XOR nums[3] = 6\r\n    - (1, 2): nums[1] XOR nums[2] = 6\r\n    - (1, 3): nums[1] XOR nums[3] = 3\r\n    - (2, 3): nums[2] XOR nums[3] = 5\r\n</pre>\r\n\r\n<p><strong class=\"example\">Example 2:</strong></p>\r\n\r\n<pre>\r\n<strong>Input:</strong> nums = [9,8,4,2,1], low = 5, high = 14\r\n<strong>Output:</strong> 8\r\n<strong>Explanation:</strong> All nice pairs (i, j) are as follows:\r\n​​​​​    - (0, 2): nums[0] XOR nums[2] = 13\r\n&nbsp;   - (0, 3): nums[0] XOR nums[3] = 11\r\n&nbsp;   - (0, 4): nums[0] XOR nums[4] = 8\r\n&nbsp;   - (1, 2): nums[1] XOR nums[2] = 12\r\n&nbsp;   - (1, 3): nums[1] XOR nums[3] = 10\r\n&nbsp;   - (1, 4): nums[1] XOR nums[4] = 9\r\n&nbsp;   - (2, 3): nums[2] XOR nums[3] = 6\r\n&nbsp;   - (2, 4): nums[2] XOR nums[4] = 5</pre>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong>Constraints:</strong></p>\r\n\r\n<ul>\r\n\t<li><code>1 &lt;= nums.length &lt;= 2 * 10<sup>4</sup></code></li>\r\n\t<li><code>1 &lt;= nums[i] &lt;= 2 * 10<sup>4</sup></code></li>\r\n\t<li><code>1 &lt;= low &lt;= high &lt;= 2 * 10<sup>4</sup></code></li>\r\n</ul>",
+  "patterns": [
+    "array",
+    "bit-manipulation",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// dp solution\nclass Solution {\npublic:\n    int countPairs(vector<int>& nums, int low, int high) {\n        return count(nums, high + 1) - count(nums, low);\n    }\n\nprivate:\n    int count(const vector<int>& nums, int x) {\n        unordered_map<int, int> dp;\n        for (const auto& x : nums) {\n            ++dp[x];\n        }\n        int result = 0;\n        for (; x; x >>= 1) {\n            unordered_map<int, int> new_dp;\n            for (auto const& [k, v] : dp) {\n                new_dp[k >> 1] += v;\n                if ((x & 1) == 0) {\n                    continue;\n                }\n                if (dp.count((x ^ 1) ^ k)) {\n                    result += v * dp[(x ^ 1) ^ k];  // current limit is xxxxx1*****, count xor pair with xxxxx0***** pattern\n                }\n            }\n            dp = move(new_dp);\n        }\n        return result / 2;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// trie solution\nclass Solution2 {\npublic:\n    int countPairs(vector<int>& nums, int low, int high) {\n        int result = 0;\n        Trie trie;\n        for (const auto& x : nums) {\n            result += trie.query(x, high + 1) - trie.query(x, low);\n            trie.insert(x);\n        }\n        return result;\n    }\n\nprivate:\n    class Trie {\n    public:\n        Trie() : nodes(1) {}\n\n        void insert(int num) {\n            int idx = 0;\n            for (int i = 31; i >= 0; --i) {\n                int curr = (num >> i) & 1;\n                if (!nodes[idx][curr]) {\n                    nodes.emplace_back();\n                    nodes[idx][curr] = size(nodes) - 1;\n                }\n                idx = nodes[idx][curr];\n                ++nodes[idx][2];\n            }\n        }\n\n        int query(int num, int limit) {\n            int result = 0, idx = 0;\n            for (int i = 31; i >= 0; --i) {\n                int curr = (num >> i) & 1;\n                int bit = (limit >> i) & 1;\n                if (bit) {\n                    if (nodes[idx][curr]) {\n                        result += nodes[nodes[idx][0 ^ curr]][2];  // current limit is xxxxx1*****, count xor pair with xxxxx0***** pattern\n                    }\n                }\n                if (!nodes[idx][bit ^ curr]) {\n                    break;\n                }\n                idx = nodes[idx][bit ^ curr];\n            }\n            return result;\n        }\n\n    private:\n        vector<array<int, 3>> nodes;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# dp solution\nclass Solution(object):\n    def countPairs(self, nums, low, high):\n        \"\"\"\n        :type nums: List[int]\n        :type low: int\n        :type high: int\n        :rtype: int\n        \"\"\"\n        def count(nums, x):\n            result = 0\n            dp = collections.Counter(nums)\n            while x:\n                if x&1:\n                    result += sum(dp[(x^1)^k]*dp[k] for k in dp.iterkeys())//2  # current limit is xxxxx1*****, count xor pair with xxxxx0***** pattern\n                dp = collections.Counter({k>>1: dp[k]+dp[k^1] for k in dp.iterkeys()})\n                x >>= 1\n            return result\n    \n        return count(nums, high+1)-count(nums, low)\n\n\n# Time:  O(n)\n# Space: O(n)\n# trie solution\nclass Trie(object):\n    def __init__(self):\n        self.__root = {}\n        \n    def insert(self, num):\n        node = self.__root\n        for i in reversed(xrange(32)):\n            curr = (num>>i) & 1\n            if curr not in node:\n                node[curr] = {\"_count\":0}\n            node = node[curr]\n            node[\"_count\"] += 1\n                \n    def query(self, num, limit):\n        node, result = self.__root, 0\n        for i in reversed(xrange(32)):\n            curr = (num>>i) & 1\n            bit = (limit>>i) & 1\n            if bit:\n                if curr in node:\n                    result += node[0^curr][\"_count\"]  # current limit is xxxxx1*****, count xor pair with xxxxx0***** pattern\n            if bit^curr not in node:\n                break\n            node = node[bit^curr]\n        return result\n\n\nclass Solution2(object):\n    def countPairs(self, nums, low, high):\n        \"\"\"\n        :type nums: List[int]\n        :type low: int\n        :type high: int\n        :rtype: int\n        \"\"\"\n        result = 0\n        trie = Trie()\n        for x in nums:\n            result += trie.query(x, high+1)-trie.query(x, low)\n            trie.insert(x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

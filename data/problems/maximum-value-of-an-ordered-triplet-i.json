@@ -1,0 +1,39 @@
+{
+  "id": "a9378503-c7d3-472c-af2a-09ff444f7c8e",
+  "slug": "maximum-value-of-an-ordered-triplet-i",
+  "title": "Maximum Value of an Ordered Triplet I",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code>.</p>\n\n<p>Return <em><strong>the maximum value over all triplets of indices</strong></em> <code>(i, j, k)</code> <em>such that</em> <code>i &lt; j &lt; k</code>. If all such triplets have a negative value, return <code>0</code>.</p>\n\n<p>The <strong>value of a triplet of indices</strong> <code>(i, j, k)</code> is equal to <code>(nums[i] - nums[j]) * nums[k]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [12,6,1,2,7]\n<strong>Output:</strong> 77\n<strong>Explanation:</strong> The value of the triplet (0, 2, 4) is (nums[0] - nums[2]) * nums[4] = 77.\nIt can be shown that there are no ordered triplets of indices with a value greater than 77. \n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,10,3,4,19]\n<strong>Output:</strong> 133\n<strong>Explanation:</strong> The value of the triplet (1, 2, 4) is (nums[1] - nums[2]) * nums[4] = 133.\nIt can be shown that there are no ordered triplets of indices with a value greater than 133.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The only ordered triplet of indices (0, 1, 2) has a negative value of (nums[0] - nums[1]) * nums[2] = -3. Hence, the answer would be 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[12,6,1,2,7]\n[1,10,3,4,19]\n[1,2,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    long long maximumTripletValue(vector<int>& nums) {\n        static const int NEG_INF = numeric_limits<int64_t>::min();\n\n        int64_t result = 0;\n        int64_t mx_diff = NEG_INF, mx = NEG_INF;\n        for (const int64_t x : nums) {\n            if (mx_diff != NEG_INF) {\n                result = max(result, mx_diff * x);\n            }\n            if (mx != NEG_INF) {\n                mx_diff = max(mx_diff, mx - x);\n            }\n            mx = max(mx, x);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def maximumTripletValue(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        NEG_INF = float(\"-inf\")\n        result = 0\n        mx_diff = mx = NEG_INF\n        for x in nums:\n            if mx_diff != NEG_INF:\n                result = max(result, mx_diff*x)\n            if mx != NEG_INF:\n                mx_diff = max(mx_diff, mx-x)\n            mx = max(mx, x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

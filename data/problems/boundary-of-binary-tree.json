@@ -1,0 +1,41 @@
+{
+  "id": "a1801e92-4243-4a5d-aec6-c53afe5c5d46",
+  "slug": "boundary-of-binary-tree",
+  "title": "Boundary of Binary Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,null,2,3,4]\n[1,2,3,4,5,6,null,null,null,7,8,9,10]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<int> boundaryOfBinaryTree(TreeNode* root) {\n        if (!root) {\n            return {};\n        }\n\n        vector<int> nodes;\n        nodes.emplace_back(root->val);\n        leftBoundary(root->left, &nodes);\n        leaves(root->left, &nodes);\n        leaves(root->right, &nodes);\n        rightBoundary(root->right, &nodes);\n        return nodes;\n    }\n\nprivate:\n    void leftBoundary(TreeNode *root, vector<int> *nodes) {\n        if (!root || (!root->left && !root->right)) {\n            return;\n        }\n        nodes->emplace_back(root->val);\n        if (!root->left) {\n            leftBoundary(root->right, nodes);\n        } else {\n            leftBoundary(root->left, nodes);\n        }\n    }\n\n    void rightBoundary(TreeNode *root, vector<int> *nodes) {\n        if (!root || (!root->right && !root->left)) {\n            return;\n        }\n        if (!root->right) {\n            rightBoundary(root->left, nodes);\n        } else {\n            rightBoundary(root->right, nodes);\n        }\n        nodes->emplace_back(root->val);\n    }\n    \n    void leaves(TreeNode *root, vector<int> *nodes) {\n        if (!root) {\n            return;\n        }\n        if (!root->left && !root->right) {\n            nodes->emplace_back(root->val);\n            return;\n        }\n        leaves(root->left, nodes);\n        leaves(root->right, nodes);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def boundaryOfBinaryTree(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[int]\n        \"\"\"\n        def leftBoundary(root, nodes):\n            if not root or (not root.left and not root.right):\n                return\n            nodes.append(root.val)\n            if not root.left:\n                leftBoundary(root.right, nodes)\n            else:\n                leftBoundary(root.left, nodes)\n\n        def rightBoundary(root, nodes):\n            if not root or (not root.left and not root.right):\n                return\n            if not root.right:\n                rightBoundary(root.left, nodes)\n            else:\n                rightBoundary(root.right, nodes)\n            nodes.append(root.val)\n\n        def leaves(root, nodes):\n            if not root:\n                return\n            if not root.left and not root.right:\n                nodes.append(root.val)\n                return\n            leaves(root.left, nodes)\n            leaves(root.right, nodes)\n\n        if not root:\n            return []\n\n        nodes = [root.val]\n        leftBoundary(root.left, nodes)\n        leaves(root.left, nodes)\n        leaves(root.right, nodes)\n        rightBoundary(root.right, nodes)\n        return nodes",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

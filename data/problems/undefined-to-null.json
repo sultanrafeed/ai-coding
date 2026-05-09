@@ -1,0 +1,31 @@
+{
+  "id": "446c8f3f-4d30-4420-a6a1-3c24a2b7b3a6",
+  "slug": "undefined-to-null",
+  "title": "Undefined to Null",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"a\": undefined, \"b\":3}\n{\"a\": undefined, \"b\":[\"a\", undefined]}",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// dfs\nfunction undefinedToNull(obj: Record<any, any>): Record<any, any> {\n    Object.keys(obj).forEach(key => {\n        if (typeof obj[key] === 'object' && obj[key] !== null) {\n            obj[key] = undefinedToNull(obj[key]);\n        } else {\n            obj[key] = obj[key] ?? null;\n        }\n    });\n    return obj;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

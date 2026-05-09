@@ -1,0 +1,36 @@
+{
+  "id": "54cdcb72-221f-4ff9-88cc-0fec23a5e5ee",
+  "slug": "minimum-moves-to-get-a-peaceful-board",
+  "title": "Minimum Moves to Get a Peaceful Board",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting",
+    "counting-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// counting sort, greedy\nclass Solution {\npublic:\n    int minMoves(vector<vector<int>>& rooks) {\n        const auto& count = [](const auto& cnt) {\n            int result = 0;\n            for (int x = 0, i = 0; x < size(cnt); ++x) {\n                for (int _ = 0; _ < cnt[x]; ++_) {\n                    result += abs((i++) - x);\n                }\n            }\n            return result;\n        };\n\n        vector<int> cnt1(size(rooks)), cnt2(size(rooks));\n        for (const auto& x : rooks) {\n            ++cnt1[x[0]];\n            ++cnt2[x[1]];\n        }\n        return count(cnt1) + count(cnt2);\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// prefix sum, greedy\nclass Solution2 {\npublic:\n    int minMoves(vector<vector<int>>& rooks) {\n        const auto& count = [](const auto& cnt) {\n            int result = 0;\n            for (int i = 0, bal = 0; i < size(cnt); ++i) {\n                bal += cnt[i] - 1;\n                result += abs(bal);\n            }\n            return result;\n        };\n\n        vector<int> cnt1(size(rooks)), cnt2(size(rooks));\n        for (const auto& x : rooks) {\n            ++cnt1[x[0]];\n            ++cnt2[x[1]];\n        }\n        return count(cnt1) + count(cnt2);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# counting sort, greedy\nclass Solution(object):\n    def minMoves(self, rooks):\n        \"\"\"\n        :type rooks: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def count(arr):\n            cnt = [0]*len(arr)\n            for x in arr:\n                cnt[x] += 1\n            return sum(abs(i-x) for i, x in enumerate(x for x, cnt in enumerate(cnt) for _ in xrange(cnt)))\n\n        return sum(count(arr) for arr in zip(*rooks))\n\n\n# Time:  O(n)\n# Space: O(n)\n# prefix sum, greedy\nclass Solution2(object):\n    def minMoves(self, rooks):\n        \"\"\"\n        :type rooks: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def count(arr):\n            cnt = [0]*len(arr)\n            for x in arr:\n                cnt[x] += 1\n            result = bal = 0\n            for i in xrange(len(rooks)):\n                bal += cnt[i]-1\n                result += abs(bal)\n            return result\n\n        return sum(count(arr) for arr in zip(*rooks))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

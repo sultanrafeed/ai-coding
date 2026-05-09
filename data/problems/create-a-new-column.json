@@ -1,0 +1,31 @@
+{
+  "id": "d44983bd-ac2f-4802-9213-ec106f5f58f9",
+  "slug": "create-a-new-column",
+  "title": "Create a New Column",
+  "difficulty": "easy",
+  "descriptionHtml": "<pre>\nDataFrame <code>employees</code>\n+-------------+--------+\n| Column Name | Type.  |\n+-------------+--------+\n| name        | object |\n| salary      | int.   |\n+-------------+--------+\n</pre>\n\n<p>A&nbsp;company plans to provide its employees with a bonus.</p>\n\n<p>Write a solution to create a new column name <code>bonus</code> that contains the <strong>doubled values</strong> of the <code>salary</code> column.</p>\n\n<p>The result format is in the following example.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong>\nDataFrame employees\n+---------+--------+\n| name    | salary |\n+---------+--------+\n| Piper   | 4548   |\n| Grace   | 28150  |\n| Georgia | 1103   |\n| Willow  | 6593   |\n| Finn    | 74576  |\n| Thomas  | 24433  |\n+---------+--------+\n<strong>Output:</strong>\n+---------+--------+--------+\n| name    | salary | bonus  |\n+---------+--------+--------+\n| Piper   | 4548   | 9096   |\n| Grace   | 28150  | 56300  |\n| Georgia | 1103   | 2206   |\n| Willow  | 6593   | 13186  |\n| Finn    | 74576  | 149152 |\n| Thomas  | 24433  | 48866  |\n+---------+--------+--------+\n<strong>Explanation:</strong> \nA new column bonus is created by doubling the value in the column salary.</pre>\n",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"headers\":{\"employees\":[\"name\",\"salary\"]},\"rows\":{\"employees\":[[\"Piper\",4548],[\"Grace\",28150],[\"Georgia\",1103],[\"Willow\",6593],[\"Finn\",74576],[\"Thomas\",24433]]}}",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport pandas as pd\n\n\n# pandas\ndef createBonusColumn(employees: pd.DataFrame) -> pd.DataFrame:\n    return employees.assign(bonus=2*employees[\"salary\"])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

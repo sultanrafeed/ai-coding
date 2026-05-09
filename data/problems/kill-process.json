@@ -1,0 +1,43 @@
+{
+  "id": "cc0682a8-b263-42c9-a485-c1dc4c9a9693",
+  "slug": "kill-process",
+  "title": "Kill Process",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "tree",
+    "depth-first-search",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,3,10,5]\n[3,0,5,3]\n5\n[1]\n[0]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// DFS solution.\nclass Solution {\npublic:\n    vector<int> killProcess(vector<int>& pid, vector<int>& ppid, int kill) {\n        vector<int> result;\n        unordered_map<int, unordered_set<int>> children;\n        for (int i = 0; i < pid.size(); ++i) {\n            children[ppid[i]].emplace(pid[i]);\n        }\n        killAll(kill, children, &result);\n        return result;\n    }\n\nprivate:\n    void killAll(int pid, unordered_map<int, unordered_set<int>>& children, vector<int> *killed) {\n        killed->emplace_back(pid);\n        for (const auto& child : children[pid]) {\n            killAll(child, children, killed);\n        }\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// BFS solution.\nclass Solution {\npublic:\n    vector<int> killProcess(vector<int>& pid, vector<int>& ppid, int kill) {\n        vector<int> result;\n        unordered_map<int, unordered_set<int>> children;\n        for (int i = 0; i < pid.size(); ++i) {\n            children[ppid[i]].emplace(pid[i]);\n        }\n\n        queue<int> q;\n        q.emplace(kill);\n        while (!q.empty()) {\n            const auto p = q.front(); q.pop();\n            result.emplace_back(p);\n            for (const auto& child : children[p]) {\n                q.emplace(child);\n            }\n        }\n\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# DFS solution.\nclass Solution(object):\n    def killProcess(self, pid, ppid, kill):\n        \"\"\"\n        :type pid: List[int]\n        :type ppid: List[int]\n        :type kill: int\n        :rtype: List[int]\n        \"\"\"\n        def killAll(pid, children, killed):\n            killed.append(pid)\n            for child in children[pid]:\n                killAll(child, children, killed)\n\n        result = []\n        children = collections.defaultdict(set)\n        for i in xrange(len(pid)):\n            children[ppid[i]].add(pid[i])\n        killAll(kill, children, result)\n        return result\n\n\n# Time:  O(n)\n# Space: O(n)\n# BFS solution.\nclass Solution2(object):\n    def killProcess(self, pid, ppid, kill):\n        \"\"\"\n        :type pid: List[int]\n        :type ppid: List[int]\n        :type kill: int\n        :rtype: List[int]\n        \"\"\"\n        def killAll(pid, children, killed):\n            killed.append(pid)\n            for child in children[pid]:\n                killAll(child, children, killed)\n\n        result = []\n        children = collections.defaultdict(set)\n        for i in xrange(len(pid)):\n            children[ppid[i]].add(pid[i])\n        q = collections.deque()\n        q.append(kill)\n        while q:\n            p = q.popleft()\n            result.append(p)\n            for child in children[p]:\n                q.append(child)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

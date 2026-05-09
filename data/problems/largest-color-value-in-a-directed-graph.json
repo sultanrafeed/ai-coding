@@ -1,0 +1,39 @@
+{
+  "id": "2c2c5a23-c884-4731-a4bb-1c011c64a600",
+  "slug": "largest-color-value-in-a-directed-graph",
+  "title": "Largest Color Value in a Directed Graph",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>There is a <strong>directed graph</strong> of <code>n</code> colored nodes and <code>m</code> edges. The nodes are numbered from <code>0</code> to <code>n - 1</code>.</p>\n\n<p>You are given a string <code>colors</code> where <code>colors[i]</code> is a lowercase English letter representing the <strong>color</strong> of the <code>i<sup>th</sup></code> node in this graph (<strong>0-indexed</strong>). You are also given a 2D array <code>edges</code> where <code>edges[j] = [a<sub>j</sub>, b<sub>j</sub>]</code> indicates that there is a <strong>directed edge</strong> from node <code>a<sub>j</sub></code> to node <code>b<sub>j</sub></code>.</p>\n\n<p>A valid <strong>path</strong> in the graph is a sequence of nodes <code>x<sub>1</sub> -&gt; x<sub>2</sub> -&gt; x<sub>3</sub> -&gt; ... -&gt; x<sub>k</sub></code> such that there is a directed edge from <code>x<sub>i</sub></code> to <code>x<sub>i+1</sub></code> for every <code>1 &lt;= i &lt; k</code>. The <strong>color value</strong> of the path is the number of nodes that are colored the <strong>most frequently</strong> occurring color along that path.</p>\n\n<p>Return <em>the <strong>largest color value</strong> of any valid path in the given graph, or </em><code>-1</code><em> if the graph contains a cycle</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/21/leet1.png\" style=\"width: 400px; height: 182px;\" /></p>\n\n<pre>\n<strong>Input:</strong> colors = &quot;abaca&quot;, edges = [[0,1],[0,2],[2,3],[3,4]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The path 0 -&gt; 2 -&gt; 3 -&gt; 4 contains 3 nodes that are colored <code>&quot;a&quot; (red in the above image)</code>.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/21/leet2.png\" style=\"width: 85px; height: 85px;\" /></p>\n\n<pre>\n<strong>Input:</strong> colors = &quot;a&quot;, edges = [[0,0]]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> There is a cycle from 0 to 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == colors.length</code></li>\n\t<li><code>m == edges.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= m &lt;= 10<sup>5</sup></code></li>\n\t<li><code>colors</code> consists of lowercase English letters.</li>\n\t<li><code>0 &lt;= a<sub>j</sub>, b<sub>j</sub>&nbsp;&lt; n</code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "dynamic-programming",
+    "graph",
+    "topological-sort",
+    "memoization",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + m)\n// Space: O(n + m)\n\nclass Solution {\npublic:\n    int largestPathValue(string colors, vector<vector<int>>& edges) {\n        vector<vector<int>> adj(size(colors));\n        vector<int> in_degree(size(colors));\n        for (const auto& edge : edges) {\n            adj[edge[0]].emplace_back(edge[1]);\n            ++in_degree[edge[1]];\n        }\n        vector<int> q;\n        for (int i = 0; i < size(colors); ++i) {\n            if (!in_degree[i]) {\n                q.emplace_back(i);\n            }\n        }\n        vector<vector<int>> dp(size(colors), vector<int>(26));\n        int result = -1, cnt = 0;\n        while (!empty(q)) {\n            vector<int> new_q;\n            for (const auto& u : q) {\n                ++cnt;\n                result = max(result, ++dp[u][colors[u] - 'a']);\n                for (const auto& v : adj[u]) {\n                    for (int c = 0; c < 26; ++c) {\n                        dp[v][c] = max(dp[v][c], dp[u][c]);\n                    }\n                    if (!--in_degree[v]) {\n                        new_q.emplace_back(v);\n                    }\n                }\n            }\n            q = move(new_q);\n        }\n        return cnt == size(colors) ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + m)\n# Space: O(n + m)\n\nclass Solution(object):\n    def largestPathValue(self, colors, edges):\n        \"\"\"\n        :type colors: str\n        :type edges: List[List[int]]\n        :rtype: int\n        \"\"\"\n        adj = [[] for _ in xrange(len(colors))]\n        in_degree = [0]*len(colors)\n        for u, v in edges:\n            adj[u].append(v)\n            in_degree[v] += 1\n        q = []\n        for u in xrange(len(colors)):\n            if not in_degree[u]:\n                q.append(u)\n        dp = [[0]*26 for _ in xrange(len(colors))]\n        result, cnt = -1, 0\n        while q:\n            new_q = []\n            for u in q:\n                cnt += 1\n                dp[u][ord(colors[u])-ord('a')] += 1\n                result = max(result, dp[u][ord(colors[u])-ord('a')])\n                for v in adj[u]:\n                    for c in xrange(26):\n                        dp[v][c] = max(dp[v][c], dp[u][c])\n                    in_degree[v] -= 1\n                    if not in_degree[v]:\n                        new_q.append(v)\n            q = new_q\n        return result if cnt == len(colors) else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

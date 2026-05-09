@@ -1,0 +1,45 @@
+{
+  "id": "7a0cbfd7-100b-4d30-b5c7-e7340b6d6b4b",
+  "slug": "apply-substitutions",
+  "title": "Apply Substitutions",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "depth-first-search",
+    "breadth-first-search",
+    "graph",
+    "topological-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[\"A\",\"abc\"],[\"B\",\"def\"]]\n\"%A%_%B%\"\n[[\"A\",\"bce\"],[\"B\",\"ace\"],[\"C\",\"abc%B%\"]]\n\"%A%_%B%_%C%\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(r * 2^r)\n// Space: O(r * 2^r)\n\n// topological sort\nclass Solution {\npublic:\n    string applySubstitutions(vector<vector<string>>& replacements, string text) {\n        unordered_map<string, string> lookup;\n        const auto& find_adj = [&](const auto& s) {\n            unordered_set<string> result;\n            for (int i = 0; i < size(s); ++i) {\n                if (s[i] != '%') {\n                    continue;\n                }\n                int j = i + 1;\n                for (; j < size(s); ++j) {\n                    if (s[j] == '%') {\n                        break;\n                    }\n                }\n                result.emplace(s.substr(i + 1, j - (i + 1)));\n                i = j;\n            }\n            return result;\n        };\n\n        const auto& replace = [&](const auto& s) {\n            string result;\n            for (int i = 0; i < size(s); ++i) {\n                if (s[i] != '%') {\n                    result.push_back(s[i]);\n                    continue;\n                }\n                int j = i + 1;\n                for (; j < size(s); ++j) {\n                    if (s[j] == '%') {\n                        break;\n                    }\n                }\n                result += lookup[s.substr(i + 1, j - (i + 1))];\n                i = j;\n            }\n            return result;\n        };\n\n        const auto& topological_sort = [&]() {\n            unordered_map<string, unordered_set<string>> adj;\n            unordered_map<string, int> in_degree;\n            for (const auto& x : replacements) {\n                for (const auto& v : find_adj(x[1])) {\n                    adj[v].emplace(x[0]);\n                    ++in_degree[x[0]];\n                }\n            }\n            vector<string> q;\n            for (const auto& x : replacements) {\n                if (!in_degree.count(x[0])) {\n                    q.emplace_back(x[0]);\n                }\n            }\n            while (!empty(q)) {\n                vector<string> new_q;\n                for (const auto& u : q) {\n                    lookup[u] = replace(lookup[u]);\n                    for (const auto& v : adj[u]) {\n                        --in_degree[v];\n                        if (in_degree[v]) {\n                            continue;\n                        }\n                        new_q.emplace_back(v);\n                    }\n                }\n                q = move(new_q);\n            }\n        };\n    \n        for (const auto& x : replacements) {\n            lookup[x[0]] = x[1];\n        }\n        topological_sort();\n        return replace(text);\n    }\n};\n\n// Time:  O(r * 2^r)\n// Space: O(r * 2^r)\n// memoization\nclass Solution2 {\npublic:\n    string applySubstitutions(vector<vector<string>>& replacements, string text) {\n        unordered_map<string, string> lookup, memo;\n        const function<string (const string&)> replace = [&](const auto& s) {\n            if (!memo.count(s)) {\n                string result;\n                for (int i = 0; i < size(s); ++i) {\n                    if (s[i] != '%') {\n                        result.push_back(s[i]);\n                        continue;\n                    }\n                    int j = i + 1;\n                    for (; j < size(s); ++j) {\n                        if (s[j] == '%') {\n                            break;\n                        }\n                    }\n                    result += replace(lookup[s.substr(i + 1, j - (i + 1))]);\n                    i = j;\n                }\n                memo[s] = result;\n            }\n            return memo[s];\n        };\n\n        for (const auto& x : replacements) {\n            lookup[x[0]] = x[1];\n        }\n        return replace(text);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(r * 2^r)\n# Space: O(r * 2^r)\n\nimport collections\n\n\n# topological sort\nclass Solution(object):\n    def applySubstitutions(self, replacements, text):\n        \"\"\"\n        :type replacements: List[List[str]]\n        :type text: str\n        :rtype: str\n        \"\"\"\n        def find_adj(s):\n            result = set()\n            i = 0\n            while i < len(s):\n                if s[i] != '%':\n                    i += 1\n                    continue\n                j = next(j for j in xrange(i+1, len(s)) if s[j] == '%')\n                result.add(s[i+1:j])\n                i = j+1\n            return result\n        \n        def replace(s):\n            result = []\n            i = 0\n            while i < len(s):\n                if s[i] != '%':\n                    result.append(s[i])\n                    i += 1\n                    continue\n                j = next(j for j in xrange(i+1, len(s)) if s[j] == '%')\n                result.append(lookup[s[i+1:j]])\n                i = j+1\n            return \"\".join(result)\n        \n        def topological_sort():\n            adj = collections.defaultdict(set)\n            in_degree = collections.defaultdict(int)\n            for u, s in replacements:\n                for v in find_adj(s):\n                    adj[v].add(u)\n                    in_degree[u] += 1\n            result = []\n            q = [u for u, _ in replacements if not in_degree[u]]\n            while q:\n                new_q = []\n                for u in q:\n                    lookup[u] = replace(lookup[u])\n                    for v in adj[u]:\n                        in_degree[v] -= 1\n                        if in_degree[v]:\n                            continue\n                        new_q.append(v)\n                q = new_q\n            return result\n\n        lookup = {k:v for k, v in replacements}\n        topological_sort()\n        return replace(text)\n\n\n# Time:  O(r * 2^r)\n# Space: O(r * 2^r)\n# memoization\nclass Solution2(object):\n    def applySubstitutions(self, replacements, text):\n        \"\"\"\n        :type replacements: List[List[str]]\n        :type text: str\n        :rtype: str\n        \"\"\"\n        lookup = {k:v for k, v in replacements}\n        memo = {}\n        def replace(s):\n            if s not in memo:\n                result = []\n                i = 0\n                while i < len(s):\n                    if s[i] != '%':\n                        result.append(s[i])\n                        i += 1\n                        continue\n                    j = next(j for j in xrange(i+1, len(s)) if s[j] == '%')\n                    result.append(replace(lookup[s[i+1:j]]))\n                    i = j+1\n                memo[s] = \"\".join(result)\n            return memo[s]\n\n        return replace(text)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

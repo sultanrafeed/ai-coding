@@ -1,0 +1,41 @@
+{
+  "id": "f514ffa9-9dff-4310-aa40-0d5245a9882f",
+  "slug": "most-expensive-item-that-can-not-be-bought",
+  "title": "Most Expensive Item That Can Not Be Bought",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "2\n5\n5\n7",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// Chicken McNugget Theorem\nclass Solution {\npublic:\n    int mostExpensiveItem(int primeOne, int primeTwo) {\n        // reference:\n        // - https://en.wikipedia.org/wiki/Coin_problem\n        // - https://mikebeneschan.medium.com/the-chicken-mcnugget-theorem-explained-2daca6fbbe1e\n        return primeOne * primeTwo - primeOne - primeTwo;\n    }\n};\n\n// Time:  O(p1 * p2)\n// Space: O(p1 + p2)\n// dp\nclass Solution2 {\npublic:\n    int mostExpensiveItem(int primeOne, int primeTwo) {\n        vector<int> dp(max(primeOne, primeTwo));\n        dp[0] = true;\n        const int w = max(primeOne, primeTwo);\n        int result = 1;\n        for (int i = 2; i < primeOne * primeTwo; ++i) {\n            dp[i % w] = dp[((i - primeOne) % w + w) % w] || dp[((i - primeTwo) % w + w) % w];\n            if (!dp[i % w]) {\n                result = i;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# Chicken McNugget Theorem\nclass Solution(object):\n    def mostExpensiveItem(self, primeOne, primeTwo):\n        \"\"\"\n        :type primeOne: int\n        :type primeTwo: int\n        :rtype: int\n        \"\"\"\n        # reference:\n        # - https://en.wikipedia.org/wiki/Coin_problem\n        # - https://mikebeneschan.medium.com/the-chicken-mcnugget-theorem-explained-2daca6fbbe1e\n        return primeOne*primeTwo-primeOne-primeTwo\n\n\n# Time:  O(p1 * p2)\n# Space: O(p1 + p2)\n# dp\nclass Solution2(object):\n    def mostExpensiveItem(self, primeOne, primeTwo):\n        \"\"\"\n        :type primeOne: int\n        :type primeTwo: int\n        :rtype: int\n        \"\"\"\n        dp = [False]*max(primeOne, primeTwo)\n        dp[0] = True\n        result = 1\n        for i in xrange(2, primeOne*primeTwo):\n            dp[i%len(dp)] = dp[(i-primeOne)%len(dp)] or dp[(i-primeTwo)%len(dp)]\n            if not dp[i%len(dp)]:\n                result = i\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

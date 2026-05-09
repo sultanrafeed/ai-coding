@@ -1,0 +1,34 @@
+{
+  "id": "fcdc8f9b-8f03-4692-91af-a6937c222b22",
+  "slug": "super-pow",
+  "title": "Super Pow",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Your task is to calculate <code>a<sup>b</sup></code> mod <code>1337</code> where <code>a</code> is a positive integer and <code>b</code> is an extremely large positive integer given in the form of an array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> a = 2, b = [3]\n<strong>Output:</strong> 8\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> a = 2, b = [1,0]\n<strong>Output:</strong> 1024\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> a = 1, b = [4,3,3,8,5,2]\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= a &lt;= 2<sup>31</sup> - 1</code></li>\n\t<li><code>1 &lt;= b.length &lt;= 2000</code></li>\n\t<li><code>0 &lt;= b[i] &lt;= 9</code></li>\n\t<li><code>b</code> does not contain leading zeros.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "divide-and-conquer"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n), n is the size of b.\n// Space: O(1)\n\nclass Solution {\npublic:\n    int superPow(int a, vector<int>& b) {\n        int result = 1;\n        for (const auto& digit : b) {\n            result = myPow(result, 10, 1337) * myPow(a, digit, 1337) % 1337;\n        }\n        return result;\n    }\n\nprivate:\n    int myPow(int a, int n, int b) {\n        int result = 1;\n        int x = a % b;\n        while (n) {\n            if (n & 1) {\n                result = result * x % b;\n            }\n            n >>= 1;\n            x = x * x % b;\n        }\n        return result % b;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n), n is the size of b.\n# Space: O(1)\n\nclass Solution(object):\n    def superPow(self, a, b):\n        \"\"\"\n        :type a: int\n        :type b: List[int]\n        :rtype: int\n        \"\"\"\n        def myPow(a, n, b):\n            result = 1\n            x = a % b\n            while n:\n                if n & 1:\n                    result = result * x % b\n                n >>= 1\n                x = x * x % b\n            return result % b\n\n        result = 1\n        for digit in b:\n            result = myPow(result, 10, 1337) * myPow(a, digit, 1337) % 1337\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

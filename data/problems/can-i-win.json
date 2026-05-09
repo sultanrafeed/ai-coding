@@ -1,0 +1,38 @@
+{
+  "id": "f7f1e5e8-cc5b-4784-b893-41490e1832c0",
+  "slug": "can-i-win",
+  "title": "Can I Win",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>In the &quot;100 game&quot; two players take turns adding, to a running total, any integer from <code>1</code> to <code>10</code>. The player who first causes the running total to <strong>reach or exceed</strong> 100 wins.</p>\n\n<p>What if we change the game so that players <strong>cannot</strong> re-use integers?</p>\n\n<p>For example, two players might take turns drawing from a common pool of numbers from 1 to 15 without replacement until they reach a total &gt;= 100.</p>\n\n<p>Given two integers <code>maxChoosableInteger</code> and <code>desiredTotal</code>, return <code>true</code> if the first player to move can force a win, otherwise, return <code>false</code>. Assume both players play <strong>optimally</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> maxChoosableInteger = 10, desiredTotal = 11\n<strong>Output:</strong> false\n<strong>Explanation:</strong>\nNo matter which integer the first player choose, the first player will lose.\nThe first player can choose an integer from 1 up to 10.\nIf the first player choose 1, the second player can only choose integers from 2 up to 10.\nThe second player will win by choosing 10 and get a total = 11, which is &gt;= desiredTotal.\nSame with other integers chosen by the first player, the second player will always win.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> maxChoosableInteger = 10, desiredTotal = 0\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> maxChoosableInteger = 10, desiredTotal = 1\n<strong>Output:</strong> true\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= maxChoosableInteger &lt;= 20</code></li>\n\t<li><code>0 &lt;= desiredTotal &lt;= 300</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "bit-manipulation",
+    "memoization",
+    "game-theory",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n!)\n// Space: O(n)\n\nclass Solution {\npublic:\n    bool canIWin(int maxChoosableInteger, int desiredTotal) {\n        if ((1 + maxChoosableInteger) * (maxChoosableInteger / 2) < desiredTotal) {\n            return false;\n        }\n        unordered_map<int, int> lookup;\n        return canIWinHelper(maxChoosableInteger, desiredTotal, 0, &lookup);\n    }\n\nprivate:\n    int canIWinHelper(int maxChoosableInteger, int desiredTotal,\n                      int visited, unordered_map<int, int> *lookup) {\n\n        if  (lookup->find(visited) != lookup->end()) {\n            return (*lookup)[visited];\n        }\n        int mask = 1;\n        for (int i = 0; i < maxChoosableInteger; ++i) {\n            if (!(visited & mask)) {\n                if (i + 1 >= desiredTotal ||\n                    !canIWinHelper(maxChoosableInteger, desiredTotal - (i + 1), visited | mask, lookup)) {\n                    (*lookup)[visited] = true;\n                    return true;\n                }\n            }\n            mask <<= 1;\n        }\n        (*lookup)[visited] = false;\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n!)\n# Space: O(n)\n\nclass Solution(object):\n    def canIWin(self, maxChoosableInteger, desiredTotal):\n        \"\"\"\n        :type maxChoosableInteger: int\n        :type desiredTotal: int\n        :rtype: bool\n        \"\"\"\n        def canIWinHelper(maxChoosableInteger, desiredTotal, visited, lookup):\n            if visited in lookup:\n                return lookup[visited]\n\n            mask = 1\n            for i in xrange(maxChoosableInteger):\n                if visited & mask == 0:\n                    if i + 1 >= desiredTotal or \\\n                       not canIWinHelper(maxChoosableInteger, desiredTotal - (i + 1), visited | mask, lookup):\n                        lookup[visited] = True\n                        return True\n                mask <<= 1\n            lookup[visited] = False\n            return False\n\n        if (1 + maxChoosableInteger) * (maxChoosableInteger / 2) < desiredTotal:\n            return False\n\n        return canIWinHelper(maxChoosableInteger, desiredTotal, 0, {})",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

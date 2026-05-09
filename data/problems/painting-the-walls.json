@@ -1,0 +1,40 @@
+{
+  "id": "96330171-8c49-4695-94f7-45a0f8d1a317",
+  "slug": "painting-the-walls",
+  "title": "Painting the Walls",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two <strong>0-indexed</strong> integer arrays,&nbsp;<code>cost</code> and <code>time</code>, of size <code>n</code> representing the costs and the time taken to paint <code>n</code> different walls respectively. There are two painters available:</p>\n\n<ul>\n\t<li>A<strong>&nbsp;paid painter</strong>&nbsp;that paints the <code>i<sup>th</sup></code> wall in <code>time[i]</code> units of time and takes <code>cost[i]</code> units of money.</li>\n\t<li>A<strong>&nbsp;free painter</strong> that paints&nbsp;<strong>any</strong> wall in <code>1</code> unit of time at a cost of <code>0</code>. But the&nbsp;free painter can only be used if the paid painter is already <strong>occupied</strong>.</li>\n</ul>\n\n<p>Return <em>the minimum amount of money required to paint the </em><code>n</code><em>&nbsp;walls.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> cost = [1,2,3,2], time = [1,2,3,2]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The walls at index 0 and 1 will be painted by the paid painter, and it will take 3 units of time; meanwhile, the free painter will paint the walls at index 2 and 3, free of cost in 2 units of time. Thus, the total cost is 1 + 2 = 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> cost = [2,3,4,2], time = [1,1,1,1]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The walls at index 0 and 3 will be painted by the paid painter, and it will take 2 units of time; meanwhile, the free painter will paint the walls at index 1 and 2, free of cost in 2 units of time. Thus, the total cost is 2 + 2 = 4.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= cost.length &lt;= 500</code></li>\n\t<li><code>cost.length == time.length</code></li>\n\t<li><code>1 &lt;= cost[i] &lt;= 10<sup>6</sup></code></li>\n\t<li><code>1 &lt;= time[i] &lt;= 500</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,2]\n[1,2,3,2]\n[2,3,4,2]\n[1,1,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\n// knapsack dp\nclass Solution {\npublic:\n    int paintWalls(vector<int>& cost, vector<int>& time) {\n        static const int INF = numeric_limits<int>::max();\n\n        vector<int> dp(size(cost) + 1, INF);\n        dp[0] = 0;\n        for (int i = 0; i < size(cost); ++i) {\n            for (int j = size(cost); j >= 1; --j) {\n                if (dp[max(j - (time[i] + 1), 0)] != INF) {\n                    dp[j] = min(dp[j], dp[max(j - (time[i] + 1), 0)] + cost[i]);\n                }\n            }\n        }\n        return dp.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nimport itertools\n\n\n# knapsack dp\nclass Solution(object):\n    def paintWalls(self, cost, time):\n        \"\"\"\n        :type cost: List[int]\n        :type time: List[int]\n        :rtype: int\n        \"\"\"\n        dp = [float(\"inf\")]*(len(cost)+1)\n        dp[0] = 0\n        for c, t in itertools.izip(cost, time):\n            for j in reversed(xrange(1, len(cost)+1)):\n                dp[j] = min(dp[j], dp[max(j-(t+1), 0)]+c)\n        return dp[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

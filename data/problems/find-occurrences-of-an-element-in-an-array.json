@@ -1,0 +1,34 @@
+{
+  "id": "8297dab4-f08f-41d3-8b26-effd165552b2",
+  "slug": "find-occurrences-of-an-element-in-an-array",
+  "title": "Find Occurrences of an Element in an Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>, an integer array <code>queries</code>, and an integer <code>x</code>.</p>\n\n<p>For each <code>queries[i]</code>, you need to find the index of the <code>queries[i]<sup>th</sup></code> occurrence of <code>x</code> in the <code>nums</code> array. If there are fewer than <code>queries[i]</code> occurrences of <code>x</code>, the answer should be -1 for that query.</p>\n\n<p>Return an integer array <code>answer</code> containing the answers to all queries.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,3,1,7], queries = [1,3,2,4], x = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[0,-1,2,-1]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>For the 1<sup>st</sup> query, the first occurrence of 1 is at index 0.</li>\n\t<li>For the 2<sup>nd</sup> query, there are only two occurrences of 1 in <code>nums</code>, so the answer is -1.</li>\n\t<li>For the 3<sup>rd</sup> query, the second occurrence of 1 is at index 2.</li>\n\t<li>For the 4<sup>th</sup> query, there are only two occurrences of 1 in <code>nums</code>, so the answer is -1.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3], queries = [10], x = 5</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[-1]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>For the 1<sup>st</sup> query, 5 doesn&#39;t exist in <code>nums</code>, so the answer is -1.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length, queries.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= queries[i] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i], x &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + q)\n// Space: O(n)\n\n// array\nclass Solution {\npublic:\n    vector<int> occurrencesOfElement(vector<int>& nums, vector<int>& queries, int x) {\n        vector<int> lookup;\n        for (int i = 0; i < size(nums); ++i) {\n            if (nums[i] != x) {\n                continue;\n            }\n            lookup.emplace_back(i);\n        }\n        vector<int> result(size(queries));\n        for (int i = 0; i < size(queries); ++i) {\n            result[i] = queries[i] - 1 < size(lookup) ? lookup[queries[i] - 1] : -1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + q)\n# Space: O(n)\n\n# array\nclass Solution(object):\n    def occurrencesOfElement(self, nums, queries, x):\n        \"\"\"\n        :type nums: List[int]\n        :type queries: List[int]\n        :type x: int\n        :rtype: List[int]\n        \"\"\"\n        lookup = [i for i, y in enumerate(nums) if y == x]\n        return [lookup[q-1] if q-1 < len(lookup) else -1 for q in queries]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

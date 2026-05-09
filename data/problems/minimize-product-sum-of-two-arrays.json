@@ -1,0 +1,35 @@
+{
+  "id": "db9229c8-64bc-4f3d-8200-f94474da8488",
+  "slug": "minimize-product-sum-of-two-arrays",
+  "title": "Minimize Product Sum of Two Arrays",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// Same problem from https://codingcompetitions.withgoogle.com/codejam/round/00000000004330f6/0000000000432f33\nclass Solution {\npublic:\n    int minProductSum(vector<int>& nums1, vector<int>& nums2) {\n        sort(begin(nums1), end(nums1));\n        sort(begin(nums2), end(nums2), greater<int>());\n        return inner_product(nums1, nums2);\n    }\n\nprivate:\n    int inner_product(const vector<int>& vec1, const vector<int>& vec2) {\n        int result = 0;\n        for (int i = 0; i < size(vec1); ++i) {\n            result += vec1[i] * vec2[i];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# Same problem from https://codingcompetitions.withgoogle.com/codejam/round/00000000004330f6/0000000000432f33\n\nimport itertools\nimport operator\n\n\nclass Solution(object):\n    def minProductSum(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        def inner_product(vec1, vec2):\n            return sum(itertools.imap(operator.mul, vec1, vec2))\n\n\n        nums1.sort()\n        nums2.sort(reverse=True)\n        return inner_product(nums1, nums2)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

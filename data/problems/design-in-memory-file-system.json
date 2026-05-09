@@ -1,0 +1,43 @@
+{
+  "id": "bb74023b-6846-413c-87db-b0ccfcd71235",
+  "slug": "design-in-memory-file-system",
+  "title": "Design In-Memory File System",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "design",
+    "trie",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"FileSystem\",\"ls\",\"mkdir\",\"addContentToFile\",\"ls\",\"readContentFromFile\"]\n[[],[\"/\"],[\"/a/b/c\"],[\"/a/b/c/d\",\"hello\"],[\"/\"],[\"/a/b/c/d\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ls: O(l + klogk), l is the path length, k is the number of entries in the last level directory\n//        mkdir: O(l)\n//        addContentToFile: O(l + c), c is the content size\n//        readContentFromFile: O(l + c)\n// Space: O(n + s), n is the number of dir/file nodes, s is the total content size.\n\nclass FileSystem {\npublic:\n    FileSystem() : root_(new TrieNode()) {\n        \n    }\n    \n    vector<string> ls(string path) {\n        auto curr = getNode(path);\n        \n        if (curr->isFile) {\n            return {split(path, '/').back()};\n        }\n        \n        vector<string> result;\n        for (const auto& child : curr->children) {\n            result.emplace_back(child.first);\n        }\n        sort(result.begin(), result.end());\n        return result; \n    }\n    \n    void mkdir(string path) {\n        auto curr = putNode(path);\n        curr->isFile = false;\n    }\n    \n    void addContentToFile(string filePath, string content) {\n        auto curr = putNode(filePath);\n        curr->isFile = true;\n        curr->content += content;\n    }\n    \n    string readContentFromFile(string filePath) {\n        return getNode(filePath)->content;\n    }\n\nprivate:\n    struct TrieNode {\n        bool isFile;\n        unordered_map<string, TrieNode *> children;\n        string content;\n    };\n\n    TrieNode *root_;\n    \n    TrieNode *getNode(const string& path) {\n        vector<string> strs = split(path, '/');\n        auto curr = root_;\n        for (const auto& str : strs) {\n            curr = curr->children[str];\n        }\n        return curr;\n    }\n\n    TrieNode *putNode(const string& path) {\n        vector<string> strs = split(path, '/');\n        auto curr = root_;\n        for (const auto& str : strs) {\n            if (!curr->children.count(str)) {\n                curr->children[str] = new TrieNode();\n            }\n            curr = curr->children[str];\n        }\n        return curr;\n    }\n\n    vector<string> split(const string& s, const char delim) {\n        vector<string> tokens;\n        stringstream ss(s);\n        string token;\n        while (getline(ss, token, delim)) {\n            if (!token.empty()) {\n                tokens.emplace_back(token);\n            }\n        }\n        return tokens;\n    }\n};\n\n/**\n * Your FileSystem object will be instantiated and called as such:\n * FileSystem obj = new FileSystem();\n * vector<string> param_1 = obj.ls(path);\n * obj.mkdir(path);\n * obj.addContentToFile(filePath,content);\n * string param_4 = obj.readContentFromFile(filePath);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ls: O(l + klogk), l is the path length, k is the number of entries in the last level directory\n#        mkdir: O(l)\n#        addContentToFile: O(l + c), c is the content size\n#        readContentFromFile: O(l + c)\n# Space: O(n + s), n is the number of dir/file nodes, s is the total content size.\n\nclass TrieNode(object):\n\n    def __init__(self):\n        self.is_file = False\n        self.children = {}\n        self.content = \"\"\n\nclass FileSystem(object):\n\n    def __init__(self):\n        self.__root = TrieNode()\n\n\n    def ls(self, path):\n        \"\"\"\n        :type path: str\n        :rtype: List[str]\n        \"\"\"\n        curr = self.__getNode(path)\n\n        if curr.is_file:\n            return [self.__split(path, '/')[-1]]\n\n        return sorted(curr.children.keys())\n\n\n    def mkdir(self, path):\n        \"\"\"\n        :type path: str\n        :rtype: void\n        \"\"\"\n        curr = self.__putNode(path)\n        curr.is_file = False\n\n\n    def addContentToFile(self, filePath, content):\n        \"\"\"\n        :type filePath: str\n        :type content: str\n        :rtype: void\n        \"\"\"\n        curr = self.__putNode(filePath)\n        curr.is_file = True\n        curr.content += content\n\n\n    def readContentFromFile(self, filePath):\n        \"\"\"\n        :type filePath: str\n        :rtype: str\n        \"\"\"\n        return self.__getNode(filePath).content\n\n\n    def __getNode(self, path):\n        curr = self.__root\n        for s in self.__split(path, '/'):\n            curr = curr.children[s]\n        return curr\n\n\n    def __putNode(self, path):\n        curr = self.__root\n        for s in self.__split(path, '/'):\n            if s not in curr.children:\n                curr.children[s] = TrieNode()\n            curr = curr.children[s]\n        return curr\n\n\n    def __split(self, path, delim):\n        if path == '/':\n            return []\n        return path.split('/')[1:]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

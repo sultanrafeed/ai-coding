@@ -1,0 +1,40 @@
+{
+  "id": "7a1468c9-8831-4a4e-859b-a355cf08fb33",
+  "slug": "minimum-adjacent-swaps-to-make-a-valid-array",
+  "title": "Minimum Adjacent Swaps to Make a Valid Array",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,4,5,5,3,1]\n[9]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// array, greedy\nclass Solution {\npublic:\n    int minimumSwaps(vector<int>& nums) {\n        const int min_idx = distance(cbegin(nums), min_element(cbegin(nums), cend(nums)));\n        const int max_idx = (size(nums) - 1) - distance(crbegin(nums), max_element(crbegin(nums), crend(nums)));\n        return ((size(nums) - 1) - max_idx) + min_idx - static_cast<int>(max_idx < min_idx);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# array, greedy\nclass Solution(object):\n    def minimumSwaps(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        min_idx = min(xrange(len(nums)), key=nums.__getitem__)\n        max_idx = max(reversed(xrange(len(nums))), key=nums.__getitem__)\n        return ((len(nums)-1)-max_idx)+min_idx-int(max_idx < min_idx)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

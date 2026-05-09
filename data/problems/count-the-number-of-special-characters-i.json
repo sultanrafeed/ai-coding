@@ -1,0 +1,34 @@
+{
+  "id": "6fa98b63-d321-4b55-b1a0-2a862e4d8dbb",
+  "slug": "count-the-number-of-special-characters-i",
+  "title": "Count the Number of Special Characters I",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a string <code>word</code>. A letter is called <strong>special</strong> if it appears <strong>both</strong> in lowercase and uppercase in <code>word</code>.</p>\n\n<p>Return the number of<em> </em><strong>special</strong> letters in<em> </em><code>word</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word = &quot;aaAbcBC&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The special characters in <code>word</code> are <code>&#39;a&#39;</code>, <code>&#39;b&#39;</code>, and <code>&#39;c&#39;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word = &quot;abc&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>No character in <code>word</code> appears in uppercase.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word = &quot;abBCab&quot;</span></p>\n\n<p><strong>Output:</strong> 1</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The only special character in <code>word</code> is <code>&#39;b&#39;</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= word.length &lt;= 50</code></li>\n\t<li><code>word</code> consists of only lowercase and uppercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// hash table\nclass Solution {\npublic:\n    int numberOfSpecialChars(string word) {\n        vector<bool> lookup1(26);\n        vector<bool> lookup2(26);\n        for (const auto& x : word) {\n            if (islower(x)) {\n                lookup1[x - 'a'] = true;\n            } else {\n                lookup2[x - 'A'] = true;\n            }\n        }\n        int result = 0;\n        for (int i = 0; i < 26; ++i) {\n            if (lookup1[i] == lookup2[i] && lookup2[i] == true) {\n                ++result;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\nimport itertools\n\n\n# hash table\nclass Solution(object):\n    def numberOfSpecialChars(self, word):\n        \"\"\"\n        :type word: str\n        :rtype: int\n        \"\"\"\n        lookup1 = [False]*26\n        lookup2 = [False]*26\n        for x in word:\n            if x.islower():\n                lookup1[ord(x)-ord('a')] = True\n            else:\n                lookup2[ord(x)-ord('A')] = True\n        return sum(x == y == True for x, y in itertools.izip(lookup1, lookup2))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

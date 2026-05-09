@@ -1,0 +1,40 @@
+{
+  "id": "59d32468-a20f-4a4f-b49a-e9961a29d9b1",
+  "slug": "merge-close-characters",
+  "title": "Merge Close Characters",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a string <code>s</code> consisting of lowercase English letters and an integer <code>k</code>.</p>\n\n<p>Two <strong>equal</strong> characters in the <strong>current</strong> string <code>s</code> are considered <strong>close</strong> if the distance between their indices is <strong>at most</strong> <code>k</code>.</p>\n\n<p>When two characters are <strong>close</strong>, the right one merges into the left. Merges happen <strong>one at a time</strong>, and after each merge, the string updates until no more merges are possible.</p>\n\n<p>Return the resulting string after performing all possible merges.</p>\n\n<p><strong>Note</strong>: If multiple merges are possible, always merge the pair with the <strong>smallest left</strong> index. If multiple pairs share the smallest left index, choose the pair with the <strong>smallest right</strong> index.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abca&quot;, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;abc&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><strong>​​​​​​​</strong>Characters <code>&#39;a&#39;</code> at indices <code>i = 0</code> and <code>i = 3</code> are close as <code>3 - 0 = 3 &lt;= k</code>.</li>\n\t<li>Merge them into the left <code>&#39;a&#39;</code> and <code>s = &quot;abc&quot;</code>.</li>\n\t<li>No other equal characters are close, so no further merges occur.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;aabca&quot;, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;abca&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Characters <code>&#39;a&#39;</code> at indices <code>i = 0</code> and <code>i = 1</code> are close as <code>1 - 0 = 1 &lt;= k</code>.</li>\n\t<li>Merge them into the left <code>&#39;a&#39;</code> and <code>s = &quot;abca&quot;</code>.</li>\n\t<li>Now the remaining <code>&#39;a&#39;</code> characters at indices <code>i = 0</code> and <code>i = 3</code> are not close as <code>k &lt; 3</code>, so no further merges occur.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;yybyzybz&quot;, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;ybzybz&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Characters <code>&#39;y&#39;</code> at indices <code>i = 0</code> and <code>i = 1</code> are close as <code>1 - 0 = 1 &lt;= k</code>.</li>\n\t<li>Merge them into the left <code>&#39;y&#39;</code> and <code>s = &quot;ybyzybz&quot;</code>.</li>\n\t<li>Now the characters <code>&#39;y&#39;</code> at indices <code>i = 0</code> and <code>i = 2</code> are close as <code>2 - 0 = 2 &lt;= k</code>.</li>\n\t<li>Merge them into the left <code>&#39;y&#39;</code> and <code>s = &quot;ybzybz&quot;</code>.</li>\n\t<li>No other equal characters are close, so no further merges occur.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= k &lt;= s.length</code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abca\"\n3\n\"aabca\"\n2\n\"yybyzybz\"\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// simulation, hash table\nclass Solution {\npublic:\n    string mergeCharacters(string s, int k) {\n        string result;\n        vector<int> lookup(26, -1);\n        for (const auto& x : s) {\n            if (lookup[x - 'a'] != -1 && size(result) - lookup[x - 'a'] <= k) {\n                continue;\n            }\n            lookup[x - 'a'] = size(result);\n            result.push_back(x);\n        }\n        return result;\n    }\n};\n\n// Time:  O(n + 26)\n// Space: O(26)\n// simulation, freq table, two pointers\nclass Solution2 {\npublic:\n    string mergeCharacters(string s, int k) {\n        string result;\n        vector<int> cnt(26);\n        for (const auto& x : s) {\n            if (cnt[x - 'a']) {\n                continue;\n            }\n            ++cnt[x - 'a'];\n            result.push_back(x);\n            if (size(result) >= k + 1) {\n                --cnt[result[size(result) - (k + 1)] - 'a'];\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# simulation, hash table\nclass Solution(object):\n    def mergeCharacters(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: str\n        \"\"\"\n        result = []\n        lookup = [-1]*26\n        for x in s:\n            if lookup[ord(x)-ord('a')] != -1 and len(result)-lookup[ord(x)-ord('a')] <= k:\n                continue\n            lookup[ord(x)-ord('a')] = len(result)\n            result.append(x)\n        return \"\".join(result)\n\n\n# Time:  O(n + 26)\n# Space: O(26)\n# simulation, freq table, two pointers\nclass Solution2(object):\n    def mergeCharacters(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: str\n        \"\"\"\n        result = []\n        cnt = [0]*26\n        for x in s:\n            if cnt[ord(x)-ord('a')]:\n                continue\n            cnt[ord(x)-ord('a')] += 1\n            result.append(x)\n            if len(result) >= k+1:\n                cnt[ord(result[-(k+1)])-ord('a')] -= 1\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

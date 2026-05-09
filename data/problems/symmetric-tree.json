@@ -1,0 +1,36 @@
+{
+  "id": "8374c5fc-84e9-4694-af03-a1815ec48089",
+  "slug": "symmetric-tree",
+  "title": "Symmetric Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary tree, <em>check whether it is a mirror of itself</em> (i.e., symmetric around its center).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/02/19/symtree1.jpg\" style=\"width: 354px; height: 291px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,2,3,4,4,3]\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/02/19/symtree2.jpg\" style=\"width: 308px; height: 258px;\" />\n<pre>\n<strong>Input:</strong> root = [1,2,2,null,3,null,3]\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 1000]</code>.</li>\n\t<li><code>-100 &lt;= Node.val &lt;= 100</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Could you solve it both recursively and iteratively?",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h), h is the height of the binary tree.\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\n \n// Iterative solution.\nclass Solution {\npublic:\n    bool isSymmetric(TreeNode* root) {\n        if (!root) {\n            return true;\n        }\n        // isSymmetricHelper(root->left, root->right)\n        stack<TreeNode *> nodes;\n        nodes.emplace(root->left);\n        nodes.emplace(root->right);\n\n        while (!nodes.empty())  {\n            auto right = nodes.top();\n            nodes.pop();\n            auto left = nodes.top();\n            nodes.pop();\n            if (!left && !right) {\n                continue;\n            }\n            if (!left || !right || left->val != right->val) {\n                return false;\n            }\n            // isSymmetricHelper(left->right, right->left)\n            nodes.emplace(left->right);\n            nodes.emplace(right->left);\n\n            // isSymmetricHelper(left->left, right->right)\n            nodes.emplace(left->left);\n            nodes.emplace(right->right);\n        }\n        return true;\n    }\n};\n\n\n// Recursive solution.\nclass Solution2 {\npublic:\n    bool isSymmetric(TreeNode* root) {\n        if (!root) {\n            return true;\n        }\n        return isSymmetricHelper(root->left, root->right);\n    }\n    \n    bool isSymmetricHelper(TreeNode *left, TreeNode *right) {\n        if (!left && !right) {\n            return true;\n        }\n        if (!left || !right || left->val != right->val) {\n            return false;\n        }\n        return isSymmetricHelper(left->left, right->right) &&\n               isSymmetricHelper(left->right, right->left);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h), h is height of binary tree\n# Given a binary tree, check whether it is a mirror of itself (ie, symmetric around its center).\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n# Iterative solution\nclass Solution(object):\n    # @param root, a tree node\n    # @return a boolean\n    def isSymmetric(self, root):\n        if root is None:\n            return True\n        stack = []\n        stack.append(root.left)\n        stack.append(root.right)\n\n        while stack:\n            p, q = stack.pop(), stack.pop()\n\n            if p is None and q is None:\n                continue\n\n            if p is None or q is None or p.val != q.val:\n                return False\n\n            stack.append(p.left)\n            stack.append(q.right)\n\n            stack.append(p.right)\n            stack.append(q.left)\n\n        return True\n\n# Recursive solution\nclass Solution2(object):\n    # @param root, a tree node\n    # @return a boolean\n    def isSymmetric(self, root):\n        if root is None:\n            return True\n\n        return self.isSymmetricRecu(root.left, root.right)\n\n    def isSymmetricRecu(self, left, right):\n        if left is None and right is None:\n            return True\n        if left is None or right is None or left.val != right.val:\n            return False\n        return self.isSymmetricRecu(left.left, right.right) and self.isSymmetricRecu(left.right, right.left)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

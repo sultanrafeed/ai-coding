@@ -1,0 +1,34 @@
+{
+  "id": "4f45835c-4bfa-465d-9e9d-cb5e6f342953",
+  "slug": "single-number-ii",
+  "title": "Single Number II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> where&nbsp;every element appears <strong>three times</strong> except for one, which appears <strong>exactly once</strong>. <em>Find the single element and return it</em>.</p>\n\n<p>You must&nbsp;implement a solution with a linear runtime complexity and use&nbsp;only constant&nbsp;extra space.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> nums = [2,2,3,2]\n<strong>Output:</strong> 3\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> nums = [0,1,0,1,0,1,99]\n<strong>Output:</strong> 99\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 3 * 10<sup>4</sup></code></li>\n\t<li><code>-2<sup>31</sup> &lt;= nums[i] &lt;= 2<sup>31</sup> - 1</code></li>\n\t<li>Each element in <code>nums</code> appears exactly <strong>three times</strong> except for one element which appears <strong>once</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int singleNumber(vector<int>& nums) {\n        int one = 0, two = 0;\n\n        for (const auto& i : nums) {\n            int new_one = (~i & one) | (i & ~one & ~two);\n            int new_two = (~i & two) | (i & one);\n            one = new_one, two = new_two;\n        }\n\n        return one;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    # @param A, a list of integer\n    # @return an integer\n    def singleNumber(self, A):\n        one, two = 0, 0\n        for x in A:\n            one, two = (~x & one) | (x & ~one & ~two), (~x & two) | (x & one)\n        return one\n\n\nclass Solution2(object):\n    # @param A, a list of integer\n    # @return an integer\n    def singleNumber(self, A):\n        one, two, carry = 0, 0, 0\n        for x in A:\n            two |= one & x\n            one ^= x\n            carry = one & two\n            one &= ~carry\n            two &= ~carry\n        return one\n\n\nclass Solution3(object):\n    def singleNumber(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return (collections.Counter(list(set(nums)) * 3) - collections.Counter(nums)).keys()[0]\n\n\nclass Solution4(object):\n    def singleNumber(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return (sum(set(nums)) * 3 - sum(nums)) / 2\n\n\n#  every element appears 4 times except for one with 2 times\nclass SolutionEX(object):\n    # @param A, a list of integer\n    # @return an integer\n    # [1, 1, 1, 1, 2, 2, 2, 2, 3, 3]\n    def singleNumber(self, A):\n        one, two, three = 0, 0, 0\n        for x in A:\n            one, two, three = (~x & one) | (x & ~one & ~two & ~three), (~x & two) | (x & one), (~x & three) | (x & two)\n        return two",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "4a386965-f15e-4ab2-9a70-5d34a0ff1974",
+  "slug": "verify-preorder-sequence-in-binary-search-tree",
+  "title": "Verify Preorder Sequence in Binary Search Tree",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "stack",
+    "tree",
+    "binary-search-tree",
+    "recursion",
+    "monotonic-stack",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool verifyPreorder(vector<int>& preorder) {\n        int low = INT_MIN, i = -1;\n        for (auto& p : preorder) {\n            if (p < low) {\n                return false;\n            }\n            while (i >= 0 && p > preorder[i]) {\n                low = preorder[i--];\n            }\n            preorder[++i] = p;\n        }\n        return true;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\nclass Solution2 {\npublic:\n    bool verifyPreorder(vector<int>& preorder) {\n        int low = INT_MIN;\n        stack<int> path;\n        for (auto& p : preorder) {\n            if (p < low) {\n                return false;\n            }\n            while (!path.empty() && p > path.top()) {\n                // Traverse to its right subtree now.\n                // Use the popped values as a lower bound because\n                // we shouldn't come across a smaller number anymore.\n                low = path.top();\n                path.pop();\n            }\n            path.emplace(p);\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    # @param {integer[]} preorder\n    # @return {boolean}\n    def verifyPreorder(self, preorder):\n        low, i = float(\"-inf\"), -1\n        for p in preorder:\n            if p < low:\n                return False\n            while i >= 0 and p > preorder[i]:\n                low = preorder[i]\n                i -= 1\n            i += 1\n            preorder[i] = p\n        return True\n\n# Time:  O(n)\n# Space: O(h)\nclass Solution2(object):\n    # @param {integer[]} preorder\n    # @return {boolean}\n    def verifyPreorder(self, preorder):\n        low = float(\"-inf\")\n        path = []\n        for p in preorder:\n            if p < low:\n                return False\n            while path and p > path[-1]:\n                low = path[-1]\n                path.pop()\n            path.append(p)\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

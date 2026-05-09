@@ -1,0 +1,45 @@
+{
+  "id": "f0eb82a8-c35d-4d4e-b7cd-48a45bbe68e4",
+  "slug": "two-sum-iv-input-is-a-bst",
+  "title": "Two Sum IV - Input is a BST",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary search tree and an integer <code>k</code>, return <code>true</code> <em>if there exist two elements in the BST such that their sum is equal to</em> <code>k</code>, <em>or</em> <code>false</code> <em>otherwise</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/21/sum_tree_1.jpg\" style=\"width: 400px; height: 229px;\" />\n<pre>\n<strong>Input:</strong> root = [5,3,6,2,4,null,7], k = 9\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/21/sum_tree_2.jpg\" style=\"width: 400px; height: 229px;\" />\n<pre>\n<strong>Input:</strong> root = [5,3,6,2,4,null,7], k = 28\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>\n\t<li><code>-10<sup>4</sup> &lt;= Node.val &lt;= 10<sup>4</sup></code></li>\n\t<li><code>root</code> is guaranteed to be a <strong>valid</strong> binary search tree.</li>\n\t<li><code>-10<sup>5</sup> &lt;= k &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "two-pointers",
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,3,6,2,4,null,7]\n9\n[5,3,6,2,4,null,7]\n28",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\n\nclass Solution {\npublic:\n    bool findTarget(TreeNode* root, int k) {\n        if (!root) {\n            return false;\n        }\n        BSTIterator left(root, true), right(root, false);\n        while (*left < *right) {\n            if (*left + *right == k) {\n                return true;\n            } else if (*left + *right < k) {\n                ++left;\n            } else {\n                ++right;\n            }\n        }\n        return false;\n    }\n\nprivate:\n    class BSTIterator {\n    public:\n        BSTIterator(TreeNode *root, bool forward) :\n            node_(root),\n            forward_(forward) {\n            ++(*this);\n        };\n\n        int operator*() {\n            return cur_; \n        }\n\n        void operator++() {\n            while (node_ || !s_.empty()) {\n                if (node_) {\n                    s_.emplace(node_);\n                    node_ = forward_ ? node_->left : node_->right;\n                } else {\n                    node_ = s_.top();\n                    s_.pop();\n                    cur_ = node_->val;\n                    node_ = forward_ ? node_->right : node_->left;\n                    break;\n                }\n            }\n        }\n\n    private:\n        TreeNode* node_;\n        bool forward_;\n        stack<TreeNode*> s_;\n        int cur_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def findTarget(self, root, k):\n        \"\"\"\n        :type root: TreeNode\n        :type k: int\n        :rtype: bool\n        \"\"\"\n        class BSTIterator(object):\n            def __init__(self, root, forward):\n                self.__node = root\n                self.__forward = forward\n                self.__s = []\n                self.__cur = None\n                self.next()\n\n            def val(self):\n                return self.__cur\n\n            def next(self):\n                while self.__node or self.__s:\n                    if self.__node:\n                        self.__s.append(self.__node)\n                        self.__node = self.__node.left if self.__forward else self.__node.right\n                    else:\n                        self.__node = self.__s.pop()\n                        self.__cur = self.__node.val\n                        self.__node = self.__node.right if self.__forward else self.__node.left\n                        break\n\n\n        if not root:\n            return False\n        left, right = BSTIterator(root, True), BSTIterator(root, False)\n        while left.val() < right.val():\n            if left.val() + right.val() == k:\n                return True\n            elif left.val() + right.val() < k:\n                left.next()\n            else:\n                right.next()\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

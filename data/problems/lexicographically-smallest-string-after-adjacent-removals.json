@@ -1,0 +1,34 @@
+{
+  "id": "48ea68c5-fcc2-42c4-8a69-7e58e0c26bd7",
+  "slug": "lexicographically-smallest-string-after-adjacent-removals",
+  "title": "Lexicographically Smallest String After Adjacent Removals",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a string <code>s</code> consisting of lowercase English letters.</p>\n\n<p>You can perform the following operation any number of times (including zero):</p>\n\n<ul>\n\t<li>Remove <strong>any</strong> pair of <strong>adjacent</strong> characters in the string that are <strong>consecutive</strong> in the alphabet, in either order (e.g., <code>&#39;a&#39;</code> and <code>&#39;b&#39;</code>, or <code>&#39;b&#39;</code> and <code>&#39;a&#39;</code>).</li>\n\t<li>Shift the remaining characters to the left to fill the gap.</li>\n</ul>\n\n<p>Return the <strong><span data-keyword=\"lexicographically-smaller-string\">lexicographically smallest</span></strong> string that can be obtained after performing the operations optimally.</p>\n\n<p><strong>Note:</strong> Consider the alphabet as circular, thus <code>&#39;a&#39;</code> and <code>&#39;z&#39;</code> are consecutive.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abc&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;a&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Remove <code>&quot;bc&quot;</code> from the string, leaving <code>&quot;a&quot;</code> as the remaining string.</li>\n\t<li>No further operations are possible. Thus, the lexicographically smallest string after all possible removals is <code>&quot;a&quot;</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;bcda&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li><strong>​​​​​​​</strong>Remove <code>&quot;cd&quot;</code> from the string, leaving <code>&quot;ba&quot;</code> as the remaining string.</li>\n\t<li>Remove <code>&quot;ba&quot;</code> from the string, leaving <code>&quot;&quot;</code> as the remaining string.</li>\n\t<li>No further operations are possible. Thus, the lexicographically smallest string after all possible removals is <code>&quot;&quot;</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;zdce&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;zdce&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Remove <code>&quot;dc&quot;</code> from the string, leaving <code>&quot;ze&quot;</code> as the remaining string.</li>\n\t<li>No further operations are possible on <code>&quot;ze&quot;</code>.</li>\n\t<li>However, since <code>&quot;zdce&quot;</code> is lexicographically smaller than <code>&quot;ze&quot;</code>, the smallest string after all possible removals is <code>&quot;zdce&quot;</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 250</code></li>\n\t<li><code>s</code> consists only of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^3)\n// Space: O(n^2)\n\n// dp\nclass Solution {\npublic:\n    string lexicographicallySmallestString(string s) {\n        vector<vector<bool>> dp(size(s), vector<bool>(size(s)));\n        for (int l = 2; l <= size(s); l += 2) {\n            for (int i = 0; i + (l - 1) < size(s); ++i) {\n                const int j = i + (l - 1);\n                if ((abs(s[i] - s[j]) == 1 || abs(s[i] - s[j]) == 25)) {\n                    if (j == i + 1 || dp[i + 1][j - 1]) {\n                        dp[i][j] = true;\n                        continue;\n                    }\n                }\n                for (int k = i + 1; k < j; k += 2) {\n                    if (dp[i][k] && dp[k + 1][j]) {\n                        dp[i][j] = true;\n                        break;\n                    }\n                }\n            }\n        }\n        vector<string> dp2(size(s) + 1);\n        for (int i = size(s) - 1; i >= 0; --i) {\n            dp2[i] = s[i] + dp2[i + 1];\n            for (int j = i + 1; j < size(s); j += 2) {\n                if (dp[i][j]) {\n                    dp2[i] = min(dp2[i], dp2[j + 1]);  \n                }\n            }\n        }\n        return dp2[0];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^3)\n# Space: O(n^2)\n\n# dp\nclass Solution(object):\n    def lexicographicallySmallestString(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        dp = [[False]*len(s) for _ in xrange(len(s))]\n        for l in xrange(2, len(s)+1, 2):\n            for i in xrange(len(s)-(l-1)):\n                j = i+(l-1)\n                if abs(ord(s[i])-ord(s[j])) in (1, 25) and (j == i+1 or dp[i+1][j-1]):\n                    dp[i][j] = True\n                    continue\n                for k in xrange(i+1, j, 2):\n                    if dp[i][k] and dp[k+1][j]:\n                        dp[i][j] = True\n                        break\n        dp2 = [\"\"]*(len(s)+1)\n        for i in reversed(xrange(len(s))):\n            dp2[i] = s[i]+dp2[i+1]\n            for j in xrange(i+1, len(s), 2):\n                if dp[i][j]:\n                    dp2[i] = min(dp2[i], dp2[j+1])\n        return dp2[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

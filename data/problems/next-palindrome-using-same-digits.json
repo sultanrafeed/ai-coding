@@ -1,0 +1,40 @@
+{
+  "id": "dbcbfd14-d420-4858-bca3-500ee23c5c85",
+  "slug": "next-palindrome-using-same-digits",
+  "title": "Next Palindrome Using Same Digits",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"1221\"\n\"32123\"\n\"45544554\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string nextPalindrome(string num) {\n        if (!nextPermutation(begin(num), begin(num) + size(num) / 2)) {\n            return \"\";\n        }\n        copy(begin(num), begin(num) + size(num) / 2, rbegin(num));\n        return num;\n    }\n\nprivate:\n    template<typename BidiIt>\n    bool nextPermutation(BidiIt begin, BidiIt end) {\n        const auto rbegin = reverse_iterator<BidiIt>(end);\n        const auto rend = reverse_iterator<BidiIt>(begin);\n        auto pivot = next(rbegin);\n        while (pivot != rend && *pivot >= *prev(pivot)) {\n            ++pivot;\n        }\n        bool is_greater = true;\n        if (pivot != rend) {\n            auto change = find_if(rbegin, pivot, bind1st(less<int>(), *pivot));\n            swap(*change, *pivot);\n        } else {\n            is_greater = false;\n        }        \n        reverse(rbegin, pivot);\n        return is_greater;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    string nextPalindrome(string num) {\n        if (!next_permutation(begin(num), begin(num) + size(num) / 2)) {\n            return \"\";\n        }\n        copy(begin(num), begin(num) + size(num) / 2, rbegin(num));\n        return num;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def nextPalindrome(self, num):\n        \"\"\"\n        :type num: str\n        :rtype: str\n        \"\"\"\n        def next_permutation(nums, begin, end):\n            def reverse(nums, begin, end):\n                left, right = begin, end-1\n                while left < right:\n                    nums[left], nums[right] = nums[right], nums[left]\n                    left += 1\n                    right -= 1\n\n            k, l = begin-1, begin\n            for i in reversed(xrange(begin, end-1)):\n                if nums[i] < nums[i+1]:\n                    k = i\n                    break\n            else:\n                reverse(nums, begin, end)\n                return False\n            for i in reversed(xrange(k+1, end)):\n                if nums[i] > nums[k]:\n                    l = i\n                    break\n            nums[k], nums[l] = nums[l], nums[k]\n            reverse(nums, k+1, end)\n            return True\n        \n        nums = list(num)\n        if not next_permutation(nums, 0, len(nums)//2):\n            return \"\"\n        for i in xrange(len(nums)//2):\n            nums[-1-i] = nums[i]\n        return \"\".join(nums)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

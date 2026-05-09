@@ -1,0 +1,36 @@
+{
+  "id": "b07c6318-871f-45dd-97de-6a5053505a59",
+  "slug": "maximum-subtree-of-the-same-color",
+  "title": "Maximum Subtree of the Same Color",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "tree",
+    "depth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// iterative dfs\nclass Solution {\npublic:\n    int maximumSubtreeSize(vector<vector<int>>& edges, vector<int>& colors) {\n        vector<vector<int>> adj(size(colors));\n        for (const auto& e : edges) {\n            adj[e[0]].emplace_back(e[1]);\n            adj[e[1]].emplace_back(e[0]);\n        }\n        \n        const auto& iter_dfs = [&]() {\n            int result = 0;\n            using RET = int;\n            RET ret{1};\n            vector<tuple<int, int, int, int, shared_ptr<RET>, RET *>> stk = {{1, 0, -1, -1, nullptr, &ret}};\n            while (!empty(stk)) {\n                const auto [step, u, p, i, new_ret, ret] = stk.back(); stk.pop_back();\n                if (step == 1) {\n                    stk.emplace_back(4, -1, -1, -1, nullptr, ret);\n                    stk.emplace_back(2, u, p, 0, nullptr, ret);\n                } else if (step == 2) {\n                    if (i == size(adj[u])) {\n                        continue;\n                    }\n                    const auto& v = adj[u][i];\n                    stk.emplace_back(2, u, p, i + 1, nullptr, ret);\n                    if (v == p) {\n                        continue;\n                    }\n                    const auto& new_ret = make_shared<RET>(1);\n                    stk.emplace_back(3, u, p, i, new_ret, ret);\n                    stk.emplace_back(1, v, u, -1, nullptr, new_ret.get());\n                } else if (step == 3) {\n                    const auto& v = adj[u][i];\n                    if (*ret == -1) {\n                        continue;\n                    }\n                    if (*new_ret == -1 || colors[v] != colors[u]) {\n                        *ret = -1;\n                        continue;\n                    }\n                    *ret += *new_ret;\n                } else if (step == 4) {\n                    result = max(result, *ret);\n                }\n            }\n            return result;\n        };\n\n        return iter_dfs();\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\n// dfs\nclass Solution2 {\npublic:\n    int maximumSubtreeSize(vector<vector<int>>& edges, vector<int>& colors) {\n        vector<vector<int>> adj(size(colors));\n        for (const auto& e : edges) {\n            adj[e[0]].emplace_back(e[1]);\n            adj[e[1]].emplace_back(e[0]);\n        }\n        int result = 0;\n        const function<int (int, int)> dfs = [&](int u, int p) {\n            int cnt = 1;\n            for (const auto& v : adj[u]) {\n                if (v == p) {\n                    continue;\n                }\n                const auto c = dfs(v, u);\n                if (cnt == -1) {\n                    continue;\n                }\n                if (c == -1 || colors[v] != colors[u]) {\n                    cnt = -1;\n                    continue;\n                }\n                cnt += c;\n            }\n            result = max(result, cnt);\n            return cnt;\n        };\n\n        dfs(0, -1);\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# iterative dfs\nclass Solution(object):\n    def maximumSubtreeSize(self, edges, colors):\n        \"\"\"\n        :type edges: List[List[int]]\n        :type colors: List[int]\n        :rtype: int\n        \"\"\"\n        def iter_dfs():\n            result = 0\n            stk = [(1, (0, -1, [1]))]\n            while stk:\n                step, args = stk.pop()\n                if step == 1:\n                    u, p, ret = args\n                    stk.append((4, (ret,)))\n                    stk.append((2, (u, p, ret, 0)))\n                elif step == 2:\n                    u, p, ret, i = args\n                    if i == len(adj[u]):\n                        continue\n                    v = adj[u][i]\n                    stk.append((2, (u, p, ret, i+1)))\n                    if v == p:\n                        continue\n                    new_ret = [1]\n                    stk.append((3, (v, u, new_ret, ret)))\n                    stk.append((1, (v, u, new_ret)))\n                elif step == 3:\n                    v, u, new_ret, ret = args\n                    if ret[0] == -1:\n                        continue \n                    if new_ret[0] == 0 or colors[v] != colors[u]:\n                        ret[0] = -1\n                        continue\n                    ret[0] += new_ret[0]\n                elif step == 4:\n                    ret = args[0]\n                    result = max(result, ret[0])\n            return result\n\n        adj = [[] for _ in xrange(len(colors))]\n        for u, v in edges:\n            adj[u].append(v)\n            adj[v].append(u)\n        return iter_dfs()\n\n\n# Time:  O(n)\n# Space: O(h)\n# dfs\nclass Solution2(object):\n    def maximumSubtreeSize(self, edges, colors):\n        \"\"\"\n        :type edges: List[List[int]]\n        :type colors: List[int]\n        :rtype: int\n        \"\"\"\n        def dfs(u, p):\n            cnt = 1\n            for v in adj[u]:\n                if v == p:\n                    continue\n                c = dfs(v, u)\n                if cnt == -1:\n                    continue\n                if c == -1 or colors[v] != colors[u]:\n                    cnt = -1\n                    continue\n                cnt += c\n            result[0] = max(result[0], cnt)\n            return cnt\n\n        adj = [[] for _ in xrange(len(colors))]\n        for u, v in edges:\n            adj[u].append(v)\n            adj[v].append(u)\n        result = [0]\n        dfs(0, -1)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

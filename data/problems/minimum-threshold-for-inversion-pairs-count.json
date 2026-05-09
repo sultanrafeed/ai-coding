@@ -1,0 +1,38 @@
+{
+  "id": "684e527e-d132-4d8a-a10f-7574eef7e760",
+  "slug": "minimum-threshold-for-inversion-pairs-count",
+  "title": "Minimum Threshold for Inversion Pairs Count",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "divide-and-conquer",
+    "binary-indexed-tree",
+    "segment-tree",
+    "merge-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn * logr)\n// Space: O(n)\n\n#include <ext/pb_ds/assoc_container.hpp>\n#include <ext/pb_ds/tree_policy.hpp>\nusing namespace __gnu_pbds;\n\n// binary search, ordered set\nclass Solution {\npublic:\n    int minThreshold(vector<int>& nums, int k) {\n        const auto& binary_search = [](auto left, auto right, const auto& check) {\n            while (left <= right) {\n                const auto mid = left + (right - left) / 2;\n                if (check(mid)) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            }\n            return left;\n        };\n\n        const auto& check = [&](int x) {\n            using ordered_set = tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update>;\n            ordered_set os;\n            int cnt = 0;\n            for (int i = size(nums) - 1; i >= 0; --i) {\n                cnt += os.order_of_key({nums[i], i}) - os.order_of_key({nums[i] - x, i});\n                os.insert({nums[i], i});\n            }\n            return cnt >= k;\n        };\n    \n        int mx = nums[0], right = 0;\n        for (int i = 1; i < size(nums); ++i) {\n            right = max(right, mx - nums[i]);\n            mx = max(mx, nums[i]);\n        }\n        const int result = binary_search(0, right, check);\n        return result <= right ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn * logr)\n# Space: O(n)\n\nfrom sortedcontainers import SortedList\n\n\n# binary search, sorted list\nclass Solution(object):\n    def minThreshold(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def binary_search(left, right, check):\n            while left <= right:\n                mid = left + (right-left)//2\n                if check(mid):\n                    right = mid-1\n                else:\n                    left = mid+1\n            return left\n\n        def check(x):\n            sl = SortedList()\n            cnt = 0\n            for i in reversed(nums):\n                cnt += sl.bisect_left(i)-sl.bisect_left(i-x)\n                sl.add(i)\n            return cnt >= k\n\n        mx, right = nums[0], 0\n        for i in xrange(1, len(nums)):\n            right = max(right, mx-nums[i])\n            mx = max(mx, nums[i])\n        result = binary_search(0, right, check)\n        return result if result <= right else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

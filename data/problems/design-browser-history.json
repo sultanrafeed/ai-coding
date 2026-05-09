@@ -1,0 +1,38 @@
+{
+  "id": "07f31bf7-124c-4150-ace5-c7a0ad496c4c",
+  "slug": "design-browser-history",
+  "title": "Design Browser History",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You have a <strong>browser</strong> of one tab where you start on the <code>homepage</code> and you can visit another <code>url</code>, get back in the history number of <code>steps</code> or move forward in the history number of <code>steps</code>.</p>\n\n<p>Implement the <code>BrowserHistory</code> class:</p>\n\n<ul>\n\t<li><code>BrowserHistory(string homepage)</code> Initializes the object with the <code>homepage</code>&nbsp;of the browser.</li>\n\t<li><code>void visit(string url)</code>&nbsp;Visits&nbsp;<code>url</code> from the current page. It clears up all the forward history.</li>\n\t<li><code>string back(int steps)</code>&nbsp;Move <code>steps</code> back in history. If you can only return <code>x</code> steps in the history and <code>steps &gt; x</code>, you will&nbsp;return only <code>x</code> steps. Return the current <code>url</code>&nbsp;after moving back in history <strong>at most</strong> <code>steps</code>.</li>\n\t<li><code>string forward(int steps)</code>&nbsp;Move <code>steps</code> forward in history. If you can only forward <code>x</code> steps in the history and <code>steps &gt; x</code>, you will&nbsp;forward only&nbsp;<code>x</code> steps. Return the current <code>url</code>&nbsp;after forwarding in history <strong>at most</strong> <code>steps</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example:</strong></p>\n\n<pre>\n<b>Input:</b>\n[&quot;BrowserHistory&quot;,&quot;visit&quot;,&quot;visit&quot;,&quot;visit&quot;,&quot;back&quot;,&quot;back&quot;,&quot;forward&quot;,&quot;visit&quot;,&quot;forward&quot;,&quot;back&quot;,&quot;back&quot;]\n[[&quot;leetcode.com&quot;],[&quot;google.com&quot;],[&quot;facebook.com&quot;],[&quot;youtube.com&quot;],[1],[1],[1],[&quot;linkedin.com&quot;],[2],[2],[7]]\n<b>Output:</b>\n[null,null,null,null,&quot;facebook.com&quot;,&quot;google.com&quot;,&quot;facebook.com&quot;,null,&quot;linkedin.com&quot;,&quot;google.com&quot;,&quot;leetcode.com&quot;]\n\n<b>Explanation:</b>\nBrowserHistory browserHistory = new BrowserHistory(&quot;leetcode.com&quot;);\nbrowserHistory.visit(&quot;google.com&quot;);       // You are in &quot;leetcode.com&quot;. Visit &quot;google.com&quot;\nbrowserHistory.visit(&quot;facebook.com&quot;);     // You are in &quot;google.com&quot;. Visit &quot;facebook.com&quot;\nbrowserHistory.visit(&quot;youtube.com&quot;);      // You are in &quot;facebook.com&quot;. Visit &quot;youtube.com&quot;\nbrowserHistory.back(1);                   // You are in &quot;youtube.com&quot;, move back to &quot;facebook.com&quot; return &quot;facebook.com&quot;\nbrowserHistory.back(1);                   // You are in &quot;facebook.com&quot;, move back to &quot;google.com&quot; return &quot;google.com&quot;\nbrowserHistory.forward(1);                // You are in &quot;google.com&quot;, move forward to &quot;facebook.com&quot; return &quot;facebook.com&quot;\nbrowserHistory.visit(&quot;linkedin.com&quot;);     // You are in &quot;facebook.com&quot;. Visit &quot;linkedin.com&quot;\nbrowserHistory.forward(2);                // You are in &quot;linkedin.com&quot;, you cannot move forward any steps.\nbrowserHistory.back(2);                   // You are in &quot;linkedin.com&quot;, move back two steps to &quot;facebook.com&quot; then to &quot;google.com&quot;. return &quot;google.com&quot;\nbrowserHistory.back(7);                   // You are in &quot;google.com&quot;, you can move back only one step to &quot;leetcode.com&quot;. return &quot;leetcode.com&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= homepage.length &lt;= 20</code></li>\n\t<li><code>1 &lt;= url.length &lt;= 20</code></li>\n\t<li><code>1 &lt;= steps &lt;= 100</code></li>\n\t<li><code>homepage</code> and <code>url</code> consist of&nbsp; &#39;.&#39; or lower case English letters.</li>\n\t<li>At most <code>5000</code>&nbsp;calls will be made to <code>visit</code>, <code>back</code>, and <code>forward</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "linked-list",
+    "stack",
+    "design",
+    "doubly-linked-list",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor  : O(1)\n//        visit : O(1)\n//        back  : O(1)\n//        foward: O(1)\n// Space: O(n)\n\nclass BrowserHistory {\npublic:\n    BrowserHistory(string homepage)\n      : history_(1, homepage)\n      , curr_{0} {\n        \n    }\n    \n    void visit(string url) {\n        history_.resize(++curr_);\n        history_.emplace_back(url);\n    }\n    \n    string back(int steps) {\n        curr_ = max(curr_ - steps, 0);\n        return history_[curr_];\n    }\n    \n    string forward(int steps) {\n        curr_ = min(curr_ + steps, int(history_.size()) - 1);\n        return history_[curr_];\n    }\n\nprivate:\n    vector<string> history_;\n    int curr_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor  : O(1)\n#        visit : O(n)\n#        back  : O(1)\n#        foward: O(1)\n# Space: O(n)\n\nclass BrowserHistory(object):\n\n    def __init__(self, homepage):\n        \"\"\"\n        :type homepage: str\n        \"\"\"\n        self.__history = [homepage]\n        self.__curr = 0        \n\n    def visit(self, url):\n        \"\"\"\n        :type url: str\n        :rtype: None\n        \"\"\"\n        while len(self.__history) > self.__curr+1:\n            self.__history.pop()\n        self.__history.append(url)\n        self.__curr += 1\n\n    def back(self, steps):\n        \"\"\"\n        :type steps: int\n        :rtype: str\n        \"\"\"\n        self.__curr = max(self.__curr-steps, 0)\n        return self.__history[self.__curr]\n\n    def forward(self, steps):\n        \"\"\"\n        :type steps: int\n        :rtype: str\n        \"\"\"\n        self.__curr = min(self.__curr+steps, len(self.__history)-1)\n        return self.__history[self.__curr]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

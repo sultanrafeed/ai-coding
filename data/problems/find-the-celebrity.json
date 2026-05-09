@@ -1,0 +1,41 @@
+{
+  "id": "fc50df33-f813-4dd1-b7a4-7bdde4d6fed1",
+  "slug": "find-the-celebrity",
+  "title": "Find the Celebrity",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "graph",
+    "interactive"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,1,0],[0,1,0],[1,1,1]]\n[[1,0,1],[1,1,0],[0,1,1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// Forward declaration of the knows API.\nbool knows(int a, int b);\n\nclass Solution {\npublic:\n    int findCelebrity(int n) {\n        int candidate = 0;\n        // Find the candidate.\n        for (int i = 1; i < n; ++i) {\n            if (knows(candidate, i)) {\n              candidate = i;  // All candidates < i are not celebrity candidates.\n            }\n         }\n         // Verify the candidate.\n         for (int i = 0; i < n; ++i) {\n             if (i != candidate &&\n                 (knows(candidate, i) || !knows(i, candidate))) {\n                 return -1;\n             }\n         }\n         return candidate;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findCelebrity(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        candidate = 0\n        # Find the candidate.\n        for i in xrange(1, n):\n            if knows(candidate, i):  # noqa\n                candidate = i        # All candidates < i are not celebrity candidates.\n        # Verify the candidate.\n        for i in xrange(n):\n            candidate_knows_i = knows(candidate, i) # noqa\n            i_knows_candidate = knows(i, candidate) # noqa\n            if i != candidate and (candidate_knows_i or\n                                   not i_knows_candidate):\n                return -1\n        return candidate",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

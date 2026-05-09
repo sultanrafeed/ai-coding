@@ -1,0 +1,42 @@
+{
+  "id": "b9015c0f-635b-4e18-a335-14ea1b7a0aa4",
+  "slug": "maximum-profit-in-job-scheduling",
+  "title": "Maximum Profit in Job Scheduling",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>We have <code>n</code> jobs, where every job is scheduled to be done from <code>startTime[i]</code> to <code>endTime[i]</code>, obtaining a profit of <code>profit[i]</code>.</p>\n\n<p>You&#39;re given the <code>startTime</code>, <code>endTime</code> and <code>profit</code> arrays, return the maximum profit you can take such that there are no two jobs in the subset with overlapping time range.</p>\n\n<p>If you choose a job that ends at time <code>X</code> you will be able to start another job that starts at time <code>X</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><strong><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/10/10/sample1_1584.png\" style=\"width: 380px; height: 154px;\" /></strong></p>\n\n<pre>\n<strong>Input:</strong> startTime = [1,2,3,3], endTime = [3,4,5,6], profit = [50,10,40,70]\n<strong>Output:</strong> 120\n<strong>Explanation:</strong> The subset chosen is the first and fourth job. \nTime range [1-3]+[3-6] , we get profit of 120 = 50 + 70.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><strong><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/10/10/sample22_1584.png\" style=\"width: 600px; height: 112px;\" /> </strong></p>\n\n<pre>\n<strong>Input:</strong> startTime = [1,2,3,4,6], endTime = [3,5,10,6,9], profit = [20,20,100,70,60]\n<strong>Output:</strong> 150\n<strong>Explanation:</strong> The subset chosen is the first, fourth and fifth job. \nProfit obtained 150 = 20 + 70 + 60.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<p><strong><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/10/10/sample3_1584.png\" style=\"width: 400px; height: 112px;\" /></strong></p>\n\n<pre>\n<strong>Input:</strong> startTime = [1,1,1], endTime = [2,3,4], profit = [5,6,4]\n<strong>Output:</strong> 6\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= startTime.length == endTime.length == profit.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= startTime[i] &lt; endTime[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= profit[i] &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "dynamic-programming",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,3]\n[3,4,5,6]\n[50,10,40,70]\n[1,2,3,4,6]\n[3,5,10,6,9]\n[20,20,100,70,60]\n[1,1,1]\n[2,3,4]\n[5,6,4]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {\n        vector<tuple<int, int, int>> jobs;\n        for (int i = 0; i < startTime.size(); ++i) {\n            jobs.emplace_back(endTime[i], startTime[i], profit[i]);\n        }\n        sort(jobs.begin(), jobs.end());\n        vector<pair<int, int>> dp = {{0, 0}};\n        for (const auto& [e, s, p] : jobs) {\n            const auto& it = prev(upper_bound(dp.cbegin(),\n                                              dp.cend(),\n                                              make_pair(s + 1, 0)));\n            if (it->second + p > dp.back().second) {\n                dp.emplace_back(e, it->second + p);\n            }\n        }\n        return dp.back().second;\n    }\n};\n\n\n// Time:  O(nlogn)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int jobScheduling(vector<int>& startTime, vector<int>& endTime, vector<int>& profit) {\n        vector<tuple<int, int, int>> min_heap;\n        for (int i = 0; i < startTime.size(); ++i) {\n            min_heap.emplace_back(startTime[i], endTime[i], profit[i]);\n        }\n        make_heap(min_heap.begin(), min_heap.end(), greater<>());\n        int result = 0;\n        while (!min_heap.empty()) {\n            const auto [s, e, p] = min_heap.front();\n            pop_heap(begin(min_heap), end(min_heap), greater<>()); min_heap.pop_back();\n            if (s < e) {\n                min_heap.emplace_back(e, s, result + p); push_heap(begin(min_heap), end(min_heap), greater<>());\n            } else {\n                result = max(result, p);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport itertools\nimport bisect\n\n\nclass Solution(object):\n    def jobScheduling(self, startTime, endTime, profit):\n        \"\"\"\n        :type startTime: List[int]\n        :type endTime: List[int]\n        :type profit: List[int]\n        :rtype: int\n        \"\"\"\n        jobs = sorted(itertools.izip(endTime, startTime, profit))\n        dp = [(0, 0)]\n        for e, s, p in jobs:\n            i = bisect.bisect_right(dp, (s+1, 0))-1\n            if dp[i][1]+p > dp[-1][1]:\n                dp.append((e, dp[i][1]+p))\n        return dp[-1][1]\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nimport heapq\nclass Solution(object):\n    def jobScheduling(self, startTime, endTime, profit):\n        \"\"\"\n        :type startTime: List[int]\n        :type endTime: List[int]\n        :type profit: List[int]\n        :rtype: int\n        \"\"\"\n        min_heap = zip(startTime, endTime, profit)\n        heapq.heapify(min_heap)\n        result = 0\n        while min_heap:\n            s, e, p = heapq.heappop(min_heap)\n            if s < e:\n                heapq.heappush(min_heap, (e, s, result+p))\n            else:\n                result = max(result, p)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

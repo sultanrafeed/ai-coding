@@ -1,0 +1,25 @@
+{
+  "id": "36845ed8-8b0e-447e-a591-8a18b1ded75c",
+  "slug": "longestCommonLength",
+  "title": "Longestcommonlength",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n1 + n2 + ...)\n// Space Complexity: O(1)\n\nclass Solution {\n    public:\n        string longestCommonPrefix(vector<string> &strs) {\n            if(strs.empty())\n                return \"\";\n            for(int idx = 0; idx < strs[0].size(); ++idx) {\n                for(int i = 1; i < strs.size(); ++i) {\n                    if(strs[0][idx] != strs[i][idx])\n                        return strs[0].substr(0, idx);\n                }\n            }\n\n            return strs[0];\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

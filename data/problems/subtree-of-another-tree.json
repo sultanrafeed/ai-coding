@@ -1,0 +1,43 @@
+{
+  "id": "6f53b17c-2a21-4483-a701-f37bb43bb2b9",
+  "slug": "subtree-of-another-tree",
+  "title": "Subtree of Another Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the roots of two binary trees <code>root</code> and <code>subRoot</code>, return <code>true</code> if there is a subtree of <code>root</code> with the same structure and node values of<code> subRoot</code> and <code>false</code> otherwise.</p>\n\n<p>A subtree of a binary tree <code>tree</code> is a tree that consists of a node in <code>tree</code> and all of this node&#39;s descendants. The tree <code>tree</code> could also be considered as a subtree of itself.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/28/subtree1-tree.jpg\" style=\"width: 532px; height: 400px;\" />\n<pre>\n<strong>Input:</strong> root = [3,4,5,1,2], subRoot = [4,1,2]\n<strong>Output:</strong> true\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/28/subtree2-tree.jpg\" style=\"width: 502px; height: 458px;\" />\n<pre>\n<strong>Input:</strong> root = [3,4,5,1,2,null,null,null,null,0], subRoot = [4,1,2]\n<strong>Output:</strong> false\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the <code>root</code> tree is in the range <code>[1, 2000]</code>.</li>\n\t<li>The number of nodes in the <code>subRoot</code> tree is in the range <code>[1, 1000]</code>.</li>\n\t<li><code>-10<sup>4</sup> &lt;= root.val &lt;= 10<sup>4</sup></code></li>\n\t<li><code>-10<sup>4</sup> &lt;= subRoot.val &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "string-matching",
+    "binary-tree",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,4,5,1,2]\n[4,1,2]\n[3,4,5,1,2,null,null,null,null,0]\n[4,1,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n), m is the number of nodes of s, n is the number of nodes of t\n// Space: O(h), h is the height of s\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    bool isSubtree(TreeNode* s, TreeNode* t) {\n        return preOrderTraverse(s, t);\n    }\n\nprivate:\n    bool preOrderTraverse(TreeNode *s, TreeNode *t) {\n        return s && (isSame(s, t) ||\n                     preOrderTraverse(s->left, t) ||\n                     preOrderTraverse(s->right, t));\n    }\n\n    bool isSame(TreeNode *x,TreeNode *y) {\n        if (!x && !y) {\n            return true;\n        }\n        if (!x || !y) {\n            return false;\n        }\n        return x->val == y->val &&\n               isSame(x->left, y->left) &&\n               isSame(x->right, y->right);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n), m is the number of nodes of s, n is the number of nodes of t\n# Space: O(h), h is the height of s\n\nclass Solution(object):\n    def isSubtree(self, s, t):\n        \"\"\"\n        :type s: TreeNode\n        :type t: TreeNode\n        :rtype: bool\n        \"\"\"\n        def isSame(x, y):\n            if not x and not y:\n                return True\n            if not x or not y:\n                return False\n            return x.val == y.val and \\\n                   isSame(x.left, y.left) and \\\n                   isSame(x.right, y.right)\n\n        def preOrderTraverse(s, t):\n            return s != None and \\\n                   (isSame(s, t) or \\\n                    preOrderTraverse(s.left, t) or \\\n                    preOrderTraverse(s.right, t))\n\n        return preOrderTraverse(s, t)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "0f4f77c4-2f99-48c0-837d-3af308352353",
+  "slug": "unique-email-groups",
+  "title": "Unique Email Groups",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"test.email+alex@leetcode.com\", \"test.e.mail+bob.cathy@leetcode.com\", \"testemail+david@lee.tcode.com\"]\n[\"A@B.com\", \"a@b.com\", \"ab+xy@b.com\", \"a.b@b.com\"]\n[\"a.b+c.d+e@DoMain.com\", \"ab+xyz@domain.com\", \"ab@domain.com\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l)\n// Space: O(n * l)\n\n// string, hash table\nclass Solution {\npublic:\n    int uniqueEmailGroups(vector<string>& emails) {\n        const auto& lower = [](const auto& s) {\n            string result(s);\n            for (auto& x : result) {\n                x = tolower(x);\n            }\n            return result;\n        };\n\n        unordered_set<string> result;\n        for (auto& email : emails) {\n            email = lower(email);\n            auto local = email.substr(0, email.find_first_of(\"+@\"));\n            local.erase(remove(begin(local), end(local), '.'), end(local));\n            const auto& domain = email.substr(email.find('@') + 1);\n            result.emplace(local + '@' + domain);\n        }\n        return size(result);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l)\n# Space: O(n * l)\n\n# string, hash table\nclass Solution(object):\n    def uniqueEmailGroups(self, emails):\n        \"\"\"\n        :type emails: List[str]\n        :rtype: int\n        \"\"\"\n        result = set()\n        for email in emails:\n            email = email.lower()\n            local = email[:next(i for i, x in enumerate(email) if x in \"+@\")].replace('.', '')\n            domain = email[next(i for i, x in enumerate(email) if x == '@')+1:]\n            result.add(local+'@'+domain)\n        return len(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

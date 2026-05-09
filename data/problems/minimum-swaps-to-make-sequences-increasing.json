@@ -1,0 +1,40 @@
+{
+  "id": "323f20ae-8508-409a-b155-ca0dfaa2b98f",
+  "slug": "minimum-swaps-to-make-sequences-increasing",
+  "title": "Minimum Swaps To Make Sequences Increasing",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two integer arrays of the same length <code>nums1</code> and <code>nums2</code>. In one operation, you are allowed to swap <code>nums1[i]</code> with <code>nums2[i]</code>.</p>\n\n<ul>\n\t<li>For example, if <code>nums1 = [1,2,3,<u>8</u>]</code>, and <code>nums2 = [5,6,7,<u>4</u>]</code>, you can swap the element at <code>i = 3</code> to obtain <code>nums1 = [1,2,3,4]</code> and <code>nums2 = [5,6,7,8]</code>.</li>\n</ul>\n\n<p>Return <em>the minimum number of needed operations to make </em><code>nums1</code><em> and </em><code>nums2</code><em> <strong>strictly increasing</strong></em>. The test cases are generated so that the given input always makes it possible.</p>\n\n<p>An array <code>arr</code> is <strong>strictly increasing</strong> if and only if <code>arr[0] &lt; arr[1] &lt; arr[2] &lt; ... &lt; arr[arr.length - 1]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,3,5,4], nums2 = [1,2,3,7]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> \nSwap nums1[3] and nums2[3]. Then the sequences are:\nnums1 = [1, 3, 5, 7] and nums2 = [1, 2, 3, 4]\nwhich are both strictly increasing.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [0,3,5,8,9], nums2 = [2,1,4,6,9]\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums1.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>nums2.length == nums1.length</code></li>\n\t<li><code>0 &lt;= nums1[i], nums2[i] &lt;= 2 * 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,3,5,4]\n[1,2,3,7]\n[0,3,5,8,9]\n[2,1,4,6,9]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minSwap(vector<int>& A, vector<int>& B) {\n        vector<int> dp_no_swap(2), dp_swap(2, 1);\n        for (int i = 1; i < A.size(); ++i) {\n            dp_no_swap[i % 2] = dp_swap[i % 2] = numeric_limits<int>::max();\n            if (A[i - 1] < A[i] && B[i -1] < B[i]) {\n                dp_no_swap[i % 2] = min(dp_no_swap[i % 2], dp_no_swap[(i - 1) % 2]);\n                dp_swap[i % 2] = min(dp_swap[i % 2], dp_swap[(i - 1) % 2] + 1);\n            }\n            if (A[i - 1] < B[i] && B[i - 1] < A[i]) {\n                dp_no_swap[i % 2] = min(dp_no_swap[i % 2], dp_swap[(i - 1) % 2]);\n                dp_swap[i % 2] = min(dp_swap[i % 2], dp_no_swap[(i - 1) % 2] + 1);\n            }\n        }\n        return min(dp_no_swap[(A.size() - 1) % 2], dp_swap[(A.size() - 1) % 2]);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minSwap(self, A, B):\n        \"\"\"\n        :type A: List[int]\n        :type B: List[int]\n        :rtype: int\n        \"\"\"\n        dp_no_swap, dp_swap = [0]*2, [1]*2\n        for i in xrange(1, len(A)):\n            dp_no_swap[i%2], dp_swap[i%2] = float(\"inf\"), float(\"inf\")\n            if A[i-1] < A[i] and B[i-1] < B[i]:\n                dp_no_swap[i%2] = min(dp_no_swap[i%2], dp_no_swap[(i-1)%2])\n                dp_swap[i%2] = min(dp_swap[i%2], dp_swap[(i-1)%2]+1)\n            if A[i-1] < B[i] and B[i-1] < A[i]:\n                dp_no_swap[i%2] = min(dp_no_swap[i%2], dp_swap[(i-1)%2])\n                dp_swap[i%2] = min(dp_swap[i%2], dp_no_swap[(i-1)%2]+1)\n        return min(dp_no_swap[(len(A)-1)%2], dp_swap[(len(A)-1)%2])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

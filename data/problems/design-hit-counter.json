@@ -1,0 +1,43 @@
+{
+  "id": "9a1213d3-7be1-4fb1-8b6f-29ead751927e",
+  "slug": "design-hit-counter",
+  "title": "Design Hit Counter",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "design",
+    "queue",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"HitCounter\",\"hit\",\"hit\",\"hit\",\"getHits\",\"hit\",\"getHits\",\"getHits\"]\n[[],[1],[2],[3],[4],[300],[300],[301]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1), amortized\n// Space: O(k), k is the count of seconds.\n\nclass HitCounter {\npublic:\n    /** Initialize your data structure here. */\n    HitCounter() : count_(0) {\n        \n    }\n    \n    /** Record a hit.\n        @param timestamp - The current timestamp (in seconds granularity). */\n    void hit(int timestamp) {\n        getHits(timestamp);\n        if (!dq_.empty() && dq_.back().first == timestamp) {\n            ++dq_.back().second;\n        } else {\n            dq_.emplace_back(timestamp, 1);\n        }\n        ++count_;\n    }\n    \n    /** Return the number of hits in the past 5 minutes.\n        @param timestamp - The current timestamp (in seconds granularity). */\n    int getHits(int timestamp) {\n        while (!dq_.empty() && dq_.front().first <= timestamp - k_) {\n            count_ -= dq_.front().second;\n            dq_.pop_front();\n        }\n        return count_;\n    }\n\nprivate:\n    const int k_ = 300;\n    int count_;\n    deque<pair<int, int>> dq_;\n};\n\n/**\n * Your HitCounter object will be instantiated and called as such:\n * HitCounter obj = new HitCounter();\n * obj.hit(timestamp);\n * int param_2 = obj.getHits(timestamp);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1), amortized\n# Space: O(k), k is the count of seconds.\n\nfrom collections import deque\n\nclass HitCounter(object):\n\n    def __init__(self):\n        \"\"\"\n        Initialize your data structure here.\n        \"\"\"\n        self.__k = 300\n        self.__dq = deque()\n        self.__count = 0\n\n    def hit(self, timestamp):\n        \"\"\"\n        Record a hit.\n        @param timestamp - The current timestamp (in seconds granularity).\n        :type timestamp: int\n        :rtype: void\n        \"\"\"\n        self.getHits(timestamp)\n        if self.__dq and self.__dq[-1][0] == timestamp:\n            self.__dq[-1][1] += 1\n        else:\n            self.__dq.append([timestamp, 1])\n        self.__count += 1\n\n    def getHits(self, timestamp):\n        \"\"\"\n        Return the number of hits in the past 5 minutes.\n        @param timestamp - The current timestamp (in seconds granularity).\n        :type timestamp: int\n        :rtype: int\n        \"\"\"\n        while self.__dq and self.__dq[0][0] <= timestamp - self.__k:\n            self.__count -= self.__dq.popleft()[1]\n        return self.__count",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

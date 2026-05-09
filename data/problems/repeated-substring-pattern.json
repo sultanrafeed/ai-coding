@@ -1,0 +1,40 @@
+{
+  "id": "7a4c4227-d9bc-499c-92f1-132069ec2256",
+  "slug": "repeated-substring-pattern",
+  "title": "Repeated Substring Pattern",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code>, check if it can be constructed by taking a substring of it and appending multiple copies of the substring together.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abab&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> It is the substring &quot;ab&quot; twice.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aba&quot;\n<strong>Output:</strong> false\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abcabcabcabc&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> It is the substring &quot;abc&quot; four times or the substring &quot;abcabc&quot; twice.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "string-matching"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abab\"\n\"aba\"\n\"abcabcabcabc\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// KMP solution.\nclass Solution {\npublic:\n    bool repeatedSubstringPattern(string str) {\n        vector<int> prefix = getPrefix(str);\n        return prefix.back() != -1 &&\n               (prefix.back() + 1) % (str.length() - prefix.back() - 1) == 0;\n    }\n\nprivate:\n    vector<int> getPrefix(const string& pattern) {\n        vector<int> prefix(pattern.length(), -1);\n        int j = -1;\n        for (int i = 1; i < pattern.length(); ++i) {\n            while (j > -1 && pattern[j + 1] != pattern[i]) {\n                j = prefix[j];\n            }\n            if (pattern[j + 1] == pattern[i]) {\n                ++j;\n            }\n            prefix[i] = j;\n        }\n        return prefix;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def repeatedSubstringPattern(self, str):\n        \"\"\"\n        :type str: str\n        :rtype: bool\n        \"\"\"\n        def getPrefix(pattern):\n            prefix = [-1] * len(pattern)\n            j = -1\n            for i in xrange(1, len(pattern)):\n                while j > -1 and pattern[j + 1] != pattern[i]:\n                    j = prefix[j]\n                if pattern[j + 1] == pattern[i]:\n                    j += 1\n                prefix[i] = j\n            return prefix\n\n        prefix = getPrefix(str)\n        return prefix[-1] != -1 and \\\n               (prefix[-1] + 1) % (len(str) - prefix[-1] - 1) == 0\n\n    def repeatedSubstringPattern2(self, str):\n        \"\"\"\n        :type str: str\n        :rtype: bool\n        \"\"\"\n        if not str:\n            return False\n\n        ss = (str + str)[1:-1]\n        return ss.find(str) != -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

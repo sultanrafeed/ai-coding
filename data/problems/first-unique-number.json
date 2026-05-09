@@ -1,0 +1,43 @@
+{
+  "id": "e8ceed8a-241d-45de-8b20-343ad3557bb7",
+  "slug": "first-unique-number",
+  "title": "First Unique Number",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "design",
+    "queue",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"FirstUnique\",\"showFirstUnique\",\"add\",\"showFirstUnique\",\"add\",\"showFirstUnique\",\"add\",\"showFirstUnique\"]\n[[[2,3,5]],[],[5],[],[2],[],[3],[]]\n[\"FirstUnique\",\"showFirstUnique\",\"add\",\"add\",\"add\",\"add\",\"add\",\"showFirstUnique\"]\n[[[7,7,7,7,7,7]],[],[7],[3],[3],[7],[17],[]]\n[\"FirstUnique\",\"showFirstUnique\",\"add\",\"showFirstUnique\"]\n[[[809]],[],[809],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor: O(k)\n//        add: O(1)\n//        showFirstUnique: O(1)\n// Space: O(n)\n\nclass FirstUnique {\npublic:\n    FirstUnique(vector<int>& nums) {\n        for (const auto& num : nums) {\n            add(num);\n        }\n    }\n    \n    int showFirstUnique() {\n        if (q_.size()) {\n            return q_.front().first;\n        }\n        return -1;\n    }\n    \n    void add(int value) {\n        if (!dup_.count(value) && !q_.count(value)) {\n            q_[value] = true;\n            return;\n        }\n        if (q_.count(value)) {\n            q_.pop(value);\n            dup_.emplace(value);\n        }\n    }\n\nprivate:\n    template<typename K, typename V>\n    class OrderedDict {\n    public:\n        bool count(const K& key) const {\n            return map_.count(key);\n        }\n        \n        V& operator[](const K& key) {\n            if (!map_.count(key)) {\n                list_.emplace_front();\n                list_.begin()->first = key;\n                map_[key] = list_.begin();\n            }\n            return map_[key]->second;\n        }\n\n        void popitem() {\n            auto del = list_.front(); list_.pop_front();\n            map_.erase(del.first);\n        }\n        \n        pair<K, V> front() {\n            return *list_.crbegin();\n        }\n        \n        void pop(const K& key) {\n            if (!map_.count(key)) {\n                return;\n            }\n            list_.erase(map_[key]);\n            map_.erase(key);\n        }\n        \n        vector<K> keys() const {\n            vector<K> result;\n            transform(list_.crbegin(), list_.crend(), back_inserter(result),\n                      [](const auto& x) {\n                          return x.first;\n                      });\n            return result;\n        }\n        \n        int size() const {\n            return list_.size();\n        }\n    \n    private:\n        list<pair<K, V>> list_;\n        unordered_map<K, typename list<pair<K, V>>::iterator> map_;\n    };\n    \n    OrderedDict<int, bool> q_;\n    unordered_set<int> dup_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor: O(k)\n#        add: O(1)\n#        showFirstUnique: O(1)\n# Space: O(n)\n\nimport collections\n\n\nclass FirstUnique(object):\n\n    def __init__(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        \"\"\"\n        self.__q = collections.OrderedDict()\n        self.__dup = set()\n        for num in nums:\n            self.add(num)\n\n    def showFirstUnique(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        if self.__q:\n            return next(iter(self.__q))\n        return -1\n    \n    def add(self, value):\n        \"\"\"\n        :type value: int\n        :rtype: None\n        \"\"\"\n        if value not in self.__dup and value not in self.__q:\n            self.__q[value] = None\n            return\n        if value in self.__q:\n            self.__q.pop(value)\n            self.__dup.add(value)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

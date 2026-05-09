@@ -1,0 +1,34 @@
+{
+  "id": "12215c3b-fccc-46fd-829b-a128f6b7bc62",
+  "slug": "count-monobit-integers",
+  "title": "Count Monobit Integers",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer <code>n</code>.</p>\n\n<p>An integer is called <strong>Monobit</strong> if all bits in its binary representation are the same.</p>\n\n<p>Return the count of <strong>Monobit</strong> integers in the range <code>[0, n]</code> (inclusive).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The integers in the range <code>[0, 1]</code> have binary representations <code>&quot;0&quot;</code> and <code>&quot;1&quot;</code>.</li>\n\t<li>Each representation consists of identical bits. Thus, the answer is 2.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The integers in the range <code>[0, 4]</code> include binaries <code>&quot;0&quot;</code>, <code>&quot;1&quot;</code>, <code>&quot;10&quot;</code>, <code>&quot;11&quot;</code>, and <code>&quot;100&quot;</code>.</li>\n\t<li>Only 0, 1 and 3 satisfy the Monobit condition. Thus, the answer is 3.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= n &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "bit-manipulation",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// bitmasks\nclass Solution {\npublic:\n    int countMonobit(int n) {\n        return bit_width(static_cast<uint32_t>(n + 1));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# bitmasks\nclass Solution(object):\n    def countMonobit(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        return (n+1).bit_length()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

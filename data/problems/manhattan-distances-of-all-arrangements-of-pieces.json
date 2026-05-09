@@ -1,0 +1,40 @@
+{
+  "id": "fce0716f-32af-484c-8138-183441bc3563",
+  "slug": "manhattan-distances-of-all-arrangements-of-pieces",
+  "title": "Manhattan Distances of All Arrangements of Pieces",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given three integers <code><font face=\"monospace\">m</font></code>, <code><font face=\"monospace\">n</font></code>, and <code>k</code>.</p>\n\n<p>There is a rectangular grid of size <code>m &times; n</code> containing <code>k</code> identical pieces. Return the sum of Manhattan distances between every pair of pieces over all <strong>valid arrangements</strong> of pieces.</p>\n\n<p>A <strong>valid arrangement</strong> is a placement of all <code>k</code> pieces on the grid with <strong>at most</strong> one piece per cell.</p>\n\n<p>Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>The Manhattan Distance between two cells <code>(x<sub>i</sub>, y<sub>i</sub>)</code> and <code>(x<sub>j</sub>, y<sub>j</sub>)</code> is <code>|x<sub>i</sub> - x<sub>j</sub>| + |y<sub>i</sub> - y<sub>j</sub>|</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">m = 2, n = 2, k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">8</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The valid arrangements of pieces on the board are:</p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/12/25/4040example1.drawio\" /><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/12/25/untitled-diagramdrawio.png\" style=\"width: 441px; height: 204px;\" /></p>\n\n<ul>\n\t<li>In the first 4 arrangements, the Manhattan distance between the two pieces is 1.</li>\n\t<li>In the last 2 arrangements, the Manhattan distance between the two pieces is 2.</li>\n</ul>\n\n<p>Thus, the total Manhattan distance across all valid arrangements is <code>1 + 1 + 1 + 1 + 2 + 2 = 8</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">m = 1, n = 4, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">20</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The valid arrangements of pieces on the board are:</p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/12/25/4040example2drawio.png\" style=\"width: 762px; height: 41px;\" /></p>\n\n<ul>\n\t<li>The first and last arrangements have a total Manhattan distance of <code>1 + 1 + 2 = 4</code>.</li>\n\t<li>The middle two arrangements have a total Manhattan distance of <code>1 + 2 + 3 = 6</code>.</li>\n</ul>\n\n<p>The total Manhattan distance between all pairs of pieces across all arrangements is <code>4 + 6 + 6 + 4 = 20</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= m, n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>2 &lt;= m * n &lt;= 10<sup>5</sup></code></li>\n\t<li><code><font face=\"monospace\">2 &lt;= k &lt;= m * n</font></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "2\n2\n2\n1\n4\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  precompute: O(max(m * n))\n//        runtime:    O(1)\n// Space: O(max(m * n))\n\n// combinatorics\nstatic const uint32_t MOD = 1e9 + 7;\n\nuint32_t addmod(uint32_t a, uint32_t b) {  // avoid overflow\n    a %= MOD, b %= MOD;\n    if (MOD - a <= b) {\n        b -= MOD;  // relied on unsigned integer overflow in order to give the expected results\n    }\n    return a + b;\n}\n\n// reference: https://stackoverflow.com/questions/12168348/ways-to-do-modulo-multiplication-with-primitive-types\nuint32_t mulmod(uint32_t a, uint32_t b)  {  // avoid overflow\n    a %= MOD, b %= MOD;\n    uint32_t result = 0;\n    if (a < b) {\n        swap(a, b);\n    }\n    while (b > 0)  { \n        if (b & 1) {\n            result = addmod(result, a);\n        }\n        a = addmod(a, a);\n        b >>= 1;\n    } \n    return result; \n} \n\nvector<int> FACT = {1, 1};\nvector<int> INV = {1, 1};\nvector<int> INV_FACT = {1, 1};\nint nCr(int n, int k) {\n    while (size(INV) <= n) {  // lazy initialization\n        FACT.emplace_back(mulmod(FACT.back(), size(INV)));\n        INV.emplace_back(mulmod(INV[MOD % size(INV)], MOD - MOD / size(INV)));  // https://cp-algorithms.com/algebra/module-inverse.html\n        INV_FACT.emplace_back(mulmod(INV_FACT.back(), INV.back()));\n    }\n    return mulmod(mulmod(FACT[n], INV_FACT[n - k]), INV_FACT[k]);\n}\n\nclass Solution {\npublic:\n    int distanceSum(int m, int n, int k) {\n        const auto& sum_n = [](int n) {\n            return static_cast<int64_t>(n + 1) * n / 2;\n        };\n\n        const auto& sum_n_square = [](int n) {\n            return static_cast<int64_t>(n) * (n + 1) * (2 * n + 1) / 6;\n        };\n\n        const auto& f = [&](int n) {\n            // sum((d*(n-d) for d in xrange(1, n)))\n            return (n * sum_n(n - 1) - sum_n_square(n - 1)); \n        };\n\n        const auto x = mulmod(mulmod(f(n) % MOD, m), m);\n        const auto y = mulmod(mulmod(f(m) % MOD, n), n);\n        return mulmod(x + y, nCr(m * n - 2, k - 2));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  precompute: O(max(m * n))\n#        runtime:    O(1)\n# Space: O(max(m * n))\n\n# combinatorics\nMOD = 10**9+7\nFACT, INV, INV_FACT = [[1]*2 for _ in xrange(3)]\ndef nCr(n, k):\n    while len(INV) <= n:  # lazy initialization\n        FACT.append(FACT[-1]*len(INV) % MOD)\n        INV.append(INV[MOD%len(INV)]*(MOD-MOD//len(INV)) % MOD)  # https://cp-algorithms.com/algebra/module-inverse.html\n        INV_FACT.append(INV_FACT[-1]*INV[-1] % MOD)\n    return (FACT[n]*INV_FACT[n-k] % MOD) * INV_FACT[k] % MOD\n\n\nclass Solution(object):\n    def distanceSum(self, m, n, k):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def sum_n(n):\n            return (n+1)*n//2\n\n        def sum_n_square(n):\n            return n*(n+1)*(2*n+1)//6\n\n        def f(n):\n            # sum((d*(n-d) for d in xrange(1, n)))\n            return (n*sum_n(n-1)-sum_n_square(n-1))\n\n        return (f(n)*m*m+f(m)*n*n)*nCr(m*n-2, k-2)%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

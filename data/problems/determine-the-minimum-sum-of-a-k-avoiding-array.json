@@ -1,0 +1,34 @@
+{
+  "id": "125056b9-70be-40b4-9c9b-7ffe4c0fdf2d",
+  "slug": "determine-the-minimum-sum-of-a-k-avoiding-array",
+  "title": "Determine the Minimum Sum of a k-avoiding Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two integers,&nbsp;<code>n</code> and <code>k</code>.</p>\n\n<p>An array of <strong>distinct</strong> positive integers is called a <b>k-avoiding</b> array if there does not exist any pair of distinct elements that sum to <code>k</code>.</p>\n\n<p>Return <em>the <strong>minimum</strong> possible sum of a k-avoiding array of length </em><code>n</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 5, k = 4\n<strong>Output:</strong> 18\n<strong>Explanation:</strong> Consider the k-avoiding array [1,2,4,5,6], which has a sum of 18.\nIt can be proven that there is no k-avoiding array with a sum less than 18.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2, k = 6\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We can construct the array [1,2], which has a sum of 3.\nIt can be proven that there is no k-avoiding array with a sum less than 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n, k &lt;= 50</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// constructive algorithms, math\nclass Solution {\npublic:\n    int minimumSum(int n, int k) {\n        const auto& arithmetic_progression_sum  = [](const auto& a, const auto& d, const auto& n) {\n            return (a + (a + (n - 1) * d)) * n / 2;\n        };\n\n        const auto a = min(k / 2, n), b = n - a;\n        return arithmetic_progression_sum(1, 1, a) + arithmetic_progression_sum(k, 1, b);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# constructive algorithms, math\nclass Solution(object):\n    def minimumSum(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def arithmetic_progression_sum(a, d, n):\n            return (a+(a+(n-1)*d))*n//2\n    \n        a = min(k//2, n)\n        b = n-a\n        return arithmetic_progression_sum(1, 1, a)+arithmetic_progression_sum(k, 1, b)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

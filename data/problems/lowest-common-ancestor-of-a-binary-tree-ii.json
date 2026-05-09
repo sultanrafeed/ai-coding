@@ -1,0 +1,41 @@
+{
+  "id": "a15cb584-a0cb-4c5c-839c-bfe7bf6d8ada",
+  "slug": "lowest-common-ancestor-of-a-binary-tree-ii",
+  "title": "Lowest Common Ancestor of a Binary Tree II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,5,1,6,2,0,8,null,null,7,4]\n5\n1\n[3,5,1,6,2,0,8,null,null,7,4]\n5\n4\n[3,5,1,6,2,0,8,null,null,7,4]\n5\n10",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {\n        return iter_dfs(root, p, q);\n    }\n\nprivate:\n    TreeNode *iter_dfs(TreeNode* node, TreeNode* p, TreeNode* q) {\n        TreeNode *result = nullptr;\n        int ret = 0;\n        vector<tuple<int, TreeNode *, unique_ptr<int>, unique_ptr<int>, int*>> stk;\n        stk.emplace_back(1, node, nullptr,  nullptr, &ret);\n        while (!empty(stk)) {\n            const auto [step, node, ret1, ret2, ret] = move(stk.back()); stk.pop_back();\n            if (step == 1) {\n                if (!node) {\n                    continue;\n                }\n                auto ret1 = make_unique<int>(), ret2 = make_unique<int>();\n                auto p1 = ret1.get(), p2 = ret2.get();\n                stk.emplace_back(2, node, move(ret1), move(ret2), ret);\n                stk.emplace_back(1, node->right, nullptr, nullptr, p2);\n                stk.emplace_back(1, node->left, nullptr, nullptr, p1);\n            } else if (step == 2) {\n                auto curr = int(node == p || node == q);\n                if (curr + *ret1 + *ret2 == 2 && !result) {\n                    result = node;\n                }\n                *ret = curr + *ret1 + *ret2;\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\nclass Solution2 {\npublic:\n    TreeNode* lowestCommonAncestor(TreeNode* root, TreeNode* p, TreeNode* q) {\n        TreeNode *result = nullptr;\n        dfs(root, p, q, &result);\n        return result;\n    }\n\nprivate:\n    int dfs(TreeNode* node, TreeNode* p, TreeNode* q, TreeNode** result) {\n        if (!node) {\n            return 0;\n        }\n        auto left = dfs(node->left, p, q, result);\n        auto right = dfs(node->right, p, q, result);\n        auto curr = int(node == p || node == q);\n        if (curr + left + right == 2 && !(*result)) {\n            *result = node;\n        }\n        return curr + left + right;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, x):\n        pass\n\n\nclass Solution(object):\n    def lowestCommonAncestor(self, root, p, q):\n        \"\"\"\n        :type root: TreeNode\n        :type p: TreeNode\n        :type q: TreeNode\n        :rtype: TreeNode\n        \"\"\"\n        def iter_dfs(node, p, q):\n            result = None\n            stk = [(1, (node, [0]))]\n            while stk:\n                step, params = stk.pop()\n                if step == 1:\n                    node, ret = params\n                    if not node:\n                        continue\n                    ret1, ret2 = [0], [0]\n                    stk.append((2, (node, ret1, ret2, ret)))\n                    stk.append((1, (node.right, ret2)))\n                    stk.append((1, (node.left, ret1)))\n                elif step == 2:\n                    node, ret1, ret2, ret = params\n                    curr = int(node == p or node == q)\n                    if curr+ret1[0]+ret2[0] == 2 and not result:\n                        result = node\n                    ret[0] = curr+ret1[0]+ret2[0]\n            return result\n\n        return iter_dfs(root, p, q)\n\n\n# Time:  O(n)\n# Space: O(h)\nclass Solution2(object):\n    def lowestCommonAncestor(self, root, p, q):\n        \"\"\"\n        :type root: TreeNode\n        :type p: TreeNode\n        :type q: TreeNode\n        :rtype: TreeNode\n        \"\"\"        \n        def dfs(node, p, q, result):\n            if not node:\n                return 0\n            left = dfs(node.left, p, q, result)\n            right = dfs(node.right, p, q, result)\n            curr = int(node == p or node == q)\n            if curr+left+right == 2 and not result[0]:\n                result[0] = node\n            return curr+left+right\n\n        result = [0]\n        dfs(root, p, q, result)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

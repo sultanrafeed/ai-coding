@@ -1,0 +1,40 @@
+{
+  "id": "92c3cd23-4d93-4f22-9717-cbec424e0535",
+  "slug": "number-of-divisible-triplet-sums",
+  "title": "Number of Divisible Triplet Sums",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,3,4,7,8]\n5\n[3,3,3,3]\n3\n[3,3,3,3]\n6",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\n// freq table\nclass Solution {\npublic:\n    int divisibleTripletCount(vector<int>& nums, int d) {\n        int result = 0;\n        unordered_map<int, int> cnt;\n        for (int i = 0; i < size(nums); ++i) {\n            for (int j = i + 1; j < size(nums); ++j) {\n                if (cnt.count((nums[i] + nums[j]) % d)) {\n                    result += cnt[(nums[i] + nums[j]) % d];\n                }\n            }\n            ++cnt[((-nums[i]) % d + d) % d];\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n^2)\n// freq table\nclass Solution2 {\npublic:\n    int divisibleTripletCount(vector<int>& nums, int d) {\n        int result = 0;\n        unordered_map<int, int> cnt;\n        for (int i = 0; i < size(nums); ++i) {\n            if (cnt.count(nums[i] % d)) {\n                result += cnt[nums[i] % d];\n            }\n            for (int j = 0; j < i; ++j) {\n                ++cnt[(-(nums[i] + nums[j]) % d + d) % d];\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n)\n// freq table\nclass Solution3 {\npublic:\n    int divisibleTripletCount(vector<int>& nums, int d) {\n        int result = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            unordered_map<int, int> cnt;\n            for (int j = i + 1; j < size(nums); ++j) {\n                if (cnt.count(nums[j] % d)) {\n                    result += cnt[nums[j] % d];\n                }\n                ++cnt[(-(nums[i] + nums[j]) % d + d) % d];\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def divisibleTripletCount(self, nums, d):\n        \"\"\"\n        :type nums: List[int]\n        :type d: int\n        :rtype: int\n        \"\"\"\n        result = 0\n        cnt = collections.Counter()\n        for i in xrange(len(nums)):\n            for j in xrange(i+1, len(nums)):\n                if (nums[i]+nums[j])%d in cnt:\n                    result += cnt[(nums[i]+nums[j])%d]\n            cnt[-nums[i]%d] += 1\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(n^2)\nimport collections\n\n\n# freq table\nclass Solution2(object):\n    def divisibleTripletCount(self, nums, d):\n        \"\"\"\n        :type nums: List[int]\n        :type d: int\n        :rtype: int\n        \"\"\"\n        result = 0\n        cnt = collections.Counter()\n        for i in xrange(len(nums)):\n            if nums[i]%d in cnt:\n                result += cnt[nums[i]%d]\n            for j in xrange(i):\n                cnt[-(nums[i]+nums[j])%d] += 1\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(n)\nimport collections\n\n\n# freq table\nclass Solution3(object):\n    def divisibleTripletCount(self, nums, d):\n        \"\"\"\n        :type nums: List[int]\n        :type d: int\n        :rtype: int\n        \"\"\"\n        result = 0\n        for i in xrange(len(nums)):\n            cnt = collections.Counter()\n            for j in xrange(i+1, len(nums)):\n                result += cnt[nums[j]%d]\n                cnt[-(nums[i]+nums[j])%d] += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

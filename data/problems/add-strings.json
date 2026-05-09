@@ -1,0 +1,35 @@
+{
+  "id": "5054adaf-0809-4057-bf5f-2edc2e367aff",
+  "slug": "add-strings",
+  "title": "Add Strings",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two non-negative integers, <code>num1</code> and <code>num2</code> represented as string, return <em>the sum of</em> <code>num1</code> <em>and</em> <code>num2</code> <em>as a string</em>.</p>\n\n<p>You must solve the problem without using any built-in library for handling large integers (such as <code>BigInteger</code>). You must also not convert the inputs to integers directly.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num1 = &quot;11&quot;, num2 = &quot;123&quot;\n<strong>Output:</strong> &quot;134&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num1 = &quot;456&quot;, num2 = &quot;77&quot;\n<strong>Output:</strong> &quot;533&quot;\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> num1 = &quot;0&quot;, num2 = &quot;0&quot;\n<strong>Output:</strong> &quot;0&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num1.length, num2.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>num1</code> and <code>num2</code> consist of only digits.</li>\n\t<li><code>num1</code> and <code>num2</code> don&#39;t have any leading zeros except for the zero itself.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string addStrings(string num1, string num2) {\n        string result;\n\n        for (int i = num1.size() - 1, j = num2.size() - 1, carry = 0;\n             i >= 0 || j >= 0 || carry;\n             carry /= 10) {\n\n            if (i >= 0) {\n                carry += num1[i--] - '0';\n            }\n            if (j >= 0) {\n                carry += num2[j--] - '0';\n            }\n            result += to_string(carry % 10);\n        }\n        reverse(result.begin(), result.end());\n\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def addStrings(self, num1, num2):\n        \"\"\"\n        :type num1: str\n        :type num2: str\n        :rtype: str\n        \"\"\"\n        result = []\n        i, j, carry = len(num1) - 1, len(num2) - 1, 0\n\n        while i >= 0 or j >= 0 or carry:\n            if i >= 0:\n                carry += ord(num1[i]) - ord('0')\n                i -= 1\n            if j >= 0:\n                carry += ord(num2[j]) - ord('0')\n                j -= 1\n            result.append(str(carry % 10))\n            carry /= 10\n        result.reverse()\n\n        return \"\".join(result)\n\n    def addStrings2(self, num1, num2):\n        \"\"\"\n        :type num1: str\n        :type num2: str\n        :rtype: str\n        \"\"\"\n        length = max(len(num1), len(num2))\n        num1 = num1.zfill(length)[::-1]\n        num2 = num2.zfill(length)[::-1]\n        res, plus = '', 0\n        for index, num in enumerate(num1):\n            tmp = str(int(num) + int(num2[index]) + plus)\n            res += tmp[-1]\n            if int(tmp) > 9:\n                plus = 1\n            else:\n                plus = 0\n        if plus:\n            res += '1'\n        return res[::-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "ad1c7e5d-523a-43f8-b41b-84441fb0eae2",
+  "slug": "construct-string-with-repeat-limit",
+  "title": "Construct String With Repeat Limit",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a string <code>s</code> and an integer <code>repeatLimit</code>. Construct a new string <code>repeatLimitedString</code> using the characters of <code>s</code> such that no letter appears <strong>more than</strong> <code>repeatLimit</code> times <strong>in a row</strong>. You do <strong>not</strong> have to use all characters from <code>s</code>.</p>\n\n<p>Return <em>the <strong>lexicographically largest</strong> </em><code>repeatLimitedString</code> <em>possible</em>.</p>\n\n<p>A string <code>a</code> is <strong>lexicographically larger</strong> than a string <code>b</code> if in the first position where <code>a</code> and <code>b</code> differ, string <code>a</code> has a letter that appears later in the alphabet than the corresponding letter in <code>b</code>. If the first <code>min(a.length, b.length)</code> characters do not differ, then the longer string is the lexicographically larger one.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;cczazcc&quot;, repeatLimit = 3\n<strong>Output:</strong> &quot;zzcccac&quot;\n<strong>Explanation:</strong> We use all of the characters from s to construct the repeatLimitedString &quot;zzcccac&quot;.\nThe letter &#39;a&#39; appears at most 1 time in a row.\nThe letter &#39;c&#39; appears at most 3 times in a row.\nThe letter &#39;z&#39; appears at most 2 times in a row.\nHence, no letter appears more than repeatLimit times in a row and the string is a valid repeatLimitedString.\nThe string is the lexicographically largest repeatLimitedString possible so we return &quot;zzcccac&quot;.\nNote that the string &quot;zzcccca&quot; is lexicographically larger but the letter &#39;c&#39; appears more than 3 times in a row, so it is not a valid repeatLimitedString.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aababab&quot;, repeatLimit = 2\n<strong>Output:</strong> &quot;bbabaa&quot;\n<strong>Explanation:</strong> We use only some of the characters from s to construct the repeatLimitedString &quot;bbabaa&quot;. \nThe letter &#39;a&#39; appears at most 2 times in a row.\nThe letter &#39;b&#39; appears at most 2 times in a row.\nHence, no letter appears more than repeatLimit times in a row and the string is a valid repeatLimitedString.\nThe string is the lexicographically largest repeatLimitedString possible so we return &quot;bbabaa&quot;.\nNote that the string &quot;bbabaaa&quot; is lexicographically larger but the letter &#39;a&#39; appears more than 2 times in a row, so it is not a valid repeatLimitedString.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= repeatLimit &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "greedy",
+    "heap-priority-queue",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(26 * n)\n// Space: O(26)\n\n// greedy\nclass Solution {\npublic:\n    string repeatLimitedString(string s, int repeatLimit) {\n        vector<int> cnt(26);\n        for (const auto& c : s) {\n            ++cnt[c - 'a'];\n        }\n        string result;\n        int top1 = 25;\n        for (;;) {\n            for (; top1 >= 0; --top1) {\n                if (cnt[top1]) {\n                    break;\n                }\n            }\n            if (top1 == -1) {\n                break;\n            }\n            const int c = min(cnt[top1], repeatLimit - static_cast<int>(!empty(result) && result.back() == 'a' + top1));\n            cnt[top1] -= c;\n            result.append(c, 'a' + top1);\n            int top2 = top1 - 1;\n            for (; top2 >= 0; --top2) {\n                if (cnt[top2]) {\n                    break;\n                }\n            }\n            if (top2 == -1) {\n                break;\n            }\n            --cnt[top2];\n            result.push_back('a' + top2);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(26 * n)\n# Space: O(26)\n\nimport collections\n\n\n# greedy\nclass Solution(object):\n    def repeatLimitedString(self, s, repeatLimit):\n        \"\"\"\n        :type s: str\n        :type repeatLimit: int\n        :rtype: str\n        \"\"\"\n        cnt = collections.Counter(map(lambda x: ord(x)-ord('a'), s))\n        result = []\n        top1 = 25\n        while True:\n            top1 = next((i for i in reversed(xrange(top1+1)) if cnt[i]), -1)\n            if top1 == -1:\n                break\n            c = min(cnt[top1], repeatLimit-int(len(result) > 0 and result[-1] == top1))\n            cnt[top1] -= c\n            result.extend([top1]*c)\n            top2 = next((j for j in reversed(xrange(top1)) if cnt[j]), -1)\n            if top2 == -1:\n                break\n            cnt[top2] -= 1\n            result.append(top2)\n        return \"\".join(map(lambda x: chr(x+ord('a')), result))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

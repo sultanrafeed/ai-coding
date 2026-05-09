@@ -1,0 +1,36 @@
+{
+  "id": "b4e31c08-c4b8-449f-a6ad-3240a0a85668",
+  "slug": "longest-strictly-increasing-subsequence-with-non-zero-bitwise-and",
+  "title": "Longest Strictly Increasing Subsequence With Non-Zero Bitwise AND",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Return the length of the <strong>longest strictly increasing <span data-keyword=\"subsequence-array-nonempty\">subsequence</span></strong> in <code>nums</code> whose bitwise <strong>AND</strong> is <strong>non-zero</strong>. If no such <strong>subsequence</strong> exists, return 0.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [5,4,7]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>One longest strictly increasing subsequence is <code>[5, 7]</code>. The bitwise AND is <code>5 AND 7 = 5</code>, which is non-zero.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,3,6]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The longest strictly increasing subsequence is <code>[2, 3, 6]</code>. The bitwise AND is <code>2 AND 3 AND 6 = 2</code>, which is non-zero.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [0,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>One longest strictly increasing subsequence is <code>[1]</code>. The bitwise AND is 1, which is non-zero.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>9</sup></code>​​​​​​​</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "bit-manipulation",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logr * nlogn)\n// Space: O(n)\n\n// bitmasks, lis, binary search\nclass Solution {\npublic:\n    int longestSubsequence(vector<int>& nums) {\n        const auto& lis = [&](int base) {\n            vector<int> result;\n            for (const auto& x : nums) {\n                if (!(x & base)) {\n                    continue;\n                }\n                if (empty(result) || result.back() < x) {\n                    result.emplace_back(x);\n                } else {\n                    *lower_bound(begin(result), end(result), x) = x;\n                }\n            }\n            return static_cast<int>(size(result));\n        };\n\n        const auto& mx = ranges::max(nums);\n        const auto& w = bit_width(static_cast<uint32_t>(ranges::max(nums)));\n        int result = 0;\n        for (int l = 0; l < w; ++l) {\n            result = max(result, lis(1 << l));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logr * nlogn)\n# Space: O(n)\n\nimport bisect\n\n\n# bitmasks, lis, binary search\nclass Solution(object):\n    def longestSubsequence(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def lis(base):\n            result = []\n            for x in nums:\n                if not x&base:\n                    continue\n                if not result or result[-1] < x:\n                    result.append(x)\n                else:\n                    result[bisect.bisect_left(result, x)] = x\n            return len(result)\n    \n        mx = max(nums)\n        return max(lis(1<<l) for l in xrange(mx.bit_length())) if mx else 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

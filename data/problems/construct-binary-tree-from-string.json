@@ -1,0 +1,43 @@
+{
+  "id": "cfc65e60-4dd1-4bbe-9da1-82cbde740ec0",
+  "slug": "construct-binary-tree-from-string",
+  "title": "Construct Binary Tree from String",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "stack",
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"4(2(3)(1))(6(5))\"\n\"4(2(3)(1))(6(5)(7))\"\n\"-4(2(3)(1))(6(5)(7))\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* str2tree(string s) {\n        int i = 0;\n        return s.empty() ? nullptr : str2treeHelper(s, &i);\n    }\n\nprivate:\n    TreeNode* str2treeHelper(const string& s, int *i) {\n        auto start = *i;\n        if (s[*i] == '-') {\n            ++(*i);\n        }\n        while (*i < s.length() && isdigit(s[*i])) {\n            ++(*i);\n        }\n        \n        auto node = new TreeNode(stoi(s.substr(start, *i - start)));\n        if (*i < s.length() && s[*i] == '(') {\n            ++(*i);\n            node->left = str2treeHelper(s, i);\n            ++(*i);\n        }\n        if (*i < s.length() && s[*i] == '(') {\n            ++(*i);\n            node->right = str2treeHelper(s, i);\n            ++(*i);\n        }\n        return node;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\nclass Solution(object):\n    def str2tree(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: TreeNode\n        \"\"\"\n        def str2treeHelper(s, i):\n            start = i\n            if s[i] == '-': i += 1\n            while i < len(s) and s[i].isdigit(): i += 1\n            node = TreeNode(int(s[start:i]))\n            if i < len(s) and s[i] == '(':\n                i += 1\n                node.left, i = str2treeHelper(s, i)\n                i += 1\n            if i < len(s) and s[i] == '(':\n                i += 1\n                node.right, i = str2treeHelper(s, i)\n                i += 1\n            return node, i\n\n        return str2treeHelper(s, 0)[0] if s else None",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

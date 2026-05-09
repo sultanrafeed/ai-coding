@@ -1,0 +1,34 @@
+{
+  "id": "8a262a59-6c8c-4f5c-aed6-fad68449446a",
+  "slug": "equal-score-substrings",
+  "title": "Equal Score Substrings",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a string <code>s</code> consisting of lowercase English letters.</p>\n\n<p>The <strong>score</strong> of a string is the sum of the positions of its characters in the alphabet, where <code>&#39;a&#39; = 1</code>, <code>&#39;b&#39; = 2</code>, ..., <code>&#39;z&#39; = 26</code>.</p>\n\n<p>Determine whether there exists an index <code>i</code> such that the string can be split into two <strong>non-empty</strong> <strong><strong><span data-keyword=\"substring-nonempty\">substrings</span></strong></strong> <code>s[0..i]</code> and <code>s[(i + 1)..(n - 1)]</code> that have <strong>equal</strong> scores.</p>\n\n<p>Return <code>true</code> if such a split exists, otherwise return <code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;adcb&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Split at index <code>i = 1</code>:</p>\n\n<ul>\n\t<li>Left substring = <code>s[0..1] = &quot;ad&quot;</code> with <code>score = 1 + 4 = 5</code></li>\n\t<li>Right substring = <code>s[2..3] = &quot;cb&quot;</code> with <code>score = 3 + 2 = 5</code></li>\n</ul>\n\n<p>Both substrings have equal scores, so the output is <code>true</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;bace&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:​​​​​​</strong></p>\n\n<p><strong>​​​​​​​</strong>No split produces equal scores, so the output is <code>false</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// prefix sum\nclass Solution {\npublic:\n    bool scoreBalance(string s) {\n        int total = 0;\n        for (const auto& x : s) {\n            total += x - 'a' + 1;\n        }\n        int prefix = 0;\n        for (const auto& x : s) {\n            prefix += x - 'a' + 1;\n            if (prefix == total - prefix) {\n                return true;\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# prefix sum\nclass Solution(object):\n    def scoreBalance(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        total = sum(ord(x)-ord('a')+1 for x in s)\n        prefix = 0\n        for x in s:\n            prefix += ord(x)-ord('a')+1\n            if prefix == total-prefix:\n                return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "9e5c2246-1289-429f-aba2-05ba239252f1",
+  "slug": "ways-to-split-array-into-good-subarrays",
+  "title": "Ways to Split Array Into Good Subarrays",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a binary array <code>nums</code>.</p>\n\n<p>A subarray of an array is <strong>good</strong> if it contains <strong>exactly</strong> <strong>one</strong> element with the value <code>1</code>.</p>\n\n<p>Return <em>an integer denoting the number of ways to split the array </em><code>nums</code><em> into <strong>good</strong> subarrays</em>. As the number may be too large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>A subarray is a contiguous <strong>non-empty</strong> sequence of elements within an array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,1,0,0,1]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> There are 3 ways to split nums into good subarrays:\n- [0,1] [0,0,1]\n- [0,1,0] [0,1]\n- [0,1,0,0] [1]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,1,0]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> There is 1 way to split nums into good subarrays:\n- [0,1,0]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 1</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[0,1,0,0,1]\n[0,1,0]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// combinatorics\nclass Solution {\npublic:\n    int numberOfGoodSubarraySplits(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n        int result = 1, prev = -1;\n        for (int i = 0; i < size(nums); ++i) {\n            if (nums[i] != 1) {\n                continue;\n            }\n            if (prev != -1) {\n                result = (result * static_cast<int64_t>(i - prev)) % MOD;\n            }\n            prev = i;\n        }\n        return prev != -1 ? result : 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# combinatorics\nclass Solution(object):\n    def numberOfGoodSubarraySplits(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        result, prev = 1, -1\n        for i in xrange(len(nums)):\n            if nums[i] != 1:\n                continue\n            if prev != -1:\n                result = (result*(i-prev))%MOD\n            prev = i\n        return result if prev != -1 else 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

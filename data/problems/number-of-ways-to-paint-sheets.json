@@ -1,0 +1,31 @@
+{
+  "id": "9beba57e-828a-4c76-b9f9-66c08cd0034e",
+  "slug": "number-of-ways-to-paint-sheets",
+  "title": "Number of Ways to Paint Sheets",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(mlogm)\n// Space: O(m)\n\n// sort, prefix sum, two pointers\nclass Solution {\npublic:\n    int numberOfWays(int n, vector<int>& limit) {\n        static const int MOD = 1e9 + 7;\n\n        ranges::sort(limit);\n        vector<int64_t> suffix(size(limit) + 1);        \n        for(int i = size(limit) - 1; i >= 0; i--) {\n            limit[i] = min(limit[i], n - 1);\n            suffix[i] = suffix[i + 1] + limit[i];\n        }\n        int64_t result = 0;\n        for (int i = size(limit) - 1, j = 0; i >= 0; --i) {\n            for (; j < size(limit); ++j) {\n                if (limit[i] + limit[j] >= n) {\n                    break;\n                }\n            }\n            int64_t cnt = (limit[i] - n + 1) * (size(limit) - j)  + suffix[j];\n            if (i >= j) {\n                cnt -= limit[i] + limit[i] - n + 1;\n            }\n            result = (result + cnt) % MOD;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(mlogm)\n# Space: O(m)\n\n# sort, prefix sum, two pointers\nclass Solution(object):\n    def numberOfWays(self, n, limit):\n        \"\"\"\n        :type n: int\n        :type limit: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        limit.sort()\n        suffix = [0]*(len(limit)+1)\n        for i in reversed(xrange(len(suffix)-1)):\n            limit[i] = min(limit[i], n-1)\n            suffix[i] = suffix[i+1]+limit[i]\n        result = j = 0\n        for i in reversed(xrange(len(limit))):\n            while j < len(limit):\n                if limit[i]+limit[j] >= n:\n                    break\n                j += 1\n            cnt = (limit[i]-n+1)*(len(limit)-j)+suffix[j]\n            if i >= j:\n                cnt -= limit[i]+limit[i]-n+1\n            result = (result+cnt)%MOD\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

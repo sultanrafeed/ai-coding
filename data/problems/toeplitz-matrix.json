@@ -1,0 +1,34 @@
+{
+  "id": "c73097e6-f105-4c52-97ef-dcecbabfad7b",
+  "slug": "toeplitz-matrix",
+  "title": "Toeplitz Matrix",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an <code>m x n</code> <code>matrix</code>, return&nbsp;<em><code>true</code>&nbsp;if the matrix is Toeplitz. Otherwise, return <code>false</code>.</em></p>\n\n<p>A matrix is <strong>Toeplitz</strong> if every diagonal from top-left to bottom-right has the same elements.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/11/04/ex1.jpg\" style=\"width: 322px; height: 242px;\" />\n<pre>\n<strong>Input:</strong> matrix = [[1,2,3,4],[5,1,2,3],[9,5,1,2]]\n<strong>Output:</strong> true\n<strong>Explanation:</strong>\nIn the above grid, the&nbsp;diagonals are:\n&quot;[9]&quot;, &quot;[5, 5]&quot;, &quot;[1, 1, 1]&quot;, &quot;[2, 2, 2]&quot;, &quot;[3, 3]&quot;, &quot;[4]&quot;.\nIn each diagonal all elements are the same, so the answer is True.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/11/04/ex2.jpg\" style=\"width: 162px; height: 162px;\" />\n<pre>\n<strong>Input:</strong> matrix = [[1,2],[2,2]]\n<strong>Output:</strong> false\n<strong>Explanation:</strong>\nThe diagonal &quot;[1, 2]&quot; has different elements.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == matrix.length</code></li>\n\t<li><code>n == matrix[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 20</code></li>\n\t<li><code>0 &lt;= matrix[i][j] &lt;= 99</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong></p>\n\n<ul>\n\t<li>What if the <code>matrix</code> is stored on disk, and the memory is limited such that you can only load at most one row of the matrix into the memory at once?</li>\n\t<li>What if the <code>matrix</code> is so large that you can only load up a partial row into the memory at once?</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isToeplitzMatrix(vector<vector<int>>& matrix) {\n        for (int i = 0; i < matrix.size(); ++i) {\n            for (int j = 0; j < matrix[i].size(); ++j) {\n                if (i != 0 && j != 0 &&\n                    matrix[i - 1][j - 1] != matrix[i][j]) {\n                    return false;\n                }\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    def isToeplitzMatrix(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: bool\n        \"\"\"\n        return all(i == 0 or j == 0 or matrix[i-1][j-1] == val\n                   for i, row in enumerate(matrix)\n                   for j, val in enumerate(row))\n\n\nclass Solution2(object):\n    def isToeplitzMatrix(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: bool\n        \"\"\"\n        for row_index, row in enumerate(matrix):\n            for digit_index, digit in enumerate(row):\n                if not row_index or not digit_index:\n                    continue\n                if matrix[row_index - 1][digit_index - 1] != digit:\n                    return False\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

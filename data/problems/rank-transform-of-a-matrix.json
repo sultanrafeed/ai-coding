@@ -1,0 +1,44 @@
+{
+  "id": "40519ded-25fd-4bbe-9ca0-2048e6f2c613",
+  "slug": "rank-transform-of-a-matrix",
+  "title": "Rank Transform of a Matrix",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an <code>m x n</code> <code>matrix</code>, return <em>a new matrix </em><code>answer</code><em> where </em><code>answer[row][col]</code><em> is the </em><em><strong>rank</strong> of </em><code>matrix[row][col]</code>.</p>\n\n<p>The <strong>rank</strong> is an <strong>integer</strong> that represents how large an element is compared to other elements. It is calculated using the following rules:</p>\n\n<ul>\n\t<li>The rank is an integer starting from <code>1</code>.</li>\n\t<li>If two elements <code>p</code> and <code>q</code> are in the <strong>same row or column</strong>, then:\n\t<ul>\n\t\t<li>If <code>p &lt; q</code> then <code>rank(p) &lt; rank(q)</code></li>\n\t\t<li>If <code>p == q</code> then <code>rank(p) == rank(q)</code></li>\n\t\t<li>If <code>p &gt; q</code> then <code>rank(p) &gt; rank(q)</code></li>\n\t</ul>\n\t</li>\n\t<li>The <strong>rank</strong> should be as <strong>small</strong> as possible.</li>\n</ul>\n\n<p>The test cases are generated so that <code>answer</code> is unique under the given rules.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/18/rank1.jpg\" style=\"width: 442px; height: 162px;\" />\n<pre>\n<strong>Input:</strong> matrix = [[1,2],[3,4]]\n<strong>Output:</strong> [[1,2],[2,3]]\n<strong>Explanation:</strong>\nThe rank of matrix[0][0] is 1 because it is the smallest integer in its row and column.\nThe rank of matrix[0][1] is 2 because matrix[0][1] &gt; matrix[0][0] and matrix[0][0] is rank 1.\nThe rank of matrix[1][0] is 2 because matrix[1][0] &gt; matrix[0][0] and matrix[0][0] is rank 1.\nThe rank of matrix[1][1] is 3 because matrix[1][1] &gt; matrix[0][1], matrix[1][1] &gt; matrix[1][0], and both matrix[0][1] and matrix[1][0] are rank 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/18/rank2.jpg\" style=\"width: 442px; height: 162px;\" />\n<pre>\n<strong>Input:</strong> matrix = [[7,7],[7,7]]\n<strong>Output:</strong> [[1,1],[1,1]]\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/10/18/rank3.jpg\" style=\"width: 601px; height: 322px;\" />\n<pre>\n<strong>Input:</strong> matrix = [[20,-21,14],[-19,4,19],[22,-47,24],[-19,4,19]]\n<strong>Output:</strong> [[4,2,3],[1,3,4],[5,1,6],[1,3,4]]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == matrix.length</code></li>\n\t<li><code>n == matrix[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 500</code></li>\n\t<li><code>-10<sup>9</sup> &lt;= matrix[row][col] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "union-find",
+    "graph",
+    "topological-sort",
+    "sorting",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,2],[3,4]]\n[[7,7],[7,7]]\n[[20,-21,14],[-19,4,19],[22,-47,24],[-19,4,19]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n * log(m * n) + m * n * α(m * n)) = O(m * n * log(m * n))\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    vector<vector<int>> matrixRankTransform(vector<vector<int>>& matrix) {\n        map<int, vector<pair<int, int>>> lookup;\n        for (int i = 0; i < size(matrix); ++i) {\n            for (int j = 0; j < size(matrix[0]); ++j) {\n                lookup[matrix[i][j]].emplace_back(i, j);\n            }\n        }\n        vector<int> rank(size(matrix) + size(matrix[0]));\n        for (const auto& [x, pairs] : lookup) {\n            vector<int> new_rank(rank);\n            const auto& cb = [&new_rank](int x, int y, int z) {\n                                 new_rank[x] = max(new_rank[y], new_rank[z]);\n                             };\n            UnionFind union_find(size(matrix) + size(matrix[0]), cb);\n            for (const auto& [i, j] : pairs) {\n                union_find.union_set(i, j + size(matrix));\n            }\n            for (const auto& [i, j] : pairs) {\n                matrix[i][j] = rank[i] = rank[j + size(matrix)] = new_rank[union_find.find_set(i)] + 1;\n            }\n        }\n        return matrix;\n    }\n\nprivate:\n    class UnionFind {\n    public:\n        UnionFind(const int n, function<void(int, int, int)> cb)\n         : set_(n)\n         , rank_(n)\n         , count_(n)\n         , cb_(cb) {\n            iota(set_.begin(), set_.end(), 0);\n        }\n\n        int find_set(const int x) {\n           if (set_[x] != x) {\n               set_[x] = find_set(set_[x]);  // Path compression.\n           }\n           return set_[x];\n        }\n\n        bool union_set(const int x, const int y) {\n            int x_root = find_set(x), y_root = find_set(y);\n            if (x_root == y_root) {\n                return false;\n            }\n            if (rank_[x_root] < rank_[y_root]) {  // Union by rank.\n                set_[x_root] = y_root;\n                cb_(y_root, x_root, y_root);\n            } else if (rank_[x_root] > rank_[y_root]) {\n                set_[y_root] = x_root;\n                cb_(x_root, x_root, y_root);\n            } else {\n                set_[y_root] = x_root;\n                ++rank_[x_root];\n                cb_(x_root, x_root, y_root);\n            }\n            --count_;\n            return true;\n        }\n\n        int size() const {\n            return count_;\n        }\n\n    private:\n        vector<int> set_;\n        vector<int> rank_;\n        int count_;\n        function<void(int, int, int)> cb_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n * log(m * n) + m * n * α(m * n)) = O(m * n * log(m * n))\n# Space: O(m * n)\n\nimport collections\n\n\nclass UnionFind(object):  # Time: O(n * α(n)), Space: O(n)\n    def __init__(self, n, cb):\n        self.set = range(n)\n        self.rank = [0]*n\n        self.cb = cb\n\n    def find_set(self, x):\n        stk = []\n        while self.set[x] != x:  # path compression\n            stk.append(x)\n            x = self.set[x]\n        while stk:\n            self.set[stk.pop()] = x\n        return x\n\n    def union_set(self, x, y):\n        x_root, y_root = map(self.find_set, (x, y))\n        if x_root == y_root:\n            return False\n        if self.rank[x_root] < self.rank[y_root]:  # union by rank\n            self.set[x_root] = y_root\n            self.cb(y_root, x_root, y_root)\n        elif self.rank[x_root] > self.rank[y_root]:\n            self.set[y_root] = x_root\n            self.cb(x_root, x_root, y_root)\n        else:\n            self.set[y_root] = x_root\n            self.rank[x_root] += 1\n            self.cb(x_root, x_root, y_root)\n        return True\n\n\nclass Solution(object):\n    def matrixRankTransform(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: List[List[int]]\n        \"\"\"\n        def cb(x, y, z):\n            new_rank[x] = max(new_rank[y], new_rank[z])\n\n        lookup = collections.defaultdict(list)\n        for i in xrange(len(matrix)):\n            for j in xrange(len(matrix[0])):\n                lookup[matrix[i][j]].append([i, j])\n        rank = [0]*(len(matrix)+len(matrix[0]))\n        for x in sorted(lookup):\n            new_rank = rank[:]\n            union_find = UnionFind(len(matrix)+len(matrix[0]), cb)\n            for i, j in lookup[x]:\n                union_find.union_set(i, j+len(matrix))\n            for i, j in lookup[x]:\n                matrix[i][j] = rank[i] = rank[j+len(matrix)] = new_rank[union_find.find_set(i)]+1\n        return matrix",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "260062e5-0f84-428a-acee-8cc0f2c3d20f",
+  "slug": "find-unique-binary-string",
+  "title": "Find Unique Binary String",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of strings <code>nums</code> containing <code>n</code> <strong>unique</strong> binary strings each of length <code>n</code>, return <em>a binary string of length </em><code>n</code><em> that <strong>does not appear</strong> in </em><code>nums</code><em>. If there are multiple answers, you may return <strong>any</strong> of them</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [&quot;01&quot;,&quot;10&quot;]\n<strong>Output:</strong> &quot;11&quot;\n<strong>Explanation:</strong> &quot;11&quot; does not appear in nums. &quot;00&quot; would also be correct.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [&quot;00&quot;,&quot;01&quot;]\n<strong>Output:</strong> &quot;11&quot;\n<strong>Explanation:</strong> &quot;11&quot; does not appear in nums. &quot;10&quot; would also be correct.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [&quot;111&quot;,&quot;011&quot;,&quot;001&quot;]\n<strong>Output:</strong> &quot;101&quot;\n<strong>Explanation:</strong> &quot;101&quot; does not appear in nums. &quot;000&quot;, &quot;010&quot;, &quot;100&quot;, and &quot;110&quot; would also be correct.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 16</code></li>\n\t<li><code>nums[i].length == n</code></li>\n\t<li><code>nums[i] </code>is either <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li>\n\t<li>All the strings of <code>nums</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string findDifferentBinaryString(vector<string>& nums) {\n        string result;\n        for (int i = 0; i < size(nums); ++i) {\n            result.push_back((nums[i][i] == '0') ? '1' : '0');\n        }\n        return result;\n    }\n};\n\n// Time:  O(k * n) = O(n^2), k is len(nums)\n//                         , n is len(nums[0])\n// Space: O(k) = O(n)\nclass Solution2 {\npublic:\n    string findDifferentBinaryString(vector<string>& nums) {\n        const int n = size(nums[0]);\n        unordered_set<int> lookup;\n        for (const auto& x : nums) {  // Time: O(k * n) = O(n^2)\n            lookup.emplace(to_decimal(x));\n        }\n        const int total = 1 << n;\n        for (int i = 0; i < total; ++i) {  // Time: O(k + n) = O(n)\n            if (!lookup.count(i)) {\n                return to_binary(i, n);\n            }\n        }\n        return \"\";\n    }\n\nprivate:\n    int to_decimal(const string& num) {  // Time: O(n)\n        return accumulate(cbegin(num), cend(num), 0,\n                          [](const auto& total, const auto& x) {\n                              return total * 2 + (x - '0');\n                          });\n    }\n    \n    string to_binary(int num, int n) {  // Time: O(n)\n        string result;\n        for (int basis = 1 << (n - 1); basis; basis >>= 1) {\n            result.push_back((num & basis) ? '1' : '0');\n        }\n        return result;\n    }\n};\n\n// Time:  O(k * n + n * 2^n) = O(n * 2^n), k is len(nums)\n//                                       , n is len(nums[0])\n// Space: O(k) = O(1) ~ O(2^n)\nclass Solution_Extra {\npublic:\n    vector<string> findAllDifferentBinaryStrings(vector<string>& nums) {\n        const int n = size(nums[0]);\n        unordered_set<int> lookup;\n        for (const auto& x : nums) {  // Time: O(k * n) = O(n * 2^n)\n            lookup.emplace(to_decimal(x));\n        }\n        vector<string> result;\n        const int total = 1 << n;\n        for (int i = 0; i < total; ++i) {  // Time: O(2^n + n * (2^n - k))\n            if (!lookup.count(i)) {\n                result.emplace_back(to_binary(i, n));\n            }\n        }\n        return result;\n    }\n\nprivate:\n    int to_decimal(const string& num) {  // Time: O(n)\n        return accumulate(cbegin(num), cend(num), 0,\n                          [](const auto& total, const auto& x) {\n                              return total * 2 + (x - '0');\n                          });\n    }\n    \n    string to_binary(int num, int n) {  // Time: O(n)\n        string result;\n        for (int basis = 1 << (n - 1); basis; basis >>= 1) {\n            result.push_back((num & basis) ? '1' : '0');\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findDifferentBinaryString(self, nums):\n        \"\"\"\n        :type nums: List[str]\n        :rtype: str\n        \"\"\"\n        return \"\".join(\"01\"[nums[i][i] == '0'] for i in xrange(len(nums)))\n\n\n# Time:  O(k * n) = O(n^2), k is len(nums)\n#                         , n is len(nums[0])\n# Space: O(k) = O(n)\nclass Solution2(object):\n    def findDifferentBinaryString(self, nums):\n        \"\"\"\n        :type nums: List[str]\n        :rtype: str\n        \"\"\"\n        lookup = set(map(lambda x: int(x, 2), nums))  # Time: O(k * n) = O(n^2)\n        return next(bin(i)[2:].zfill(len(nums[0])) for i in xrange(2**len(nums[0])) if i not in lookup)  # Time: O(k + n) = O(n)\n\n\n# Time:  O(k * n + n * 2^n) = O(n * 2^n), k is len(nums)\n#                                       , n is len(nums[0])\n# Space: O(k) = O(1) ~ O(2^n)\nclass Solution_Extra(object):\n    def findAllDifferentBinaryStrings(self, nums):\n        \"\"\"\n        :type nums: List[str]\n        :rtype: List[str]\n        \"\"\"\n        lookup = set(map(lambda x: int(x, 2), nums))  # Time: O(k * n) = O(n * 2^n)\n        return [bin(i)[2:].zfill(len(nums[0])) for i in xrange(2**len(nums[0])) if i not in lookup]  # Time: O(2^n + n * (2^n - k))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

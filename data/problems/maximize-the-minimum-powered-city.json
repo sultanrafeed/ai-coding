@@ -1,0 +1,38 @@
+{
+  "id": "7c7e8806-d64d-4002-8dae-ffdaab826ae0",
+  "slug": "maximize-the-minimum-powered-city",
+  "title": "Maximize the Minimum Powered City",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>stations</code> of length <code>n</code>, where <code>stations[i]</code> represents the number of power stations in the <code>i<sup>th</sup></code> city.</p>\n\n<p>Each power station can provide power to every city in a fixed <strong>range</strong>. In other words, if the range is denoted by <code>r</code>, then a power station at city <code>i</code> can provide power to all cities <code>j</code> such that <code>|i - j| &lt;= r</code> and <code>0 &lt;= i, j &lt;= n - 1</code>.</p>\n\n<ul>\n\t<li>Note that <code>|x|</code> denotes <strong>absolute</strong> value. For example, <code>|7 - 5| = 2</code> and <code>|3 - 10| = 7</code>.</li>\n</ul>\n\n<p>The <strong>power</strong> of a city is the total number of power stations it is being provided power from.</p>\n\n<p>The government has sanctioned building <code>k</code> more power stations, each of which can be built in any city, and have the same range as the pre-existing ones.</p>\n\n<p>Given the two integers <code>r</code> and <code>k</code>, return <em>the <strong>maximum possible minimum power</strong> of a city, if the additional power stations are built optimally.</em></p>\n\n<p><strong>Note</strong> that you can build the <code>k</code> power stations in multiple cities.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> stations = [1,2,4,5,0], r = 1, k = 2\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> \nOne of the optimal ways is to install both the power stations at city 1. \nSo stations will become [1,4,4,5,0].\n- City 0 is provided by 1 + 4 = 5 power stations.\n- City 1 is provided by 1 + 4 + 4 = 9 power stations.\n- City 2 is provided by 4 + 4 + 5 = 13 power stations.\n- City 3 is provided by 5 + 4 = 9 power stations.\n- City 4 is provided by 5 + 0 = 5 power stations.\nSo the minimum power of a city is 5.\nSince it is not possible to obtain a larger power, we return 5.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> stations = [4,4,4,4], r = 0, k = 3\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> \nIt can be proved that we cannot make the minimum power of a city greater than 4.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == stations.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= stations[i] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= r&nbsp;&lt;= n - 1</code></li>\n\t<li><code>0 &lt;= k&nbsp;&lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "greedy",
+    "queue",
+    "sliding-window",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogk)\n// Space: O(n)\n\n// binary search, sliding window, greedy\nclass Solution {\npublic:\n    long long maxPower(vector<int>& stations, int r, int k) {\n        const auto& min_power = [&]() {\n            int64_t mn = numeric_limits<int64_t>::max();\n            int64_t curr = accumulate(cbegin(stations), cbegin(stations) + r, 0ll);\n            for (int i = 0; i < size(stations); ++i) {\n                if (i + r < size(stations)) {\n                    curr += stations[i + r];\n                }\n                if (i >= r + 1) {\n                    curr -= stations[i - (r + 1)];\n                }\n                mn = min(mn, curr);\n            }\n            return mn;\n        };\n\n        const int64_t mn = min_power();\n        const auto& check = [&](int64_t target) {\n            vector<int> arr(cbegin(stations), cend(stations));\n            int64_t curr = accumulate(cbegin(arr), cbegin(arr) + r, 0ll);\n            int cnt = k;\n            for (int i = 0; i < size(arr); ++i) {\n                if (i + r < size(arr)) {\n                    curr += arr[i + r];\n                }\n                if (i >= r + 1) {\n                    curr -= arr[i - (r + 1)];\n                }\n                if (curr >= target) {\n                    continue;\n                }\n                const auto diff = target - curr;\n                if (diff > cnt) {\n                    return false;\n                }\n                cnt -= diff;\n                curr += diff;\n                if (i + r < size(arr)) {\n                    arr[i + r] += diff;\n                }\n            }\n            return true;\n        };\n\n        int64_t left = mn, right = mn + k;\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (!check(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return right;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogk)\n# Space: O(n)\n\n# binary search, sliding window, greedy\nclass Solution(object):\n    def maxPower(self, stations, r, k):\n        \"\"\"\n        :type stations: List[int]\n        :type r: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def min_power():\n            mn = float(\"inf\")\n            curr = sum(stations[i] for i in xrange(r))\n            for i in xrange(len(stations)):\n                if i+r < len(stations):\n                    curr += stations[i+r]\n                if i >= r+1:\n                    curr -= stations[i-(r+1)]\n                mn = min(mn, curr)\n            return mn\n    \n        def check(target):\n            arr = stations[:]\n            curr = sum(arr[i] for i in xrange(r))\n            cnt = k\n            for i in xrange(len(arr)):\n                if i+r < len(arr):\n                    curr += arr[i+r]\n                if i >= r+1:\n                    curr -= arr[i-(r+1)]\n                if curr >= target:\n                    continue\n                diff = target-curr\n                if diff > cnt:\n                    return False\n                cnt -= diff\n                curr += diff\n                if i+r < len(arr):\n                    arr[i+r] += diff\n            return True\n\n        mn = min_power() \n        left, right = mn, mn+k\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return right",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

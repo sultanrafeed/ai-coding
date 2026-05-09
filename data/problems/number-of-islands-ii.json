@@ -1,0 +1,41 @@
+{
+  "id": "0cd18b11-4ed9-4af6-9568-4d665f0a5199",
+  "slug": "number-of-islands-ii",
+  "title": "Number of Islands II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "union-find"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n3\n[[0,0],[0,1],[1,2],[2,1]]\n1\n1\n[[0,0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(klog*k) ~= O(k), k is the length of the positions\n// Space: O(k)\n\n// Using unordered_map.\nclass Solution {\npublic:\n    vector<int> numIslands2(int m, int n, vector<pair<int, int>>& positions) {\n        vector<int> numbers;\n        int number = 0;\n        const vector<pair<int, int>> directions{{0, -1}, {0, 1},\n                                                {-1, 0}, {1, 0}};\n        unordered_map<int, int> set;\n        for (const auto& position : positions) {\n            const auto& node = make_pair(position.first, position.second);\n            set[node_id(node, n)] = node_id(node, n);\n            ++number;\n\n            for (const auto& d : directions) {\n                const auto& neighbor = make_pair(position.first + d.first,\n                                                 position.second + d.second);\n                if (neighbor.first >= 0 && neighbor.first < m &&\n                    neighbor.second >= 0 && neighbor.second < n &&\n                    set.find(node_id(neighbor, n)) != set.end()) {\n                    if (find_set(node_id(node, n), &set) != \n                        find_set(node_id(neighbor, n), &set)) {\n                        // Merge different islands, amortised time: O(log*k) ~= O(1)\n                        union_set(&set, node_id(node, n), node_id(neighbor, n));\n                        --number;\n                    }\n                }\n            }\n            numbers.emplace_back(number);\n        }\n\n        return numbers;\n    }\n\n    int node_id(const pair<int, int>& node, const int n) {\n        return node.first * n + node.second;\n    }\n\n    int find_set(int x, unordered_map<int, int> *set) {\n       if ((*set)[x] != x) {\n           (*set)[x] = find_set((*set)[x], set);  // path compression.\n       }\n       return (*set)[x];\n    }\n\n    void union_set(unordered_map<int, int> *set, const int x, const int y) {\n        int x_root = find_set(x, set), y_root = find_set(y, set);\n        (*set)[min(x_root, y_root)] = max(x_root, y_root);\n    }\n};\n\n\n// Time:  O(klog*k) ~= O(k), k is the length of the positions\n// Space: O(m * n)\n// Using vector.\nclass Solution2 {\npublic:\n    /**\n     * @param n an integer\n     * @param m an integer\n     * @param operators an array of point\n     * @return an integer array\n     */\n    vector<int> numIslands2(int m, int n, vector<pair<int, int>>& positions) {\n        vector<int> numbers;\n        int number = 0;\n        const vector<pair<int, int>> directions{{0, -1}, {0, 1},\n                                                {-1, 0}, {1, 0}};\n        vector<int> set(m * n, -1);\n        for (const auto& position : positions) {\n            const auto& node = make_pair(position.first, position.second);\n            set[node_id(node, n)] = node_id(node, n);\n            ++number;\n\n            for (const auto& d : directions) {\n                const auto& neighbor = make_pair(position.first + d.first,\n                                                 position.second + d.second);\n                if (neighbor.first >= 0 && neighbor.first < m &&\n                    neighbor.second >= 0 && neighbor.second < n &&\n                    set[node_id(neighbor, n)] != -1) {\n                    if (find_set(node_id(node, n), &set) != \n                        find_set(node_id(neighbor, n), &set)) {\n                        // Merge different islands, amortised time: O(log*k) ~= O(1)\n                        union_set(&set, node_id(node, n), node_id(neighbor, n));\n                        --number;\n                    }\n                }\n            }\n            numbers.emplace_back(number);\n        }\n\n        return numbers;\n    }\n\n    int node_id(const pair<int, int>& node, const int m) {\n        return node.first * m + node.second;\n    }\n\n    int find_set(int x, vector<int> *set) {\n        int parent = x;\n        while ((*set)[parent] != parent) {\n            parent = (*set)[parent];\n        }\n        while ((*set)[x] != x) {\n            int tmp = (*set)[x];\n            (*set)[x] = parent;\n            x = tmp;\n        }\n        return parent;\n    }\n\n    void union_set(vector<int> *set, const int x, const int y) {\n        int x_root = find_set(x, set), y_root = find_set(y, set);\n        (*set)[min(x_root, y_root)] = max(x_root, y_root);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(klog*k) ~= O(k), k is the length of the positions\n# Space: O(k)\n\nclass Solution(object):\n    def numIslands2(self, m, n, positions):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :type positions: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        def node_id(node, n):\n            return node[0] * n + node[1]\n\n        def find_set(x):\n           if set[x] != x:\n               set[x] = find_set(set[x])  # path compression.\n           return set[x]\n\n        def union_set(x, y):\n            x_root, y_root = find_set(x), find_set(y)\n            set[min(x_root, y_root)] = max(x_root, y_root)\n\n        numbers = []\n        number = 0\n        directions = [(0, -1), (0, 1), (-1, 0), (1, 0)]\n        set = {}\n        for position in positions:\n            node = (position[0], position[1])\n            set[node_id(node, n)] = node_id(node, n)\n            number += 1\n\n            for d in directions:\n                neighbor = (position[0] + d[0], position[1] + d[1])\n                if 0 <= neighbor[0] < m and 0 <= neighbor[1] < n and \\\n                   node_id(neighbor, n) in set:\n                   if find_set(node_id(node, n)) != find_set(node_id(neighbor, n)):\n                       # Merge different islands, amortised time: O(log*k) ~= O(1)\n                       union_set(node_id(node, n), node_id(neighbor, n))\n                       number -= 1\n            numbers.append(number)\n\n        return numbers",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

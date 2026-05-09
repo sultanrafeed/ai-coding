@@ -1,0 +1,31 @@
+{
+  "id": "b2e6c68d-e60f-46ae-a9de-d7cf7cacbebd",
+  "slug": "promise-pool",
+  "title": "Promise Pool",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[() => new Promise(res => setTimeout(res, 300)), () => new Promise(res => setTimeout(res, 400)), () => new Promise(res => setTimeout(res, 200))]\n2\n[() => new Promise(res => setTimeout(res, 300)), () => new Promise(res => setTimeout(res, 400)), () => new Promise(res => setTimeout(res, 200))]\n5\n[() => new Promise(res => setTimeout(res, 300)), () => new Promise(res => setTimeout(res, 400)), () => new Promise(res => setTimeout(res, 200))]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(c + n / c)\n// Space: O(c)\n\ntype F = () => Promise<any>;\n\nfunction promisePool(functions: F[], n: number): Promise<any> {\n    const nxt = () => functions[n++]?.().then(nxt);\n    return Promise.all(functions.slice(0, n).map(fn => fn().then(nxt)));\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

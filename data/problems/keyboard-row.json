@@ -1,0 +1,35 @@
+{
+  "id": "bb194547-dfb7-4e37-b0b8-26db7885c346",
+  "slug": "keyboard-row",
+  "title": "Keyboard Row",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an array of strings <code>words</code>, return <em>the words that can be typed using letters of the alphabet on only one row of American keyboard like the image below</em>.</p>\n\n<p><strong>Note</strong> that the strings are <strong>case-insensitive</strong>, both lowercased and uppercased of the same letter are treated as if they are at the same row.</p>\n\n<p>In the <strong>American keyboard</strong>:</p>\n\n<ul>\n\t<li>the first row consists of the characters <code>&quot;qwertyuiop&quot;</code>,</li>\n\t<li>the second row consists of the characters <code>&quot;asdfghjkl&quot;</code>, and</li>\n\t<li>the third row consists of the characters <code>&quot;zxcvbnm&quot;</code>.</li>\n</ul>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2018/10/12/keyboard.png\" style=\"width: 800px; max-width: 600px; height: 267px;\" />\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;Hello&quot;,&quot;Alaska&quot;,&quot;Dad&quot;,&quot;Peace&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[&quot;Alaska&quot;,&quot;Dad&quot;]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Both <code>&quot;a&quot;</code> and <code>&quot;A&quot;</code> are in the 2nd row of the American keyboard due to case insensitivity.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;omk&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[]</span></p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">words = [&quot;adsdf&quot;,&quot;sfd&quot;]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[&quot;adsdf&quot;,&quot;sfd&quot;]</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 20</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 100</code></li>\n\t<li><code>words[i]</code> consists of English letters (both lowercase and uppercase).&nbsp;</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<string> findWords(vector<string>& words) {\n        static const vector<unordered_set<char>> rows{{'q', 'w', 'e', 'r', 't', 'y', 'u', 'i', 'o', 'p'},\n                                                      {'a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l'}, \n                                                      {'z', 'x', 'c', 'v', 'b' ,'n', 'm'}};\n\n        vector<string> result;\n        for (const auto& word : words) {\n            int k = 0;\n            for (int i = 0; i < rows.size(); ++i) {\n                if (rows[i].count(tolower(word[0]))) {\n                    k = i;\n                    break;\n                }\n            }\n            result.emplace_back(word);\n            for (const auto& c: word) {\n                if (!rows[k].count(tolower(c))) {\n                    result.pop_back();\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findWords(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: List[str]\n        \"\"\"\n        rows = [set(['q', 'w', 'e', 'r', 't', 'y','u', 'i', 'o', 'p']),\n                set(['a', 's', 'd', 'f', 'g', 'h', 'j', 'k', 'l']),\n                set(['z', 'x', 'c', 'v', 'b' ,'n', 'm'])]\n\n        result = []\n        for word in words:\n            k = 0\n            for i in xrange(len(rows)):\n                if word[0].lower() in rows[i]:\n                    k = i\n                    break\n            for c in word:\n                if c.lower() not in rows[k]:\n                    break\n            else:\n                result.append(word)\n        return result\n\n\nclass Solution2(object):\n    def findWords(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: List[str]\n        \"\"\"\n        keyboard_rows = ['qwertyuiop', 'asdfghjkl', 'zxcvbnm']\n        single_row_words = []\n        for word in words:\n            for row in keyboard_rows:\n                if all(letter in row for letter in word.lower()):\n                    single_row_words.append(word)\n        return single_row_words",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

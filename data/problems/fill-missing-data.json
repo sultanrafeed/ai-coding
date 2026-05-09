@@ -1,0 +1,31 @@
+{
+  "id": "7a2543e8-dc28-4e05-8264-9101b04c2492",
+  "slug": "fill-missing-data",
+  "title": "Fill Missing Data",
+  "difficulty": "easy",
+  "descriptionHtml": "<pre>\nDataFrame <code>products</code>\n+-------------+--------+\n| Column Name | Type   |\n+-------------+--------+\n| name        | object |\n| quantity    | int    |\n| price       | int    |\n+-------------+--------+\n</pre>\n\n<p>Write a solution to fill in the missing value as <code><strong>0</strong></code> in the <code>quantity</code> column.</p>\n\n<p>The result format is in the following example.</p>\n\n<p>&nbsp;</p>\n<pre>\n<strong class=\"example\">Example 1:</strong>\n<strong>Input:</strong>+-----------------+----------+-------+\n| name            | quantity | price |\n+-----------------+----------+-------+\n| Wristwatch      | None     | 135   |\n| WirelessEarbuds | None     | 821   |\n| GolfClubs       | 779      | 9319  |\n| Printer         | 849      | 3051  |\n+-----------------+----------+-------+\n<strong>Output:\n</strong>+-----------------+----------+-------+\n| name            | quantity | price |\n+-----------------+----------+-------+\n| Wristwatch      | 0        | 135   |\n| WirelessEarbuds | 0        | 821   |\n| GolfClubs       | 779      | 9319  |\n| Printer         | 849      | 3051  |\n+-----------------+----------+-------+\n<strong>Explanation:</strong> \nThe quantity for Wristwatch and WirelessEarbuds are filled by 0.</pre>\n",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"headers\":{\"products\":[\"name\",\"quantity\",\"price\"]},\"rows\":{\"products\":[[\"Wristwatch\",null,135],[\"WirelessEarbuds\",null,821],[\"GolfClubs\",779,9319],[\"Printer\",849,3051]]}}",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport pandas as pd\n\n\n# pandas\ndef fillMissingValues(products: pd.DataFrame) -> pd.DataFrame:\n    products[\"quantity\"].fillna(0, inplace=True)\n    return products",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

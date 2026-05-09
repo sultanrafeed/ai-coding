@@ -1,0 +1,36 @@
+{
+  "id": "63aeffce-f135-42cd-b061-ac62a6abca00",
+  "slug": "find-mode-in-binary-search-tree",
+  "title": "Find Mode in Binary Search Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given the <code>root</code> of a binary search tree (BST) with duplicates, return <em>all the <a href=\"https://en.wikipedia.org/wiki/Mode_(statistics)\" target=\"_blank\">mode(s)</a> (i.e., the most frequently occurred element) in it</em>.</p>\n\n<p>If the tree has more than one mode, return them in <strong>any order</strong>.</p>\n\n<p>Assume a BST is defined as follows:</p>\n\n<ul>\n\t<li>The left subtree of a node contains only nodes with keys <strong>less than or equal to</strong> the node&#39;s key.</li>\n\t<li>The right subtree of a node contains only nodes with keys <strong>greater than or equal to</strong> the node&#39;s key.</li>\n\t<li>Both the left and right subtrees must also be binary search trees.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/11/mode-tree.jpg\" style=\"width: 142px; height: 222px;\" />\n<pre>\n<strong>Input:</strong> root = [1,null,2,2]\n<strong>Output:</strong> [2]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> root = [0]\n<strong>Output:</strong> [0]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>\n\t<li><code>-10<sup>5</sup> &lt;= Node.val &lt;= 10<sup>5</sup></code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Could you do that without using any extra space? (Assume that the implicit stack space incurred due to recursion does not count).",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<int> findMode(TreeNode* root) {\n        if (!root) {\n            return {};\n        }\n        \n        vector<int> result;\n        TreeNode *prev = nullptr;\n        int cnt = 1, max_cnt = 0;\n        inorder(root, &prev, &cnt, &max_cnt, &result);\n        return result;\n    }\n    \nprivate:    \n    void inorder(TreeNode *root, TreeNode **prev, int *cnt, int *max_cnt, vector<int> *result) {\n        if (root == nullptr) {\n            return;\n        }\n        \n        inorder(root->left, prev, cnt, max_cnt, result);\n        if (*prev) {\n            if (root->val == (*prev)->val) {\n                ++(*cnt);\n            } else {\n                *cnt = 1;\n            }\n        }\n        if (*cnt > *max_cnt) {\n            *max_cnt = *cnt;\n            result->clear();\n            result->emplace_back(root->val);\n        } else if (*cnt == *max_cnt) {\n            result->emplace_back(root->val);\n        }\n        *prev = root;\n        inorder(root->right, prev, cnt, max_cnt, result);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def findMode(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[int]\n        \"\"\"\n        def inorder(root, prev, cnt, max_cnt, result):\n            if not root:\n                return prev, cnt, max_cnt\n\n            prev, cnt, max_cnt = inorder(root.left, prev, cnt, max_cnt, result)\n            if prev:\n                if root.val == prev.val:\n                    cnt += 1\n                else:\n                    cnt = 1\n            if cnt > max_cnt:\n                max_cnt = cnt\n                del result[:]\n                result.append(root.val)\n            elif cnt == max_cnt:\n                result.append(root.val)\n            return inorder(root.right, root, cnt, max_cnt, result)\n\n        if not root:\n            return []\n        result = []\n        inorder(root, None, 1, 0, result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

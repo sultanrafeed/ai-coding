@@ -1,0 +1,34 @@
+{
+  "id": "b3423d84-4a2e-4f92-8362-1992b6696cc6",
+  "slug": "split-array-into-fibonacci-sequence",
+  "title": "Split Array into Fibonacci Sequence",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a string of digits <code>num</code>, such as <code>&quot;123456579&quot;</code>. We can split it into a Fibonacci-like sequence <code>[123, 456, 579]</code>.</p>\n\n<p>Formally, a <strong>Fibonacci-like</strong> sequence is a list <code>f</code> of non-negative integers such that:</p>\n\n<ul>\n\t<li><code>0 &lt;= f[i] &lt; 2<sup>31</sup></code>, (that is, each integer fits in a <strong>32-bit</strong> signed integer type),</li>\n\t<li><code>f.length &gt;= 3</code>, and</li>\n\t<li><code>f[i] + f[i + 1] == f[i + 2]</code> for all <code>0 &lt;= i &lt; f.length - 2</code>.</li>\n</ul>\n\n<p>Note that when splitting the string into pieces, each piece must not have extra leading zeroes, except if the piece is the number <code>0</code> itself.</p>\n\n<p>Return any Fibonacci-like sequence split from <code>num</code>, or return <code>[]</code> if it cannot be done.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;1101111&quot;\n<strong>Output:</strong> [11,0,11,11]\n<strong>Explanation:</strong> The output [110, 1, 111] would also be accepted.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;112358130&quot;\n<strong>Output:</strong> []\n<strong>Explanation:</strong> The task is impossible.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;0123&quot;\n<strong>Output:</strong> []\n<strong>Explanation:</strong> Leading zeroes are not allowed, so &quot;01&quot;, &quot;2&quot;, &quot;3&quot; is not valid.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num.length &lt;= 200</code></li>\n\t<li><code>num</code> contains only digits.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^3)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> splitIntoFibonacci(string S) {\n        for (int i = 0, a = 0; i + 2 < S.length(); ++i) {\n            a = 10 * a + S[i] - '0';\n            for (int j = i + 1, b = 0; j + 1 < S.length(); ++j) {\n                b = 10 * b + S[j] - '0';\n                vector<int> fib = {a, b};\n                int k = j + 1;\n                while (k < S.length()) {\n                    if (fib[fib.size() - 2] > numeric_limits<int>::max() - fib[fib.size() - 1]) {\n                        break;\n                    }\n                    auto c = fib[fib.size() - 2] + fib[fib.size() - 1];\n                    auto l = startswith(S, k, c);\n                    if (l == 0) {\n                        break;\n                    }\n                    fib.emplace_back(c);\n                    k += l;\n                }\n                if (k == S.length()) {\n                    return fib;\n                }\n                if (b == 0) {\n                    break;\n                }\n            }\n            if (a == 0) {\n                break;\n            }\n        }\n        return {};\n    }\n\nprivate:\n    int startswith(const string& S, int k, int x) {\n        int y = 0;\n        for (int i = k; i < S.length(); ++i) {\n            y = 10 * y + S[i] - '0';\n            if (y == x) {\n                return i - k + 1;\n            } else if (y > x) {\n                break;\n            }\n        }\n        return 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^3)\n# Space: O(n)\n\n\nclass Solution(object):\n    def splitIntoFibonacci(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: List[int]\n        \"\"\"\n        def startswith(S, k, x):\n            y = 0\n            for i in xrange(k, len(S)):\n                y = 10*y + int(S[i])\n                if y == x:\n                    return i-k+1\n                elif y > x:\n                    break\n            return 0\n\n        MAX_INT = 2**31-1\n        a = 0\n        for i in xrange(len(S)-2):\n            a = 10*a + int(S[i])\n            b = 0\n            for j in xrange(i+1, len(S)-1):\n                b = 10*b + int(S[j])\n                fib = [a, b]\n                k = j+1\n                while k < len(S):\n                    if fib[-2] > MAX_INT-fib[-1]:\n                        break\n                    c = fib[-2]+fib[-1]\n                    length = startswith(S, k, c)\n                    if length == 0:\n                        break\n                    fib.append(c)\n                    k += length\n                else:\n                    return fib\n                if b == 0:\n                    break\n            if a == 0:\n                break\n        return []",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,46 @@
+{
+  "id": "367c6cb3-a5c5-4f6c-b873-51d3f947b5a2",
+  "slug": "top-k-frequent-words",
+  "title": "Top K Frequent Words",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of strings <code>words</code> and an integer <code>k</code>, return <em>the </em><code>k</code><em> most frequent strings</em>.</p>\n\n<p>Return the answer <strong>sorted</strong> by <strong>the frequency</strong> from highest to lowest. Sort the words with the same frequency by their <strong>lexicographical order</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;i&quot;,&quot;love&quot;,&quot;leetcode&quot;,&quot;i&quot;,&quot;love&quot;,&quot;coding&quot;], k = 2\n<strong>Output:</strong> [&quot;i&quot;,&quot;love&quot;]\n<strong>Explanation:</strong> &quot;i&quot; and &quot;love&quot; are the two most frequent words.\nNote that &quot;i&quot; comes before &quot;love&quot; due to a lower alphabetical order.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;the&quot;,&quot;day&quot;,&quot;is&quot;,&quot;sunny&quot;,&quot;the&quot;,&quot;the&quot;,&quot;the&quot;,&quot;sunny&quot;,&quot;is&quot;,&quot;is&quot;], k = 4\n<strong>Output:</strong> [&quot;the&quot;,&quot;is&quot;,&quot;sunny&quot;,&quot;day&quot;]\n<strong>Explanation:</strong> &quot;the&quot;, &quot;is&quot;, &quot;sunny&quot; and &quot;day&quot; are the four most frequent words, with the number of occurrence being 4, 3, 2 and 1 respectively.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 500</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 10</code></li>\n\t<li><code>words[i]</code> consists of lowercase English letters.</li>\n\t<li><code>k</code> is in the range <code>[1, The number of <strong>unique</strong> words[i]]</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow-up:</strong> Could you solve it in <code>O(n log(k))</code> time and <code>O(n)</code> extra space?</p>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "trie",
+    "sorting",
+    "heap-priority-queue",
+    "bucket-sort",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"i\",\"love\",\"leetcode\",\"i\",\"love\",\"coding\"]\n2\n[\"the\",\"day\",\"is\",\"sunny\",\"the\",\"the\",\"the\",\"sunny\",\"is\",\"is\"]\n4",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + klogk) on average\n// Space: O(n)\n\n// Quick Select Solution\nclass Solution {\npublic:\n    vector<string> topKFrequent(vector<string>& words, int k) {\n        unordered_map<string, int> counts;\n        for (const auto& word : words) {\n            ++counts[word];\n        }\n        vector<pair<int, string>> p;\n        for (const auto& kvp : counts) {\n            p.emplace_back(-kvp.second, kvp.first);\n        }\n        nth_element(p.begin(), p.begin() + k - 1, p.end());  // O(n) time on average.\n        sort(p.begin(), p.begin() + k);  // O(klogk) time.\n        vector<string> result;\n        for (int i = 0; i < k; ++i) {\n            result.emplace_back(p[i].second);\n        }\n        return result;\n    }\n};\n\n\n// Time:  O(nlogk)\n// Space: O(n)\n// Heap Solution\nclass Solution2 {\npublic:\n    vector<string> topKFrequent(vector<string>& words, int k) {\n        unordered_map<string, int> counts;\n        for (const auto& word : words) {\n            ++counts[word];\n        }\n        priority_queue<pair<int, string>> heap;\n        for (const auto& kvp : counts) {\n            heap.emplace(-kvp.second, kvp.first);\n            if (heap.size() == k + 1) {\n                heap.pop();\n            }\n        }\n        vector<string> result;\n        while (!heap.empty()) {\n            result.emplace_back(heap.top().second);\n            heap.pop();\n        }\n        reverse(result.begin(), result.end());\n        return result;\n    }\n};\n\n\n// Time:  O(n + klogk) ~ O(n + nlogn)\n// Space: O(n)\n// Bucket Sort Solution\nclass Solution3 {\npublic:\n    vector<string> topKFrequent(vector<string>& words, int k) {\n        unordered_map<string, int> counts;\n        for (const auto& word : words) {\n            ++counts[word];\n        }\n        vector<vector<string>> buckets(words.size() + 1);\n        for (const auto& kvp : counts) {\n            buckets[kvp.second].emplace_back(kvp.first);\n        }\n\n        vector<pair<int, string>> p;\n        for (int i = buckets.size() - 1; i >= 0; --i) {\n            for (const auto& word : buckets[i]) {\n                p.emplace_back(-i, word);\n            }\n            if (p.size() >= k) {\n                break;\n            }\n        }\n        sort(p.begin(), p.end());\n        vector<string> result;\n        for (int i = 0; i < k; ++i) {\n            result.emplace_back(p[i].second);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + klogk) on average\n# Space: O(n)\n\nimport collections\nimport heapq\nfrom random import randint\n\n\nclass Solution(object):\n    def topKFrequent(self, words, k):\n        \"\"\"\n        :type words: List[str]\n        :type k: int\n        :rtype: List[str]\n        \"\"\"\n        counts = collections.Counter(words)\n        p = []\n        for key, val in counts.iteritems():\n            p.append((-val, key))\n        self.kthElement(p, k-1)\n\n        result = []\n        sorted_p = sorted(p[:k])\n        for i in xrange(k):\n            result.append(sorted_p[i][1])\n        return result\n\n    def kthElement(self, nums, k):  # O(n) on average\n        def PartitionAroundPivot(left, right, pivot_idx, nums):\n            pivot_value = nums[pivot_idx]\n            new_pivot_idx = left\n            nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]\n            for i in xrange(left, right):\n                if nums[i] < pivot_value:\n                    nums[i], nums[new_pivot_idx] = nums[new_pivot_idx], nums[i]\n                    new_pivot_idx += 1\n\n            nums[right], nums[new_pivot_idx] = nums[new_pivot_idx], nums[right]\n            return new_pivot_idx\n\n        left, right = 0, len(nums) - 1\n        while left <= right:\n            pivot_idx = randint(left, right)\n            new_pivot_idx = PartitionAroundPivot(left, right, pivot_idx, nums)\n            if new_pivot_idx == k:\n                return\n            elif new_pivot_idx > k:\n                right = new_pivot_idx - 1\n            else:  # new_pivot_idx < k.\n                left = new_pivot_idx + 1\n\n\n# Time:  O(nlogk)\n# Space: O(n)\n# Heap Solution\nclass Solution2(object):\n    def topKFrequent(self, words, k):\n        \"\"\"\n        :type words: List[str]\n        :type k: int\n        :rtype: List[str]\n        \"\"\"\n        class MinHeapObj(object):\n            def __init__(self,val):\n                self.val = val\n            def __lt__(self,other):\n                return self.val[1] > other.val[1] if self.val[0] == other.val[0] else \\\n                       self.val < other.val\n            def __eq__(self,other):\n                return self.val == other.val\n            def __str__(self):\n                return str(self.val)\n\n        counts = collections.Counter(words)\n        min_heap = []\n        for word, count in counts.iteritems():\n            heapq.heappush(min_heap, MinHeapObj((count, word)))\n            if len(min_heap) == k+1:\n                heapq.heappop(min_heap)\n        result = []\n        while min_heap:\n            result.append(heapq.heappop(min_heap).val[1])\n        return result[::-1]\n\n\n# Time:  O(n + klogk) ~ O(n + nlogn)\n# Space: O(n)\n# Bucket Sort Solution\nclass Solution3(object):\n    def topKFrequent(self, words, k):\n        \"\"\"\n        :type words: List[str]\n        :type k: int\n        :rtype: List[str]\n        \"\"\"\n        counts = collections.Counter(words)\n        buckets = [[] for _ in xrange(len(words)+1)]\n        for word, count in counts.iteritems():\n            buckets[count].append(word)\n        pairs = []\n        for i in reversed(xrange(len(words))):\n            for word in buckets[i]:\n                pairs.append((-i, word))\n            if len(pairs) >= k:\n                break\n        pairs.sort()\n        return [pair[1] for pair in pairs[:k]]\n\n\n# time: O(nlogn)\n# space: O(n)\n\nfrom collections import Counter\n\n\nclass Solution4(object):\n    def topKFrequent(self, words, k):\n        \"\"\"\n        :type words: List[str]\n        :type k: int\n        :rtype: List[str]\n        \"\"\"\n        counter = Counter(words)\n        candidates = counter.keys()\n        candidates.sort(key=lambda w: (-counter[w], w))\n        return candidates[:k]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

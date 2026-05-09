@@ -1,0 +1,36 @@
+{
+  "id": "19f0caeb-06c1-4ffc-8241-7c9f8d92b967",
+  "slug": "largest-divisible-subset",
+  "title": "Largest Divisible Subset",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a set of <strong>distinct</strong> positive integers <code>nums</code>, return the largest subset <code>answer</code> such that every pair <code>(answer[i], answer[j])</code> of elements in this subset satisfies:</p>\n\n<ul>\n\t<li><code>answer[i] % answer[j] == 0</code>, or</li>\n\t<li><code>answer[j] % answer[i] == 0</code></li>\n</ul>\n\n<p>If there are multiple solutions, return any of them.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3]\n<strong>Output:</strong> [1,2]\n<strong>Explanation:</strong> [1,3] is also accepted.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,4,8]\n<strong>Output:</strong> [1,2,4,8]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 2 * 10<sup>9</sup></code></li>\n\t<li>All the integers in <code>nums</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> largestDivisibleSubset(vector<int>& nums) {\n        if (nums.empty()) {\n            return {};\n        }\n\n        sort(nums.begin(), nums.end());\n        // dp[i]: the size of the largest distinct subset of\n        //        the first i+1 numbers including nums[i]\n        vector<int> dp(nums.size() , 1);\n        vector<int> prev(nums.size(), -1);\n        int largest_idx = 0;\n        for (int i = 0; i < nums.size(); ++i) {\n            for (int j = 0; j < i; ++j) {\n                if (nums[i] % nums[j] == 0) {\n                    if (dp[i] < dp[j] + 1) {\n                        dp[i] = dp[j] + 1;\n                        prev[i] = j;\n                    }\n                }\n            }\n            if (dp[largest_idx] < dp[i]) {\n                largest_idx = i;\n            }\n        }\n\n        vector<int> result;\n        for (int i = largest_idx; i != -1; i = prev[i]) {\n            result.emplace_back(nums[i]);\n        }\n        reverse(result.begin(), result.end());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def largestDivisibleSubset(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        if not nums:\n            return []\n\n        nums.sort()\n        dp = [1] * len(nums)\n        prev = [-1] * len(nums)\n        largest_idx = 0\n        for i in xrange(len(nums)):\n            for j in xrange(i):\n                if nums[i] % nums[j] == 0:\n                    if dp[i] < dp[j] + 1:\n                        dp[i] = dp[j] + 1\n                        prev[i] = j\n            if dp[largest_idx] < dp[i]:\n                largest_idx = i\n\n        result = []\n        i = largest_idx\n        while i != -1:\n            result.append(nums[i])\n            i = prev[i]\n        return result[::-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

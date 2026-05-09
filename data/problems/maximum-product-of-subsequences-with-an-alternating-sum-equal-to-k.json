@@ -1,0 +1,35 @@
+{
+  "id": "ee882873-58a2-4607-97d6-b231eff948d6",
+  "slug": "maximum-product-of-subsequences-with-an-alternating-sum-equal-to-k",
+  "title": "Maximum Product of Subsequences With an Alternating Sum Equal to K",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> and two integers, <code>k</code> and <code>limit</code>. Your task is to find a non-empty <strong><span data-keyword=\"subsequence-array\">subsequence</span></strong> of <code>nums</code> that:</p>\n\n<ul>\n\t<li>Has an <strong>alternating sum</strong> equal to <code>k</code>.</li>\n\t<li><strong>Maximizes</strong> the product of all its numbers <em>without the product exceeding</em> <code>limit</code>.</li>\n</ul>\n\n<p>Return the <em>product</em> of the numbers in such a subsequence. If no subsequence satisfies the requirements, return -1.</p>\n\n<p>The <strong>alternating sum</strong> of a <strong>0-indexed</strong> array is defined as the <strong>sum</strong> of the elements at <strong>even</strong> indices <strong>minus</strong> the <strong>sum</strong> of the elements at <strong>odd</strong> indices.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3], k = 2, limit = 10</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The subsequences with an alternating sum of 2 are:</p>\n\n<ul>\n\t<li><code>[1, 2, 3]</code>\n\n\t<ul>\n\t\t<li>Alternating Sum: <code>1 - 2 + 3 = 2</code></li>\n\t\t<li>Product: <code>1 * 2 * 3 = 6</code></li>\n\t</ul>\n\t</li>\n\t<li><code>[2]</code>\n\t<ul>\n\t\t<li>Alternating Sum: 2</li>\n\t\t<li>Product: 2</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>The maximum product within the limit is 6.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [0,2,3], k = -5, limit = 12</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>A subsequence with an alternating sum of exactly -5 does not exist.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,2,3,3], k = 0, limit = 9</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">9</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The subsequences with an alternating sum of 0 are:</p>\n\n<ul>\n\t<li><code>[2, 2]</code>\n\n\t<ul>\n\t\t<li>Alternating Sum: <code>2 - 2 = 0</code></li>\n\t\t<li>Product: <code>2 * 2 = 4</code></li>\n\t</ul>\n\t</li>\n\t<li><code>[3, 3]</code>\n\t<ul>\n\t\t<li>Alternating Sum: <code>3 - 3 = 0</code></li>\n\t\t<li>Product: <code>3 * 3 = 9</code></li>\n\t</ul>\n\t</li>\n\t<li><code>[2, 2, 3, 3]</code>\n\t<ul>\n\t\t<li>Alternating Sum: <code>2 - 2 + 3 - 3 = 0</code></li>\n\t\t<li>Product: <code>2 * 2 * 3 * 3 = 36</code></li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>The subsequence <code>[2, 2, 3, 3]</code> has the greatest product with an alternating sum equal to <code>k</code>, but <code>36 &gt; 9</code>. The next greatest product is 9, which is within the limit.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 150</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 12</code></li>\n\t<li><code>-10<sup>5</sup> &lt;= k &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= limit &lt;= 5000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k * l), l = limits\n// Space: O(n * k * l)\n\n// dp\nclass Solution {\npublic:\n    int maxProduct(vector<int>& nums, int k, int limit) {\n        const int total = accumulate(cbegin(nums), cend(nums), 0);\n        if (k > total || k < -total) {  // optimized to speed up\n            return -1;\n        }\n        unordered_map<int, unordered_map<int, unordered_set<int>>> dp;\n        for (const auto& x : nums) {\n            unordered_map<int, unordered_map<int, unordered_set<int>>> new_dp;\n            for (const auto& [p, total_products] : dp) {\n                for (const auto& [total, products] : total_products) {\n                    new_dp[p][total] = products;\n                }\n            }\n            new_dp[1][x].emplace(min(x, limit + 1));\n            for (const auto& [p, total_products] : dp) {\n                const int new_p = p ^ 1;\n                const int v = p == 0 ? x : -x;\n                for (const auto& [total, products] : total_products) {\n                    const int new_total = total + v;\n                    for (const auto& v : products) {\n                        new_dp[new_p][new_total].emplace(min(v * x, limit + 1));\n                    }\n                }\n            }\n            dp = move(new_dp);\n        }\n        int result = -1;\n        for (const auto& [p, total_products] : dp) {\n            for (const auto& [total, products] : total_products) {\n                if (total != k) {\n                    continue;\n                }\n                for (const auto& v : products) {\n                    if (v <= limit) {\n                        result = max(result, v);\n                    }\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k * l), l = limits\n# Space: O(n * k * l)\n\nimport collections\n\n\n# dp\nclass Solution(object):\n    def maxProduct(self, nums, k, limit):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :type limit: int\n        :rtype: int\n        \"\"\"\n        total = sum(nums)\n        if k > total or k < -total:  # optimized to speed up\n            return -1\n        dp = collections.defaultdict(set)\n        for x in nums:\n            new_dp = collections.defaultdict(set, {k:set(v) for k, v in dp.iteritems()})\n            new_dp[(1, x)].add(min(x, limit+1))\n            for (p, total), products in dp.iteritems():\n                new_state = (p^1, total+(x if p == 0 else -x))\n                for v in products:\n                    new_dp[new_state].add(min(v*x, limit+1))\n            dp = new_dp\n        result = -1\n        for (p, total), products in dp.iteritems():\n            if total != k:\n                continue\n            for v in products:\n                if v <= limit:\n                    result = max(result, v)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "d5b052ec-8e7f-44a3-9a81-e74f736eacf5",
+  "slug": "number-of-subarrays-having-even-product",
+  "title": "Number of Subarrays Having Even Product",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[9,6,7,13]\n[7,3,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// dp, math\nclass Solution {\npublic:\n    long long evenProduct(vector<int>& nums) {\n        int64_t result = (size(nums) + 1) * size(nums) / 2;\n        int cnt = 0;\n        for (const auto& x : nums) {\n            cnt = (x % 2 == 1) ? cnt + 1 : 0;\n            result -= cnt;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// dp, math\nclass Solution2 {\npublic:\n    long long evenProduct(vector<int>& nums) {\n        int64_t result = 0;\n        int cnt = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            if (nums[i] % 2 == 0) {\n                cnt = i + 1;\n            }\n            result += cnt;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# dp, math\nclass Solution(object):\n    def evenProduct(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = (len(nums)+1)*len(nums)//2\n        cnt = 0\n        for x in nums:\n            cnt = cnt+1 if x%2 else 0\n            result -= cnt\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\n# dp, math\nclass Solution2(object):\n    def evenProduct(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = cnt = 0\n        for i, x in enumerate(nums):\n            if x%2 == 0:\n                cnt = i+1\n            result += cnt\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

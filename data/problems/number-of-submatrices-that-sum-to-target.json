@@ -1,0 +1,42 @@
+{
+  "id": "679cfdb8-ae4e-4d4c-9baa-df3b1e316d15",
+  "slug": "number-of-submatrices-that-sum-to-target",
+  "title": "Number of Submatrices That Sum to Target",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given a <code>matrix</code>&nbsp;and a <code>target</code>, return the number of non-empty submatrices that sum to <font face=\"monospace\">target</font>.</p>\n\n<p>A submatrix <code>x1, y1, x2, y2</code> is the set of all cells <code>matrix[x][y]</code> with <code>x1 &lt;= x &lt;= x2</code> and <code>y1 &lt;= y &lt;= y2</code>.</p>\n\n<p>Two submatrices <code>(x1, y1, x2, y2)</code> and <code>(x1&#39;, y1&#39;, x2&#39;, y2&#39;)</code> are different if they have some coordinate&nbsp;that is different: for example, if <code>x1 != x1&#39;</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/02/mate1.jpg\" style=\"width: 242px; height: 242px;\" />\n<pre>\n<strong>Input:</strong> matrix = [[0,1,0],[1,1,1],[0,1,0]], target = 0\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The four 1x1 submatrices that only contain 0.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> matrix = [[1,-1],[-1,1]], target = 0\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> The two 1x2 submatrices, plus the two 2x1 submatrices, plus the 2x2 submatrix.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> matrix = [[904]], target = 0\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= matrix.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= matrix[0].length &lt;= 100</code></li>\n\t<li><code>-1000 &lt;= matrix[i][j] &lt;= 1000</code></li>\n\t<li><code>-10^8 &lt;= target &lt;= 10^8</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "matrix",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,1,0],[1,1,1],[0,1,0]]\n0\n[[1,-1],[-1,1]]\n0\n[[904]]\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m^2*n), m is min(r, c), n is max(r, c)\n// Space: O(n), which doesn't include transposed space\n\nclass Solution {\npublic:\n    int numSubmatrixSumTarget(vector<vector<int>>& matrix, int target) {\n        if (matrix.size() > matrix[0].size()) {\n            const auto& transposed = transpose(matrix);\n            return numSubmatrixSumTarget(const_cast<vector<vector<int>>&>(transposed),\n                                         target);\n        }\n\n        for (int i = 0; i < matrix.size(); ++i) {\n            for (int j = 0; j < matrix[i].size() - 1; ++j) {\n                matrix[i][j + 1] += matrix[i][j];\n            }\n        }\n\n        int result = 0;\n        for (int i = 0; i < matrix.size(); ++i) {\n            vector<int> prefix_sum(matrix[i].size());\n            for (int j = i; j < matrix.size(); ++j) {\n                unordered_map<int, int> lookup;\n                ++lookup[0];\n                for (int k = 0; k < matrix[i].size(); ++k) {\n                    prefix_sum[k] += matrix[j][k];\n                    if (lookup.count(prefix_sum[k] - target)) {\n                        result += lookup[prefix_sum[k] - target];\n                    }\n                    ++lookup[prefix_sum[k]];\n                }\n            }\n        }\n        return result;\n    }\n\nprivate:\n    vector<vector<int>> transpose(const vector<vector<int>>& matrix) {\n        vector<vector<int>> result(matrix[0].size(),\n                                   vector<int>(matrix.size()));\n        for (int i = 0; i < matrix.size(); ++i) {\n            for (int j = 0; j < matrix[i].size(); ++j) {\n                result[j][i] = matrix[i][j];\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m^2*n), m is min(r, c), n is max(r, c)\n# Space: O(n), which doesn't include transposed space\n\nimport collections\n\n\nclass Solution(object):\n    def numSubmatrixSumTarget(self, matrix, target):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        if len(matrix) > len(matrix[0]):\n            return self.numSubmatrixSumTarget(map(list, zip(*matrix)), target)\n        \n        for i in xrange(len(matrix)):\n            for j in xrange(len(matrix[i])-1):\n                matrix[i][j+1] += matrix[i][j]\n\n        result = 0\n        for i in xrange(len(matrix)):\n            prefix_sum = [0]*len(matrix[i])\n            for j in xrange(i, len(matrix)):\n                lookup = collections.defaultdict(int)\n                lookup[0] = 1\n                for k in xrange(len(matrix[j])):\n                    prefix_sum[k] += matrix[j][k]\n                    if prefix_sum[k]-target in lookup:\n                        result += lookup[prefix_sum[k]-target]\n                    lookup[prefix_sum[k]] += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "3ac1293c-89a7-46d2-a5ce-50a3b8005912",
+  "slug": "average-of-levels-in-binary-tree",
+  "title": "Average of Levels in Binary Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "Given the <code>root</code> of a binary tree, return <em>the average value of the nodes on each level in the form of an array</em>. Answers within <code>10<sup>-5</sup></code> of the actual answer will be accepted.\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/09/avg1-tree.jpg\" style=\"width: 277px; height: 302px;\" />\n<pre>\n<strong>Input:</strong> root = [3,9,20,null,null,15,7]\n<strong>Output:</strong> [3.00000,14.50000,11.00000]\nExplanation: The average value of nodes on level 0 is 3, on level 1 is 14.5, and on level 2 is 11.\nHence return [3, 14.5, 11].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/09/avg2-tree.jpg\" style=\"width: 292px; height: 302px;\" />\n<pre>\n<strong>Input:</strong> root = [3,9,20,15,7]\n<strong>Output:</strong> [3.00000,14.50000,11.00000]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the tree is in the range <code>[1, 10<sup>4</sup>]</code>.</li>\n\t<li><code>-2<sup>31</sup> &lt;= Node.val &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<double> averageOfLevels(TreeNode* root) {\n        vector<double> result;\n        vector<TreeNode *> q;\n        q.emplace_back(root);\n        while (!q.empty()) {\n            long long sum = 0, count = 0;\n            vector<TreeNode *> next_q;\n            for (const auto& n : q) {\n                sum += n->val;\n                ++count;\n                if (n->left) {\n                    next_q.emplace_back(n->left);\n                }\n                if (n->right) {\n                    next_q.emplace_back(n->right);\n                }\n            }\n            swap(q, next_q);\n            result.emplace_back(sum * 1.0 / count);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\n\nclass Solution(object):\n    def averageOfLevels(self, root):\n        \"\"\"\n        :type root: TreeNode\n        :rtype: List[float]\n        \"\"\"\n        result = []\n        q = [root]\n        while q:\n            total, count = 0, 0\n            next_q = []\n            for n in q:\n                total += n.val\n                count += 1\n                if n.left:\n                    next_q.append(n.left)\n                if n.right:\n                    next_q.append(n.right)\n            q = next_q\n            result.append(float(total) / count)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

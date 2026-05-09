@@ -1,0 +1,41 @@
+{
+  "id": "3e972179-1efa-49d4-8214-71864ffc8342",
+  "slug": "encode-and-decode-strings",
+  "title": "Encode and Decode Strings",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"Hello\",\"World\"]\n[\"\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Codec {\npublic:\n\n    // Encodes a list of strings to a single string.\n    string encode(vector<string>& strs) {\n        string s;\n        for (size_t i = 0; i < strs.size(); ++i) {\n            size_t len = strs[i].length();\n            string tmp;\n            for (size_t i = 0, mask = 0xff; i < sizeof(size_t); ++i, mask <<= 8) {\n                tmp.push_back(len & mask);\n            }\n            reverse(tmp.begin(), tmp.end());\n            s.append(tmp);\n            s.append(strs[i]);\n        }\n    \n        return s;\n    }\n    \n    // Decodes a single string to a list of strings.\n    vector<string> decode(string s) {\n        vector<string> strs;\n        size_t pos = 0;\n    \n        while (pos + sizeof(size_t) <= s.length()) {\n            size_t len = 0;\n            for (size_t i = 0; i < sizeof(size_t); ++i) {\n                len <<= 8;\n                len += static_cast<unsigned char>(s[pos++]);\n            } \n    \n            strs.push_back(s.substr(pos, len));\n            pos += len;\n        }\n    \n        return strs;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Codec(object):\n\n    def encode(self, strs):\n        \"\"\"Encodes a list of strings to a single string.\n\n        :type strs: List[str]\n        :rtype: str\n        \"\"\"\n        encoded_str = \"\"\n        for s in strs:\n            encoded_str += \"%0*x\" % (8, len(s)) + s\n        return encoded_str\n\n\n    def decode(self, s):\n        \"\"\"Decodes a single string to a list of strings.\n\n        :type s: str\n        :rtype: List[str]\n        \"\"\"\n        i = 0\n        strs = []\n        while i < len(s):\n            l = int(s[i:i+8], 16)\n            strs.append(s[i+8:i+8+l])\n            i += 8+l\n        return strs",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

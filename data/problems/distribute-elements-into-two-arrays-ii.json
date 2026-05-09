@@ -1,0 +1,36 @@
+{
+  "id": "3788c3fa-d351-43bb-a468-73f5d91c2690",
+  "slug": "distribute-elements-into-two-arrays-ii",
+  "title": "Distribute Elements Into Two Arrays II",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>1-indexed</strong> array of integers <code>nums</code> of length <code>n</code>.</p>\n\n<p>We define a function <code>greaterCount</code> such that <code>greaterCount(arr, val)</code> returns the number of elements in <code>arr</code> that are <strong>strictly greater</strong> than <code>val</code>.</p>\n\n<p>You need to distribute all the elements of <code>nums</code> between two arrays <code>arr1</code> and <code>arr2</code> using <code>n</code> operations. In the first operation, append <code>nums[1]</code> to <code>arr1</code>. In the second operation, append <code>nums[2]</code> to <code>arr2</code>. Afterwards, in the <code>i<sup>th</sup></code> operation:</p>\n\n<ul>\n\t<li>If <code>greaterCount(arr1, nums[i]) &gt; greaterCount(arr2, nums[i])</code>, append <code>nums[i]</code> to <code>arr1</code>.</li>\n\t<li>If <code>greaterCount(arr1, nums[i]) &lt; greaterCount(arr2, nums[i])</code>, append <code>nums[i]</code> to <code>arr2</code>.</li>\n\t<li>If <code>greaterCount(arr1, nums[i]) == greaterCount(arr2, nums[i])</code>, append <code>nums[i]</code> to the array with a <strong>lesser</strong> number of elements.</li>\n\t<li>If there is still a tie, append <code>nums[i]</code> to <code>arr1</code>.</li>\n</ul>\n\n<p>The array <code>result</code> is formed by concatenating the arrays <code>arr1</code> and <code>arr2</code>. For example, if <code>arr1 == [1,2,3]</code> and <code>arr2 == [4,5,6]</code>, then <code>result = [1,2,3,4,5,6]</code>.</p>\n\n<p>Return <em>the integer array</em> <code>result</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,3,3]\n<strong>Output:</strong> [2,3,1,3]\n<strong>Explanation:</strong> After the first 2 operations, arr1 = [2] and arr2 = [1].\nIn the 3<sup>rd</sup> operation, the number of elements greater than 3 is zero in both arrays. Also, the lengths are equal, hence, append nums[3] to arr1.\nIn the 4<sup>th</sup> operation, the number of elements greater than 3 is zero in both arrays. As the length of arr2 is lesser, hence, append nums[4] to arr2.\nAfter 4 operations, arr1 = [2,3] and arr2 = [1,3].\nHence, the array result formed by concatenation is [2,3,1,3].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,14,3,1,2]\n<strong>Output:</strong> [5,3,1,2,14]\n<strong>Explanation:</strong> After the first 2 operations, arr1 = [5] and arr2 = [14].\nIn the 3<sup>rd</sup> operation, the number of elements greater than 3 is one in both arrays. Also, the lengths are equal, hence, append nums[3] to arr1.\nIn the 4<sup>th</sup> operation, the number of elements greater than 1 is greater in arr1 than arr2 (2 &gt; 1). Hence, append nums[4] to arr1.\nIn the 5<sup>th</sup> operation, the number of elements greater than 2 is greater in arr1 than arr2 (2 &gt; 1). Hence, append nums[5] to arr1.\nAfter 5 operations, arr1 = [5,3,1,2] and arr2 = [14].\nHence, the array result formed by concatenation is [5,3,1,2,14].\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,3,3,3]\n<strong>Output:</strong> [3,3,3,3]\n<strong>Explanation:</strong> At the end of 4 operations, arr1 = [3,3] and arr2 = [3,3].\nHence, the array result formed by concatenation is [3,3,3,3].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-indexed-tree",
+    "segment-tree",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n#include <ext/pb_ds/assoc_container.hpp>\n#include <ext/pb_ds/tree_policy.hpp>\nusing namespace __gnu_pbds;\n\n// ordered set\nclass Solution {\npublic:\n    vector<int> resultArray(vector<int>& nums) {\n        using ordered_set = tree<pair<int, int>, null_type, less<pair<int, int>>, rb_tree_tag, tree_order_statistics_node_update>;\n        ordered_set os1, os2;\n        os1.insert({nums[0], 0});\n        os2.insert({nums[1], 1});\n        vector<int> a = {nums[0]}, b = {nums[1]};\n        for (int i = 2; i < size(nums); ++i) {\n            const int cnt1 = size(os1) - os1.order_of_key({nums[i] + 1, 0});\n            const int cnt2 = size(os2) - os2.order_of_key({nums[i] + 1, 0});\n            if (cnt1 > cnt2 || (cnt1 == cnt2 && size(a) <= size(b))) {\n                os1.insert({nums[i], i});\n                a.emplace_back(nums[i]);\n            } else {\n                os2.insert({nums[i], i});\n                b.emplace_back(nums[i]);\n            }\n        }\n        a.insert(end(a), cbegin(b), cend(b));\n        return a;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nfrom sortedcontainers import SortedList\n\n\n# sorted list\nclass Solution(object):\n    def resultArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        sl1, sl2 = SortedList([nums[0]]), SortedList([nums[1]])\n        a, b = [nums[0]], [nums[1]]\n        for i in xrange(2, len(nums)):\n            cnt1 = len(sl1)-sl1.bisect_right(nums[i])\n            cnt2 = len(sl2)-sl2.bisect_right(nums[i])\n            if cnt1 > cnt2 or (cnt1 == cnt2 and len(a) <= len(b)):\n                sl1.add(nums[i])\n                a.append(nums[i])\n            else:\n                sl2.add(nums[i])\n                b.append(nums[i])\n        return a+b",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

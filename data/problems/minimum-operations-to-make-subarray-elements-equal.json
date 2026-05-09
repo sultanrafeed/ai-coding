@@ -1,0 +1,37 @@
+{
+  "id": "c31dbc50-5ebd-462d-9757-41ef82319048",
+  "slug": "minimum-operations-to-make-subarray-elements-equal",
+  "title": "Minimum Operations to Make Subarray Elements Equal",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "sliding-window",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogk)\n// Space: O(k)\n\n// math, two pointers, sliding window, bst\nclass Solution {\npublic:\n    long long minOperations(vector<int>& nums, int k) {\n        set<pair<int, int>> left, right;\n        int64_t total_left = 0, total_right = 0;\n        const auto& rebalance = [&]() {\n            if (size(left) + 1 < size(right)) {\n                auto it = begin(right);\n                const auto [x, i] = *it;\n                right.erase(it);\n                total_right -= x;\n                left.emplace(-x, -i);\n                total_left += x;\n            } else if (size(left) > size(right)) {\n                auto it = begin(left);\n                const auto [x, i] = *it;\n                left.erase(*it);\n                total_left -= -x;\n                right.emplace(-x, -i);\n                total_right += -x;\n            }\n        };\n\n        int64_t result = numeric_limits<int64_t>::max();\n        for (int i = 0; i < size(nums); ++i) {\n            if (!empty(left) && -cbegin(left)->first > nums[i]) {\n                left.emplace(-nums[i], -i);\n                total_left += nums[i];\n            } else {\n                right.emplace(nums[i], i);\n                total_right += nums[i];\n            }\n            rebalance();\n            const int j = i - (k - 1);\n            if (j >= 0) {\n                result = min(result, (total_right - (k % 2 ? cbegin(right)->first: 0)) - total_left);\n                if (left.count(pair(-nums[j], -j))) {\n                    left.erase(pair(-nums[j], -j));\n                    total_left -= nums[j];\n                } else {\n                    right.erase(pair(nums[j], j));\n                    total_right -= nums[j];\n                }\n                rebalance();\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogk)\n# Space: O(k)\n\nfrom sortedcontainers import SortedList\n\n\n# math, two pointers, sliding window, sorted list\nclass Solution(object):\n    def minOperations(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def rebalance(total_left, total_right):\n            if len(left)+1 < len(right):\n                x, i = right.pop(0)\n                total_right -= x\n                left.add((-x, -i))\n                total_left += x\n            elif len(left) > len(right):\n                x, i = left.pop(0)\n                total_left -= -x\n                right.add((-x, -i))\n                total_right += -x\n            return total_left, total_right\n\n        result = float(\"inf\")\n        left = SortedList()\n        right = SortedList()\n        total_left = total_right = 0\n        for i, x in enumerate(nums):\n            if left and -left[0][0] > x:\n                left.add((-x, -i))\n                total_left += x\n            else:\n                right.add((x, i))\n                total_right += x                \n            total_left, total_right = rebalance(total_left, total_right)\n            if i-(k-1) >= 0:\n                result = min(result, (total_right-(right[0][0] if k%2 else 0))-total_left)\n                j, y = i-(k-1), nums[i-(k-1)]\n                if (-y, -j) in left:\n                    left.remove((-y, -j))\n                    total_left -= y\n                else:\n                    right.remove((y, j))\n                    total_right -= y\n                total_left, total_right = rebalance(total_left, total_right)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

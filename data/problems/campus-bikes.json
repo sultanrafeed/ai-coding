@@ -1,0 +1,41 @@
+{
+  "id": "4b958d26-5422-49a2-9c97-0227a039cea0",
+  "slug": "campus-bikes",
+  "title": "Campus Bikes",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "sorting",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,0],[2,1]]\n[[1,2],[3,3]]\n[[0,0],[1,1],[2,0]]\n[[1,0],[2,2],[2,1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((w * b) * log(w * b))\n// Space: O(w * b)\n\nclass Solution {\npublic:\n    vector<int> assignBikes(vector<vector<int>>& workers, vector<vector<int>>& bikes) {\n        using P = vector<int>;\n        vector<vector<P>> distances(workers.size());\n        for (int i = 0; i < workers.size(); ++i) {\n            for (int j = 0; j < bikes.size(); ++j) {\n                distances[i].push_back({manhattan(workers[i], bikes[j]), i, j});\n            }\n            sort(distances[i].begin(), distances[i].end(), greater<P>());\n        }\n        \n        vector<int> result(workers.size());\n        unordered_set<int> lookup;\n        priority_queue<P, vector<P>, greater<P>> min_heap;\n        for (int i = 0; i < workers.size(); ++i) {\n            min_heap.emplace(distances[i].back());\n            distances[i].pop_back();\n        }\n        while (lookup.size() < workers.size()) {\n            const auto worker = min_heap.top()[1];\n            const auto bike = min_heap.top()[2];\n            min_heap.pop();\n            if (!lookup.count(bike)) {\n                result[worker] = bike;\n                lookup.emplace(bike);\n            } else {\n                min_heap.emplace(distances[worker].back());\n                distances[worker].pop_back();\n            }\n        }\n        return result;\n    }\n    \nprivate:\n    int manhattan(const vector<int>& p1, const vector<int>& p2) {\n        return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1]);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((w * b) * log(w * b))\n# Space: O(w * b)\n\nimport heapq\n\n\nclass Solution(object):\n    def assignBikes(self, workers, bikes):\n        \"\"\"\n        :type workers: List[List[int]]\n        :type bikes: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        def manhattan(p1, p2):\n            return abs(p1[0] - p2[0]) + abs(p1[1] - p2[1])\n        \n        distances = [[] for _ in xrange(len(workers))]\n        for i in xrange(len(workers)):\n            for j in xrange(len(bikes)):\n                distances[i].append((manhattan(workers[i], bikes[j]), i, j))\n            distances[i].sort(reverse = True)\n        \n        result = [None] * len(workers)\n        lookup = set()\n        min_heap = []\n        for i in xrange(len(workers)):\n            heapq.heappush(min_heap, distances[i].pop())\n        while len(lookup) < len(workers):\n            _, worker, bike = heapq.heappop(min_heap)\n            if bike not in lookup:\n                result[worker] = bike\n                lookup.add(bike)\n            else:\n                heapq.heappush(min_heap, distances[worker].pop())\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

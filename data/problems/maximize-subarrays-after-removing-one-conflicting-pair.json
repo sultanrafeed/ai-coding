@@ -1,0 +1,36 @@
+{
+  "id": "4d57fd3f-f62a-4932-974d-8e0ab2253cfe",
+  "slug": "maximize-subarrays-after-removing-one-conflicting-pair",
+  "title": "Maximize Subarrays After Removing One Conflicting Pair",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer <code>n</code> which represents an array <code>nums</code> containing the numbers from 1 to <code>n</code> in order. Additionally, you are given a 2D array <code>conflictingPairs</code>, where <code>conflictingPairs[i] = [a, b]</code> indicates that <code>a</code> and <code>b</code> form a conflicting pair.</p>\n\n<p>Remove <strong>exactly</strong> one element from <code>conflictingPairs</code>. Afterward, count the number of <span data-keyword=\"subarray-nonempty\">non-empty subarrays</span> of <code>nums</code> which do not contain both <code>a</code> and <code>b</code> for any remaining conflicting pair <code>[a, b]</code>.</p>\n\n<p>Return the <strong>maximum</strong> number of subarrays possible after removing <strong>exactly</strong> one conflicting pair.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4, conflictingPairs = [[2,3],[1,4]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">9</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Remove <code>[2, 3]</code> from <code>conflictingPairs</code>. Now, <code>conflictingPairs = [[1, 4]]</code>.</li>\n\t<li>There are 9 subarrays in <code>nums</code> where <code>[1, 4]</code> do not appear together. They are <code>[1]</code>, <code>[2]</code>, <code>[3]</code>, <code>[4]</code>, <code>[1, 2]</code>, <code>[2, 3]</code>, <code>[3, 4]</code>, <code>[1, 2, 3]</code> and <code>[2, 3, 4]</code>.</li>\n\t<li>The maximum number of subarrays we can achieve after removing one element from <code>conflictingPairs</code> is 9.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 5, conflictingPairs = [[1,2],[2,5],[3,5]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">12</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Remove <code>[1, 2]</code> from <code>conflictingPairs</code>. Now, <code>conflictingPairs = [[2, 5], [3, 5]]</code>.</li>\n\t<li>There are 12 subarrays in <code>nums</code> where <code>[2, 5]</code> and <code>[3, 5]</code> do not appear together.</li>\n\t<li>The maximum number of subarrays we can achieve after removing one element from <code>conflictingPairs</code> is 12.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= conflictingPairs.length &lt;= 2 * n</code></li>\n\t<li><code>conflictingPairs[i].length == 2</code></li>\n\t<li><code>1 &lt;= conflictingPairs[i][j] &lt;= n</code></li>\n\t<li><code>conflictingPairs[i][0] != conflictingPairs[i][1]</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "segment-tree",
+    "enumeration",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + m)\n// Space: O(n + m)\n\n// greedy\nclass Solution {\npublic:\n    long long maxSubarrays(int n, vector<vector<int>>& conflictingPairs) {\n        vector<vector<int64_t>> right(n);\n        for (const auto& p : conflictingPairs) {\n            int l = p[0] - 1, r = p[1] - 1;\n            if (l > r) {\n                swap(l, r);\n            }\n            right[r].emplace_back(l);\n        }\n        int64_t result = 0;\n        vector<int64_t> top2(2, -1);\n        vector<int64_t> cnt(n);\n        for (int r = 0; r < n; ++r) {\n            for (auto l : right[r]) {\n                for (int i = 0; i < size(top2); ++i) {\n                    if (l > top2[i]) {\n                        swap(l, top2[i]);\n                    }\n                }\n            }\n            result += r - top2[0];\n            if (top2[0] != -1) {\n                cnt[top2[0]] += top2[0] - top2[1];\n            }\n        }\n        return result + ranges::max(cnt);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + m)\n# Space: O(n + m)\n\n# greedy\nclass Solution(object):\n    def maxSubarrays(self, n, conflictingPairs):\n        \"\"\"\n        :type n: int\n        :type conflictingPairs: List[List[int]]\n        :rtype: int\n        \"\"\"\n        right = [[] for _ in xrange(n)]\n        for l, r in conflictingPairs:\n            l, r = l-1, r-1\n            if l > r:\n                l, r = r, l\n            right[r].append(l)\n        result = 0\n        top2 = [-1]*2\n        cnt = [0]*n\n        for r in xrange(n):\n            for l in right[r]:\n                for i in xrange(len(top2)):\n                    if l > top2[i]:\n                        l, top2[i] = top2[i], l\n            result += r-top2[0]\n            if top2[0] != -1:\n                cnt[top2[0]] += top2[0]-top2[1]\n        return result+max(cnt)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

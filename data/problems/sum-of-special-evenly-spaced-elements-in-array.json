@@ -1,0 +1,40 @@
+{
+  "id": "c560cba2-f868-4b57-bee5-d2aa21ef4100",
+  "slug": "sum-of-special-evenly-spaced-elements-in-array",
+  "title": "Sum Of Special Evenly-Spaced Elements In Array",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[0,1,2,3,4,5,6,7]\n[[0,3],[5,1],[4,2]]\n[100,200,101,201,102,202,103,203]\n[[0,7]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * sqrt(n))\n// Space: O(n * sqrt(n))\n\nclass Solution {\npublic:\n    vector<int> solve(vector<int>& nums, vector<vector<int>>& queries) {\n        static const int MOD = 1e9 + 7;\n        \n        vector<vector<vector<int>>> prefix(floor(sqrt(size(queries))) + 1, vector<vector<int>>(floor(sqrt(size(queries))) + 1));\n        vector<int> result;\n        for (const auto& query : queries) {\n            int x = query[0], y = query[1];\n            if (uint64_t(y) * y > size(queries)) {\n                int total = 0;\n                for (int i = x; i < size(nums); i += y) {\n                    total = (total + nums[i]) % MOD;\n                }\n                result.emplace_back(total);\n            } else {\n                int begin = x % y;\n                if (empty(prefix[begin][y])) {\n                    prefix[begin][y].emplace_back(0);\n                    for (int i = begin; i < size(nums); i += y) {\n                        prefix[begin][y].emplace_back((prefix[begin][y].back() + nums[i]) % MOD);\n                    }\n                }\n                result.emplace_back((prefix[begin][y].back() - prefix[begin][y][x / y] + MOD) % MOD);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * sqrt(n))\n# Space: O(n * sqrt(n))\n\nclass Solution(object):\n    def solve(self, nums, queries):\n        \"\"\"\n        :type nums: List[int]\n        :type queries: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        MOD = 10**9+7\n\n        prefix = {}          \n        result = []\n        for x, y in queries:\n            if y*y > len(nums):\n                total = 0\n                for i in xrange(x, len(nums), y):\n                    total += nums[i]\n                    total %= MOD\n                result.append(total)\n            else:\n                begin = x%y\n                if (begin, y) not in prefix:\n                    prefix[(begin, y)] = [0]\n                    for i in xrange(begin, len(nums), y):\n                        prefix[(begin, y)].append((prefix[(begin, y)][-1] + nums[i]) % MOD)\n                result.append((prefix[(begin, y)][-1]-prefix[(begin, y)][x//y]) % MOD)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

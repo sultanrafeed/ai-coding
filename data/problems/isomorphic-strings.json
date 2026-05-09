@@ -1,0 +1,34 @@
+{
+  "id": "b597a469-42aa-406b-862b-411326a61991",
+  "slug": "isomorphic-strings",
+  "title": "Isomorphic Strings",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two strings <code>s</code> and <code>t</code>, <em>determine if they are isomorphic</em>.</p>\n\n<p>Two strings <code>s</code> and <code>t</code> are isomorphic if the characters in <code>s</code> can be replaced to get <code>t</code>.</p>\n\n<p>All occurrences of a character must be replaced with another character while preserving the order of characters. No two characters may map to the same character, but a character may map to itself.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;egg&quot;, t = &quot;add&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The strings <code>s</code> and <code>t</code> can be made identical by:</p>\n\n<ul>\n\t<li>Mapping <code>&#39;e&#39;</code> to <code>&#39;a&#39;</code>.</li>\n\t<li>Mapping <code>&#39;g&#39;</code> to <code>&#39;d&#39;</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;f11&quot;, t = &quot;b23&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The strings <code>s</code> and <code>t</code> can not be made identical as <code>&#39;1&#39;</code> needs to be mapped to both <code>&#39;2&#39;</code> and <code>&#39;3&#39;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;paper&quot;, t = &quot;title&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>t.length == s.length</code></li>\n\t<li><code>s</code> and <code>t</code> consist of any valid ascii character.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isIsomorphic(string s, string t) {\n        if (s.length() != t.length()) {\n            return false;\n        }\n        vector<int> s2t(256, 0), t2s(256, 0);\n        for (int i = 0; i < s.length(); ++i) {\n            if (s2t[s[i]] == 0 && t2s[t[i]] == 0) {\n                s2t[s[i]] = t[i];\n                t2s[t[i]] = s[i];\n            } else if (s2t[s[i]] != t[i]) {\n                // Contradict mapping.\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nfrom itertools import izip  # Generator version of zip.\n\nclass Solution(object):\n    def isIsomorphic(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        if len(s) != len(t):\n            return False\n\n        s2t, t2s = {}, {}\n        for p, w in izip(s, t):\n            if w not in s2t and p not in t2s:\n                s2t[w] = p\n                t2s[p] = w\n            elif w not in s2t or s2t[w] != p:\n                # Contradict mapping.\n                return False\n        return True\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def isIsomorphic(self, s, t):\n        if len(s) != len(t):\n            return False\n\n        return self.halfIsom(s, t) and self.halfIsom(t, s)\n\n    def halfIsom(self, s, t):\n        lookup = {}\n        for i in xrange(len(s)):\n            if s[i] not in lookup:\n                lookup[s[i]] = t[i]\n            elif lookup[s[i]] != t[i]:\n                return False\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

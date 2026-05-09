@@ -1,0 +1,41 @@
+{
+  "id": "23c16edb-acd9-47d7-bd7a-40e5d9c1231b",
+  "slug": "extract-kth-character-from-the-rope-tree",
+  "title": "Extract Kth Character From The Rope Tree",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[10,4,\"abcpoe\",\"g\",\"rta\"]\n6\n[12,6,6,\"abc\",\"efg\",\"hij\",\"klm\"]\n3\n[\"ropetree\"]\n8",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(h)\n// Space: O(1)\n\n// binary search tree\nclass Solution {\npublic:\n    char getKthCharacter(RopeTreeNode* root, int k) {\n        while (root->len) {\n            const int l = root->left ? max(root->left->len, static_cast<int>(size(root->left->val))) : 0;\n            if (k <= l) {\n                root = root->left;\n            } else {\n                k -= l;\n                root = root->right;\n            }\n        }\n        return root->val[k - 1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(h)\n# Space: O(1)\n\n# Definition for a rope tree node.\nclass RopeTreeNode(object):\n    def __init__(self, len=0, val=\"\", left=None, right=None):\n        pass\n\n\n# binary search tree\nclass Solution(object):\n    def getKthCharacter(self, root, k):\n        \"\"\"\n        :type root: Optional[RopeTreeNode]\n        :type k: int\n        :rtype: str\n        \"\"\"\n        while root.len:\n            l = max(root.left.len, len(root.left.val)) if root.left else 0\n            if k <= l:\n                root = root.left\n            else:\n                k -= l\n                root = root.right\n        return root.val[k-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

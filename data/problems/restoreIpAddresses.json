@@ -1,0 +1,25 @@
+{
+  "id": "c316a18c-82a9-4910-9371-bc5c33795c18",
+  "slug": "restoreIpAddresses",
+  "title": "Restoreipaddresses",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n^m), where n is max length of number, m is count of segment\n// Space Complexity: O(nm)\n\nclass Solution {\n    public:\n        vector<string> restoreIpAddresses(string s) {\n            vector<string> ans;\n            dfs(s, 0, 4, \"\", ans);\n            return ans;\n        }\n\n    private:\n        void dfs(const string &s, int start, int step, string ip, vector<string> &ans) {\n            if(start == s.size() && step == 0) {\n                ip.pop_back();\n                ans.push_back(ip);\n                return;\n            }\n\n            if(s.size() - start < step || s.size() - start > step * 3) // pruing\n                return;\n\n            int num = 0;\n            for(int i = start; i < start + 3; ++i) {\n                num = num * 10 + s[i] - '0';\n                if(num > 255) break;\n                ip += s[i];\n                dfs(s, i + 1, step - 1, ip + '.', ans);\n                if(num == 0) break; // only one 0\n            }\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

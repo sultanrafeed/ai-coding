@@ -1,0 +1,35 @@
+{
+  "id": "bd26b32c-588a-45b5-82e9-ac313054f782",
+  "slug": "maximum-number-of-potholes-that-can-be-fixed",
+  "title": "Maximum Number of Potholes That Can Be Fixed",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// counting sort, greedy\nclass Solution {\npublic:\n    int maxPotholes(string road, int budget) {\n        const auto& inplace_counting_sort = [](auto& nums, bool is_reverse) {\n            if (empty(nums)) {\n                return;\n            }\n            const int max_num = *max_element(cbegin(nums), cend(nums));\n            vector<int> count(max_num + 1);\n            for (const auto& num : nums) {\n                ++count[num];\n            }\n            for (int i = 1; i < size(count); ++i) {\n                count[i] += count[i - 1];\n            }\n            for (int i = size(nums) - 1; i >= 0; --i) {  // inplace but unstable sort\n                while (nums[i] >= 0) {\n                    --count[(nums)[i]];\n                    const int j = count[(nums)[i]];\n                    tie(nums[i], nums[j]) = pair(nums[j], ~nums[i]);\n                }\n            }\n            for (auto& num : nums) {\n                num = ~num;  // restore values\n            }\n            if (is_reverse) {  // unstable sort\n                reverse(begin(nums), end(nums));\n            }\n        };\n\n        vector<int> ls;\n        for (int i = 0, l = 0; i < size(road); ++i) {\n            ++l;\n            if (i + 1 == size(road) || road[i + 1] != road[i]) {\n                if (road[i] == 'x') {\n                    ls.emplace_back(l);\n                }\n                l = 0;\n            }\n        }\n        inplace_counting_sort(ls, false);\n        int result = 0;\n        for (int i = size(ls) - 1; i >= 0; --i) {\n            const int c = min(ls[i] + 1, budget);\n            if (c - 1 <= 0) {\n                break;\n            }\n            result += c - 1;\n            budget -= c;\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// sort, greedy\nclass Solution2 {\npublic:\n    int maxPotholes(string road, int budget) {\n        vector<int> ls;\n        for (int i = 0, l = 0; i < size(road); ++i) {\n            ++l;\n            if (i + 1 == size(road) || road[i + 1] != road[i]) {\n                if (road[i] == 'x') {\n                    ls.emplace_back(l);\n                }\n                l = 0;\n            }\n        }\n        sort(begin(ls), end(ls));\n        int result = 0;\n        for (int i = size(ls) - 1; i >= 0; --i) {\n            const int c = min(ls[i] + 1, budget);\n            if (c - 1) {\n                break;\n            }\n            result += c - 1;\n            budget -= c;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# counting sort, greedy\nclass Solution(object):\n    def maxPotholes(self, road, budget):\n        \"\"\"\n        :type road: str\n        :type budget: int\n        :rtype: int\n        \"\"\"\n        def inplace_counting_sort(nums, reverse=False):  # Time: O(n)\n            if not nums:\n                return\n            count = [0]*(max(nums)+1)\n            for num in nums:\n                count[num] += 1\n            for i in xrange(1, len(count)):\n                count[i] += count[i-1]\n            for i in reversed(xrange(len(nums))):  # inplace but unstable sort\n                while nums[i] >= 0:\n                    count[nums[i]] -= 1\n                    j = count[nums[i]]\n                    nums[i], nums[j] = nums[j], ~nums[i]\n            for i in xrange(len(nums)):\n                nums[i] = ~nums[i]  # restore values\n            if reverse:  # unstable sort\n                nums.reverse()\n    \n        ls = []\n        l = 0\n        for i in xrange(len(road)):\n            l += 1\n            if i+1 == len(road) or road[i+1] != road[i]:\n                if road[i] == 'x':\n                    ls.append(l)\n                l = 0\n        inplace_counting_sort(ls)\n        result = 0\n        for l in reversed(ls):\n            c = min(l+1, budget)\n            if c-1 <= 0:\n                break\n            result += c-1\n            budget -= c\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\n# sort, greedy\nclass Solution2(object):\n    def maxPotholes(self, road, budget):\n        \"\"\"\n        :type road: str\n        :type budget: int\n        :rtype: int\n        \"\"\"\n        ls = []\n        l = 0\n        for i in xrange(len(road)):\n            l += 1\n            if i+1 == len(road) or road[i+1] != road[i]:\n                if road[i] == 'x':\n                    ls.append(l)\n                l = 0\n        ls.sort()\n        result = 0\n        for l in reversed(ls):\n            c = min(l+1, budget)\n            if c-1 <= 0:\n                break\n            result += c-1\n            budget -= c\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "79b98981-d3a7-4b11-90fc-6b55f5ab32b5",
+  "slug": "json-deep-equal",
+  "title": "JSON Deep Equal",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"x\":1,\"y\":2}\n{\"x\":1,\"y\":2}\n{\"y\":2,\"x\":1}\n{\"x\":1,\"y\":2}\n{\"x\":null,\"L\":[1,2,3]}\n{\"x\":null,\"L\":[\"1\",\"2\",\"3\"]}\ntrue\nfalse",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// dfs\nfunction areDeeplyEqual(o1: any, o2: any): boolean {\n    if (o1 === o2) {\n        return true;\n    }\n    if (typeof o1 !== 'object' || o1 === null || typeof o2 !== 'object' || o2 === null) {\n        return false;\n    }\n    if (Array.isArray(o1) !== Array.isArray(o2)) {\n        return false;\n    }\n    const keys1 = Object.keys(o1);\n    const keys2 = Object.keys(o2);\n    if (keys1.length !== keys2.length) {\n        return false;\n    }\n    return keys1.every(key => areDeeplyEqual(o1[key], o2[key]));\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

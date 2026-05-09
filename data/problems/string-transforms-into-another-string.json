@@ -1,0 +1,41 @@
+{
+  "id": "a1507731-c260-4f69-a383-53e9d485c9c9",
+  "slug": "string-transforms-into-another-string",
+  "title": "String Transforms Into Another String",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"aabcc\"\n\"ccdee\"\n\"leetcode\"\n\"codeleet\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool canConvert(string str1, string str2) {\n        if (str1 == str2) {\n            return true;\n        }\n        unordered_map<char, char> lookup;\n        for (int i = 0; i < str1.size(); ++i) {\n            lookup.emplace(str1[i], str2[i]);\n            if (lookup[str1[i]] != str2[i]) {\n                return false;\n            }\n        }\n        unordered_set<char> count(str2.cbegin(), str2.cend());\n        return count.size() < 26;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport itertools\n\n\nclass Solution(object):\n    def canConvert(self, str1, str2):\n        \"\"\"\n        :type str1: str\n        :type str2: str\n        :rtype: bool\n        \"\"\"\n        if str1 == str2:\n            return True\n        lookup = {}\n        for i, j in itertools.izip(str1, str2):\n            if lookup.setdefault(i, j) != j:\n                return False\n        return len(set(str2)) < 26",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

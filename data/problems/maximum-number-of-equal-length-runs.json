@@ -1,0 +1,35 @@
+{
+  "id": "0a86121d-a0de-4f64-a596-1bcf6b986ec9",
+  "slug": "maximum-number-of-equal-length-runs",
+  "title": "Maximum Number of Equal Length Runs",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(sqrt(n))\n\n// freq table\nclass Solution {\npublic:\n    int maxSameLengthRuns(string s) {\n        unordered_map<int, int> cnt;\n        for (int i = 0, l = 0; i < size(s); ++i) {\n            ++l;\n            if (i + 1 == size(s) || s[i + 1] != s[i]) {\n                ++cnt[l];\n                l = 0;\n            }\n        }\n        return max_element(cbegin(cnt), cend(cnt), [](const auto& a, const auto& b) {\n            return a.second < b.second;\n        })->second;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// freq table\nclass Solution2 {\npublic:\n    int maxSameLengthRuns(string s) {\n        vector<int> cnt(size(s) + 1);\n        for (int i = 0, l = 0; i < size(s); ++i) {\n            ++l;\n            if (i + 1 == size(s) || s[i + 1] != s[i]) {\n                ++cnt[l];\n                l = 0;\n            }\n        }\n        return ranges::max(cnt);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(sqrt(n))\n\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def maxSameLengthRuns(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        cnt = collections.defaultdict(int)\n        l = 0\n        for i in xrange(len(s)):\n            l += 1\n            if i+1 == len(s) or s[i+1] != s[i]:\n                cnt[l] += 1\n                l = 0\n        return max(cnt.itervalues())\n\n\n# Time:  O(n)\n# Space: O(n)\n# freq table\nclass Solution2(object):\n    def maxSameLengthRuns(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        cnt = [0]*(len(s)+1)\n        l = 0\n        for i in xrange(len(s)):\n            l += 1\n            if i+1 == len(s) or s[i+1] != s[i]:\n                cnt[l] += 1\n                l = 0\n        return max(cnt)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

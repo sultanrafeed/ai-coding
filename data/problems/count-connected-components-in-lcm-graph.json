@@ -1,0 +1,37 @@
+{
+  "id": "2bb90d06-e4e4-4b81-9541-e0ecb76cd66e",
+  "slug": "count-connected-components-in-lcm-graph",
+  "title": "Count Connected Components in LCM Graph",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an array of integers <code>nums</code> of size <code>n</code> and a <strong>positive</strong> integer <code>threshold</code>.</p>\n\n<p>There is a graph consisting of <code>n</code> nodes with the&nbsp;<code>i<sup>th</sup></code>&nbsp;node having a value of <code>nums[i]</code>. Two nodes <code>i</code> and <code>j</code> in the graph are connected via an <strong>undirected</strong> edge if <code>lcm(nums[i], nums[j]) &lt;= threshold</code>.</p>\n\n<p>Return the number of <strong>connected components</strong> in this graph.</p>\n\n<p>A <strong>connected component</strong> is a subgraph of a graph in which there exists a path between any two vertices, and no vertex of the subgraph shares an edge with a vertex outside of the subgraph.</p>\n\n<p>The term <code>lcm(a, b)</code> denotes the <strong>least common multiple</strong> of <code>a</code> and <code>b</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,4,8,3,9], threshold = 5</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong>&nbsp;</p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/10/31/example0.png\" style=\"width: 250px; height: 251px;\" /></p>\n\n<p>&nbsp;</p>\n\n<p>The four connected components are <code>(2, 4)</code>, <code>(3)</code>, <code>(8)</code>, <code>(9)</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,4,8,3,9,12], threshold = 10</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong>&nbsp;</p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/10/31/example1.png\" style=\"width: 250px; height: 252px;\" /></p>\n\n<p>The two connected components are <code>(2, 3, 4, 8, 9)</code>, and <code>(12)</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li>All elements of <code>nums</code> are unique.</li>\n\t<li><code>1 &lt;= threshold &lt;= 2 * 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "union-find",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + tlogt), t = threshold\n// Space: O(t)\n\n// union find, number theory\nclass UnionFind {\npublic:\n    UnionFind(int n)\n        : set_(n)\n        , rank_(n) {\n        iota(set_.begin(), set_.end(), 0);\n    }\n\n    int find_set(int x) {\n        if (set_[x] != x) {\n            set_[x] = find_set(set_[x]);  // Path compression.\n        }\n        return set_[x];\n    }\n\n    bool union_set(int x, int y) {\n        x = find_set(x), y = find_set(y);\n        if (x == y) {\n            return false;\n        }\n        if (rank_[x] > rank_[y]) {\n            swap(x, y);\n        }\n        set_[x] = y;  // Union by rank.\n        if (rank_[x] == rank_[y]) {\n            ++rank_[y];\n        }\n        return true;\n    }\n\nprivate:\n    vector<int> set_;\n    vector<int> rank_;\n};\n\nclass Solution {\npublic:\n    int countComponents(vector<int>& nums, int threshold) {\n        UnionFind uf(threshold);\n        vector<int> lookup(threshold, -1);\n        int result = size(nums);\n        for (const auto& x : nums) {\n            if (x - 1 >= threshold) {\n                continue;\n            }\n            for (int i = x; i <= threshold; i += x) {\n                if (lookup[i - 1] == -1) {\n                    lookup[i - 1] = x - 1;\n                    continue;\n                }\n                if (uf.union_set(lookup[i - 1], x - 1)) {\n                    --result;\n                }\n                if (i == x) {\n                    break;\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n + tlogt), t = threshold\n// Space: O(t)\n// union find, number theory\nclass Solution2 {\npublic:\n    int countComponents(vector<int>& nums, int threshold) {\n        UnionFind uf(threshold);\n        for (const auto& x : nums) {\n            if (x - 1 >= threshold) {\n                continue;\n            }\n            for (int i = x + x; i <= threshold; i += x) {\n                uf.union_set(i - 1, x - 1);\n            }\n        }\n        int result = 0;\n        for (const auto& x : nums) {\n            if (x - 1 >= threshold || uf.find_set(x - 1) == x - 1) {\n                ++result;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + tlogt), t = threshold\n# Space: O(t)\n\n# union find, number theory\nclass UnionFind(object):  # Time: O(n * alpha(n)), Space: O(n)\n    def __init__(self, n):\n        self.set = range(n)\n        self.rank = [0]*n\n\n    def find_set(self, x):\n        stk = []\n        while self.set[x] != x:  # path compression\n            stk.append(x)\n            x = self.set[x]\n        while stk:\n            self.set[stk.pop()] = x\n        return x\n\n    def union_set(self, x, y):\n        x, y = self.find_set(x), self.find_set(y)\n        if x == y:\n            return False\n        if self.rank[x] > self.rank[y]:  # union by rank\n            x, y = y, x\n        self.set[x] = self.set[y]\n        if self.rank[x] == self.rank[y]:\n            self.rank[y] += 1\n        return True\n\n\nclass Solution(object):\n    def countComponents(self, nums, threshold):\n        \"\"\"\n        :type nums: List[int]\n        :type threshold: int\n        :rtype: int\n        \"\"\"\n        uf = UnionFind(threshold)\n        lookup = [-1]*threshold\n        result = len(nums)\n        for x in nums:\n            if x-1 >= threshold:\n                continue\n            for i in xrange(x, threshold+1, x):\n                if lookup[i-1] == -1:\n                    lookup[i-1] = x-1\n                    continue\n                if uf.union_set(lookup[i-1], x-1):\n                    result -= 1\n                if i == x:\n                    break\n        return result\n\n\n# Time:  O(n + tlogt), t = threshold\n# Space: O(t)\n# union find, number theory\nclass Solution2(object):\n    def countComponents(self, nums, threshold):\n        \"\"\"\n        :type nums: List[int]\n        :type threshold: int\n        :rtype: int\n        \"\"\"\n        uf = UnionFind(threshold)\n        lookup = [-1]*threshold\n        for x in nums:\n            if x-1 >= threshold:\n                continue\n            for i in xrange(x+x, threshold+1, x):\n                uf.union_set(i-1, x-1)\n        return sum(x-1 >= threshold or uf.find_set(x-1) == x-1 for x in nums)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

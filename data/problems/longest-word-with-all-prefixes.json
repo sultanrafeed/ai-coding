@@ -1,0 +1,42 @@
+{
+  "id": "fa603851-1cf8-45cf-858a-7e23c3036220",
+  "slug": "longest-word-with-all-prefixes",
+  "title": "Longest Word With All Prefixes",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "depth-first-search",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"k\",\"ki\",\"kir\",\"kira\",\"kiran\"]\n[\"a\",\"banana\",\"app\",\"appl\",\"ap\",\"apply\",\"apple\"]\n[\"abc\",\"bc\",\"ab\",\"qwe\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(t), t is the number of nodes in trie\n\nclass Solution {\nprivate:\n    class TrieNode { \n    public:\n        int idx = -1;\n        unordered_map<char, unique_ptr<TrieNode>> leaves;\n\n        void Insert(int i, const string& s) {\n            auto p = this;\n            for (const auto& c : s) {\n                if (!p->leaves.count(c)) {\n                    p->leaves[c] = make_unique<TrieNode>();\n                }\n                p = p->leaves[c].get();\n            }\n            p->idx = i;\n        }\n    };\n\npublic:\n    string longestWord(vector<string>& words) {\n        auto trie = make_unique<TrieNode>();\n        for (int i = 0; i < size(words); ++i) {\n            trie->Insert(i, words[i]);\n        }\n        return iter_dfs(words, trie.get());\n    }\n\nprivate:\n    string iter_dfs(const vector<string>& words, TrieNode *node) {\n        int result = -1;\n        vector<TrieNode *> stk = {node};\n        while (!empty(stk)) {\n            const auto node = stk.back(); stk.pop_back();\n            if (result == -1 || size(words[node->idx]) > size(words[result])) {\n                result = node->idx;\n            }\n            for (char c = 'z'; c >= 'a'; --c) {\n                if (!node->leaves.count(c) || node->leaves[c]->idx == -1) {\n                    continue;\n                }\n                stk.emplace_back(node->leaves[c].get());\n            }\n        }\n        return result != -1 ? words[result] : \"\";\n    }\n};\n\n\n// Time:  O(n)\n// Space: O(t), t is the number of nodes in trie\nclass Solution2 {\nprivate:\n    class TrieNode { \n    public:\n        int idx = -1;\n        unordered_map<char, unique_ptr<TrieNode>> leaves;\n\n        void Insert(int i, const string& s) {\n            auto p = this;\n            for (const auto& c : s) {\n                if (!p->leaves.count(c)) {\n                    p->leaves[c] = make_unique<TrieNode>();\n                }\n                p = p->leaves[c].get();\n            }\n            p->idx = i;\n        }\n    };\n\npublic:\n    string longestWord(vector<string>& words) {\n        auto trie = make_unique<TrieNode>();\n        for (int i = 0; i < size(words); ++i) {\n            trie->Insert(i, words[i]);\n        }\n        int result = -1;\n        dfs(words, trie.get(), &result);\n        return result != -1 ? words[result] : \"\";\n    }\n\nprivate:\n    void dfs(const vector<string>& words, TrieNode *node, int *result) {\n        if (*result == -1 || size(words[node->idx]) > size(words[*result])) {\n            *result = node->idx;\n        }\n        for (char c = 'a'; c <= 'z'; ++c) {\n            if (!node->leaves.count(c) || node->leaves[c]->idx == -1) {\n                continue;\n            }\n            dfs(words, node->leaves[c].get(), result);\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(t), t is the number of nodes in trie\n\nimport collections\nimport string\n\n\nclass Solution(object):\n    def longestWord(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: str\n        \"\"\"\n        def iter_dfs(words, node):\n            result = -1\n            stk = [node]\n            while stk:\n                node = stk.pop()\n                if result == -1 or len(words[node[\"_end\"]]) > len(words[result]):\n                    result = node[\"_end\"]\n                for c in reversed(string.ascii_lowercase):\n                    if c not in node or \"_end\" not in node[c]:\n                        continue\n                    stk.append(node[c])\n            return result       \n    \n        _trie = lambda: collections.defaultdict(_trie)\n        trie = _trie()\n        trie[\"_end\"] = -1\n        for i, word in enumerate(words):\n            reduce(dict.__getitem__, word, trie)[\"_end\"] = i\n        result = iter_dfs(words, trie)\n        return words[result] if result != -1 else \"\" \n\n\n# Time:  O(n)\n# Space: O(t), t is the number of nodes in trie\nimport collections\nimport string\n\n\nclass Solution2(object):\n    def longestWord(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: str\n        \"\"\"\n        def dfs(words, node, result):\n            if result[0] == -1 or len(words[node[\"_end\"]]) > len(words[result[0]]):\n                result[0] = node[\"_end\"]\n            for c in string.ascii_lowercase:\n                if c not in node or \"_end\" not in node[c]:\n                    continue\n                dfs(words, node[c], result)\n    \n        _trie = lambda: collections.defaultdict(_trie)\n        trie = _trie()\n        trie[\"_end\"] = -1\n        for i, word in enumerate(words):\n            reduce(dict.__getitem__, word, trie)[\"_end\"] = i\n        result = [-1]\n        dfs(words, trie, result)\n        return words[result[0]] if result[0] != -1 else \"\"",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

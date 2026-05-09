@@ -1,0 +1,35 @@
+{
+  "id": "e9f6e28c-fa61-4ce3-b77d-129a7ac529cd",
+  "slug": "sum-of-mutated-array-closest-to-target",
+  "title": "Sum of Mutated Array Closest to Target",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>arr</code> and a target value <code>target</code>, return the integer <code>value</code> such that when we change all the integers larger than <code>value</code> in the given array to be equal to <code>value</code>, the sum of the array gets as close as possible (in absolute difference) to <code>target</code>.</p>\n\n<p>In case of a tie, return the minimum such integer.</p>\n\n<p>Notice that the answer is not neccesarilly a number from <code>arr</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [4,9,3], target = 10\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> When using 3 arr converts to [3, 3, 3] which sums 9 and that&#39;s the optimal answer.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [2,3,5], target = 10\n<strong>Output:</strong> 5\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [60864,25176,27249,21296,20204], target = 56803\n<strong>Output:</strong> 11361\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= arr[i], target &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findBestValue(vector<int>& arr, int target) {\n        sort(arr.begin(), arr.end(), greater<int>());\n        const auto max_arr = arr[0];\n        while (!arr.empty() && arr.back() * arr.size() <= target) {\n            target -= arr.back(); arr.pop_back();\n        }\n        // let x = ceil(t/n)-1\n        // (1) (t/n-1/2) <= x:\n        //    return x, which is equal to ceil(t/n)-1 = ceil(t/n-1/2) = (2t+n-1)//2n\n        // (2) (t/n-1/2) > x:\n        //    return x+1, which is equal to ceil(t/n) = ceil(t/n-1/2) = (2t+n-1)//2n\n        // (1) + (2) => both return (2t+n-1)//2n\n        return arr.empty() ? max_arr : (2 * target + arr.size() - 1) / (2 * arr.size());\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int findBestValue(vector<int>& arr, int target) {\n        sort(arr.begin(), arr.end(), greater<int>());\n        const auto max_arr = arr[0];\n        while (!arr.empty() && arr.back() * arr.size() <= target) {\n            target -= arr.back(); arr.pop_back();\n        }\n        if (arr.empty()) {\n            return max_arr;\n        }\n        const auto& x = (target - 1) / arr.size();\n        return target - x * arr.size() <= (x + 1) * arr.size() - target ? x : x + 1;\n    }\n};\n\n// Time:  O(nlogm), m is the max of arr, which may be larger than n\n// Space: O(1)\nclass Solution3 {\npublic:\n    int findBestValue(vector<int>& arr, int target) {\n        int left = 1, right = *max_element(arr.cbegin(), arr.cend());\n        while (left <= right) {\n            const auto& mid = left + (right - left) / 2;\n            if (check(arr, mid, target)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return target - total(arr, left - 1) <= total(arr, left) - target ? left - 1 : left;\n    }\n\nprivate:\n    int total(const vector<int>& arr, int v) {\n        return accumulate(arr.cbegin(), arr.cend(), 0,\n                          [&v](const auto& x, const auto& y) {\n                              return x + min(v, y);\n                          });\n    }\n\n    bool check(const vector<int>& arr, int v, int target) {\n        return total(arr, v) >= target;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def findBestValue(self, arr, target):\n        \"\"\"\n        :type arr: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        arr.sort(reverse=True)\n        max_arr = arr[0]\n        while arr and arr[-1]*len(arr) <= target:\n            target -= arr.pop()\n        # let x = ceil(t/n)-1\n        # (1) (t/n-1/2) <= x:\n        #    return x, which is equal to ceil(t/n)-1 = ceil(t/n-1/2) = (2t+n-1)//2n\n        # (2) (t/n-1/2) > x:\n        #    return x+1, which is equal to ceil(t/n) = ceil(t/n-1/2) = (2t+n-1)//2n\n        # (1) + (2) => both return (2t+n-1)//2n\n        return max_arr if not arr else (2*target+len(arr)-1)//(2*len(arr))\n\n\n# Time:  O(nlogn)\n# Space: O(1)\nclass Solution2(object):\n    def findBestValue(self, arr, target):\n        \"\"\"\n        :type arr: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        arr.sort(reverse=True)\n        max_arr = arr[0]\n        while arr and arr[-1]*len(arr) <= target:\n            target -= arr.pop()\n        if not arr:\n            return max_arr\n        x = (target-1)//len(arr)\n        return x if target-x*len(arr) <= (x+1)*len(arr)-target else x+1\n\n\n# Time:  O(nlogm), m is the max of arr, which may be larger than n\n# Space: O(1)\nclass Solution3(object):\n    def findBestValue(self, arr, target):\n        \"\"\"\n        :type arr: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        def total(arr, v):\n            result = 0\n            for x in arr:\n                result += min(v, x)\n            return result\n\n        def check(arr, v, target):\n            return total(arr, v) >= target\n        \n        left, right = 1, max(arr)\n        while left <= right:\n            mid = left + (right-left)//2\n            if check(arr, mid, target):\n                right = mid-1\n            else:\n                left = mid+1\n        return left-1 if target-total(arr, left-1) <= total(arr, left)-target else left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

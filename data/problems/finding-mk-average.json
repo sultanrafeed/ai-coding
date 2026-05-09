@@ -1,0 +1,37 @@
+{
+  "id": "bfd68dd5-1896-4b74-8a14-d5ff579ce0f6",
+  "slug": "finding-mk-average",
+  "title": "Finding MK Average",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two integers, <code>m</code> and <code>k</code>, and a stream of integers. You are tasked to implement a data structure that calculates the <strong>MKAverage</strong> for the stream.</p>\n\n<p>The <strong>MKAverage</strong> can be calculated using these steps:</p>\n\n<ol>\n\t<li>If the number of the elements in the stream is less than <code>m</code> you should consider the <strong>MKAverage</strong> to be <code>-1</code>. Otherwise, copy the last <code>m</code> elements of the stream to a separate container.</li>\n\t<li>Remove the smallest <code>k</code> elements and the largest <code>k</code> elements from the container.</li>\n\t<li>Calculate the average value for the rest of the elements <strong>rounded down to the nearest integer</strong>.</li>\n</ol>\n\n<p>Implement the <code>MKAverage</code> class:</p>\n\n<ul>\n\t<li><code>MKAverage(int m, int k)</code> Initializes the <strong>MKAverage</strong> object with an empty stream and the two integers <code>m</code> and <code>k</code>.</li>\n\t<li><code>void addElement(int num)</code> Inserts a new element <code>num</code> into the stream.</li>\n\t<li><code>int calculateMKAverage()</code> Calculates and returns the <strong>MKAverage</strong> for the current stream <strong>rounded down to the nearest integer</strong>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;MKAverage&quot;, &quot;addElement&quot;, &quot;addElement&quot;, &quot;calculateMKAverage&quot;, &quot;addElement&quot;, &quot;calculateMKAverage&quot;, &quot;addElement&quot;, &quot;addElement&quot;, &quot;addElement&quot;, &quot;calculateMKAverage&quot;]\n[[3, 1], [3], [1], [], [10], [], [5], [5], [5], []]\n<strong>Output</strong>\n[null, null, null, -1, null, 3, null, null, null, 5]\n\n<strong>Explanation</strong>\n<code>MKAverage obj = new MKAverage(3, 1); \nobj.addElement(3);        // current elements are [3]\nobj.addElement(1);        // current elements are [3,1]\nobj.calculateMKAverage(); // return -1, because m = 3 and only 2 elements exist.\nobj.addElement(10);       // current elements are [3,1,10]\nobj.calculateMKAverage(); // The last 3 elements are [3,1,10].\n                          // After removing smallest and largest 1 element the container will be [3].\n                          // The average of [3] equals 3/1 = 3, return 3\nobj.addElement(5);        // current elements are [3,1,10,5]\nobj.addElement(5);        // current elements are [3,1,10,5,5]\nobj.addElement(5);        // current elements are [3,1,10,5,5,5]\nobj.calculateMKAverage(); // The last 3 elements are [5,5,5].\n                          // After removing smallest and largest 1 element the container will be [5].\n                          // The average of [5] equals 5/1 = 5, return 5\n</code></pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= m &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt; k*2 &lt; m</code></li>\n\t<li><code>1 &lt;= num &lt;= 10<sup>5</sup></code></li>\n\t<li>At most <code>10<sup>5</sup></code> calls will be made to <code>addElement</code> and <code>calculateMKAverage</code>.</li>\n</ul>\n",
+  "patterns": [
+    "design",
+    "queue",
+    "heap-priority-queue",
+    "data-stream",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:           O(1)\n//        add_element:    O(logn)\n//        calc_mkaverage: O(1)\n// Space: O(m)\n\nclass MKAverage {\npublic:\n    MKAverage(int m, int k)\n     : m_{m}\n     , k_{k} {\n        \n    }\n    \n    void addElement(int num) {\n        if (size(dq_) == m_) {\n            remove(dq_.front());\n            dq_.pop_front();\n        }\n        dq_.emplace_back(num);\n        add(num);\n    }\n    \n    int calculateMKAverage() {\n        if (size(dq_) < m_) {\n            return -1;\n        }\n        return total_ / (m_ - 2 * k_);\n    }\n\nprivate:\n    void add(int num) {\n        left_.emplace(num);\n        if (size(left_) > k_) {\n            const auto it = prev(end(left_));\n            mid_.emplace(*it);\n            total_ += *it;\n            left_.erase(it);\n        }\n        if (size(mid_) > (m_ - 2 * k_)) {\n            const auto it = prev(end(mid_));\n            total_ -= *it;\n            right_.emplace(*it);\n            mid_.erase(it);\n        }\n    }\n\n    void remove(int num) {\n        if (num <= *rbegin(left_)) {\n            left_.erase(left_.find(num));\n        } else if (num <= *rbegin(mid_)) {\n            auto it = mid_.find(num); \n            total_ -= *it;\n            mid_.erase(it);\n        } else {\n            right_.erase(right_.find(num));\n        }\n        if (size(left_) < k_) {\n            left_.emplace(*begin(mid_));\n            total_ -= *begin(mid_);\n            mid_.erase(begin(mid_));\n        }\n        if (size(mid_) < (m_ - 2 * k_)) {\n            mid_.emplace(*begin(right_));\n            total_ += *begin(right_);\n            right_.erase(begin(right_));\n        }\n    }\n\n    int m_;\n    int k_;\n    deque<int> dq_;\n    multiset<int> left_, mid_, right_;\n    int64_t total_ = 0;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:           O(1)\n#        add_element:    O(logn)\n#        calc_mkaverage: O(1)\n# Space: O(m)\n\nimport collections\nfrom sortedcontainers import SortedList\n\n\nclass MKAverage(object):\n\n    def __init__(self, m, k):\n        \"\"\"\n        :type m: int\n        :type k: int\n        \"\"\"\n        self.__m = m\n        self.__k = k\n        self.__dq = collections.deque()\n        self.__sl = SortedList()\n        self.__total = self.__first_k = self.__last_k = 0\n\n    def addElement(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: None\n        \"\"\"\n        if len(self.__dq) == self.__m:\n            self.__remove(self.__dq.popleft())\n        self.__dq.append(num)\n        self.__add(num)\n\n    def calculateMKAverage(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        if len(self.__sl) < self.__m:\n            return -1\n        return (self.__total-self.__first_k-self.__last_k)//(self.__m-2*self.__k)\n\n    def __add(self, num):\n        self.__total += num\n        idx = self.__sl.bisect_left(num)\n        if idx < self.__k:\n            self.__first_k += num\n            if len(self.__sl) >= self.__k:\n                self.__first_k -= self.__sl[self.__k-1]\n        if idx > len(self.__sl)-self.__k:\n            self.__last_k += num\n            if len(self.__sl) >= self.__k:\n                self.__last_k -= self.__sl[-self.__k]\n        self.__sl.add(num)\n\n    def __remove(self, num):\n        self.__total -= num\n        idx = self.__sl.index(num)\n        if idx < self.__k:\n            self.__first_k -= num\n            self.__first_k += self.__sl[self.__k]\n        elif idx > (len(self.__sl)-1)-self.__k:\n            self.__last_k -= num\n            self.__last_k += self.__sl[-1-self.__k]\n        self.__sl.remove(num)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

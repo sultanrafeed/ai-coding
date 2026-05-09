@@ -1,0 +1,33 @@
+{
+  "id": "7a52e101-616c-4a1b-8b57-416b5fa29bc8",
+  "slug": "longest-strictly-increasing-or-strictly-decreasing-subarray",
+  "title": "Longest Strictly Increasing or Strictly Decreasing Subarray",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an array of integers <code>nums</code>. Return <em>the length of the <strong>longest</strong> <span data-keyword=\"subarray-nonempty\">subarray</span> of </em><code>nums</code><em> which is either <strong><span data-keyword=\"strictly-increasing-array\">strictly increasing</span></strong> or <strong><span data-keyword=\"strictly-decreasing-array\">strictly decreasing</span></strong></em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,4,3,3,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The strictly increasing subarrays of <code>nums</code> are <code>[1]</code>, <code>[2]</code>, <code>[3]</code>, <code>[3]</code>, <code>[4]</code>, and <code>[1,4]</code>.</p>\n\n<p>The strictly decreasing subarrays of <code>nums</code> are <code>[1]</code>, <code>[2]</code>, <code>[3]</code>, <code>[3]</code>, <code>[4]</code>, <code>[3,2]</code>, and <code>[4,3]</code>.</p>\n\n<p>Hence, we return <code>2</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,3,3,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The strictly increasing subarrays of <code>nums</code> are <code>[3]</code>, <code>[3]</code>, <code>[3]</code>, and <code>[3]</code>.</p>\n\n<p>The strictly decreasing subarrays of <code>nums</code> are <code>[3]</code>, <code>[3]</code>, <code>[3]</code>, and <code>[3]</code>.</p>\n\n<p>Hence, we return <code>1</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,2,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The strictly increasing subarrays of <code>nums</code> are <code>[3]</code>, <code>[2]</code>, and <code>[1]</code>.</p>\n\n<p>The strictly decreasing subarrays of <code>nums</code> are <code>[3]</code>, <code>[2]</code>, <code>[1]</code>, <code>[3,2]</code>, <code>[2,1]</code>, and <code>[3,2,1]</code>.</p>\n\n<p>Hence, we return <code>3</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 50</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 50</code></li>\n</ul>\n",
+  "patterns": [
+    "array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    int longestMonotonicSubarray(vector<int>& nums) {\n        const auto& cmp = [](int x, int y) {\n            return x < y ? -1 : (x > y ? 1 : 0);\n        };\n\n        int result = size(nums) == 1 || cmp(nums[0], nums[1]) == 0 ? 1 : 2;\n        for (int i = 2, cnt = result; i < size(nums); ++i) {\n            cnt = cmp(nums[i - 1], nums[i]) == 0 ? 1 : cmp(nums[i - 2], nums[i - 1]) == cmp(nums[i - 1], nums[i]) ? cnt + 1 : 2;\n            result = max(result, cnt);\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// array\nclass Solution2 {\npublic:\n    int longestMonotonicSubarray(vector<int>& nums) {\n        int result = 1;\n        for (int i = 1, cnt1 = 1, cnt2 = 1; i < size(nums); ++i) {\n            cnt1 = nums[i - 1] < nums[i] ? cnt1 + 1 : 1;\n            cnt2 = nums[i - 1] > nums[i] ? cnt2 + 1 : 1;\n            result = max({result, cnt1, cnt2});\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// array\nclass Solution3 {\npublic:\n    int longestMonotonicSubarray(vector<int>& nums) {\n        const auto& f = [&](const auto& compare) {\n            int result = 0;\n            for (int i = 0, l = 0; i < size(nums); ++i) {\n                ++l;\n                if (i + 1 == size(nums) || !compare(nums[i], nums[i + 1])) {\n                    result = max(result, l);\n                    l = 0;\n                }\n            }\n            return result;\n        };\n\n        return max(f(less<int>()), f(greater<int>()));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def longestMonotonicSubarray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = cnt = 1 if len(nums) == 1 or cmp(nums[0], nums[1]) == 0 else 2\n        for i in xrange(2, len(nums)):\n            cnt = 1 if cmp(nums[i-1], nums[i]) == 0 else cnt+1 if cmp(nums[i-2], nums[i-1]) == cmp(nums[i-1], nums[i]) else 2\n            result = max(result, cnt)\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\n# array\nclass Solution2(object):\n    def longestMonotonicSubarray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = cnt1 = cnt2 = 1\n        for i in xrange(1, len(nums)):\n            cnt1 = cnt1+1 if nums[i-1] < nums[i] else 1\n            cnt2 = cnt2+1 if nums[i-1] > nums[i] else 1\n            result = max(result, cnt1, cnt2)\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\n# array\nclass Solution3(object):\n    def longestMonotonicSubarray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def f(compare):\n            result = l = 0\n            for i in xrange(len(nums)):\n                l += 1\n                if i+1 == len(nums) or not compare(nums[i], nums[i+1]):\n                    result = max(result, l)\n                    l = 0\n            return result\n\n        return max(f(lambda x, y: x < y), f(lambda x, y: x > y))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

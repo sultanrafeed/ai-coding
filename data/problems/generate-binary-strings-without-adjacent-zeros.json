@@ -1,0 +1,35 @@
+{
+  "id": "53e4b467-53a3-4fdb-bd6a-c8e9f52dc647",
+  "slug": "generate-binary-strings-without-adjacent-zeros",
+  "title": "Generate Binary Strings Without Adjacent Zeros",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a positive integer <code>n</code>.</p>\n\n<p>A binary string <code>x</code> is <strong>valid</strong> if all <span data-keyword=\"substring-nonempty\">substrings</span> of <code>x</code> of length 2 contain <strong>at least</strong> one <code>&quot;1&quot;</code>.</p>\n\n<p>Return all <strong>valid</strong> strings with length <code>n</code><strong>, </strong>in <em>any</em> order.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[&quot;010&quot;,&quot;011&quot;,&quot;101&quot;,&quot;110&quot;,&quot;111&quot;]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The valid strings of length 3 are: <code>&quot;010&quot;</code>, <code>&quot;011&quot;</code>, <code>&quot;101&quot;</code>, <code>&quot;110&quot;</code>, and <code>&quot;111&quot;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[&quot;0&quot;,&quot;1&quot;]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The valid strings of length 1 are: <code>&quot;0&quot;</code> and <code>&quot;1&quot;</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 18</code></li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "backtracking",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^n)\n// Space: O(n)\n\n// backtracking\nclass Solution {\npublic:\n    vector<string> validStrings(int n) {\n        vector<string> result;\n        string curr;\n        const function<void (int)> backtracking = [&](int i) {\n            if (i == n) {\n                result.push_back(curr);\n                return;\n            }\n            if (empty(curr) || curr.back() == '1') {\n                curr.push_back('0');\n                backtracking(i + 1);\n                curr.pop_back();\n            }\n            curr.push_back('1');\n            backtracking(i + 1);\n            curr.pop_back();\n        };\n\n        backtracking(0);\n        return result;\n    }\n};\n\n// Time:  O(n * 2^n)\n// Space: O(n * 2^n)\n// bfs\nclass Solution2 {\npublic:\n    vector<string> validStrings(int n) {\n        vector<string> result;\n        vector<string> q = {\"\"};\n        for (int _ = 0; _ < n; ++_) {\n            vector<string> new_q;\n            for (const auto& x : q) {\n                if (empty(x) || x.back() == '1') {\n                    new_q.push_back(x + '0');\n                }\n                new_q.push_back(x + '1');\n            }\n            q = move(new_q);\n        }\n        return q;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^n)\n# Space: O(n)\n\n# backtracking\nclass Solution(object):\n    def validStrings(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        def backtracking(i):\n            if i == n:\n                result.append(\"\".join(curr))\n                return\n            if not curr or curr[-1] == '1':\n                curr.append('0')\n                backtracking(i+1)\n                curr.pop()\n            curr.append('1')\n            backtracking(i+1)\n            curr.pop()\n\n        result, curr = [], []\n        backtracking(0)\n        return result\n\n\n# Time:  O(n * 2^n)\n# Space: O(n * 2^n)\n# bfs\nclass Solution2(object):\n    def validStrings(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        q = [[]]\n        for _ in xrange(n):\n            new_q = []\n            for x in q:\n                if not x or x[-1] == '1':\n                    new_q.append(x+['0'])\n                new_q.append(x+['1'])\n            q = new_q\n        return [\"\".join(x) for x in q]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "46b32cbd-e47f-4ba1-8274-8a7c22ee10f2",
+  "slug": "plus-one",
+  "title": "Plus One",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <strong>large integer</strong> represented as an integer array <code>digits</code>, where each <code>digits[i]</code> is the <code>i<sup>th</sup></code> digit of the integer. The digits are ordered from most significant to least significant in left-to-right order. The large integer does not contain any leading <code>0</code>&#39;s.</p>\n\n<p>Increment the large integer by one and return <em>the resulting array of digits</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> digits = [1,2,3]\n<strong>Output:</strong> [1,2,4]\n<strong>Explanation:</strong> The array represents the integer 123.\nIncrementing by one gives 123 + 1 = 124.\nThus, the result should be [1,2,4].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> digits = [4,3,2,1]\n<strong>Output:</strong> [4,3,2,2]\n<strong>Explanation:</strong> The array represents the integer 4321.\nIncrementing by one gives 4321 + 1 = 4322.\nThus, the result should be [4,3,2,2].\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> digits = [9]\n<strong>Output:</strong> [1,0]\n<strong>Explanation:</strong> The array represents the integer 9.\nIncrementing by one gives 9 + 1 = 10.\nThus, the result should be [1,0].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= digits.length &lt;= 100</code></li>\n\t<li><code>0 &lt;= digits[i] &lt;= 9</code></li>\n\t<li><code>digits</code> does not contain any leading <code>0</code>&#39;s.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// in-place solution\nclass Solution {\npublic:\n    vector<int> plusOne(vector<int>& digits) {\n        for (int i = digits.size() - 1; i >= 0; --i) {\n            if (digits[i] == 9) {\n                digits[i] = 0;\n            } else {\n                ++digits[i];\n                return digits;\n            }\n        }\n        digits[0] = 1;\n        digits.emplace_back(0);\n        return digits;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution2 {\npublic:\n    vector<int> plusOne(vector<int>& digits) {\n        vector<int> result(digits.rbegin(), digits.rend());\n        int carry = 1;\n        for (auto& num : result) {\n            num += carry;\n            carry = num / 10;\n            num %= 10;\n        }\n        if (carry == 1) {\n            result.emplace_back(carry);\n        }\n        reverse(result.begin(), result.end());\n        return result;  \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def plusOne(self, digits):\n        \"\"\"\n        :type digits: List[int]\n        :rtype: List[int]\n        \"\"\"\n        for i in reversed(xrange(len(digits))):\n            if digits[i] == 9:\n                digits[i] = 0\n            else:\n                digits[i] += 1\n                return digits\n        digits[0] = 1\n        digits.append(0)\n        return digits\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    def plusOne(self, digits):\n        \"\"\"\n        :type digits: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = digits[::-1]\n        carry = 1\n        for i in xrange(len(result)):\n            result[i] += carry\n            carry, result[i] = divmod(result[i], 10)\n        if carry:\n            result.append(carry)\n        return result[::-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

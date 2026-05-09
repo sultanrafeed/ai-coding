@@ -1,0 +1,41 @@
+{
+  "id": "728d025e-55e8-4972-b935-c00ed86ad3ee",
+  "slug": "sum-of-consecutive-subsequences",
+  "title": "Sum of Consecutive Subsequences",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2]\n[1,4,2,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// combinatorics, prefix sum, freq table, dp\nclass Solution {\npublic:\n    int getSum(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        const auto& count = [&](int d) {\n            int result = 0;\n            unordered_map<int, int> cnt, prefix;\n            for (const auto& x : nums) {\n                const int64_t c = (cnt[x - d] + 1) % MOD;\n                cnt[x] = (cnt[x] + c) % MOD;\n                const int total = (prefix[x - d] + (x * c) % MOD) % MOD;\n                prefix[x] = (prefix[x] + total) % MOD;\n                result = (result + total) % MOD;\n            }\n            return result;\n        };\n    \n        return ((count(+1) + count(-1)) % MOD - accumulate(cbegin(nums), cend(nums), 0, [](const auto& accu, const auto& x) {\n            return (accu + x) % MOD;\n        }) % MOD + MOD) % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# combinatorics, prefix sum, freq table, dp\nclass Solution(object):\n    def getSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def count(d):\n            result = 0\n            cnt = collections.defaultdict(int)\n            prefix = collections.defaultdict(int)\n            for x in nums:\n                c = (cnt[x-d]+1)%MOD\n                cnt[x] = (cnt[x]+c)%MOD\n                total = (prefix[x-d]+x*c)%MOD\n                prefix[x] = (prefix[x]+total)%MOD\n                result = (result+total)%MOD\n            return result\n    \n        MOD = 10**9+7\n        return (count(+1)+count(-1)-reduce(lambda accu, x: (accu+x)%MOD, nums, 0))%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

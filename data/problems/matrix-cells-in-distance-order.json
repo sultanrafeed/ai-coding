@@ -1,0 +1,37 @@
+{
+  "id": "67657be4-1c45-4b60-876e-7c9d85bccecd",
+  "slug": "matrix-cells-in-distance-order",
+  "title": "Matrix Cells in Distance Order",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given four integers <code>row</code>, <code>cols</code>, <code>rCenter</code>, and <code>cCenter</code>. There is a <code>rows x cols</code> matrix and you are on the cell with the coordinates <code>(rCenter, cCenter)</code>.</p>\n\n<p>Return <em>the coordinates of all cells in the matrix, sorted by their <strong>distance</strong> from </em><code>(rCenter, cCenter)</code><em> from the smallest distance to the largest distance</em>. You may return the answer in <strong>any order</strong> that satisfies this condition.</p>\n\n<p>The <strong>distance</strong> between two cells <code>(r<sub>1</sub>, c<sub>1</sub>)</code> and <code>(r<sub>2</sub>, c<sub>2</sub>)</code> is <code>|r<sub>1</sub> - r<sub>2</sub>| + |c<sub>1</sub> - c<sub>2</sub>|</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> rows = 1, cols = 2, rCenter = 0, cCenter = 0\n<strong>Output:</strong> [[0,0],[0,1]]\n<strong>Explanation:</strong> The distances from (0, 0) to other cells are: [0,1]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> rows = 2, cols = 2, rCenter = 0, cCenter = 1\n<strong>Output:</strong> [[0,1],[0,0],[1,1],[1,0]]\n<strong>Explanation:</strong> The distances from (0, 1) to other cells are: [0,1,1,2]\nThe answer [[0,1],[1,1],[0,0],[1,0]] would also be accepted as correct.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> rows = 2, cols = 3, rCenter = 1, cCenter = 2\n<strong>Output:</strong> [[1,2],[0,2],[1,1],[0,1],[1,0],[0,0]]\n<strong>Explanation:</strong> The distances from (1, 2) to other cells are: [0,1,1,2,2,3]\nThere are other answers that would also be accepted as correct, such as [[1,2],[1,1],[0,2],[1,0],[0,1],[0,0]].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= rows, cols &lt;= 100</code></li>\n\t<li><code>0 &lt;= rCenter &lt; rows</code></li>\n\t<li><code>0 &lt;= cCenter &lt; cols</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "geometry",
+    "sorting",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<vector<int>> allCellsDistOrder(int R, int C, int r0, int c0) {\n        vector<vector<int>> result{{r0, c0}};\n        for (auto d = 1; d < R + C; ++d) {\n            append(R, C, r0 - d, c0, &result);\n            for (int x = -d + 1; x < d; ++x) {\n                append(R, C, r0 + x, c0 + d - abs(x), &result);\n                append(R, C, r0 + x, c0 + abs(x) - d, &result);\n            }\n            append(R, C, r0 + d, c0, &result);\n         }\n         return result;\n    }\n    \nprivate:\n    void append(int R, int C, int r, int c,\n                vector<vector<int>> *result) {\n        if (0 <= r && r < R && 0 <= c && c < C) {\n            result->emplace_back(vector<int>{r, c});\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    def allCellsDistOrder(self, R, C, r0, c0):\n        \"\"\"\n        :type R: int\n        :type C: int\n        :type r0: int\n        :type c0: int\n        :rtype: List[List[int]]\n        \"\"\"\n        def append(R, C, r, c, result):\n            if 0 <= r < R and 0 <= c < C:\n                result.append([r, c])\n            \n        result = [[r0, c0]]\n        for d in xrange(1, R+C):\n            append(R, C, r0-d, c0, result)\n            for x in xrange(-d+1, d):\n                append(R, C, r0+x, c0+abs(x)-d, result)\n                append(R, C, r0+x, c0+d-abs(x), result)\n            append(R, C, r0+d, c0, result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

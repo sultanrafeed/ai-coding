@@ -1,0 +1,33 @@
+{
+  "id": "1c29e5c8-0a40-4ce9-a059-336abc4e5ae7",
+  "slug": "out-of-boundary-paths",
+  "title": "Out of Boundary Paths",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There is an <code>m x n</code> grid with a ball. The ball is initially at the position <code>[startRow, startColumn]</code>. You are allowed to move the ball to one of the four adjacent cells in the grid (possibly out of the grid crossing the grid boundary). You can apply <strong>at most</strong> <code>maxMove</code> moves to the ball.</p>\n\n<p>Given the five integers <code>m</code>, <code>n</code>, <code>maxMove</code>, <code>startRow</code>, <code>startColumn</code>, return the number of paths to move the ball out of the grid boundary. Since the answer can be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/28/out_of_boundary_paths_1.png\" style=\"width: 500px; height: 296px;\" />\n<pre>\n<strong>Input:</strong> m = 2, n = 2, maxMove = 2, startRow = 0, startColumn = 0\n<strong>Output:</strong> 6\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/28/out_of_boundary_paths_2.png\" style=\"width: 500px; height: 293px;\" />\n<pre>\n<strong>Input:</strong> m = 1, n = 3, maxMove = 3, startRow = 0, startColumn = 1\n<strong>Output:</strong> 12\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= m, n &lt;= 50</code></li>\n\t<li><code>0 &lt;= maxMove &lt;= 50</code></li>\n\t<li><code>0 &lt;= startRow &lt; m</code></li>\n\t<li><code>0 &lt;= startColumn &lt; n</code></li>\n</ul>\n",
+  "patterns": [
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(N * m * n)\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    int findPaths(int m, int n, int N, int x, int y) {\n        const auto M = 1000000000 + 7;\n        vector<vector<vector<int>>> dp(2, vector<vector<int>>(m, vector<int>(n)));\n        int result = 0;\n        for (int moves = 0; moves < N; ++moves) {\n            for (int i = 0; i < m; ++i) {\n                for (int j = 0; j < n; ++j) {\n                    dp[(moves + 1) % 2][i][j] = (((i == 0 ? 1 : dp[moves % 2][i - 1][j]) +\n                                                  (i == m - 1 ? 1 : dp[moves % 2][i + 1][j])) % M +\n                                                 ((j == 0 ? 1 : dp[moves % 2][i][j - 1]) +\n                                                  (j == n - 1 ? 1 : dp[moves % 2][i][j + 1])) % M) % M;\n                }\n            }\n        }\n        return dp[N % 2][x][y];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(N * m * n)\n# Space: O(m * n)\n\nclass Solution(object):\n    def findPaths(self, m, n, N, x, y):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :type N: int\n        :type x: int\n        :type y: int\n        :rtype: int\n        \"\"\"\n        M = 1000000000 + 7\n        dp = [[[0 for _ in xrange(n)] for _ in xrange(m)] for _ in xrange(2)]\n        for moves in xrange(N):\n            for i in xrange(m):\n                for j in xrange(n):\n                    dp[(moves + 1) % 2][i][j] = (((1 if (i == 0) else dp[moves % 2][i - 1][j]) + \\\n                                                  (1 if (i == m - 1) else dp[moves % 2][i + 1][j])) % M + \\\n                                                 ((1 if (j == 0) else dp[moves % 2][i][j - 1]) + \\\n                                                  (1 if (j == n - 1) else dp[moves % 2][i][j + 1])) % M) % M\n        return dp[N % 2][x][y]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

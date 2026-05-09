@@ -1,0 +1,36 @@
+{
+  "id": "e296c0d1-80c9-4108-a67c-6dee1cfbc85d",
+  "slug": "intersection-of-multiple-arrays",
+  "title": "Intersection of Multiple Arrays",
+  "difficulty": "easy",
+  "descriptionHtml": "Given a 2D integer array <code>nums</code> where <code>nums[i]</code> is a non-empty array of <strong>distinct</strong> positive integers, return <em>the list of integers that are present in <strong>each array</strong> of</em> <code>nums</code><em> sorted in <strong>ascending order</strong></em>.\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [[<u><strong>3</strong></u>,1,2,<u><strong>4</strong></u>,5],[1,2,<u><strong>3</strong></u>,<u><strong>4</strong></u>],[<u><strong>3</strong></u>,<u><strong>4</strong></u>,5,6]]\n<strong>Output:</strong> [3,4]\n<strong>Explanation:</strong> \nThe only integers present in each of nums[0] = [<u><strong>3</strong></u>,1,2,<u><strong>4</strong></u>,5], nums[1] = [1,2,<u><strong>3</strong></u>,<u><strong>4</strong></u>], and nums[2] = [<u><strong>3</strong></u>,<u><strong>4</strong></u>,5,6] are 3 and 4, so we return [3,4].</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [[1,2,3],[4,5,6]]\n<strong>Output:</strong> []\n<strong>Explanation:</strong> \nThere does not exist any integer present both in nums[0] and nums[1], so we return an empty list [].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= sum(nums[i].length) &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i][j] &lt;= 1000</code></li>\n\t<li>All the values of <code>nums[i]</code> are <strong>unique</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sorting",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l + r), n = len(nums), l = len(nums[0])\n// Space: O(r), r = max(nums)-min(nums)\n\n// freq table, counting sort\nclass Solution {\npublic:\n    vector<int> intersection(vector<vector<int>>& nums) {\n        static const int MAX_NUM = 1000;\n        vector<int> cnt(MAX_NUM + 1);\n        for (const auto& num : nums) {\n            for (const auto& x : num) {\n                ++cnt[x];\n            }\n        }\n        vector<int> result;\n        for (int i = 1; i <= MAX_NUM; ++i) {\n            if (cnt[i] == size(nums)) {\n                result.emplace_back(i);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n * l + r), n = len(nums), l = len(nums[0]), r = max(nums)-min(nums)\n// Space: O(l)\n// hash table, counting sort\nclass Solution2 {\npublic:\n    vector<int> intersection(vector<vector<int>>& nums) {\n        unordered_set<int> lookup(cbegin(nums[0]), cend(nums[0]));\n        for (int i = 1; i < size(nums); ++i) {\n            unordered_set<int> new_lookup;\n            for (const auto& x : nums[i]) {\n                if (lookup.count(x)) {\n                    new_lookup.emplace(x);\n                }\n            }\n            lookup = move(new_lookup);\n        }\n        if (empty(lookup)) {\n            return {};\n        }\n        const int mn = *min_element(cbegin(lookup), cend(lookup));\n        const int mx = *max_element(cbegin(lookup), cend(lookup));\n        vector<int> result;\n        for (int i = mn; i <= mx; ++i) {\n            if (lookup.count(i)) {\n                result.emplace_back(i);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n * l + llogl), n = len(nums), l = len(nums[0])\n// Space: O(l)\n// hash table, sort\nclass Solution3 {\npublic:\n    vector<int> intersection(vector<vector<int>>& nums) {\n        unordered_set<int> lookup(cbegin(nums[0]), cend(nums[0]));\n        for (int i = 1; i < size(nums); ++i) {\n            unordered_set<int> new_lookup;\n            for (const auto& x : nums[i]) {\n                if (lookup.count(x)) {\n                    new_lookup.emplace(x);\n                }\n            }\n            lookup = move(new_lookup);\n        }\n        vector<int> result(cbegin(lookup), cend(lookup));\n        sort(begin(result), end(result));\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l + r), n = len(nums), l = len(nums[0])\n# Space: O(r), r = max(nums)-min(nums)\n\n# freq table, counting sort\nclass Solution(object):\n    def intersection(self, nums):\n        \"\"\"\n        :type nums: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        MAX_NUM = 1000\n        cnt = [0]*(MAX_NUM+1)\n        for num in nums:\n            for x in num:\n                cnt[x] += 1\n        return [i for i in xrange(1, MAX_NUM+1) if cnt[i] == len(nums)]\n\n\n# Time:  O(n * l + r), n = len(nums), l = len(nums[0]), r = max(nums)-min(nums)\n# Space: O(l)\n# hash table, counting sort\nclass Solution2(object):\n    def intersection(self, nums):\n        \"\"\"\n        :type nums: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        result = set(nums[0])\n        for i in xrange(1, len(nums)):\n            result = set(x for x in nums[i] if x in result)\n        return [i for i in xrange(min(result), max(result)+1) if i in result] if result else []\n\n\n# Time:  O(n * l + llogl), n = len(nums), l = len(nums[0])\n# Space: O(l)\n# hash table, sort\nclass Solution3(object):\n    def intersection(self, nums):\n        \"\"\"\n        :type nums: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        result = set(nums[0])\n        for i in xrange(1, len(nums)):\n            result = set(x for x in nums[i] if x in result)\n        return sorted(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

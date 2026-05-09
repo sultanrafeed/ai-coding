@@ -1,0 +1,37 @@
+{
+  "id": "9a5b2b15-a543-4c35-ad7e-847c254cfd11",
+  "slug": "find-the-n-th-value-after-k-seconds",
+  "title": "Find the N-th Value After K Seconds",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two integers <code>n</code> and <code>k</code>.</p>\n\n<p>Initially, you start with an array <code>a</code> of <code>n</code> integers where <code>a[i] = 1</code> for all <code>0 &lt;= i &lt;= n - 1</code>. After each second, you simultaneously update each element to be the sum of all its preceding elements plus the element itself. For example, after one second, <code>a[0]</code> remains the same, <code>a[1]</code> becomes <code>a[0] + a[1]</code>, <code>a[2]</code> becomes <code>a[0] + a[1] + a[2]</code>, and so on.</p>\n\n<p>Return the <strong>value</strong> of <code>a[n - 1]</code> after <code>k</code> seconds.</p>\n\n<p>Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4, k = 5</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">56</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<table border=\"1\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th>Second</th>\n\t\t\t<th>State After</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>0</td>\n\t\t\t<td>[1,1,1,1]</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>1</td>\n\t\t\t<td>[1,2,3,4]</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>2</td>\n\t\t\t<td>[1,3,6,10]</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>3</td>\n\t\t\t<td>[1,4,10,20]</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>4</td>\n\t\t\t<td>[1,5,15,35]</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>5</td>\n\t\t\t<td>[1,6,21,56]</td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 5, k = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">35</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<table border=\"1\">\n\t<tbody>\n\t\t<tr>\n\t\t\t<th>Second</th>\n\t\t\t<th>State After</th>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>0</td>\n\t\t\t<td>[1,1,1,1,1]</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>1</td>\n\t\t\t<td>[1,2,3,4,5]</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>2</td>\n\t\t\t<td>[1,3,6,10,15]</td>\n\t\t</tr>\n\t\t<tr>\n\t\t\t<td>3</td>\n\t\t\t<td>[1,4,10,20,35]</td>\n\t\t</tr>\n\t</tbody>\n</table>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n, k &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "simulation",
+    "combinatorics",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + k)\n// Space: O(n + k)\n\n// combinatorics\nclass Solution {\npublic:\n    int valueAfterKSeconds(int n, int k) {\n        return nCr((n - 1) + k, n - 1);\n    }\n\nprivate:\n    int nCr(int n, int k) {\n        if (k < 0 || k > n) {\n            return 0;\n        }\n        while (size(inv_) <= n) {  // lazy initialization\n            fact_.emplace_back(mulmod(fact_.back(), size(inv_)));\n            inv_.emplace_back(mulmod(inv_[MOD % size(inv_)], MOD - MOD / size(inv_)));  // https://cp-algorithms.com/algebra/module-inverse.html\n            inv_fact_.emplace_back(mulmod(inv_fact_.back(), inv_.back()));\n        }\n        return mulmod(mulmod(fact_[n], inv_fact_[n - k]), inv_fact_[k]);\n    }\n\n    uint32_t addmod(uint32_t a, uint32_t b) {  // avoid overflow\n        a %= MOD, b %= MOD;\n        if (MOD - a <= b) {\n            b -= MOD;  // relied on unsigned integer overflow in order to give the expected results\n        }\n        return a + b;\n    }\n\n    uint32_t submod(uint32_t a, uint32_t b) {\n        a %= MOD, b %= MOD;\n        return addmod(a, MOD - b);\n    }\n\n    // reference: https://stackoverflow.com/questions/12168348/ways-to-do-modulo-multiplication-with-primitive-types\n    uint32_t mulmod(uint32_t a, uint32_t b)  {  // avoid overflow\n        a %= MOD, b %= MOD;\n        uint32_t result = 0;\n        if (a < b) {\n            swap(a, b);\n        }\n        while (b > 0)  { \n            if (b % 2 == 1) {\n                result = addmod(result, a);\n            }\n            a = addmod(a, a);\n            b /= 2; \n        } \n        return result; \n    }\n   \n    static const uint32_t MOD = 1e9 + 7;\n    vector<int> fact_ = {1, 1};\n    vector<int> inv_ = {1, 1};\n    vector<int> inv_fact_ = {1, 1};\n};\n\n// Time:  O(n * k)\n// Space: O(n)\n// prefix sum\nclass Solution2 {\npublic:\n    int valueAfterKSeconds(int n, int k) {\n        static const uint32_t MOD = 1e9 + 7;\n\n        vector<int> prefix(n, 1);\n        for (int _ = 0; _ < k; ++_) {\n            for (int i = 1; i < n; ++i) {\n                prefix[i] = (prefix[i] + prefix[i - 1]) % MOD;\n            }\n        }\n        return prefix.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + k)\n# Space: O(n + k)\n\n# combinatorics\nclass Solution(object):\n    def valueAfterKSeconds(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        fact, inv, inv_fact = [[1]*2 for _ in xrange(3)]\n        def nCr(n, k):\n            if not (0 <= k <= n):\n                return 0\n            while len(inv) <= n:  # lazy initialization\n                fact.append(fact[-1]*len(inv) % MOD)\n                inv.append(inv[MOD%len(inv)]*(MOD-MOD//len(inv)) % MOD)  # https://cp-algorithms.com/algebra/module-inverse.html\n                inv_fact.append(inv_fact[-1]*inv[-1] % MOD)\n            return (fact[n]*inv_fact[n-k] % MOD) * inv_fact[k] % MOD\n\n        return nCr(n+k-1, k)\n\n\n# Time:  O(n * k)\n# Space: O(n)\n# prefix sum\nclass Solution2(object):\n    def valueAfterKSeconds(self, n, k):\n        \"\"\"\n        :type n: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        prefix = [1]*n\n        for _ in range(k):\n            for i in xrange(1, n):\n                prefix[i] = (prefix[i]+prefix[i-1])%MOD\n        return prefix[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

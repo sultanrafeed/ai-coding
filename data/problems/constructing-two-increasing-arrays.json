@@ -1,0 +1,40 @@
+{
+  "id": "0107def0-cd4a-4ac4-8c06-52cbc86ec6e8",
+  "slug": "constructing-two-increasing-arrays",
+  "title": "Constructing Two Increasing Arrays",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[]\n[1,0,1,1]\n[0,1,0,1]\n[1,0,0,1]\n[0,1,0,0,1]\n[0,0,0,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(min(m, n))\n\n// dp\nclass Solution {\npublic:\n    int minLargest(vector<int>& nums1, vector<int>& nums2) {\n        static const int INF = numeric_limits<int>::max();\n\n        if (size(nums1) < size(nums2)) {\n            swap(nums1, nums2);\n        }\n        vector<int> dp(size(nums2) + 1, INF);\n        dp[0] = 0;\n        for (int i = 0; i <= size(nums1); ++i) {\n            for (int j = 0; j <= size(nums2); ++j) {\n                if (!i && !j) {\n                    continue;\n                }\n                int curr = INF;\n                if (i - 1 >= 0) {\n                    if (dp[j] != INF) {\n                        curr = min(curr, dp[j] + (dp[j] % 2 == nums1[i - 1] % 2 ? 2 : 1));\n                    }\n                }\n                if (j - 1 >= 0) {\n                    if (dp[j - 1] != INF) {\n                        curr = min(curr, dp[j - 1] + (dp[j - 1] % 2 == nums2[j - 1] % 2 ? 2 : 1));\n                    }\n                }\n                dp[j] = curr;\n            }\n        }\n        return dp.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(min(m, n))\n\n# dp\nclass Solution(object):\n    def minLargest(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        if len(nums1) < len(nums2):\n            nums1, nums2 = nums2, nums1\n        dp = [float(\"inf\")]*(len(nums2)+1)\n        dp[0] = 0\n        for i in xrange(len(nums1)+1):\n            for j in xrange(len(nums2)+1):\n                if not i and not j:\n                    continue\n                curr = float(\"inf\")\n                if i-1 >= 0:\n                    curr = min(curr, dp[j]+(2 if dp[j]%2 == nums1[i-1]%2 else 1))\n                if j-1 >= 0:\n                    curr = min(curr, dp[j-1]+(2 if dp[j-1]%2 == nums2[j-1]%2 else 1))\n                dp[j] = curr\n        return dp[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "d5e48899-5983-491d-af16-9e97bbf3ac5c",
+  "slug": "palindrome-permutation",
+  "title": "Palindrome Permutation",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"code\"\n\"aab\"\n\"carerac\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool canPermutePalindrome(string s) {\n        bitset<256> bits;\n        for (const auto& c : s) {\n            bits.flip(c);\n        }\n        return bits.count() < 2;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def canPermutePalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        return sum(v % 2 for v in collections.Counter(s).values()) < 2",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

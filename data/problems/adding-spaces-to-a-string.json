@@ -1,0 +1,36 @@
+{
+  "id": "452e8d3a-ba46-4036-a259-781e57a24a98",
+  "slug": "adding-spaces-to-a-string",
+  "title": "Adding Spaces to a String",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> string <code>s</code> and a <strong>0-indexed</strong> integer array <code>spaces</code> that describes the indices in the original string where spaces will be added. Each space should be inserted <strong>before</strong> the character at the given index.</p>\n\n<ul>\n\t<li>For example, given <code>s = &quot;EnjoyYourCoffee&quot;</code> and <code>spaces = [5, 9]</code>, we place spaces before <code>&#39;Y&#39;</code> and <code>&#39;C&#39;</code>, which are at indices <code>5</code> and <code>9</code> respectively. Thus, we obtain <code>&quot;Enjoy <strong><u>Y</u></strong>our <u><strong>C</strong></u>offee&quot;</code>.</li>\n</ul>\n\n<p>Return<strong> </strong><em>the modified string <strong>after</strong> the spaces have been added.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;LeetcodeHelpsMeLearn&quot;, spaces = [8,13,15]\n<strong>Output:</strong> &quot;Leetcode Helps Me Learn&quot;\n<strong>Explanation:</strong> \nThe indices 8, 13, and 15 correspond to the underlined characters in &quot;Leetcode<u><strong>H</strong></u>elps<u><strong>M</strong></u>e<u><strong>L</strong></u>earn&quot;.\nWe then place spaces before those characters.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;icodeinpython&quot;, spaces = [1,5,7,9]\n<strong>Output:</strong> &quot;i code in py thon&quot;\n<strong>Explanation:</strong>\nThe indices 1, 5, 7, and 9 correspond to the underlined characters in &quot;i<u><strong>c</strong></u>ode<u><strong>i</strong></u>n<u><strong>p</strong></u>y<u><strong>t</strong></u>hon&quot;.\nWe then place spaces before those characters.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;spacing&quot;, spaces = [0,1,2,3,4,5,6]\n<strong>Output:</strong> &quot; s p a c i n g&quot;\n<strong>Explanation:</strong>\nWe are also able to place spaces before the first character of the string.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 3 * 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists only of lowercase and uppercase English letters.</li>\n\t<li><code>1 &lt;= spaces.length &lt;= 3 * 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= spaces[i] &lt;= s.length - 1</code></li>\n\t<li>All the values of <code>spaces</code> are <strong>strictly increasing</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "string",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// inplace solution\nclass Solution {\npublic:\n    string addSpaces(string s, vector<int>& spaces) {\n        int prev = size(s);\n        s.resize(size(s) + size(spaces));\n        for(int i = size(spaces) - 1; i >= 0; --i) {\n            for (int j = prev - 1; j >= spaces[i]; --j) {\n                s[j + 1 + i] = s[j];\n            }\n            s[spaces[i] + i] = ' ';\n            prev = spaces[i];\n        }\n        return s;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# inplace solution\nclass Solution(object):\n    def addSpaces(self, s, spaces):\n        \"\"\"\n        :type s: str\n        :type spaces: List[int]\n        :rtype: str\n        \"\"\"\n        prev = len(s)\n        s = list(s)\n        s.extend([None]*len(spaces))\n        for i in reversed(xrange(len(spaces))):\n            for j in reversed(xrange(spaces[i], prev)):\n                s[j+1+i] = s[j]\n            s[spaces[i]+i] = ' '\n            prev = spaces[i]\n        return \"\".join(s)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

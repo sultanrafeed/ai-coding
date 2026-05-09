@@ -1,0 +1,25 @@
+{
+  "id": "7e77db31-6987-4926-8581-b292b24d3e2c",
+  "slug": "isValidBST2",
+  "title": "Isvalidbst2",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(logn)\n\n/**\n * Definition for binary tree\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        bool isValidBST(TreeNode *root) {\n            return isValidBST(root, INT_MIN, INT_MAX);\n        }\n\n    private:\n        bool isValidBST(TreeNode *root, int lower, int upper) {\n            if(!root)\n                return true;\n            return root->val > lower && root->val < upper \n                && isValidBST(root->left, lower, root->val) \n                && isValidBST(root->right, root->val, upper);\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

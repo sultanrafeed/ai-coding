@@ -1,0 +1,34 @@
+{
+  "id": "bf3622d9-570a-4f55-876e-d01eb6800dd6",
+  "slug": "reverse-substrings-between-each-pair-of-parentheses",
+  "title": "Reverse Substrings Between Each Pair of Parentheses",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a string <code>s</code> that consists of lower case English letters and brackets.</p>\n\n<p>Reverse the strings in each pair of matching parentheses, starting from the innermost one.</p>\n\n<p>Your result should <strong>not</strong> contain any brackets.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;(abcd)&quot;\n<strong>Output:</strong> &quot;dcba&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;(u(love)i)&quot;\n<strong>Output:</strong> &quot;iloveu&quot;\n<strong>Explanation:</strong> The substring &quot;love&quot; is reversed first, then the whole string is reversed.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;(ed(et(oc))el)&quot;\n<strong>Output:</strong> &quot;leetcode&quot;\n<strong>Explanation:</strong> First, we reverse the substring &quot;oc&quot;, then &quot;etco&quot;, and finally, the whole string.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 2000</code></li>\n\t<li><code>s</code> only contains lower case English characters and parentheses.</li>\n\t<li>It is guaranteed that all parentheses are balanced.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    string reverseParentheses(string s) {\n        vector<int> stk;\n        unordered_map<int, int> lookup;\n        for (int i = 0; i < s.length(); ++i) {\n            if (s[i] == '(') {\n                stk.emplace_back(i);\n            } else if (s[i] == ')') {\n                int j = stk.back(); stk.pop_back();\n                lookup[i] = j, lookup[j] = i;\n            }\n        }\n        string result;\n        for (int i = 0, d = 1; i < s.length(); i += d) {\n            if (lookup.count(i)) {\n                i = lookup[i];\n                d *= -1;\n            } else {\n                result.push_back(s[i]);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n)\nclass Solution2 {\npublic:\n    string reverseParentheses(string s) {\n        vector<string> stk = {\"\"};\n        for (const auto& c : s) {\n            if (c == '(') {\n                stk.emplace_back();\n            } else if (c == ')') {\n                auto end = move(stk.back()); stk.pop_back();\n                reverse(end.begin(), end.end());\n                stk.back() += end;\n            } else {\n                stk.back().push_back(c);\n            }\n        }\n        return stk[0];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def reverseParentheses(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        stk, lookup = [], {}\n        for i, c in enumerate(s):\n            if c == '(':\n                stk.append(i)\n            elif c == ')':\n                j = stk.pop()\n                lookup[i], lookup[j] = j, i\n        result = []\n        i, d = 0, 1\n        while i < len(s):\n            if i in lookup:\n                i = lookup[i]\n                d *= -1\n            else:\n                result.append(s[i])\n            i += d\n        return \"\".join(result)\n\n\n# Time:  O(n^2)\n# Space: O(n)\nclass Solution2(object):\n    def reverseParentheses(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        stk = [[]]\n        for c in s:\n            if c == '(':\n                stk.append([])\n            elif c == ')':\n                end = stk.pop()\n                end.reverse()\n                stk[-1].extend(end)\n            else:\n                stk[-1].append(c)\n        return \"\".join(stk.pop())",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "2d1eea6c-ae68-4451-8adf-14150e9bde3f",
+  "slug": "minimum-operations-to-make-a-uni-value-grid",
+  "title": "Minimum Operations to Make a Uni-Value Grid",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a 2D integer <code>grid</code> of size <code>m x n</code> and an integer <code>x</code>. In one operation, you can <strong>add</strong> <code>x</code> to or <strong>subtract</strong> <code>x</code> from any element in the <code>grid</code>.</p>\n\n<p>A <strong>uni-value grid</strong> is a grid where all the elements of it are equal.</p>\n\n<p>Return <em>the <strong>minimum</strong> number of operations to make the grid <strong>uni-value</strong></em>. If it is not possible, return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/09/21/gridtxt.png\" style=\"width: 164px; height: 165px;\" />\n<pre>\n<strong>Input:</strong> grid = [[2,4],[6,8]], x = 2\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> We can make every element equal to 4 by doing the following: \n- Add x to 2 once.\n- Subtract x from 6 once.\n- Subtract x from 8 twice.\nA total of 4 operations were used.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/09/21/gridtxt-1.png\" style=\"width: 164px; height: 165px;\" />\n<pre>\n<strong>Input:</strong> grid = [[1,5],[2,3]], x = 1\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> We can make every element equal to 3.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/09/21/gridtxt-2.png\" style=\"width: 164px; height: 165px;\" />\n<pre>\n<strong>Input:</strong> grid = [[1,2],[3,4]], x = 2\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> It is impossible to make every element equal.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == grid.length</code></li>\n\t<li><code>n == grid[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= m * n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= x, grid[i][j] &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "sorting",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n) on average\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    int minOperations(vector<vector<int>>& grid, int x) {\n        vector<int> nums;\n        for (const auto& row : grid) {\n            nums.insert(end(nums), cbegin(row), cend(row));\n        }\n        int mod_group = -1;\n        for (const auto& num : nums) {\n            if (mod_group == -1) {\n                mod_group = num % x;\n            } else if (mod_group != num % x) {\n                return -1;\n            }\n        }\n        nth_element(begin(nums), begin(nums) + size(nums) / 2, end(nums));\n        const auto& median = nums[size(nums) / 2];\n        return accumulate(cbegin(nums), cend(nums), 0,\n                          [&median, &x](const auto& total, const auto& a) {\n                              return total + abs(a - median) / x;\n                          });\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n) on average\n# Space: O(m * n)\n\nimport random\n\nclass Solution(object):\n    def minOperations(self, grid, x):\n        \"\"\"\n        :type grid: List[List[int]]\n        :type x: int\n        :rtype: int\n        \"\"\"\n        def nth_element(nums, n, compare=lambda a, b: a < b):\n            def tri_partition(nums, left, right, target, compare):\n                mid = left\n                while mid <= right:\n                    if nums[mid] == target:\n                        mid += 1\n                    elif compare(nums[mid], target):\n                        nums[left], nums[mid] = nums[mid], nums[left]\n                        left += 1\n                        mid += 1\n                    else:\n                        nums[mid], nums[right] = nums[right], nums[mid]\n                        right -= 1\n                return left, right\n\n            left, right = 0, len(nums)-1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)\n                if pivot_left <= n <= pivot_right:\n                    return\n                elif pivot_left > n:\n                    right = pivot_left-1\n                else:  # pivot_right < n.\n                    left = pivot_right+1\n\n        nums = [v for row in grid for v in row]\n        if len(set(v%x for v in nums)) > 1:\n            return -1\n        nth_element(nums, len(nums)//2)\n        median = nums[len(nums)//2]\n        return sum(abs(v-median)//x for v in nums)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "1c0d0146-9329-435c-a229-fa32f75efd63",
+  "slug": "longest-happy-prefix",
+  "title": "Longest Happy Prefix",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>A string is called a <strong>happy prefix</strong> if is a <strong>non-empty</strong> prefix which is also a suffix (excluding itself).</p>\n\n<p>Given a string <code>s</code>, return <em>the <strong>longest happy prefix</strong> of</em> <code>s</code>. Return an empty string <code>&quot;&quot;</code> if no such prefix exists.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;level&quot;\n<strong>Output:</strong> &quot;l&quot;\n<strong>Explanation:</strong> s contains 4 prefix excluding itself (&quot;l&quot;, &quot;le&quot;, &quot;lev&quot;, &quot;leve&quot;), and suffix (&quot;l&quot;, &quot;el&quot;, &quot;vel&quot;, &quot;evel&quot;). The largest prefix which is also suffix is given by &quot;l&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;ababab&quot;\n<strong>Output:</strong> &quot;abab&quot;\n<strong>Explanation:</strong> &quot;abab&quot; is the largest prefix which is also suffix. They can overlap in the original string.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> contains only lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "rolling-hash",
+    "string-matching",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// kmp solution\nclass Solution {\npublic:\n    string longestPrefix(string s) {\n        return s.substr(0, getPrefix(s).back() + 1);\n    }\n\nprivate:\n    vector<int> getPrefix(const string& pattern) {\n        vector<int> prefix(pattern.length(), -1);\n        int j = -1;\n        for (int i = 1; i < pattern.length(); ++i) {\n            while (j != -1 && pattern[j + 1] != pattern[i]) {\n                j = prefix[j];\n            }\n            if (pattern[j + 1] == pattern[i]) {\n                ++j;\n            }\n            prefix[i] = j;\n        }\n        return prefix;\n    }\n};\n\n\n// Time:  O(n) on average\n// Space: O(1)\n// rolling-hash solution\nclass Solution2 {\npublic:\n    string longestPrefix(string s) {\n        static const int M = 1e9 + 7;\n        static const int D = 26;\n        int result = 0;\n        uint64_t prefix = 0, suffix = 0, power = 1;\n        for (int i = 0; i + 1 < s.length(); ++i) {\n            prefix = (prefix * D % M + (s[s.length() - (i + 1)] - 'a')) % M;\n            suffix = (suffix + (s[i] - 'a') * power % M) % M;\n            power = (power * D) % M;\n            if (prefix == suffix) {\n                // we assume M is a very large prime without hash collision\n                // assert(check(i + 1, s));\n                result = i + 1;\n            }\n        }\n        return s.substr(0, result);\n    }\n\nprivate:\n    bool check(int l, const string& s) {\n        for (int i = 0; i < l; ++i) {\n            if (s[i] != s[s.length() - l + i]) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# kmp solution\nclass Solution(object):\n    def longestPrefix(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        def getPrefix(pattern):\n            prefix = [-1]*len(pattern)\n            j = -1\n            for i in xrange(1, len(pattern)):\n                while j != -1 and pattern[j+1] != pattern[i]:\n                    j = prefix[j]\n                if pattern[j+1] == pattern[i]:\n                    j += 1\n                prefix[i] = j\n            return prefix\n        \n        return s[:getPrefix(s)[-1]+1]\n\n\n# Time:  O(n) on average\n# Space: O(1)\n# rolling-hash solution\nclass Solution2(object):\n    def longestPrefix(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        M = 10**9+7\n        D = 26\n        def check(l, s):\n            for i in xrange(l):\n                if s[i] != s[len(s)-l+i]:\n                    return False\n            return True\n    \n        result, prefix, suffix, power = 0, 0, 0, 1\n        for i in xrange(len(s)-1):\n            prefix = (prefix*D + (ord(s[i])-ord('a'))) % M\n            suffix = (suffix + (ord(s[len(s)-(i+1)])-ord('a'))*power) % M\n            power = (power*D)%M\n            if prefix == suffix:\n                # we assume M is a very large prime without hash collision\n                # assert(check(i+1, s))\n                result = i+1\n        return s[:result]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

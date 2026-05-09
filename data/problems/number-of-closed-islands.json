@@ -1,0 +1,37 @@
+{
+  "id": "298dd5f8-5ff1-4307-84e6-bd7eeda0de33",
+  "slug": "number-of-closed-islands",
+  "title": "Number of Closed Islands",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a 2D&nbsp;<code>grid</code> consists of <code>0s</code> (land)&nbsp;and <code>1s</code> (water).&nbsp; An <em>island</em> is a maximal 4-directionally connected group of <code><font face=\"monospace\">0</font>s</code> and a <em>closed island</em>&nbsp;is an island <strong>totally</strong>&nbsp;(all left, top, right, bottom) surrounded by <code>1s.</code></p>\n\n<p>Return the number of <em>closed islands</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/10/31/sample_3_1610.png\" style=\"width: 240px; height: 120px;\" /></p>\n\n<pre>\n<strong>Input:</strong> grid = [[1,1,1,1,1,1,1,0],[1,0,0,0,0,1,1,0],[1,0,1,0,1,1,1,0],[1,0,0,0,0,1,0,1],[1,1,1,1,1,1,1,0]]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> \nIslands in gray are closed because they are completely surrounded by water (group of 1s).</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/10/31/sample_4_1610.png\" style=\"width: 160px; height: 80px;\" /></p>\n\n<pre>\n<strong>Input:</strong> grid = [[0,0,1,0,0],[0,1,0,1,0],[0,1,1,1,0]]\n<strong>Output:</strong> 1\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[1,1,1,1,1,1,1],\n&nbsp;              [1,0,0,0,0,0,1],\n&nbsp;              [1,0,1,1,1,0,1],\n&nbsp;              [1,0,1,0,1,0,1],\n&nbsp;              [1,0,1,1,1,0,1],\n&nbsp;              [1,0,0,0,0,0,1],\n               [1,1,1,1,1,1,1]]\n<strong>Output:</strong> 2\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= grid.length, grid[0].length &lt;= 100</code></li>\n\t<li><code>0 &lt;= grid[i][j] &lt;=1</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "breadth-first-search",
+    "union-find",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int closedIsland(vector<vector<int>>& grid) {\n        for (int j = 0; j < grid[0].size(); ++j) {\n            fill(&grid, 0, j);\n            fill(&grid, grid.size() - 1, j);\n        }\n        for (int i = 1; i + 1 < grid.size(); ++i) {\n            fill(&grid, i, 0);\n            fill(&grid, i, grid[0].size() - 1);\n        }\n        int result = 0;\n        for (int i = 1; i + 1 < grid.size(); ++i) {\n            for (int j = 1; j + 1 < grid[0].size(); ++j) {\n                if (fill(&grid, i, j)) {\n                    ++result;\n                }\n            }\n        }\n        return result;\n    }\n\nprivate:\n    bool fill(vector<vector<int>> *grid, int i, int j) {\n        static vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};\n        if (i < 0 || j < 0 ||\n            i >= grid->size() || j >= (*grid)[i].size() ||\n            (*grid)[i][j]) {\n            return false;\n        }\n        (*grid)[i][j] = 1;\n        for (const auto& [dx, dy] : directions) {\n            fill(grid, i + dx, j + dy);\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    def closedIsland(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n        def fill(grid, i, j):\n            if not (0 <= i < len(grid) and \n                    0 <= j < len(grid[0]) and \n                    grid[i][j] == 0):\n                return False\n            grid[i][j] = 1\n            for dx, dy in directions:\n                fill(grid, i+dx, j+dy)\n            return True\n\n        for j in xrange(len(grid[0])):\n            fill(grid, 0, j)\n            fill(grid, len(grid)-1, j)\n        for i in xrange(1, len(grid)):\n            fill(grid, i, 0)\n            fill(grid, i, len(grid[0])-1)\n        result = 0\n        for i in xrange(1, len(grid)-1):\n            for j in xrange(1, len(grid[0])-1):\n                if fill(grid, i, j):\n                    result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

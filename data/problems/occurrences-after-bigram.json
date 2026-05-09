@@ -1,0 +1,39 @@
+{
+  "id": "3e9c1bd5-6c95-4809-a5ca-1ad831d73dce",
+  "slug": "occurrences-after-bigram",
+  "title": "Occurrences After Bigram",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two strings <code>first</code> and <code>second</code>, consider occurrences in some text of the form <code>&quot;first second third&quot;</code>, where <code>second</code> comes immediately after <code>first</code>, and <code>third</code> comes immediately after <code>second</code>.</p>\n\n<p>Return <em>an array of all the words</em> <code>third</code> <em>for each occurrence of</em> <code>&quot;first second third&quot;</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> text = \"alice is a good girl she is a good student\", first = \"a\", second = \"good\"\n<strong>Output:</strong> [\"girl\",\"student\"]\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> text = \"we will we will rock you\", first = \"we\", second = \"will\"\n<strong>Output:</strong> [\"we\",\"rock\"]\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= text.length &lt;= 1000</code></li>\n\t<li><code>text</code> consists of lowercase English letters and spaces.</li>\n\t<li>All the words in <code>text</code> are separated by <strong>a single space</strong>.</li>\n\t<li><code>1 &lt;= first.length, second.length &lt;= 10</code></li>\n\t<li><code>first</code> and <code>second</code> consist of lowercase English letters.</li>\n\t<li><code>text</code> will not have any leading or trailing spaces.</li>\n</ul>\n",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"alice is a good girl she is a good student\"\n\"a\"\n\"good\"\n\"we will we will rock you\"\n\"we\"\n\"will\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<string> findOcurrences(string text, string first, string second) {\n        vector<string> result;\n        first.push_back(' ');\n        second.push_back(' ');\n        string third;\n        int i = 0, j = 0, k = 0;\n        while (k < text.length()) {\n            auto c = text[k++];\n            if (i != first.length()) {\n                if (c == first[i]) {\n                    ++i;\n                } else {\n                    i = 0;\n                }\n                continue;\n            }\n            if (j != second.length()) {\n                if (c == second[j]) {\n                    ++j;\n                } else {\n                    k -= j + 1;\n                    i = 0, j = 0;\n                }\n                continue;\n            }\n            if (c != ' ') {\n                third.push_back(c);\n                continue;\n            }\n            k -= second.length() + third.length() + 1;\n            i = 0, j = 0;\n            result.emplace_back(move(third));\n        }\n        if (!third.empty()) {\n            result.emplace_back(move(third));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findOcurrences(self, text, first, second):\n        \"\"\"\n        :type text: str\n        :type first: str\n        :type second: str\n        :rtype: List[str]\n        \"\"\"\n        result = []\n        first += ' '\n        second += ' '\n        third = []\n        i, j, k = 0, 0, 0\n        while k < len(text):\n            c = text[k]\n            k += 1\n            if i != len(first):\n                if c == first[i]:\n                    i += 1\n                else:\n                    i = 0\n                continue\n            if j != len(second):\n                if c == second[j]:\n                    j += 1\n                else:\n                    k -= j+1\n                    i, j = 0, 0\n                continue\n            if c != ' ':\n                third.append(c)\n                continue\n            k -= len(second) + len(third) + 1\n            i, j = 0, 0\n            result.append(\"\".join(third))\n            third = []\n        if third:\n            result.append(\"\".join(third))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

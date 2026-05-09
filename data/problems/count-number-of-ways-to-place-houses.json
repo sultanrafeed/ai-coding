@@ -1,0 +1,33 @@
+{
+  "id": "4a56e23c-2c20-4943-b9df-f0c025ed8581",
+  "slug": "count-number-of-ways-to-place-houses",
+  "title": "Count Number of Ways to Place Houses",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There is a street with <code>n * 2</code> <strong>plots</strong>, where there are <code>n</code> plots on each side of the street. The plots on each side are numbered from <code>1</code> to <code>n</code>. On each plot, a house can be placed.</p>\n\n<p>Return <em>the number of ways houses can be placed such that no two houses are adjacent to each other on the same side of the street</em>. Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>Note that if a house is placed on the <code>i<sup>th</sup></code> plot on one side of the street, a house can also be placed on the <code>i<sup>th</sup></code> plot on the other side of the street.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 1\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> \nPossible arrangements:\n1. All plots are empty.\n2. A house is placed on one side of the street.\n3. A house is placed on the other side of the street.\n4. Two houses are placed, one on each side of the street.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/05/12/arrangements.png\" style=\"width: 500px; height: 500px;\" />\n<pre>\n<strong>Input:</strong> n = 2\n<strong>Output:</strong> 9\n<strong>Explanation:</strong> The 9 possible arrangements are shown in the diagram above.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// matrix exponentiation\nclass Solution {\npublic:\n    int countHousePlacements(int n) {\n        vector<vector<int>> T = {{1, 1},\n                                 {1, 0}};\n        int64_t result = matrixMult({{2, 1}}, matrixExpo(T, n - 1))[0][0];  // [a1, a0] * T^(n-1) = [an, a(n-1)]\n        return result * result % MOD;\n    }\n\nprivate:\n    vector<vector<int>> matrixExpo(const vector<vector<int>>& A, int pow) {\n        vector<vector<int>> result(A.size(), vector<int>(A.size()));\n        vector<vector<int>> A_exp(A);\n        for (int i = 0; i < A.size(); ++i) {\n            result[i][i] = 1;\n        }\n        while (pow) {\n            if (pow % 2 == 1) {\n                result = matrixMult(result, A_exp);\n            }\n            A_exp = matrixMult(A_exp, A_exp);\n            pow /= 2;\n        }\n        return result;\n    }\n\n    vector<vector<int>> matrixMult(const vector<vector<int>>& A, const vector<vector<int>>& B) {\n        vector<vector<int>> result(A.size(), vector<int>(B[0].size()));\n        for (int i = 0; i < A.size(); ++i) {\n            for (int j = 0; j < B[0].size(); ++j) {\n                int64_t entry = 0;\n                for (int k = 0; k < B.size(); ++k) {\n                    entry = (static_cast<int64_t>(A[i][k]) * B[k][j] % MOD + entry) % MOD;\n                }\n                result[i][j] = static_cast<int>(entry);\n            }\n        }\n        return result;\n    }\n    const int MOD = 1e9 + 7;\n};\n\n\n// Time:  O(n)\n// Space: O(1)\n// dp\nclass Solution2 {\npublic:\n    int countHousePlacements(int n) {\n        static const int MOD = 1e9 + 7;\n        int64_t prev = 1, curr = 2;\n        for (int _ = 0; _ < n - 1; ++_) {\n            tie(prev, curr) = pair(curr, (prev + curr) % MOD);\n        }\n        return curr * curr % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nimport itertools\n\n\n# matrix exponentiation\nclass Solution(object):\n    def countHousePlacements(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def matrix_mult(A, B):\n            ZB = zip(*B)\n            return [[sum(a*b % MOD for a, b in itertools.izip(row, col)) % MOD for col in ZB] for row in A]\n \n        def matrix_expo(A, K):\n            result = [[int(i == j) for j in xrange(len(A))] for i in xrange(len(A))]\n            while K:\n                if K % 2:\n                    result = matrix_mult(result, A)\n                A = matrix_mult(A, A)\n                K /= 2\n            return result\n\n        T = [[1, 1],\n             [1, 0]]\n        return pow(matrix_mult([[2, 1]], matrix_expo(T, n-1))[0][0], 2, MOD)  # [a1, a0] * T^(n-1) = [an, a(n-1)]\n\n    \n# Time:  O(n)\n# Space: O(1)\n# dp\nclass Solution2(object):\n    def countHousePlacements(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        prev, curr = 1, 2\n        for _ in xrange(n-1):\n            prev, curr = curr, (prev+curr)%MOD\n        return pow(curr, 2, MOD)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

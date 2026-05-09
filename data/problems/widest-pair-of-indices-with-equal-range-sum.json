@@ -1,0 +1,41 @@
+{
+  "id": "22af507f-55f2-428f-a2ee-a6a760e25b0f",
+  "slug": "widest-pair-of-indices-with-equal-range-sum",
+  "title": "Widest Pair of Indices With Equal Range Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,0,1]\n[0,1,1,0]\n[0,1]\n[1,1]\n[0]\n[1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int widestPairOfIndices(vector<int>& nums1, vector<int>& nums2) {\n        unordered_map<int, int> lookup = {{0, -1}};\n        int result = 0, total = 0;\n        for (int i = 0; i < size(nums1); ++i) {\n            total += nums1[i] - nums2[i];\n            if (!lookup.count(total)) {\n                lookup[total] = i;\n            }\n            result = max(result, i - lookup[total]);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport itertools\n\n\nclass Solution(object):\n    def widestPairOfIndices(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        lookup = {0:-1}\n        result = total = 0\n        for i, (n1, n2) in enumerate(itertools.izip(nums1, nums2)):\n            total += n1-n2\n            if total not in lookup:\n                lookup[total] = i\n            result = max(result, i-lookup[total])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

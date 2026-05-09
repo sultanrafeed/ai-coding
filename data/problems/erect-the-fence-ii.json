@@ -1,0 +1,41 @@
+{
+  "id": "bbfe9c78-4f74-4985-babe-0b4976418002",
+  "slug": "erect-the-fence-ii",
+  "title": "Erect the Fence II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "geometry"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,1],[2,2],[2,0],[2,4],[3,3],[4,2]]\n[[1,2],[2,2],[4,2]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n) on average\n// Space: O(n)\n\n// reference: https://en.wikipedia.org/wiki/Smallest-circle_problem\nclass Solution {\npublic:\n    vector<double> outerTrees(vector<vector<int>>& trees) {\n        random_shuffle(begin(trees), end(trees));\n        vector<vector<double>> boundaries;\n        const auto& result = Welzl(trees, &boundaries, 0);\n        return {result.first[0], result.first[1], result.second};\n    }\n\nprivate:\n    pair<vector<double>, double> Welzl(\n        const vector<vector<int>>& points,\n        vector<vector<double>> *boundaries,\n        int curr) {\n\n        if (curr == size(points) || size(*boundaries) == 3) {\n            return trivial(*boundaries);\n        }\n        vector<double> p = {double(points[curr][0]), double(points[curr][1])};\n        const auto& result = Welzl(points, boundaries, curr + 1);\n        if (!empty(result.first) && inside(result, p)) {\n            return result;\n        }\n        boundaries->emplace_back(move(p));\n        const auto& result2 = Welzl(points, boundaries, curr + 1);\n        boundaries->pop_back();\n        return result2;\n    }\n\n    pair<vector<double>, double> trivial(const vector<vector<double>>& boundaries) {  // circumscribed circle\n        if (empty(boundaries)) {\n            return {{}, 0.0};\n        }\n        if (size(boundaries) == 1) {\n            return {boundaries[0], 0.0};\n        }\n        if (size(boundaries) == 2) {\n            return circle_from_2_points(boundaries[0], boundaries[1]);\n        }\n        return circle_from_3_points(boundaries[0], boundaries[1], boundaries[2]);\n    }\n\n    double dist(const vector<double>& a, const vector<double>& b) {\n        return sqrt((a[0] - b[0]) * (a[0] - b[0]) + (a[1] - b[1]) * (a[1] - b[1]));\n    }\n\n    bool inside(const pair<vector<double>, double>& c, const vector<double>& p) {\n        static const double EPS = 1e-5;\n        return dist(c.first, p) < c.second + EPS;\n    }\n\n    vector<double> circle_center(int bx, int by, int cx, int cy) {\n        double B = bx * bx + by * by;\n        double C = cx * cx + cy * cy;\n        double D = bx * cy - by * cx;\n        return {(cy * B - by * C) / (2 * D), (bx * C - cx * B) / (2 * D)};\n    }\n\n    pair<vector<double>, double> circle_from_2_points(\n        const vector<double>& A,\n        const vector<double>& B) {\n\n        vector<double> C = {(A[0] + B[0]) / 2.0, (A[1] + B[1]) / 2.0};\n        return {C, dist(A, B) / 2.0};\n    }\n\n    pair<vector<double>, double> circle_from_3_points(\n        const vector<double>& A,\n        const vector<double>& B,\n        const vector<double>& C) {\n\n        vector<double> I = circle_center(B[0] - A[0], B[1] - A[1], C[0] - A[0], C[1] - A[1]);\n        I[0] += A[0];\n        I[1] += A[1];\n        return {I, dist(I, A)};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n) on average\n# Space: O(n)\n\nimport random\n\n\n# reference: https://en.wikipedia.org/wiki/Smallest-circle_problem\nclass Solution(object):\n    def outerTrees(self, trees):\n        \"\"\"\n        :type trees: List[List[int]]\n        :rtype: List[float]\n        \"\"\"\n        def dist(a, b):\n            return ((a[0]-b[0])**2 + (a[1]-b[1])**2)**0.5\n\n        def inside(c, p):\n            return dist(c[0], p) < c[1]+EPS\n\n        def circle_center(bx, by, cx, cy):\n            B = bx*bx + by*by\n            C = cx*cx + cy*cy\n            D = bx*cy - by*cx\n            return [float(cy*B - by*C)/(2*D),\n                    float(bx*C - cx*B)/(2*D)]\n\n        def circle_from_2_points(A, B):\n            C = [(A[0]+B[0])/2.0, (A[1]+B[1])/2.0]\n            return [C, dist(A, B)/2.0]\n\n        def circle_from_3_points(A, B, C):\n            I = circle_center(B[0]-A[0], B[1]-A[1],\n                              C[0]-A[0], C[1]-A[1])\n            I[0] += A[0]\n            I[1] += A[1]\n            return [I, dist(I, A)]\n\n        def trivial(boundaries):  # circumscribed circle\n            if not boundaries:\n                return None\n            if len(boundaries) == 1:\n                return [boundaries[0], 0.0]\n            if len(boundaries) == 2:\n                return circle_from_2_points(boundaries[0], boundaries[1])\n            return circle_from_3_points(boundaries[0], boundaries[1], boundaries[2])\n\n        def Welzl(points, boundaries, curr):\n            if curr == len(points) or len(boundaries) == 3:\n                return trivial(boundaries)\n            result = Welzl(points, boundaries, curr+1)\n            if result is not None and inside(result, points[curr]):\n                return result\n            boundaries.append(points[curr])\n            result = Welzl(points, boundaries, curr+1)\n            boundaries.pop()\n            return result\n\n        EPS = 1e-5\n        random.seed(0)\n        random.shuffle(trees)\n        result = Welzl(trees, [], 0)\n        return result[0][0], result[0][1], result[1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

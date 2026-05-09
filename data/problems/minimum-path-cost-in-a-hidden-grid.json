@@ -1,0 +1,40 @@
+{
+  "id": "0993c5a8-4497-419e-b6f2-f777bbca2515",
+  "slug": "minimum-path-cost-in-a-hidden-grid",
+  "title": "Minimum Path Cost in a Hidden Grid",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "breadth-first-search",
+    "graph",
+    "heap-priority-queue",
+    "matrix",
+    "interactive",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n * log(m * n))\n// Space: O(m * n)\n\n/**\n * class GridMaster {\n *   public:\n *     bool canMove(char direction);\n *     void move(char direction);\n *     boolean isTarget();\n * };\n */\n\nclass Solution {\npublic:\n    int findShortestPath(GridMaster &master) {\n        const pair<int, int> start = {MAX_M, MAX_N};\n        pair<int, int> target = {0, 0};\n        bool found = false;\n        unordered_set<int> lookup;\n        unordered_map<int, unordered_map<int, int>> adj;\n        dfs(start, &target, &master, &found, &lookup, &adj);\n        if (!found) {\n            return -1;\n        }\n        return dijkstra(adj, start, target);\n    }\n\nprivate:\n    int index(pair<int, int> p) {\n        return (2 * MAX_N + 1) * p.first + p.second;\n    }\n\n    int dijkstra(const unordered_map<int, unordered_map<int, int>>& adj,\n                 const pair<int, int>& start,\n                 const pair<int, int>& target) {\n        unordered_map<int, int> dist = {{index(start), 0}};\n        priority_queue<pair<int, int>, vector<pair<int, int>>, greater<pair<int, int>>> min_heap;\n        min_heap.emplace(0, index(start));\n        while (!empty(min_heap)) {\n            const auto [curr, u] = min_heap.top(); min_heap.pop();\n            if (dist[u] < curr) {\n                continue;\n            }\n            for (const auto& [v, w] : adj.at(u)) {\n                if ((dist.count(v) && dist[v] - curr <= w)) {\n                    continue;\n                }\n                dist[v] = curr + w;\n                min_heap.emplace(curr + w, v);\n            }\n        }\n        return dist.count(index(target)) ? dist[index(target)] : -1;\n    }\n\n    void dfs(const pair<int, int>& pos,\n             pair<int, int> *target,\n             GridMaster *master,\n             bool *found,\n             unordered_set<int> *lookup,\n             unordered_map<int, unordered_map<int, int>> *adj) {\n        static const unordered_map<char, char> rollback = {\n            {'L', 'R'}, {'R', 'L'}, {'U', 'D'}, {'D', 'U'}\n        };\n        static const unordered_map<char, pair<int, int>> directions = {\n            {'L', {0, -1}},\n            {'R', {0, 1}},\n            {'U', {-1, 0}},\n            {'D', {1, 0}}\n        };\n        \n        if (!(*found) && master->isTarget()) {\n            *found = true;\n            *target = pos;\n        }\n        lookup->emplace(index(pos));\n        for (const auto& [d, dir] : directions) {\n            if (!master->canMove(d)) {\n                continue;\n            }\n            pair<int, int> nei = {pos.first + dir.first, pos.second + dir.second};\n            if ((*adj)[index(pos)].count(index(nei))) {\n                continue;\n            }\n            (*adj)[index(pos)][index(nei)] = master->move(d);\n            if (!lookup->count(index(nei))) {\n                dfs(nei, target, master, found, lookup, adj);\n            }\n            (*adj)[index(nei)][index(pos)] = master->move(rollback.at(d));\n        }\n    }\n\n    static const int MAX_M = 100;\n    static const int MAX_N = 100;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n * log(m * n))\n# Space: O(m * n)\n\nclass GridMaster(object):\n    def canMove(self, direction):\n        pass\n\n    def move(self, direction):\n        pass\n\n    def isTarget(self):\n        pass\n\n\nimport collections\nimport heapq\n\n\nclass Solution(object):\n    def findShortestPath(self, master):\n        \"\"\"\n        :type master: GridMaster\n        :rtype: int\n        \"\"\"\n        directions = {'L': (0, -1), 'R': (0, 1), 'U': (-1, 0), 'D': (1, 0)}\n        rollback = {'L': 'R', 'R': 'L', 'U': 'D', 'D': 'U'}\n\n        def dfs(pos, target, master, lookup, adj):\n            if target[0] is None and master.isTarget():\n                target[0] = pos\n            lookup.add(pos)\n            for d, (di, dj) in directions.iteritems():\n                if not master.canMove(d):\n                    continue\n                nei = (pos[0]+di, pos[1]+dj)\n                if nei in adj[pos]:\n                    continue\n                adj[pos][nei] = master.move(d)\n                if nei not in lookup:\n                    dfs(nei, target, master, lookup, adj)\n                adj[nei][pos] = master.move(rollback[d])\n                        \n        def dijkstra(adj, start, target):\n            dist = {start:0}\n            min_heap = [(0, start)]\n            while min_heap:\n                curr, u = heapq.heappop(min_heap)\n                if dist[u] < curr:\n                    continue\n                for v, w in adj[u].iteritems():\n                    if v in dist and dist[v] <= curr+w:\n                        continue\n                    dist[v] = curr+w\n                    heapq.heappush(min_heap, (curr+w, v))\n            return dist[target] if target in dist else -1 \n        \n        start = (0, 0)\n        target = [None]\n        adj = collections.defaultdict(dict)\n        dfs(start, target, master, set(), adj)\n        if not target[0]:\n            return -1\n        return dijkstra(adj, start, target[0])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

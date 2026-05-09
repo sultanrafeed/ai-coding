@@ -1,0 +1,35 @@
+{
+  "id": "da1f751b-2ff6-46c6-8365-15642af1e94a",
+  "slug": "odd-string-difference",
+  "title": "Odd String Difference",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an array of equal-length strings <code>words</code>. Assume that the length of each string is <code>n</code>.</p>\n\n<p>Each string <code>words[i]</code> can be converted into a <strong>difference integer array</strong> <code>difference[i]</code> of length <code>n - 1</code> where <code>difference[i][j] = words[i][j+1] - words[i][j]</code> where <code>0 &lt;= j &lt;= n - 2</code>. Note that the difference between two letters is the difference between their <strong>positions</strong> in the alphabet i.e.&nbsp;the position of <code>&#39;a&#39;</code> is <code>0</code>, <code>&#39;b&#39;</code> is <code>1</code>, and <code>&#39;z&#39;</code> is <code>25</code>.</p>\n\n<ul>\n\t<li>For example, for the string <code>&quot;acb&quot;</code>, the difference integer array is <code>[2 - 0, 1 - 2] = [2, -1]</code>.</li>\n</ul>\n\n<p>All the strings in words have the same difference integer array, <strong>except one</strong>. You should find that string.</p>\n\n<p>Return<em> the string in </em><code>words</code><em> that has different <strong>difference integer array</strong>.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;adc&quot;,&quot;wzy&quot;,&quot;abc&quot;]\n<strong>Output:</strong> &quot;abc&quot;\n<strong>Explanation:</strong> \n- The difference integer array of &quot;adc&quot; is [3 - 0, 2 - 3] = [3, -1].\n- The difference integer array of &quot;wzy&quot; is [25 - 22, 24 - 25]= [3, -1].\n- The difference integer array of &quot;abc&quot; is [1 - 0, 2 - 1] = [1, 1]. \nThe odd array out is [1, 1], so we return the corresponding string, &quot;abc&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;aaa&quot;,&quot;bob&quot;,&quot;ccc&quot;,&quot;ddd&quot;]\n<strong>Output:</strong> &quot;bob&quot;\n<strong>Explanation:</strong> All the integer arrays are [0, 0] except for &quot;bob&quot;, which corresponds to [13, -13].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= words.length &lt;= 100</code></li>\n\t<li><code>n == words[i].length</code></li>\n\t<li><code>2 &lt;= n &lt;= 20</code></li>\n\t<li><code>words[i]</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n), m is the number of words, n is the length of each word\n// Space: O(1)\n\n// freq table\nclass Solution {\npublic:\n    string oddString(vector<string>& words) {\n        for (int i = 0; i < size(words[0]) - 1; ++i) {\n            unordered_map<int, vector<int>> lookup;\n            for (int j = 0; j < size(words); ++j) {\n                if (size(lookup[words[j][i + 1] - words[j][i]]) < 2) {\n                    lookup[words[j][i + 1] - words[j][i]].emplace_back(j);\n                }\n            }\n            if (size(lookup) == 2) {\n                return size(cbegin(lookup)->second) == 1\n                       ? words[cbegin(lookup)->second[0]]\n                       : words[next(cbegin(lookup))->second[0]];\n            }\n        }\n        return \"\";\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n), m is the number of words, n is the length of each word\n# Space: O(1)\n\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def oddString(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: str\n        \"\"\"\n        for i in xrange(len(words[0])-1):\n            lookup = collections.defaultdict(list)\n            for j, w in enumerate(words):\n                if len(lookup[ord(w[i+1])-ord(w[i])]) < 2:\n                    lookup[ord(w[i+1])-ord(w[i])].append(j)\n            if len(lookup) == 2:\n                return next(words[l[0]] for l in lookup.itervalues() if len(l) == 1)\n\n\n# Time:  O(m * n), m is the number of words, n is the length of each word\n# Space: O(n)\nimport collections\n\n\n# freq table\nclass Solution2(object):\n    def oddString(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: str\n        \"\"\"\n        cnt = collections.Counter(tuple(ord(w[i+1])-ord(w[i]) for i in xrange(len(w)-1)) for w in words)\n        target = next(k for k, v in cnt.iteritems() if v == 1)\n        return next(w for w in words if tuple(ord(w[i+1])-ord(w[i]) for i in xrange(len(w)-1)) == target)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

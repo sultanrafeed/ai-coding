@@ -1,0 +1,42 @@
+{
+  "id": "ea149bc6-aaba-42c8-96e4-e24679e202b9",
+  "slug": "lru-cache",
+  "title": "LRU Cache",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Design a data structure that follows the constraints of a <strong><a href=\"https://en.wikipedia.org/wiki/Cache_replacement_policies#LRU\" target=\"_blank\">Least Recently Used (LRU) cache</a></strong>.</p>\n\n<p>Implement the <code>LRUCache</code> class:</p>\n\n<ul>\n\t<li><code>LRUCache(int capacity)</code> Initialize the LRU cache with <strong>positive</strong> size <code>capacity</code>.</li>\n\t<li><code>int get(int key)</code> Return the value of the <code>key</code> if the key exists, otherwise return <code>-1</code>.</li>\n\t<li><code>void put(int key, int value)</code> Update the value of the <code>key</code> if the <code>key</code> exists. Otherwise, add the <code>key-value</code> pair to the cache. If the number of keys exceeds the <code>capacity</code> from this operation, <strong>evict</strong> the least recently used key.</li>\n</ul>\n\n<p>The functions <code>get</code> and <code>put</code> must each run in <code>O(1)</code> average time complexity.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;LRUCache&quot;, &quot;put&quot;, &quot;put&quot;, &quot;get&quot;, &quot;put&quot;, &quot;get&quot;, &quot;put&quot;, &quot;get&quot;, &quot;get&quot;, &quot;get&quot;]\n[[2], [1, 1], [2, 2], [1], [3, 3], [2], [4, 4], [1], [3], [4]]\n<strong>Output</strong>\n[null, null, null, 1, null, -1, null, -1, 3, 4]\n\n<strong>Explanation</strong>\nLRUCache lRUCache = new LRUCache(2);\nlRUCache.put(1, 1); // cache is {1=1}\nlRUCache.put(2, 2); // cache is {1=1, 2=2}\nlRUCache.get(1);    // return 1\nlRUCache.put(3, 3); // LRU key was 2, evicts key 2, cache is {1=1, 3=3}\nlRUCache.get(2);    // returns -1 (not found)\nlRUCache.put(4, 4); // LRU key was 1, evicts key 1, cache is {4=4, 3=3}\nlRUCache.get(1);    // return -1 (not found)\nlRUCache.get(3);    // return 3\nlRUCache.get(4);    // return 4\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= capacity &lt;= 3000</code></li>\n\t<li><code>0 &lt;= key &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= value &lt;= 10<sup>5</sup></code></li>\n\t<li>At most <code>2 * 10<sup>5</sup></code> calls will be made to <code>get</code> and <code>put</code>.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "linked-list",
+    "design",
+    "doubly-linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"LRUCache\",\"put\",\"put\",\"get\",\"put\",\"get\",\"put\",\"get\",\"get\",\"get\"]\n[[2],[1,1],[2,2],[1],[3,3],[2],[4,4],[1],[3],[4]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1), per operation.\n// Space: O(k), k is the capacity of cache.\n\n#include <list>\n\nclass LRUCache {\npublic:\n    LRUCache(int capacity) : capa_(capacity) {\n    }\n    \n    int get(int key) {\n        if (!map_.count(key)) {\n            return -1;\n        }\n        // It key exists, update it.\n        const auto value = map_[key]->second;\n        update(key, value);\n        return value;\n    }\n    \n    void put(int key, int value) {\n        if (capa_ <= 0) {\n            return;\n        }\n\n        // If cache is full while inserting, remove the last one.\n        if (!map_.count(key) && list_.size() == capa_) {\n            auto del = list_.front(); list_.pop_front();\n            map_.erase(del.first);\n        }\n        update(key, value);\n    }\n    \nprivate:\n    list<pair<int, int>> list_; // key, value\n    unordered_map<int, list<pair<int, int>>::iterator> map_; // key, list iterator\n    int capa_;\n    \n    // Update (key, iterator of (key, value)) pair\n    void update(int key, int value) {\n        auto it = map_.find(key);\n        if (it != map_.end()) {\n            list_.erase(it->second);\n        }\n        list_.emplace_back(key, value);\n        map_[key] = prev(end(list_));\n    }\n};\n\n// Time:  O(1), per operation.\n// Space: O(k), k is the capacity of cache.\nclass LRUCache2 {\npublic:\n    LRUCache2(int capacity) : capa_(capacity) {\n    }\n    \n    int get(int key) {\n        if (!map_.count(key)) {\n            return -1;\n        }\n        // It key exists, update it.\n        const auto value = map_[key]->second;\n        update(key, value);\n        return value;\n    }\n    \n    void put(int key, int value) {\n        if (capa_ <= 0) {\n            return;\n        }\n    \n        // If cache is full while inserting, remove the last one.\n        if (!map_.count(key) && list_.size() == capa_) {\n            auto del = list_.back(); list_.pop_back();\n            map_.erase(del.first);\n        }\n        update(key, value);\n    }\n    \nprivate:\n    list<pair<int, int>> list_; // key, value\n    unordered_map<int, list<pair<int, int>>::iterator> map_; // key, list iterator\n    int capa_;\n    \n    // Update (key, iterator of (key, value)) pair\n    void update(int key, int value) {\n        auto it = map_.find(key);\n        if (it != map_.end()) {\n            list_.erase(it->second);\n        }\n        list_.emplace_front(key, value);\n        map_[key] = list_.begin();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1), per operation.\n# Space: O(k), k is the capacity of cache.\n\nimport collections\n\n\n# using OrderedDict\nclass LRUCache(object):\n    def __init__(self, capacity):\n        self.cache = collections.OrderedDict()\n        self.capacity = capacity\n\n    def get(self, key):\n        if key not in self.cache:\n            return -1\n        val = self.cache[key]\n        self.__update(key, val)\n        return val\n\n    def put(self, key, val):\n        if key not in self.cache and len(self.cache) == self.capacity:\n            self.cache.popitem(last=False)\n        self.__update(key, val)\n    \n    def __update(self, key, val):\n        if key in self.cache:\n            del self.cache[key]\n        self.cache[key] = val\n\n\n# Time:  O(1), per operation.\n# Space: O(k), k is the capacity of cache.\n\n\nclass ListNode(object):\n    def __init__(self, key, val):\n        self.val = val\n        self.key = key\n        self.next = None\n        self.prev = None\n\nclass LinkedList(object):\n    def __init__(self):\n        self.head = None\n        self.tail = None\n\n    def insert(self, node):\n        node.next, node.prev = None, None  # avoid dirty node\n        if self.head is None:\n            self.head = node\n        else:\n            self.tail.next = node\n            node.prev = self.tail\n        self.tail = node\n\n    def delete(self, node):\n        if node.prev:\n            node.prev.next = node.next\n        else:\n            self.head = node.next\n        if node.next:\n            node.next.prev = node.prev\n        else:\n            self.tail = node.prev\n        node.next, node.prev = None, None  # make node clean\n\nclass LRUCache2(object):\n\n    def __init__(self, capacity):\n        self.list = LinkedList()\n        self.dict = {}\n        self.capacity = capacity\n\n    def get(self, key):\n        if key not in self.dict:\n            return -1\n        val = self.dict[key].val\n        self.__update(key, val)\n        return val\n\n    def put(self, key, val):\n        if key not in self.dict and len(self.dict) == self.capacity:\n            del self.dict[self.list.head.key]\n            self.list.delete(self.list.head)\n        self.__update(key, val)\n\n    def __update(self, key, val):\n        if key in self.dict:\n            self.list.delete(self.dict[key])\n        node = ListNode(key, val)\n        self.list.insert(node)\n        self.dict[key] = node",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

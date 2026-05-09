@@ -1,0 +1,41 @@
+{
+  "id": "7a39663e-a2aa-44c6-8bdc-cf13108222fa",
+  "slug": "number-of-ways-to-separate-numbers",
+  "title": "Number of Ways to Separate Numbers",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You wrote down many <strong>positive</strong> integers in a string called <code>num</code>. However, you realized that you forgot to add commas to seperate the different numbers. You remember that the list of integers was <strong>non-decreasing</strong> and that <strong>no</strong> integer had leading zeros.</p>\n\n<p>Return <em>the <strong>number of possible lists of integers</strong> that you could have written down to get the string </em><code>num</code>. Since the answer may be large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;327&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> You could have written down the numbers:\n3, 27\n327\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;094&quot;\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> No numbers can have leading zeros and all numbers must be positive.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;0&quot;\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> No numbers can have leading zeros and all numbers must be positive.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num.length &lt;= 3500</code></li>\n\t<li><code>num</code> consists of digits <code>&#39;0&#39;</code> through <code>&#39;9&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming",
+    "suffix-array"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"327\"\n\"094\"\n\"0\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    int numberOfCombinations(string num) {\n        static const int MOD = 1e9 + 7;\n\n        const auto& lcp = find_longest_common_prefix(num);\n        vector<vector<int64_t>> dp(size(num), vector<int64_t>(size(num)));  // dp[i][l]: the count of numbers ending at num[i], where the length of the last number is l+1\n        dp[0][0] = int(num[0] != '0');\n        for (int i = 1; i < size(num); ++i) {\n            dp[i][i] = dp[i - 1][i - 1];\n            if (num[i] == '0') {\n                continue;\n            }\n            for (int l = 1, accu = 0; i + l - 1 < size(num); ++l) {\n                const int ni = i + l - 1;\n                dp[ni][l - 1] = accu;  // accumulated count where the length of the second to last number ending at num[i-1] is shorter than the length of the last number ending at num[i+l-1]\n                if (i - l < 0) {\n                    continue;\n                }\n                if (num[i - l] != '0' && is_less_or_equal_to_with_same_length(num, lcp, i - l, i, l)) {\n                    dp[ni][l - 1] = (dp[ni][l - 1] + dp[i - 1][l - 1]) % MOD;\n                }\n                accu = (accu + dp[i - 1][l - 1]) % MOD;\n            }\n        }\n        return accumulate(cbegin(dp.back()), cend(dp.back()), 0,\n                          [](const auto& a, const auto& b) {\n                              return (a + b) % MOD;\n                          });\n    }\n\nprivate:\n    vector<vector<int64_t>> find_longest_common_prefix(const string& num) {\n        vector<vector<int64_t>> lcp(size(num) + 1, vector<int64_t>(size(num) + 1));  // lcp[i][j]: longest length of the common prefix which starts at num[i], num[j]\n        for (int i = size(lcp) - 2; i >= 0; --i) {\n            for (int j = size(lcp[i]) - 2; j >= 0; --j) {\n                if (num[i] == num[j]) {\n                    lcp[i][j] = lcp[i + 1][j + 1] + 1;\n                }\n            }\n        }\n        return lcp;\n    }\n\n    bool is_less_or_equal_to_with_same_length(\n        const string& num,\n        const vector<vector<int64_t>>& lcp,\n        int i, int j, int l) {\n        return lcp[i][j] >= l || num[i + lcp[i][j]] < num[j + lcp[i][j]];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n^2)\n\nclass Solution(object):\n    def numberOfCombinations(self, num):\n        \"\"\"\n        :type num: str\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def find_longest_common_prefix(num):\n            lcp = [[0]*(len(num)+1) for _ in xrange(len(num)+1)]  # lcp[i][j]: longest length of the common prefix which starts at num[i], num[j]\n            for i in reversed(xrange(len(lcp)-1)):\n                for j in reversed(xrange(len(lcp[0])-1)):\n                    if num[i] == num[j]:\n                        lcp[i][j] = lcp[i+1][j+1]+1\n            return lcp\n\n        def is_less_or_equal_to_with_same_length(num, lcp, i, j, l):\n            return lcp[i][j] >= l or num[i+lcp[i][j]] < num[j+lcp[i][j]]\n\n        lcp = find_longest_common_prefix(num)\n        dp = [[0]*len(num) for _ in xrange(len(num))]  # dp[i][l]: the count of numbers ending at num[i], where the length of the last number is l+1\n        dp[0][0] = int(num[0] != '0')\n        for i in xrange(1, len(num)):\n            dp[i][i] = dp[i-1][i-1]\n            if num[i] == '0':\n                continue\n            accu = 0\n            for l in xrange(len(num)-i+1):\n                ni = i+l-1\n                dp[ni][l-1] = accu  # accumulated count where the length of the second to last number ending at num[i-1] is shorter than the length of the last number ending at num[i+l-1]\n                if i-l < 0:\n                    continue\n                if num[i-l] != '0' and is_less_or_equal_to_with_same_length(num, lcp, i-l, i, l):\n                    dp[ni][l-1] = (dp[ni][l-1] + dp[i-1][l-1]) % MOD\n                accu = (accu + dp[i-1][l-1]) % MOD\n        return reduce(lambda total, x: (total+x)%MOD, dp[-1], 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

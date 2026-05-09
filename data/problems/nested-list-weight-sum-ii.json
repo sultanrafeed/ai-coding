@@ -1,0 +1,41 @@
+{
+  "id": "9bf3fe97-0f77-4069-a31e-b4fe51f624c7",
+  "slug": "nested-list-weight-sum-ii",
+  "title": "Nested List Weight Sum II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "stack",
+    "depth-first-search",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,1],2,[1,1]]\n[1,[4,[6]]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n/**\n * // This is the interface that allows for creating nested lists.\n * // You should not implement it, or speculate about its implementation\n * class NestedInteger {\n *   public:\n *     // Return true if this NestedInteger holds a single integer, rather than a nested list.\n *     bool isInteger() const;\n *\n *     // Return the single integer that this NestedInteger holds, if it holds a single integer\n *     // The result is undefined if this NestedInteger holds a nested list\n *     int getInteger() const;\n *\n *     // Return the nested list that this NestedInteger holds, if it holds a nested list\n *     // The result is undefined if this NestedInteger holds a single integer\n *     const vector<NestedInteger> &getList() const;\n * };\n */\nclass Solution {\npublic:\n    int depthSumInverse(vector<NestedInteger>& nestedList) {\n        vector<int> result;\n        for (const auto& list : nestedList) {\n            depthSumInverseHelper(list, 0, &result);\n        }\n\n        int sum = 0;\n        for (int i = result.size() - 1; i >= 0; --i) {\n            sum += result[i] * (result.size() - i);\n        }\n        return sum;\n    }\n\nprivate:\n    void depthSumInverseHelper(const NestedInteger &list, int depth, vector<int> *result) {\n        if (result->size() < depth + 1) {\n            result->emplace_back(0);\n        }\n        if (list.isInteger()) {\n            (*result)[depth] += list.getInteger();\n        } else {\n            for (const auto& l : list.getList()) {\n                depthSumInverseHelper(l, depth + 1, result);\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass Solution(object):\n    def depthSumInverse(self, nestedList):\n        \"\"\"\n        :type nestedList: List[NestedInteger]\n        :rtype: int\n        \"\"\"\n        def depthSumInverseHelper(list, depth, result):\n            if len(result) < depth + 1:\n                result.append(0)\n            if list.isInteger():\n                result[depth] += list.getInteger()\n            else:\n                for l in list.getList():\n                    depthSumInverseHelper(l, depth + 1, result)\n\n        result = []\n        for list in nestedList:\n            depthSumInverseHelper(list, 0, result)\n\n        sum = 0\n        for i in reversed(xrange(len(result))):\n            sum += result[i] * (len(result) - i)\n        return sum",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

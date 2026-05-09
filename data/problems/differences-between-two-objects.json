@@ -1,0 +1,31 @@
+{
+  "id": "f8ba7231-12d8-44c4-b414-e8e1d125eecb",
+  "slug": "differences-between-two-objects",
+  "title": "Differences Between Two Objects",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{}\n{\"a\": 1, \"b\": 2}\n{\"a\": 1, \"v\": 3, \"x\": [], \"z\": {\"a\": null}}\n{\"a\": 2, \"v\": 4, \"x\": [], \"z\": {\"a\": 2}}\n{\"a\": 5, \"v\": 6, \"z\": [1,2,4, [2,5,7]]}\n{\"a\": 5, \"v\": 7, \"z\": [1,2,3, [1]]}\n{\"a\":{\"b\":1}}\n{\"a\":[5]}\n{\"a\": [1, 2, {}],\"b\": false}\n{\"b\": false, \"a\": [1, 2, {}]}",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// dfs\nfunction objDiff(obj1: any, obj2: any): any {\n    let result = {};\n    for (const [k, o1] of Object.entries(obj1)) {\n        if (!(k in obj2)) {\n            continue;\n        }\n        const o2 = obj2[k];\n        if (typeof o1 === 'object' && typeof o2 === 'object' && Array.isArray(o1) === Array.isArray(o2)) {\n            result[k] = objDiff(o1, o2);\n            if (Object.keys(result[k]).length === 0) {\n                delete result[k];\n            }\n        } else if (o1 !== o2) {\n            result[k] = [o1, o2];\n        }\n    }\n    return result;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

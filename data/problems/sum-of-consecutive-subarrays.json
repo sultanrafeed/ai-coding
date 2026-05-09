@@ -1,0 +1,35 @@
+{
+  "id": "6171db3c-8fd3-48b9-a7b6-c15c268cd856",
+  "slug": "sum-of-consecutive-subarrays",
+  "title": "Sum of Consecutive Subarrays",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// combinatorics\nclass Solution {\npublic:\n    int getSum(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n        const auto& count = [&](int d) {\n            int64_t result = 0, total = 0, cnt = 0;\n            for (int i = 0; i < size(nums); ++i) {\n                total = (total + ++cnt * nums[i]) % MOD;\n                result = (result + total) % MOD;\n                if (i + 1 < size(nums) && nums[i + 1] - nums[i] == d) {\n                    continue;\n                }\n                total = cnt = 0;\n            }\n            return result;\n        };\n\n        return (count(1) + count(-1) - accumulate(cbegin(nums), cend(nums), 0ll, [](const auto& a, const auto& b) {\n            return (a + b) % MOD;\n        })) % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# combinatorics\nclass Solution(object):\n    def getSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def count(d):\n            result = total = l = 0\n            for i in xrange(len(nums)):\n                l += 1\n                total = (total+nums[i]*l)%MOD\n                result = (result+total)%MOD\n                if i+1 < len(nums) and nums[i+1]-nums[i] == d:\n                    continue\n                total = l = 0\n            return result\n    \n        return (count(1)+count(-1)-reduce(lambda accu, x: (accu+x)%MOD, nums, 0))%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

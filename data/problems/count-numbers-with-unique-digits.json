@@ -1,0 +1,35 @@
+{
+  "id": "ebe84f15-4d22-43a4-bea2-b7a6ce2bec9d",
+  "slug": "count-numbers-with-unique-digits",
+  "title": "Count Numbers with Unique Digits",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, return the count of all numbers with unique digits, <code>x</code>, where <code>0 &lt;= x &lt; 10<sup>n</sup></code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2\n<strong>Output:</strong> 91\n<strong>Explanation:</strong> The answer should be the total numbers in the range of 0 &le; x &lt; 100, excluding 11,22,33,44,55,66,77,88,99\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 0\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= n &lt;= 8</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countNumbersWithUniqueDigits(int n) {\n        if (n == 0) {\n            return 1;\n        }\n        int result = 1;\n        for (int i = 0, cnt = 1; i < n - 1; ++i) {\n            cnt *= 9 - i;\n            result += cnt;\n        }\n        return 1 + 9 * result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int countNumbersWithUniqueDigits(int n) {\n        vector<int> fact(2, 1);\n        const auto& nPr = [&](int n, int k) {\n            while (size(fact) <= n) {  // lazy initialization\n                fact.emplace_back(fact.back() * size(fact));\n            }\n            return fact[n] / fact[n - k];\n        };\n\n        int result = 0;\n        for (int i = 0; i < n; ++i) {\n            result += nPr(9, i);\n        }\n        result *= 9;\n        return ++result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def countNumbersWithUniqueDigits(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        if n == 0:\n            return 1\n        result = cnt = 1\n        for i in xrange(n-1):\n            cnt *= 9-i\n            result += cnt\n        return 1+9*result\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    def countNumbersWithUniqueDigits(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        fact = [1]*2\n        def nPr(n, k):\n            while len(fact) <= n:  # lazy initialization\n                fact.append(fact[-1]*len(fact))\n            return fact[n]//fact[n-k]\n\n        return 1+9*sum(nPr(9, i) for i in xrange(n))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

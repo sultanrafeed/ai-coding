@@ -1,0 +1,34 @@
+{
+  "id": "8f8af11b-3e2f-4a4f-9cd7-2d32c2f54d94",
+  "slug": "pour-water",
+  "title": "Pour Water",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(v * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    vector<int> pourWater(vector<int>& heights, int V, int K) {\n        for (; V > 0; --V) {\n            int best = K;\n            for (const auto& d : {-1, 1}) {\n                int i = K;\n                while (0 <= i + d && i + d < heights.size() &&\n                       heights[i + d] <= heights[i]) {\n                    if (heights[i + d] < heights[i]) {\n                        best = i + d;\n                    }\n                    i += d;\n                }\n                if (best != K) {\n                    break;\n                }\n            }\n            ++heights[best];\n        }\n        return heights;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(v * n)\n# Space: O(1)\n\nclass Solution(object):\n    def pourWater(self, heights, V, K):\n        \"\"\"\n        :type heights: List[int]\n        :type V: int\n        :type K: int\n        :rtype: List[int]\n        \"\"\"\n        for _ in xrange(V):\n            best = K\n            for d in (-1, 1):\n                i = K\n                while 0 <= i+d < len(heights) and \\\n                      heights[i+d] <= heights[i]:\n                    if heights[i+d] < heights[i]: best = i+d\n                    i += d\n                if best != K:\n                    break\n            heights[best] += 1\n        return heights",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

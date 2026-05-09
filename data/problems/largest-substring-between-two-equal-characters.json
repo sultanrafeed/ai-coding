@@ -1,0 +1,34 @@
+{
+  "id": "c8385ab5-3142-4ae9-8609-cc630ce6e8a5",
+  "slug": "largest-substring-between-two-equal-characters",
+  "title": "Largest Substring Between Two Equal Characters",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code>, return <em>the length of the longest substring between two equal characters, excluding the two characters.</em> If there is no such substring return <code>-1</code>.</p>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters within a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aa&quot;\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The optimal substring here is an empty substring between the two <code>&#39;a&#39;s</code>.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abca&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The optimal substring here is &quot;bc&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;cbzxy&quot;\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> There are no characters that appear twice in s.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 300</code></li>\n\t<li><code>s</code> contains only lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxLengthBetweenEqualCharacters(string s) {\n        int result = -1;\n        vector<int> lookup(26, -1);\n        for (int i = 0; i < size(s); ++i) {\n            if (lookup[s[i] - 'a'] >= 0) {\n                result = max(result, i - lookup[s[i] - 'a'] - 1);\n            } else {\n                lookup[s[i] - 'a'] = i;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def maxLengthBetweenEqualCharacters(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result, lookup = -1, {}\n        for i, c in enumerate(s):\n            result = max(result, i-lookup.setdefault(c, i)-1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "eefcf181-505c-4231-988a-d00bf5372012",
+  "slug": "brace-expansion",
+  "title": "Brace Expansion",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "backtracking",
+    "stack",
+    "breadth-first-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"{a,b}c{d,e}f\"\n\"abcd\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(p*l * log(p*l)), p is the production of all number of options\n//                         , l is the length of a word\n// Space: O(p*l)\n\nclass Solution {\npublic:\n    vector<string> expand(string S) {  // nested is fine\n        int i = 0;\n        return generateWords(S, &i);\n    }\n\nprivate:\n    vector<string> generateWords(const string& expr, int *i) {\n        vector<vector<string>> options;\n        while (*i != expr.length() &&\n               string(\",}\").find(expr[*i]) == string::npos) {\n            vector<string> tmp;\n            if (string(\"{,}\").find(expr[*i]) == string::npos) {\n                tmp.emplace_back(string(1, expr[*i]));\n                ++(*i);  // a-z\n            } else if (expr[*i] == '{') {\n                tmp = generateOption(expr, i);\n            }\n            options.emplace_back(move(tmp));\n        }\n        return formWords(options);\n    }\n      \n    vector<string> generateOption(const string& expr, int *i) {\n        set<string> option_set;\n        while (*i != expr.length() && expr[*i] != '}') {\n            ++(*i);  // { or ,\n            for (const auto& option : generateWords(expr, i)) {\n                option_set.emplace(option);\n            }\n        }\n        ++(*i);  // }\n        return vector<string>(option_set.cbegin(), option_set.cend());\n    }\n    \n    vector<string> formWords(const vector<vector<string>>& options) {\n        set<string> words_set;\n        int total = 1;\n        for (const auto& opt : options) {\n            total *= opt.size();\n        }\n        for (int i = 0; i < total; ++i) {\n            vector<string> tmp;\n            int curr = i;\n            for (int j = options.size() - 1; j >= 0; --j) {\n                tmp.emplace_back(options[j][curr % options[j].size()]);\n                curr /= options[j].size();\n            }\n            reverse(tmp.begin(), tmp.end());\n            words_set.emplace(accumulate(tmp.cbegin(), tmp.cend(), string()));\n        }\n        return vector<string>(words_set.cbegin(), words_set.cend());\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(p*l * log(p*l)), p is the production of all number of options\n#                         , l is the length of a word\n# Space: O(p*l)\n\nimport itertools\n\n\nclass Solution(object):\n    def expand(self, S):  # nested is fine\n        \"\"\"\n        :type S: str\n        :rtype: List[str]\n        \"\"\"\n        def form_words(options):\n            words = map(\"\".join, itertools.product(*options))\n            words.sort()\n            return words\n\n        def generate_option(expr, i):\n            option_set = set()\n            while i[0] != len(expr) and expr[i[0]] != \"}\":\n                i[0] += 1  # { or ,\n                for option in generate_words(expr, i):\n                    option_set.add(option)\n            i[0] += 1  # }\n            option = list(option_set)\n            option.sort()\n            return option\n\n        def generate_words(expr, i):\n            options = []\n            while i[0] != len(expr) and expr[i[0]] not in \",}\":\n                tmp = []\n                if expr[i[0]] not in \"{,}\":\n                    tmp.append(expr[i[0]])\n                    i[0] += 1  # a-z\n                elif expr[i[0]] == \"{\":\n                    tmp = generate_option(expr, i)\n                options.append(tmp)\n            return form_words(options)\n\n        return generate_words(S, [0])\n\n\nclass Solution2(object):\n    def expand(self, S):  # nested is fine\n        \"\"\"\n        :type S: str\n        :rtype: List[str]\n        \"\"\"\n        def form_words(options):\n            words = []\n            total = 1\n            for opt in options:\n                total *= len(opt)\n            for i in xrange(total):\n                tmp = []\n                for opt in reversed(options):\n                    i, c = divmod(i, len(opt))\n                    tmp.append(opt[c])\n                tmp.reverse()\n                words.append(\"\".join(tmp))\n            words.sort()\n            return words\n\n        def generate_option(expr, i):\n            option_set = set()\n            while i[0] != len(expr) and expr[i[0]] != \"}\":\n                i[0] += 1  # { or ,\n                for option in generate_words(expr, i):\n                    option_set.add(option)\n            i[0] += 1  # }\n            option = list(option_set)\n            option.sort()\n            return option\n\n        def generate_words(expr, i):\n            options = []\n            while i[0] != len(expr) and expr[i[0]] not in \",}\":\n                tmp = []\n                if expr[i[0]] not in \"{,}\":\n                    tmp.append(expr[i[0]])\n                    i[0] += 1  # a-z\n                elif expr[i[0]] == \"{\":\n                    tmp = generate_option(expr, i)\n                options.append(tmp)\n            return form_words(options)\n\n        return generate_words(S, [0])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

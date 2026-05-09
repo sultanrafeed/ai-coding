@@ -1,0 +1,40 @@
+{
+  "id": "38f3fddf-884c-48c4-8088-9f51e95a7662",
+  "slug": "missing-number-in-arithmetic-progression",
+  "title": "Missing Number In Arithmetic Progression",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,7,11,13]\n[15,13,12]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int missingNumber(vector<int>& arr) {\n        const auto& d = (arr.back() - arr[0]) / static_cast<int>(arr.size());\n        int left = 0, right = arr.size() - 1;\n        while (left <= right) {\n            const auto& mid = left + (right - left) / 2;\n            if (check(arr, d, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return arr[0] + d * left;\n    }\n    \nprivate:\n    bool check(const vector<int>& arr, int d, int x) {\n        return arr[x] != arr[0] + d * x;\n    }\n};\n\n// Time:  O(logn)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int missingNumber(vector<int>& arr) {\n        return (*min_element(arr.cbegin(), arr.cend()) +\n                *max_element(arr.cbegin(), arr.cend())) *\n               (arr.size() + 1) / 2 -\n               accumulate(arr.cbegin(), arr.cend(), 0);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def missingNumber(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        def check(arr, d, x):\n            return arr[x] != arr[0] + d*x\n\n        d = (arr[-1]-arr[0])//len(arr)\n        left, right = 0, len(arr)-1\n        while left <= right:\n            mid = left + (right-left)//2\n            if check(arr, d, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return arr[0] + d*left\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def missingNumber(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        return (min(arr)+max(arr))*(len(arr)+1)//2 - sum(arr)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

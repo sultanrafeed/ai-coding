@@ -1,0 +1,41 @@
+{
+  "id": "65fcd9f1-1864-48c5-8510-78f495fb49a1",
+  "slug": "logger-rate-limiter",
+  "title": "Logger Rate Limiter",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "design",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"Logger\",\"shouldPrintMessage\",\"shouldPrintMessage\",\"shouldPrintMessage\",\"shouldPrintMessage\",\"shouldPrintMessage\",\"shouldPrintMessage\"]\n[[],[1,\"foo\"],[2,\"bar\"],[3,\"foo\"],[8,\"bar\"],[10,\"foo\"],[11,\"foo\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1), amortized\n// Space: O(k), k is the max number of printed messages in last 10 seconds\n\nclass Logger {\npublic:\n    /** Initialize your data structure here. */\n    Logger() {\n        \n    }\n    \n    /** Returns true if the message should be printed in the given timestamp, otherwise returns false. The timestamp is in seconds granularity. */\n    bool shouldPrintMessage(int timestamp, string message) {\n        while (!dq_.empty() && dq_.front().first <= timestamp - 10) {\n            printed_.erase(dq_.front().second);\n            dq_.pop_front();\n        }\n        if (printed_.count(message)) {\n            return false;\n        }\n        dq_.emplace_back(timestamp, message);\n        printed_.emplace(message);\n        return true;\n    }\n\nprivate:\n    deque<pair<int, string>> dq_;\n    unordered_set<string> printed_;\n};\n\n// Time:  O(1)\n// Space: O(n), n is the number of total unique messages\nclass Logger2 {\npublic:\n    /** Initialize your data structure here. */\n    Logger2() {\n        \n    }\n    \n    /** Returns true if the message should be printed in the given timestamp, otherwise returns false. The timestamp is in seconds granularity. */\n    bool shouldPrintMessage(int timestamp, string message) {\n        if (message_time_.count(message) &&\n            timestamp < message_time_[message] + 10) {\n            return false;\n        }\n        message_time_[message] = timestamp;\n        return true;\n    }\n\nprivate:\n    unordered_map<string, int> message_time_;\n};\n\n/**\n * Your Logger object will be instantiated and called as such:\n * Logger obj = new Logger();\n * bool param_1 = obj.shouldPrintMessage(timestamp,message);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1), amortized\n# Space: O(k), k is the max number of printed messages in last 10 seconds\n\nimport collections\n\n\nclass Logger(object):\n\n    def __init__(self):\n        \"\"\"\n        Initialize your data structure here.\n        \"\"\"\n        self.__dq = collections.deque()\n        self.__printed = set()\n\n    def shouldPrintMessage(self, timestamp, message):\n        \"\"\"\n        Returns true if the message should be printed in the given timestamp, otherwise returns false. The timestamp is in seconds granularity.\n        :type timestamp: int\n        :type message: str\n        :rtype: bool\n        \"\"\"\n        while self.__dq and self.__dq[0][0] <= timestamp - 10:\n            self.__printed.remove(self.__dq.popleft()[1])\n        if message in self.__printed:\n            return False\n        self.__dq.append((timestamp, message))\n        self.__printed.add(message)\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

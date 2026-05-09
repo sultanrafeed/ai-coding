@@ -1,0 +1,36 @@
+{
+  "id": "757541f6-9f88-40ed-ad22-39f5f9398619",
+  "slug": "pacific-atlantic-water-flow",
+  "title": "Pacific Atlantic Water Flow",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There is an <code>m x n</code> rectangular island that borders both the <strong>Pacific Ocean</strong> and <strong>Atlantic Ocean</strong>. The <strong>Pacific Ocean</strong> touches the island&#39;s left and top edges, and the <strong>Atlantic Ocean</strong> touches the island&#39;s right and bottom edges.</p>\n\n<p>The island is partitioned into a grid of square cells. You are given an <code>m x n</code> integer matrix <code>heights</code> where <code>heights[r][c]</code> represents the <strong>height above sea level</strong> of the cell at coordinate <code>(r, c)</code>.</p>\n\n<p>The island receives a lot of rain, and the rain water can flow to neighboring cells directly north, south, east, and west if the neighboring cell&#39;s height is <strong>less than or equal to</strong> the current cell&#39;s height. Water can flow from any cell adjacent to an ocean into the ocean.</p>\n\n<p>Return <em>a <strong>2D list</strong> of grid coordinates </em><code>result</code><em> where </em><code>result[i] = [r<sub>i</sub>, c<sub>i</sub>]</code><em> denotes that rain water can flow from cell </em><code>(r<sub>i</sub>, c<sub>i</sub>)</code><em> to <strong>both</strong> the Pacific and Atlantic oceans</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/06/08/waterflow-grid.jpg\" style=\"width: 400px; height: 400px;\" />\n<pre>\n<strong>Input:</strong> heights = [[1,2,2,3,5],[3,2,3,4,4],[2,4,5,3,1],[6,7,1,4,5],[5,1,1,2,4]]\n<strong>Output:</strong> [[0,4],[1,3],[1,4],[2,2],[3,0],[3,1],[4,0]]\n<strong>Explanation:</strong> The following cells can flow to the Pacific and Atlantic oceans, as shown below:\n[0,4]: [0,4] -&gt; Pacific Ocean \n&nbsp;      [0,4] -&gt; Atlantic Ocean\n[1,3]: [1,3] -&gt; [0,3] -&gt; Pacific Ocean \n&nbsp;      [1,3] -&gt; [1,4] -&gt; Atlantic Ocean\n[1,4]: [1,4] -&gt; [1,3] -&gt; [0,3] -&gt; Pacific Ocean \n&nbsp;      [1,4] -&gt; Atlantic Ocean\n[2,2]: [2,2] -&gt; [1,2] -&gt; [0,2] -&gt; Pacific Ocean \n&nbsp;      [2,2] -&gt; [2,3] -&gt; [2,4] -&gt; Atlantic Ocean\n[3,0]: [3,0] -&gt; Pacific Ocean \n&nbsp;      [3,0] -&gt; [4,0] -&gt; Atlantic Ocean\n[3,1]: [3,1] -&gt; [3,0] -&gt; Pacific Ocean \n&nbsp;      [3,1] -&gt; [4,1] -&gt; Atlantic Ocean\n[4,0]: [4,0] -&gt; Pacific Ocean \n       [4,0] -&gt; Atlantic Ocean\nNote that there are other possible paths for these cells to flow to the Pacific and Atlantic oceans.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> heights = [[1]]\n<strong>Output:</strong> [[0,0]]\n<strong>Explanation:</strong> The water can flow from the only cell to the Pacific and Atlantic oceans.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == heights.length</code></li>\n\t<li><code>n == heights[r].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 200</code></li>\n\t<li><code>0 &lt;= heights[r][c] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    \n    vector<pair<int, int>> pacificAtlantic(vector<vector<int>>& matrix) {\n        if (matrix.empty()) {\n            return {};\n        }\n\n        vector<pair<int, int>> res;\n        const auto m = matrix.size(), n = matrix[0].size();\n        vector<vector<int>> visited(m, vector<int>(n));\n\n        for (int i = 0; i < m; ++i) {\n            pacificAtlanticHelper(matrix, i, 0, numeric_limits<int>::min(), PACIFIC, &visited, &res);\n            pacificAtlanticHelper(matrix, i, n - 1, numeric_limits<int>::min(), ATLANTIC, &visited, &res);\n        }\n        for (int j = 0; j < n; ++j) {\n            pacificAtlanticHelper(matrix, 0, j, numeric_limits<int>::min(), PACIFIC, &visited, &res);\n            pacificAtlanticHelper(matrix, m - 1, j, numeric_limits<int>::min(), ATLANTIC, &visited, &res);\n        }\n\n        return res;\n    }\n\nprivate:\n    void pacificAtlanticHelper(const vector<vector<int>>& matrix, int x, int y, int prev_height, int prev_val,\n                               vector<vector<int>> *visited, vector<pair<int, int>> *res) {\n\n        if (x < 0 || x >= matrix.size() ||\n            y < 0 || y >= matrix[0].size() ||\n            matrix[x][y] < prev_height || ((*visited)[x][y] | prev_val) == (*visited)[x][y]) {\n            return;\n        }\n\n        (*visited)[x][y] |= prev_val;\n        if ((*visited)[x][y] == (PACIFIC | ATLANTIC)) {\n            res->emplace_back(x, y);\n        }\n\n        for (const auto& dir : directions) {\n            pacificAtlanticHelper(matrix, x + dir.first, y + dir.second, matrix[x][y], (*visited)[x][y], visited, res);\n        }\n    }\n    \n    enum ocean { PACIFIC = 1, ATLANTIC = 2 };\n    const vector<pair<int, int>> directions{ {0, -1}, {0, 1}, {-1, 0}, {1, 0} };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\nclass Solution(object):\n    def pacificAtlantic(self, matrix):\n        \"\"\"\n        :type matrix: List[List[int]]\n        :rtype: List[List[int]]\n        \"\"\"\n        PACIFIC, ATLANTIC = 1, 2\n\n        def pacificAtlanticHelper(matrix, x, y, prev_height, prev_val, visited, res):\n            if (not 0 <= x < len(matrix)) or \\\n               (not 0 <= y < len(matrix[0])) or \\\n               matrix[x][y] < prev_height or \\\n               (visited[x][y] | prev_val) == visited[x][y]:\n                return\n\n            visited[x][y] |= prev_val\n            if visited[x][y] == (PACIFIC | ATLANTIC):\n                res.append((x, y))\n\n            for d in [(0, -1), (0, 1), (-1, 0), (1, 0)]:\n                pacificAtlanticHelper(matrix, x + d[0], y + d[1], matrix[x][y], visited[x][y], visited, res)\n\n        if not matrix:\n            return []\n\n        res = []\n        m, n = len(matrix),len(matrix[0])\n        visited = [[0 for _ in xrange(n)] for _ in xrange(m)]\n\n        for i in xrange(m):\n            pacificAtlanticHelper(matrix, i, 0, float(\"-inf\"), PACIFIC, visited, res)\n            pacificAtlanticHelper(matrix, i, n - 1, float(\"-inf\"), ATLANTIC, visited, res)\n        for j in xrange(n):\n            pacificAtlanticHelper(matrix, 0, j, float(\"-inf\"), PACIFIC, visited, res)\n            pacificAtlanticHelper(matrix, m - 1, j, float(\"-inf\"), ATLANTIC, visited, res)\n\n        return res",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

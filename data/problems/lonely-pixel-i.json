@@ -1,0 +1,41 @@
+{
+  "id": "e8fbe6fd-d261-4efe-8cd9-74781c98277c",
+  "slug": "lonely-pixel-i",
+  "title": "Lonely Pixel I",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[\"W\",\"W\",\"B\"],[\"W\",\"B\",\"W\"],[\"B\",\"W\",\"W\"]]\n[[\"B\",\"B\",\"B\"],[\"B\",\"B\",\"W\"],[\"B\",\"B\",\"B\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m + n)\n\nclass Solution {\npublic:\n    int findLonelyPixel(vector<vector<char>>& picture) {\n        vector<int> rows = vector<int>(picture.size());\n        vector<int> cols = vector<int>(picture[0].size());\n\n        for (int i = 0; i < picture.size(); ++i) {\n            for (int j = 0; j < picture[0].size(); ++j) {\n                rows[i] += picture[i][j] == 'B';\n                cols[j] += picture[i][j] == 'B';\n            }\n        }\n\n        int result = 0;\n        for (int i = 0; i < picture.size(); ++i) {\n            if (rows[i] == 1) {\n                for (int j = 0; j < picture[0].size() && rows[i] > 0; ++j) {\n                    result += picture[i][j] == 'B' && cols[j] == 1;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m + n)\n\nclass Solution(object):\n    def findLonelyPixel(self, picture):\n        \"\"\"\n        :type picture: List[List[str]]\n        :rtype: int\n        \"\"\"\n        rows, cols = [0] * len(picture),  [0] * len(picture[0])\n        for i in xrange(len(picture)):\n            for j in xrange(len(picture[0])):\n                if picture[i][j] == 'B':\n                    rows[i] += 1\n                    cols[j] += 1\n\n        result = 0\n        for i in xrange(len(picture)):\n            if rows[i] == 1:\n                for j in xrange(len(picture[0])):\n                     result += picture[i][j] == 'B' and cols[j] == 1\n        return result\n\n\nclass Solution2(object):\n    def findLonelyPixel(self, picture):\n        \"\"\"\n        :type picture: List[List[str]]\n        :type N: int\n        :rtype: int\n        \"\"\"\n        return sum(col.count('B') == 1 == picture[col.index('B')].count('B') \\\n               for col in zip(*picture))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

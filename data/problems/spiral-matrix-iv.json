@@ -1,0 +1,36 @@
+{
+  "id": "04414306-c06d-4f2d-9aac-9c174b692e76",
+  "slug": "spiral-matrix-iv",
+  "title": "Spiral Matrix IV",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two integers <code>m</code> and <code>n</code>, which represent the dimensions of a matrix.</p>\n\n<p>You are also given the <code>head</code> of a linked list of integers.</p>\n\n<p>Generate an <code>m x n</code> matrix that contains the integers in the linked list presented in <strong>spiral</strong> order <strong>(clockwise)</strong>, starting from the <strong>top-left</strong> of the matrix. If there are remaining empty spaces, fill them with <code>-1</code>.</p>\n\n<p>Return <em>the generated matrix</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/05/09/ex1new.jpg\" style=\"width: 240px; height: 150px;\" />\n<pre>\n<strong>Input:</strong> m = 3, n = 5, head = [3,0,2,6,8,1,7,9,4,2,5,5,0]\n<strong>Output:</strong> [[3,0,2,6,8],[5,0,-1,-1,1],[5,2,4,9,7]]\n<strong>Explanation:</strong> The diagram above shows how the values are printed in the matrix.\nNote that the remaining spaces in the matrix are filled with -1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/05/11/ex2.jpg\" style=\"width: 221px; height: 60px;\" />\n<pre>\n<strong>Input:</strong> m = 1, n = 4, head = [0,1,2]\n<strong>Output:</strong> [[0,1,2,-1]]\n<strong>Explanation:</strong> The diagram above shows how the values are printed from left to right in the matrix.\nThe last space in the matrix is set to -1.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= m, n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= m * n &lt;= 10<sup>5</sup></code></li>\n\t<li>The number of nodes in the list is in the range <code>[1, m * n]</code>.</li>\n\t<li><code>0 &lt;= Node.val &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "linked-list",
+    "matrix",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\n// linked list, array\nclass Solution {\npublic:\n    vector<vector<int>> spiralMatrix(int m, int n, ListNode* head) {\n        static const vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};\n        vector<vector<int>> result(m, vector<int>(n, -1));\n        for (int i = 0, j = 0, d = 0; head; head = head->next) {\n            result[i][j] = head->val;\n            if (!(0 <= i + directions[d].first && i + directions[d].first < m &&\n                  0 <= j + directions[d].second && j + directions[d].second < n &&\n                  result[i + directions[d].first][j + directions[d].second] == -1)) {\n                d = (d + 1) % 4;\n            }\n            i += directions[d].first;\n            j += directions[d].second;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\n# Definition for singly-linked list.\nclass ListNode(object):\n    def __init__(self, val=0, next=None):\n        pass\n\n\n# linked list, array\nclass Solution(object):\n    def spiralMatrix(self, m, n, head):\n        \"\"\"\n        :type m: int\n        :type n: int\n        :type head: Optional[ListNode]\n        :rtype: List[List[int]]\n        \"\"\"\n        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n        result = [[-1]*n for _ in xrange(m)]\n        i = j = d = 0\n        while head:\n            result[i][j] = head.val\n            if not (0 <= i+directions[d][0] < m and 0 <= j+directions[d][1] < n and result[i+directions[d][0]][j+directions[d][1]] == -1):\n                d = (d+1)%4\n            i, j = i+directions[d][0], j+directions[d][1]\n            head = head.next\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

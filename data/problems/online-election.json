@@ -1,0 +1,36 @@
+{
+  "id": "34906346-2568-4422-a508-9a3dd48ec78d",
+  "slug": "online-election",
+  "title": "Online Election",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two integer arrays <code>persons</code> and <code>times</code>. In an election, the <code>i<sup>th</sup></code> vote was cast for <code>persons[i]</code> at time <code>times[i]</code>.</p>\n\n<p>For each query at a time <code>t</code>, find the person that was leading the election at time <code>t</code>. Votes cast at time <code>t</code> will count towards our query. In the case of a tie, the most recent vote (among tied candidates) wins.</p>\n\n<p>Implement the <code>TopVotedCandidate</code> class:</p>\n\n<ul>\n\t<li><code>TopVotedCandidate(int[] persons, int[] times)</code> Initializes the object with the <code>persons</code> and <code>times</code> arrays.</li>\n\t<li><code>int q(int t)</code> Returns the number of the person that was leading the election at time <code>t</code> according to the mentioned rules.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;TopVotedCandidate&quot;, &quot;q&quot;, &quot;q&quot;, &quot;q&quot;, &quot;q&quot;, &quot;q&quot;, &quot;q&quot;]\n[[[0, 1, 1, 0, 0, 1, 0], [0, 5, 10, 15, 20, 25, 30]], [3], [12], [25], [15], [24], [8]]\n<strong>Output</strong>\n[null, 0, 1, 1, 0, 0, 1]\n\n<strong>Explanation</strong>\nTopVotedCandidate topVotedCandidate = new TopVotedCandidate([0, 1, 1, 0, 0, 1, 0], [0, 5, 10, 15, 20, 25, 30]);\ntopVotedCandidate.q(3); // return 0, At time 3, the votes are [0], and 0 is leading.\ntopVotedCandidate.q(12); // return 1, At time 12, the votes are [0,1,1], and 1 is leading.\ntopVotedCandidate.q(25); // return 1, At time 25, the votes are [0,1,1,0,0,1], and 1 is leading (as ties go to the most recent vote.)\ntopVotedCandidate.q(15); // return 0\ntopVotedCandidate.q(24); // return 0\ntopVotedCandidate.q(8); // return 1\n\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= persons.length &lt;= 5000</code></li>\n\t<li><code>times.length == persons.length</code></li>\n\t<li><code>0 &lt;= persons[i] &lt; persons.length</code></li>\n\t<li><code>0 &lt;= times[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>times</code> is sorted in a strictly increasing order.</li>\n\t<li><code>times[0] &lt;= t &lt;= 10<sup>9</sup></code></li>\n\t<li>At most <code>10<sup>4</sup></code> calls will be made to <code>q</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "binary-search",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor: O(n)\n//        q:    O(logn)\n// Space: O(n)\n\nclass TopVotedCandidate {\npublic:\n    TopVotedCandidate(vector<int> persons, vector<int> times) {\n        int lead = -1;\n        unordered_map<int, int> count;\n        for (int i = 0; i < persons.size(); ++i) {\n            if (++count[persons[i]] >= count[lead]) {\n                lead = persons[i];\n                lookup_.emplace_back(times[i], persons[i]);\n            }\n        }\n    }\n\n    int q(int t) {\n        return prev(upper_bound(lookup_.cbegin(), lookup_.cend(),\n                                make_pair(t, numeric_limits<int>::max())))->second;\n    }\n\nprivate:\n     vector<pair<int, int>> lookup_;\n};\n\n/**\n * Your TopVotedCandidate object will be instantiated and called as such:\n * TopVotedCandidate obj = new TopVotedCandidate(persons, times);\n * int param_1 = obj.q(t);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor: O(n)\n#        q:    O(logn)\n# Space: O(n)\n\nimport collections\nimport itertools\nimport bisect\n\n\nclass TopVotedCandidate(object):\n\n    def __init__(self, persons, times):\n        \"\"\"\n        :type persons: List[int]\n        :type times: List[int]\n        \"\"\"\n        lead = -1\n        self.__lookup, count = [], collections.defaultdict(int)\n        for t, p in itertools.izip(times, persons):\n            count[p] += 1\n            if count[p] >= count[lead]:\n                lead = p\n                self.__lookup.append((t, lead))\n\n    def q(self, t):\n        \"\"\"\n        :type t: int\n        :rtype: int\n        \"\"\"\n        return self.__lookup[bisect.bisect(self.__lookup,\n                                           (t, float(\"inf\")))-1][1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

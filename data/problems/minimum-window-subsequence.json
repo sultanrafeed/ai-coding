@@ -1,0 +1,41 @@
+{
+  "id": "537b99df-52c2-403d-9781-c364093995da",
+  "slug": "minimum-window-subsequence",
+  "title": "Minimum Window Subsequence",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "dynamic-programming",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abcdebdde\"\n\"bde\"\n\"jmeqksfrsdcmsiwvaovztaqenprpvnbstl\"\n\"u\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(s * t)\n// Space: O(s)\n\nclass Solution {\npublic:\n    string minWindow(string S, string T) {\n        vector<vector<int>> lookup(S.size() + 1, vector<int>(26, -1));\n        vector<int> find_char_next_pos(26, -1);\n        for (int i = S.length() - 1; i >= 0; --i) {\n            find_char_next_pos[S[i] - 'a'] = i + 1;\n            lookup[i] = find_char_next_pos;\n        }\n        \n        int min_i = -1, min_len = numeric_limits<int>::max();\n        for (int i = 0; i < S.length(); ++i) {\n            if (S[i] != T[0]) {\n                continue;\n            }\n            int start = i;\n            for (const auto& c : T) {\n                start = lookup[start][c - 'a'];\n                if (start == -1) {\n                    break;\n                }\n            }\n            if (start != -1) {\n               if (start - i < min_len) {\n                   min_i = i;\n                   min_len = start - i;\n               }\n            }\n        }\n        return min_i != -1 ? S.substr(min_i, min_len) : \"\";\n    }\n};\n\n// Time:  O(s * t)\n// Space: O(s)\nclass Solution2 {\npublic:\n    string minWindow(string S, string T) {\n        vector<vector<int>> dp(2, vector<int>(S.length(), -1));\n        for (int j = 0; j < S.length(); ++j) {\n            if (S[j] == T[0]) {\n                dp[0][j] = j;\n            }\n        }\n                \n        for (int i = 1; i < T.length(); ++i) {\n            int prev = -1;\n            dp[i % 2] = vector<int>(S.length(), -1);\n            for (int j = 0; j < S.length(); ++j) {\n                if (prev != -1 && S[j] == T[i]) {\n                    dp[i % 2][j] = prev;\n                }\n                if (dp[(i - 1) % 2][j] != -1) {\n                    prev = dp[(i - 1) % 2][j];\n                }\n            }\n        }\n\n        int start = 0, end = S.length();\n        for (int j = 0; j < S.length(); ++j) {\n            int i = dp[(T.length() - 1) % 2][j];\n            if (i >= 0 && j - i < end - start) {\n                tie(start, end) = make_pair(i, j);\n            }\n        }\n        return end < S.length() ? S.substr(start, end - start + 1) : \"\";\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(s * t)\n# Space: O(s)\n\nclass Solution(object):\n    def minWindow(self, S, T):\n        \"\"\"\n        :type S: str\n        :type T: str\n        :rtype: str\n        \"\"\"\n        lookup = [[None for _ in xrange(26)] for _ in xrange(len(S)+1)]\n        find_char_next_pos = [None]*26\n        for i in reversed(xrange(len(S))):\n            find_char_next_pos[ord(S[i])-ord('a')] = i+1\n            lookup[i] = list(find_char_next_pos)\n\n        min_i, min_len = None, float(\"inf\")\n        for i in xrange(len(S)):\n            if S[i] != T[0]:\n                continue\n            start = i\n            for c in T:\n                start = lookup[start][ord(c)-ord('a')]\n                if start == None:\n                    break\n            else:\n                if start-i < min_len:\n                    min_i, min_len = i, start-i\n        return S[min_i:min_i+min_len] if min_i is not None else \"\"\n\n    \n# Time:  O(s * t)\n# Space: O(s)\nclass Solution2(object):\n    def minWindow(self, S, T):\n        \"\"\"\n        :type S: str\n        :type T: str\n        :rtype: str\n        \"\"\"\n        dp = [[None for _ in xrange(len(S))] for _ in xrange(2)]\n        for j, c in enumerate(S):\n            if c == T[0]:\n                dp[0][j] = j\n\n        for i in xrange(1, len(T)):\n            prev = None\n            dp[i%2] = [None] * len(S)\n            for j, c in enumerate(S):\n                if prev is not None and c == T[i]:\n                    dp[i%2][j] = prev\n                if dp[(i-1)%2][j] is not None:\n                    prev = dp[(i-1)%2][j]\n\n        start, end = 0, len(S)\n        for j, i in enumerate(dp[(len(T)-1)%2]):\n            if i >= 0 and j-i < end-start:\n                start, end = i, j\n        return S[start:end+1] if end < len(S) else \"\"",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

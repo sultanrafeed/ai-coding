@@ -1,0 +1,40 @@
+{
+  "id": "a2bedbdc-7dec-4d55-84eb-b9ddd1355b39",
+  "slug": "partition-list",
+  "title": "Partition List",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given the <code>head</code> of a linked list and a value <code>x</code>, partition it such that all nodes <strong>less than</strong> <code>x</code> come before nodes <strong>greater than or equal</strong> to <code>x</code>.</p>\n\n<p>You should <strong>preserve</strong> the original relative order of the nodes in each of the two partitions.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/01/04/partition.jpg\" style=\"width: 662px; height: 222px;\" />\n<pre>\n<strong>Input:</strong> head = [1,4,3,2,5,2], x = 3\n<strong>Output:</strong> [1,2,2,4,3,5]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> head = [2,1], x = 2\n<strong>Output:</strong> [1,2]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the list is in the range <code>[0, 200]</code>.</li>\n\t<li><code>-100 &lt;= Node.val &lt;= 100</code></li>\n\t<li><code>-200 &lt;= x &lt;= 200</code></li>\n</ul>\n",
+  "patterns": [
+    "linked-list",
+    "two-pointers"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,4,3,2,5,2]\n3\n[2,1]\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    ListNode *partition(ListNode *head, int x) {\n        ListNode dummy_smaller{0};\n        ListNode dummy_larger{0};\n        auto smaller = &dummy_smaller;\n        auto larger = &dummy_larger;\n\n        while (head) {\n            if (head->val < x) {\n                smaller->next = head;\n                smaller = smaller->next;\n            } else {\n                larger->next = head;\n                larger = larger->next;\n            }\n            head = head->next;\n        }\n        smaller->next = dummy_larger.next;\n        larger->next = nullptr;\n\n        return dummy_smaller.next;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass ListNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.next = None\n\n    def __repr__(self):\n        if self:\n            return \"{} -> {}\".format(self.val, repr(self.next))\n\nclass Solution(object):\n    # @param head, a ListNode\n    # @param x, an integer\n    # @return a ListNode\n    def partition(self, head, x):\n        dummySmaller, dummyGreater = ListNode(-1), ListNode(-1)\n        smaller, greater = dummySmaller, dummyGreater\n\n        while head:\n            if head.val < x:\n                smaller.next = head\n                smaller = smaller.next\n            else:\n                greater.next = head\n                greater = greater.next\n            head = head.next\n\n        smaller.next = dummyGreater.next\n        greater.next = None\n\n        return dummySmaller.next",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

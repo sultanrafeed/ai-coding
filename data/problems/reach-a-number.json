@@ -1,0 +1,34 @@
+{
+  "id": "a6604644-7bd5-46c5-8a57-3b5497b2036f",
+  "slug": "reach-a-number",
+  "title": "Reach a Number",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are standing at position <code>0</code> on an infinite number line. There is a destination at position <code>target</code>.</p>\n\n<p>You can make some number of moves <code>numMoves</code> so that:</p>\n\n<ul>\n\t<li>On each move, you can either go left or right.</li>\n\t<li>During the <code>i<sup>th</sup></code> move (starting from <code>i == 1</code> to <code>i == numMoves</code>), you take <code>i</code> steps in the chosen direction.</li>\n</ul>\n\n<p>Given the integer <code>target</code>, return <em>the <strong>minimum</strong> number of moves required (i.e., the minimum </em><code>numMoves</code><em>) to reach the destination</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> target = 2\n<strong>Output:</strong> 3\n<strong>Explanation:</strong>\nOn the 1<sup>st</sup> move, we step from 0 to 1 (1 step).\nOn the 2<sup>nd</sup> move, we step from 1 to -1 (2 steps).\nOn the 3<sup>rd</sup> move, we step from -1 to 2 (3 steps).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> target = 3\n<strong>Output:</strong> 2\n<strong>Explanation:</strong>\nOn the 1<sup>st</sup> move, we step from 0 to 1 (1 step).\nOn the 2<sup>nd</sup> move, we step from 1 to 3 (2 steps).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-10<sup>9</sup> &lt;= target &lt;= 10<sup>9</sup></code></li>\n\t<li><code>target != 0</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int reachNumber(int target) {\n        target = abs(target);\n        auto k = static_cast<int>(ceil((-1 + sqrt(1 + 8.0 * target)) / 2));\n        target -= k * (k + 1) / 2;\n        return (target % 2 == 0) ? k : k + 1 + k % 2;\n    }\n};\n\n\n// Time:  O(sqrt(n))\n// Space: O(1)\nclass Solution2 {\npublic:\n    int reachNumber(int target) {\n        target = abs(target);\n        int k = 0;\n        while (target > 0) {\n            ++k;\n            target -= k;\n        }\n        return (target % 2 == 0) ? k : k + 1 + k % 2;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nimport math\n\n\nclass Solution(object):\n    def reachNumber(self, target):\n        \"\"\"\n        :type target: int\n        :rtype: int\n        \"\"\"\n        target = abs(target)\n        k = int(math.ceil((-1+math.sqrt(1+8*target))/2))\n        target -= k*(k+1)/2\n        return k if target%2 == 0 else k+1+k%2\n\n\n# Time:  O(sqrt(n))\n# Space: O(1)\nclass Solution2(object):\n    def reachNumber(self, target):\n        \"\"\"\n        :type target: int\n        :rtype: int\n        \"\"\"\n        target = abs(target)\n        k = 0\n        while target > 0:\n            k += 1\n            target -= k\n        return k if target%2 == 0 else k+1+k%2",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

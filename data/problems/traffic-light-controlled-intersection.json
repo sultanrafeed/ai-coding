@@ -1,0 +1,39 @@
+{
+  "id": "f7ecc3da-e80b-40dd-8bb0-97d0ed75d208",
+  "slug": "traffic-light-controlled-intersection",
+  "title": "Traffic Light Controlled Intersection",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "concurrency"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,3,5,2,4]\n[2,1,2,4,3]\n[10,20,30,40,50]\n[1,2,3,4,5]\n[2,4,3,3,1]\n[10,20,30,40,40]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass TrafficLight {\npublic:\n    TrafficLight()\n     : light_{1} {\n        \n    }\n\n    void carArrived(\n        int carId,                   // ID of the car\n        int roadId,                  // ID of the road the car travels on. Can be 1 (road A) or 2 (road B)\n        int direction,               // Direction of the car\n        function<void()> turnGreen,  // Use turnGreen() to turn light to green on current road\n        function<void()> crossCar    // Use crossCar() to make car cross the intersection\n    ) {\n        unique_lock<mutex> lock{m_};\n        if (light_ != roadId) {\n            light_ = roadId;\n\t\t\tturnGreen();\n\t\t}\n        crossCar();\n    }\n\nprivate:\n    mutex m_;\n    int light_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport threading\n\n\nclass TrafficLight(object):\n    \n    def __init__(self):\n        self.__l = threading.Lock()\n        self.__light = 1\n\n    def carArrived(self, carId, roadId, direction, turnGreen, crossCar):\n        \"\"\"\n        :type roadId: int --> // ID of the car\n        :type carId: int --> // ID of the road the car travels on. Can be 1 (road A) or 2 (road B)\n        :type direction: int --> // Direction of the car\n        :type turnGreen: method --> // Use turnGreen() to turn light to green on current road\n        :type crossCar: method --> // Use crossCar() to make car cross the intersection\n        :rtype: void\n        \"\"\"\n        with self.__l:\n            if self.__light != roadId:\n                self.__light = roadId\n                turnGreen()\n            crossCar()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

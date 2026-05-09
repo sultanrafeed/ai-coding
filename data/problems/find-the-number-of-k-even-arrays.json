@@ -1,0 +1,39 @@
+{
+  "id": "0de576cf-beb1-42fb-9a96-dfb75f85acd6",
+  "slug": "find-the-number-of-k-even-arrays",
+  "title": "Find the Number of K-Even Arrays",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n4\n2\n5\n1\n0\n7\n7\n5",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// stars and bars, combinatorics\nclass Solution {\npublic:\n    int countOfArrays(int n, int m, int k) {\n        const int even = m / 2, odd = (m + 1) / 2;\n        int result = 0;\n        if (k == 0) {\n            result = (result + pow(odd, n)) % MOD;\n        }\n        for (int x = 1; x <= (n + 1 - k) / 2; ++x) {  // since (n-(k+x))-((x+1)-2) >= 0, so x <= (n+1-k)/2\n            const auto a = static_cast<int64_t>(nHr(x, (k + x) - x)) * nHr(x + 1, (n - (k + x)) - ((x + 1) - 2)) % MOD;\n            const auto b = static_cast<int64_t>(pow(even, k + x)) * pow(odd, n - (k + x)) % MOD;\n            result = (result + (a * b) % MOD) % MOD;\n        }\n        return result;\n    }\n\nprivate:\n    int nHr(int n, int k) {\n        return nCr(n + k - 1, k);\n    }\n\n    int nCr(int n, int k) {\n        while (size(inv_) <= n) {  // lazy initialization\n            fact_.emplace_back(mulmod(fact_.back(), size(inv_)));\n            inv_.emplace_back(mulmod(inv_[MOD % size(inv_)], MOD - MOD / size(inv_)));  // https://cp-algorithms.com/algebra/module-inverse.html\n            inv_fact_.emplace_back(mulmod(inv_fact_.back(), inv_.back()));\n        }\n        return mulmod(mulmod(fact_[n], inv_fact_[n - k]), inv_fact_[k]);\n    }\n\n    uint32_t addmod(uint32_t a, uint32_t b) {  // avoid overflow\n        a %= MOD, b %= MOD;\n        if (MOD - a <= b) {\n            b -= MOD;  // relied on unsigned integer overflow in order to give the expected results\n        }\n        return a + b;\n    }\n\n    // reference: https://stackoverflow.com/questions/12168348/ways-to-do-modulo-multiplication-with-primitive-types\n    uint32_t mulmod(uint32_t a, uint32_t b)  {  // avoid overflow\n        a %= MOD, b %= MOD;\n        uint32_t result = 0;\n        if (a < b) {\n            swap(a, b);\n        }\n        while (b > 0)  { \n            if (b % 2 == 1) {\n                result = addmod(result, a);\n            }\n            a = addmod(a, a);\n            b /= 2; \n        } \n        return result; \n    }\n\n    int pow(int a, int b) {\n        while (b >= size(pow_[a])) {\n            pow_[a].emplace_back(!empty(pow_[a]) ? (static_cast<int64_t>(pow_[a].back()) * a) % MOD : 1);\n        }\n        return pow_[a][b];\n    }\n\n    static const uint32_t MOD = 1e9 + 7;\n    vector<int> fact_ = {1, 1};\n    vector<int> inv_ = {1, 1};\n    vector<int> inv_fact_ = {1, 1};\n    unordered_map<int, vector<int>> pow_;\n};\n\n// Time:  O(n * k)\n// Space: O(k)\n// dp\nclass Solution2 {\npublic:\n    int countOfArrays(int n, int m, int k) {\n        static const int MOD = 1e9 + 7;\n\n        const int even = m / 2, odd = (m + 1) / 2;\n        vector<vector<int>> dp(2, vector<int>(k + 1));\n        dp[0][0] = even;\n        dp[1][0] = odd;\n        for (int _ = 0; _ < n - 1; ++_) {\n            for (int i = k; i >= 0; --i) {\n                tie(dp[0][i], dp[1][i]) = pair((static_cast<int64_t>((i - 1 >= 0 ? dp[0][i - 1] : 0) + dp[1][i]) * even) % MOD,\n                                               (static_cast<int64_t>(dp[0][i] + dp[1][i]) * odd) % MOD);\n            }\n        }\n        return (dp[0][k] + dp[1][k]) % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# stars and bars, combinatorics\nclass Solution(object):\n    def countOfArrays(self, n, m, k):\n        \"\"\"\n        :type n: int\n        :type m: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        fact, inv, inv_fact = [[1]*2 for _ in xrange(3)]\n        def nCr(n, k):\n            while len(inv) <= n:  # lazy initialization\n                fact.append(fact[-1]*len(inv) % MOD)\n                inv.append(inv[MOD%len(inv)]*(MOD-MOD//len(inv)) % MOD)  # https://cp-algorithms.com/algebra/module-inverse.html\n                inv_fact.append(inv_fact[-1]*inv[-1] % MOD)\n            return (fact[n]*inv_fact[n-k] % MOD) * inv_fact[k] % MOD\n\n        def nHr(n, k):\n            return nCr(n+k-1, k)\n\n        lookup = collections.defaultdict(list)\n        def pow(a, b):\n            while len(lookup[a]) <= b:\n                lookup[a].append((lookup[a][-1]*a)%MOD if lookup[a] else 1)\n            return lookup[a][b]\n\n        MOD = 10**9+7\n        even, odd = m//2, (m+1)//2\n        result = 0\n        if k == 0:\n            result = (result+pow(odd, n))%MOD\n        for x in xrange(1, (n+1-k)//2+1):  # since (n-(k+x))-((x+1)-2) >= 0, so x <= (n+1-k)/2\n            result = (result+(nHr(x, (k+x)-x)*nHr(x+1, (n-(k+x))-((x+1)-2))*pow(even, k+x)*pow(odd, n-(k+x))%MOD))%MOD\n        return result\n\n\n# Time:  O(n * k)\n# Space: O(k)\n# dp\nclass Solution2(object):\n    def countOfArrays(self, n, m, k):\n        \"\"\"\n        :type n: int\n        :type m: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        even, odd = m//2, (m+1)//2\n        dp = [[0]*(k+1) for _ in xrange(2)]\n        dp[0][0], dp[1][0] = even, odd\n        for _ in xrange(n-1):\n            for i in reversed(xrange(k+1)):\n                dp[0][i], dp[1][i] = (((dp[0][i-1] if i-1 >= 0 else 0)+dp[1][i])*even)%MOD, ((dp[0][i]+dp[1][i])*odd)%MOD\n        return (dp[0][k]+dp[1][k])%MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

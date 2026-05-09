@@ -1,0 +1,43 @@
+{
+  "id": "3297b45a-4ee4-4775-8bc9-c0c69bc9a254",
+  "slug": "median-of-a-binary-search-tree-level",
+  "title": "Median of a Binary Search Tree Level",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,null,5,null,7]\n2\n[6,3,8]\n1\n[2,1]\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// bfs\nclass Solution {\npublic:\n    int levelMedian(TreeNode* root, int level) {\n        const auto& bfs = [](auto root, int level) {\n            vector<TreeNode *> q = {root};\n            for (int d = 0; !empty(q); ++d) {\n                if (d == level) {\n                    return q;\n                }\n                vector<TreeNode *> new_q;\n                for (const auto& u : q) {\n                    if (u->left) {\n                        new_q.emplace_back(u->left);\n                    }\n                    if (u->right) {\n                        new_q.emplace_back(u->right);\n                    }\n                }\n                q = move(new_q);\n            }\n            return vector<TreeNode *>();\n        };\n\n        const auto& arr = bfs(root, level);\n        return !empty(arr) ? arr[size(arr) / 2]->val : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# bfs\nclass Solution(object):\n    def levelMedian(self, root, level):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :type level: int\n        :rtype: int\n        \"\"\"\n        def bfs(root, level):\n            q = [root]\n            d = 0\n            while q:\n                if d == level:\n                    return q\n                new_q = []\n                for u in q:\n                    if u.left:\n                        new_q.append(u.left)\n                    if u.right:\n                        new_q.append(u.right)\n                q = new_q\n                d += 1\n            return []\n    \n        arr = bfs(root, level)\n        return arr[len(arr)//2].val if arr else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

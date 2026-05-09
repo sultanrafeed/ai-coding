@@ -1,0 +1,41 @@
+{
+  "id": "832ec87e-5c79-4730-928b-106d1d682ebf",
+  "slug": "buildings-with-an-ocean-view",
+  "title": "Buildings With an Ocean View",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "stack",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,2,3,1]\n[4,3,2,1]\n[1,3,2,4]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> findBuildings(vector<int>& heights) {\n        vector<int> result;\n        for (int i = 0; i < size(heights); ++i) {\n            while (!empty(result) && heights[result.back()] <= heights[i]) {\n                result.pop_back();\n            }\n            result.emplace_back(i);\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\nclass Solution2 {\npublic:\n    vector<int> findBuildings(vector<int>& heights) {\n        vector<int> result;\n        for (int i = size(heights) - 1; i >= 0; --i) {\n            if (empty(result) || heights[i] > heights[result.back()]) {\n                result.emplace_back(i);\n            }\n        }\n        return {rbegin(result), rend(result)};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def findBuildings(self, heights):\n        \"\"\"\n        :type heights: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        for i, h in enumerate(heights):\n            while result and heights[result[-1]] <= h:\n                result.pop()\n            result.append(i)\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def findBuildings(self, heights):\n        \"\"\"\n        :type heights: List[int]\n        :rtype: List[int]\n        \"\"\"\n        result = []\n        for i in reversed(xrange(len(heights))):\n            if not result or heights[result[-1]] < heights[i]:\n                result.append(i)\n        result.reverse()\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

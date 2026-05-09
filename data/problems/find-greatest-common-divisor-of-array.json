@@ -1,0 +1,35 @@
+{
+  "id": "9dbdbd02-0d90-47d7-a64d-f1cdcd8824d0",
+  "slug": "find-greatest-common-divisor-of-array",
+  "title": "Find Greatest Common Divisor of Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, return<strong> </strong><em>the <strong>greatest common divisor</strong> of the smallest number and largest number in </em><code>nums</code>.</p>\n\n<p>The <strong>greatest common divisor</strong> of two numbers is the largest positive integer that evenly divides both numbers.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,5,6,9,10]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong>\nThe smallest number in nums is 2.\nThe largest number in nums is 10.\nThe greatest common divisor of 2 and 10 is 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [7,5,6,8,3]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong>\nThe smallest number in nums is 3.\nThe largest number in nums is 8.\nThe greatest common divisor of 3 and 8 is 1.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,3]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong>\nThe smallest number in nums is 3.\nThe largest number in nums is 3.\nThe greatest common divisor of 3 and 3 is 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findGCD(vector<int>& nums) {\n        return gcd(*min_element(cbegin(nums), cend(nums)),\n                   *max_element(cbegin(nums), cend(nums)));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport fractions\n\n\nclass Solution(object):\n    def findGCD(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return fractions.gcd(min(nums), max(nums))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

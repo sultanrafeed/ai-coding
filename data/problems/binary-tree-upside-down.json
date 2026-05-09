@@ -1,0 +1,35 @@
+{
+  "id": "9f955ea2-21ef-4cb5-a67a-9f6992605b3b",
+  "slug": "binary-tree-upside-down",
+  "title": "Binary Tree Upside Down",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5]\n[]\n[1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n\nclass Solution(object):\n    # @param root, a tree node\n    # @return root of the upside down tree\n    def upsideDownBinaryTree(self, root):\n        p, parent, parent_right = root, None, None\n\n        while p:\n            left = p.left\n            p.left = parent_right\n            parent_right = p.right\n            p.right = parent\n            parent = p\n            p = left\n\n        return parent\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    # @param root, a tree node\n    # @return root of the upside down tree\n    def upsideDownBinaryTree(self, root):\n        return self.upsideDownBinaryTreeRecu(root, None)\n\n    def upsideDownBinaryTreeRecu(self, p, parent):\n        if p is None:\n            return parent\n\n        root = self.upsideDownBinaryTreeRecu(p.left, p)\n        if parent:\n            p.left = parent.right\n        else:\n            p.left = None\n        p.right = parent\n\n        return root",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

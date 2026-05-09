@@ -1,0 +1,37 @@
+{
+  "id": "3fbdb8ff-9642-452b-a836-de38571d002b",
+  "slug": "maximum-star-sum-of-a-graph",
+  "title": "Maximum Star Sum of a Graph",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There is an undirected graph consisting of <code>n</code> nodes numbered from <code>0</code> to <code>n - 1</code>. You are given a <strong>0-indexed</strong> integer array <code>vals</code> of length <code>n</code> where <code>vals[i]</code> denotes the value of the <code>i<sup>th</sup></code> node.</p>\n\n<p>You are also given a 2D integer array <code>edges</code> where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> denotes that there exists an <strong>undirected</strong> edge connecting nodes <code>a<sub>i</sub></code> and <code>b<sub>i.</sub></code></p>\n\n<p>A <strong>star graph</strong> is a subgraph of the given graph having a center node containing <code>0</code> or more neighbors. In other words, it is a subset of edges of the given graph such that there exists a common node for all edges.</p>\n\n<p>The image below shows star graphs with <code>3</code> and <code>4</code> neighbors respectively, centered at the blue node.</p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/11/07/max-star-sum-descdrawio.png\" style=\"width: 400px; height: 179px;\" />\n<p>The <strong>star sum</strong> is the sum of the values of all the nodes present in the star graph.</p>\n\n<p>Given an integer <code>k</code>, return <em>the <strong>maximum star sum</strong> of a star graph containing <strong>at most</strong> </em><code>k</code><em> edges.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/11/07/max-star-sum-example1drawio.png\" style=\"width: 300px; height: 291px;\" />\n<pre>\n<strong>Input:</strong> vals = [1,2,3,4,10,-10,-20], edges = [[0,1],[1,2],[1,3],[3,4],[3,5],[3,6]], k = 2\n<strong>Output:</strong> 16\n<strong>Explanation:</strong> The above diagram represents the input graph.\nThe star graph with the maximum star sum is denoted by blue. It is centered at 3 and includes its neighbors 1 and 4.\nIt can be shown it is not possible to get a star graph with a sum greater than 16.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> vals = [-5], edges = [], k = 0\n<strong>Output:</strong> -5\n<strong>Explanation:</strong> There is only one possible star graph, which is node 0 itself.\nHence, we return -5.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == vals.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>4</sup> &lt;= vals[i] &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= edges.length &lt;= min(n * (n - 1) / 2</code><code>, 10<sup>5</sup>)</code></li>\n\t<li><code>edges[i].length == 2</code></li>\n\t<li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt;= n - 1</code></li>\n\t<li><code>a<sub>i</sub> != b<sub>i</sub></code></li>\n\t<li><code>0 &lt;= k &lt;= n - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "graph",
+    "sorting",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// quick select\nclass Solution {\npublic:\n    int maxStarSum(vector<int>& vals, vector<vector<int>>& edges, int k) {\n        vector<vector<int>> adj(size(vals));\n        for (const auto& e : edges) {\n            if (vals[e[1]] > 0) {\n                adj[e[0]].emplace_back(e[1]);\n            }\n            if (vals[e[0]] > 0) {\n                adj[e[1]].emplace_back(e[0]);\n            }\n        }\n        int result = numeric_limits<int>::min();\n        for (int u = 0; u < size(vals); ++u) {\n            if (1 <= k && k <= size(adj[u])) {\n                nth_element(begin(adj[u]), begin(adj[u]) + k - 1, end(adj[u]),\n                            [&](const auto& a, const auto& b) {\n                                return vals[a] > vals[b];\n                            });\n            }\n            result = max(result, vals[u] + accumulate(cbegin(adj[u]), cbegin(adj[u]) + min(k, static_cast<int>(size(adj[u]))), 0,\n                                                      [&](const auto& total, const auto& x) {\n                                                          return total + vals[x];\n                                                      }));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport random\n\n\n# quick select\nclass Solution(object):\n    def maxStarSum(self, vals, edges, k):\n        \"\"\"\n        :type vals: List[int]\n        :type edges: List[List[int]]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def nth_element(nums, n, compare=lambda a, b: a < b):\n            def tri_partition(nums, left, right, target, compare):\n                mid = left\n                while mid <= right:\n                    if nums[mid] == target:\n                        mid += 1\n                    elif compare(nums[mid], target):\n                        nums[left], nums[mid] = nums[mid], nums[left]\n                        left += 1\n                        mid += 1\n                    else:\n                        nums[mid], nums[right] = nums[right], nums[mid]\n                        right -= 1\n                return left, right\n\n            left, right = 0, len(nums)-1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)\n                if pivot_left <= n <= pivot_right:\n                    return\n                elif pivot_left > n:\n                    right = pivot_left-1\n                else:  # pivot_right < n.\n                    left = pivot_right+1\n\n        adj = [[] for _ in xrange(len(vals))]\n        for u, v in edges:\n            if vals[v] > 0:\n                adj[u].append(v)\n            if vals[u] > 0:\n                adj[v].append(u)\n        result = float(\"-inf\")\n        for u in xrange(len(vals)):\n            if 1 <= k <= len(adj[u]):\n                nth_element(adj[u], k-1, lambda a, b: vals[a] > vals[b])\n            result = max(result, vals[u]+sum(vals[adj[u][i]] for i in range(min(k, len(adj[u])))))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

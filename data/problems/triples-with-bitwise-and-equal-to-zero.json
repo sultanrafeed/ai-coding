@@ -1,0 +1,35 @@
+{
+  "id": "e275456b-bb1e-487c-8fe0-8ec08af3e5c6",
+  "slug": "triples-with-bitwise-and-equal-to-zero",
+  "title": "Triples with Bitwise AND Equal To Zero",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer array nums, return <em>the number of <strong>AND triples</strong></em>.</p>\n\n<p>An <strong>AND triple</strong> is a triple of indices <code>(i, j, k)</code> such that:</p>\n\n<ul>\n\t<li><code>0 &lt;= i &lt; nums.length</code></li>\n\t<li><code>0 &lt;= j &lt; nums.length</code></li>\n\t<li><code>0 &lt;= k &lt; nums.length</code></li>\n\t<li><code>nums[i] &amp; nums[j] &amp; nums[k] == 0</code>, where <code>&amp;</code> represents the bitwise-AND operator.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,3]\n<strong>Output:</strong> 12\n<strong>Explanation:</strong> We could choose the following i, j, k triples:\n(i=0, j=0, k=1) : 2 &amp; 2 &amp; 1\n(i=0, j=1, k=0) : 2 &amp; 1 &amp; 2\n(i=0, j=1, k=1) : 2 &amp; 1 &amp; 1\n(i=0, j=1, k=2) : 2 &amp; 1 &amp; 3\n(i=0, j=2, k=1) : 2 &amp; 3 &amp; 1\n(i=1, j=0, k=0) : 1 &amp; 2 &amp; 2\n(i=1, j=0, k=1) : 1 &amp; 2 &amp; 1\n(i=1, j=0, k=2) : 1 &amp; 2 &amp; 3\n(i=1, j=1, k=0) : 1 &amp; 1 &amp; 2\n(i=1, j=2, k=0) : 1 &amp; 3 &amp; 2\n(i=2, j=0, k=1) : 3 &amp; 2 &amp; 1\n(i=2, j=1, k=0) : 3 &amp; 1 &amp; 2\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,0,0]\n<strong>Output:</strong> 27\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>0 &lt;= nums[i] &lt; 2<sup>16</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn), n is the max of A\n// Space: O(n)\n\n// Reference: https://blog.csdn.net/john123741/article/details/76576925\n// FWT solution\nclass Solution {\npublic:\n    int countTriplets(vector<int>& A) {\n        static const int k = 3;\n        const auto max_A = *max_element(A.cbegin(), A.cend());\n        int n = 1;\n        for (; n <= max_A; n <<= 1);\n        vector<int> B(n); \n        for (const auto& x : A) {\n            ++B[x];\n        }\n\n        FWT(&B, 1);\n        for(auto& x : B) {\n            x = pow(x, k);\n        }\n        FWT(&B, -1);\n\n        return B[0];\n    }\n    \nprivate:\n    void FWT(vector<int> *A, int v) {\n        for (int d = 1; d < A->size(); d <<= 1) {\n            for (int m = d << 1, i = 0; i < A->size(); i += m) {\n                for (int j = 0; j < d ; ++j) {  \n                    (*A)[i + j] += (*A)[i + j + d] * v;\n                }\n            }  \n        }\n    }\n};\n\n// Time:  O(n^3), n is the length of A\n// Space: O(n^2)\nclass Solution2 {\npublic:\n    int countTriplets(vector<int>& A) {\n        unordered_map<int, int> count;\n        for (int i = 0 ;i < A.size(); ++i) {\n            for (int j = 0; j < A.size(); ++j) {\n                ++count[A[i] & A[j]];\n            }\n        }\n        int result = 0;\n        for (int k = 0; k < A.size(); ++k) {\n            for (const auto& kvp : count) {\n                if ((A[k] & kvp.first) == 0) {\n                    result += kvp.second;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn), n is the max of A\n# Space: O(n)\n\nimport collections\n\n\n# Reference: https://blog.csdn.net/john123741/article/details/76576925\n# FWT solution\nclass Solution(object):\n    def countTriplets(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        def FWT(A, v):\n            B = A[:]\n            d = 1\n            while d < len(B):\n                for i in xrange(0, len(B), d << 1):\n                    for j in xrange(d):\n                        B[i+j] += B[i+j+d] * v\n                d <<= 1\n            return B\n\n        k = 3\n        n, max_A = 1, max(A)\n        while n <= max_A:\n            n *= 2\n        count = collections.Counter(A)\n        B = [count[i] for i in xrange(n)]\n        C = FWT(map(lambda x : x**k, FWT(B, 1)), -1)\n        return C[0]\n\n\n# Time:  O(n^3), n is the length of A\n# Space: O(n^2)\nimport collections\n\n\nclass Solution2(object):\n    def countTriplets(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        count = collections.defaultdict(int)\n        for i in xrange(len(A)):\n            for j in xrange(len(A)):\n                count[A[i]&A[j]] += 1\n        result = 0\n        for k in xrange(len(A)):\n            for v in count:\n                if A[k]&v == 0:\n                    result += count[v]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

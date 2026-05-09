@@ -1,0 +1,42 @@
+{
+  "id": "73c785c5-047d-46d0-bf8b-e5aae5e9c987",
+  "slug": "basic-calculator-iii",
+  "title": "Basic Calculator III",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "string",
+    "stack",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"1+1\"\n\"6-4/2\"\n\"2*(5+5*2)/3+(6/2+8)\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// Support +, -, *, /.\nclass Solution {\npublic:\n    int calculate(string s) {\n        static const unordered_map<char, int> precedence = {{'+', 0}, {'-', 0}, {'*', 1}, {'/', 1}};\n\n        stack<int64_t> operands;\n        stack<char> operators;\n        int64_t operand = 0;\n        for (int i = 0; i < size(s); ++i) {\n            if (isdigit(s[i])) {\n                operand = operand * 10 + s[i] - '0';\n                if (i + 1 == size(s) || !isdigit(s[i + 1])) {\n                    operands.emplace(operand);\n                    operand = 0;\n                }\n            } else if (s[i] == '(') {\n                operators.emplace(s[i]);\n            } else if (s[i] == ')') {\n                while (operators.top() != '(') {\n                    compute(&operands, &operators);\n                }\n                operators.pop();\n            } else if (precedence.count(s[i])) {\n                while (!empty(operators) && precedence.count(operators.top()) && \n                       precedence.at(operators.top()) >= precedence.at(s[i])) {\n                     compute(&operands, &operators);\n                }\n                operators.emplace(s[i]);\n            }\n        }\n        while (!empty(operators)) {\n            compute(&operands, &operators);\n        }\n        return operands.top();\n    }\n\nprivate:\n    template<typename T>\n    void compute(stack<T> *operands, stack<char> *operators) {\n        const auto right = operands->top(); operands->pop();\n        const auto left = operands->top(); operands->pop();\n        const char op = operators->top(); operators->pop();\n        if (op == '+') {\n            operands->emplace(left + right);\n        } else if (op == '-') {\n            operands->emplace(left - right);\n        } else if (op == '*') {\n            operands->emplace(left * right);\n        } else if (op == '/') {\n            operands->emplace(left / right);\n        }\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// Support +, -, *, /.\nclass Solution2 {\npublic:\n    int calculate(string s) {\n        stack<int64_t> operands;\n        stack<char> operators;\n        string operand;\n        for (int i = s.length() - 1; i >= 0; --i) {\n            if (isdigit(s[i])) {\n                operand.push_back(s[i]);\n                if (i == 0 || !isdigit(s[i - 1])) {\n                    reverse(operand.begin(), operand.end());\n                    operands.emplace(stol(operand));\n                    operand.clear();\n                }\n            } else if (s[i] == ')' || s[i] == '*' ||\n                       s[i] == '/') {\n                operators.emplace(s[i]);\n            } else if (s[i] == '+' || s[i] == '-') {\n                while (!operators.empty() && (operators.top() == '*' ||\n                       operators.top() == '/')) {\n                     compute(operands, operators);\n                }\n                operators.emplace(s[i]);\n            } else if (s[i] == '(') {\n                // operators at least one element, i.e. ')'.\n                while (operators.top() != ')') {\n                    compute(operands, operators);\n                }\n                operators.pop();\n            }\n        }\n        while (!operators.empty()) {\n            compute(operands, operators);\n        }\n        return operands.top();\n    }\n\n    template<typename T>\n    void compute(stack<T>& operands, stack<char>& operators) {\n        const auto left = operands.top();\n        operands.pop();\n        const auto right = operands.top();\n        operands.pop();\n        const char op = operators.top();\n        operators.pop();\n        if (op == '+') {\n            operands.emplace(left + right);\n        } else if (op == '-') {\n            operands.emplace(left - right);\n        } else if (op == '*') {\n            operands.emplace(left * right);\n        } else if (op == '/') {\n            operands.emplace(left / right);\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport operator\n\n\nclass Solution(object):\n    def calculate(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        def compute(operands, operators):\n            right, left = operands.pop(), operands.pop()\n            operands.append(ops[operators.pop()](left, right))\n\n        ops = {'+':operator.add, '-':operator.sub, '*':operator.mul, '/':operator.div}\n        precedence = {'+':0, '-':0, '*':1, '/':1}\n        operands, operators, operand = [], [], 0\n        for i in xrange(len(s)):\n            if s[i].isdigit():\n                operand = operand*10 + int(s[i])\n                if i == len(s)-1 or not s[i+1].isdigit():\n                    operands.append(operand)\n                    operand = 0\n            elif s[i] == '(':\n                operators.append(s[i])\n            elif s[i] == ')':\n                while operators[-1] != '(':\n                    compute(operands, operators)\n                operators.pop()\n            elif s[i] in precedence:\n                while operators and operators[-1] in precedence and \\\n                      precedence[operators[-1]] >= precedence[s[i]]:\n                    compute(operands, operators)\n                operators.append(s[i])\n        while operators:\n            compute(operands, operators)\n        return operands[-1]\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    def calculate(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        operands, operators = [], []\n        operand = \"\"\n        for i in reversed(xrange(len(s))):\n            if s[i].isdigit():\n                operand += s[i]\n                if i == 0 or not s[i-1].isdigit():\n                    operands.append(int(operand[::-1]))\n                    operand = \"\"\n            elif s[i] == ')' or s[i] == '*' or s[i] == '/':\n                operators.append(s[i])\n            elif s[i] == '+' or s[i] == '-':\n                while operators and \\\n                      (operators[-1] == '*' or operators[-1] == '/'):\n                    self.compute(operands, operators)\n                operators.append(s[i])\n            elif s[i] == '(':\n                while operators[-1] != ')':\n                    self.compute(operands, operators)\n                operators.pop()\n\n        while operators:\n            self.compute(operands, operators)\n\n        return operands[-1]\n\n    def compute(self, operands, operators):\n        left, right = operands.pop(), operands.pop()\n        op = operators.pop()\n        if op == '+':\n            operands.append(left + right)\n        elif op == '-':\n            operands.append(left - right)\n        elif op == '*':\n            operands.append(left * right)\n        elif op == '/':\n            operands.append(left / right)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "925bfae9-895b-4586-90f3-00c7f5382bc0",
+  "slug": "maximum-subarray-sum-after-one-operation",
+  "title": "Maximum Subarray Sum After One Operation",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxSumAfterOperation(vector<int>& nums) {\n        int prev_with_square = 0, prev_without_square = 0;\n        int result = 0;\n        for (const auto& num : nums) {\n            int without_square = max(num, num + prev_without_square);\n            int with_square = max({num * num, num * num + prev_without_square, prev_with_square + num});\n            result = max(result, with_square);\n            prev_with_square = with_square;\n            prev_without_square = without_square;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def maxSumAfterOperation(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        prev_with_square = prev_without_square = 0\n        result = 0\n        for num in nums:\n            without_square = max(num, num+prev_without_square)\n            with_square = max(num*num, num*num+prev_without_square, num+prev_with_square)\n            result = max(result, with_square)\n            prev_with_square, prev_without_square = with_square, without_square\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

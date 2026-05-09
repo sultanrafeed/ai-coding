@@ -1,0 +1,34 @@
+{
+  "id": "f85ea5f3-42f5-4aec-9ae5-f9a5d17fc619",
+  "slug": "build-array-where-you-can-find-the-maximum-exactly-k-comparisons",
+  "title": "Build Array Where You Can Find The Maximum Exactly K Comparisons",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given three integers <code>n</code>, <code>m</code> and <code>k</code>. Consider the following algorithm to find the maximum element of an array of positive integers:</p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/04/02/e.png\" style=\"width: 424px; height: 372px;\" />\n<p>You should build the array arr which has the following properties:</p>\n\n<ul>\n\t<li><code>arr</code> has exactly <code>n</code> integers.</li>\n\t<li><code>1 &lt;= arr[i] &lt;= m</code> where <code>(0 &lt;= i &lt; n)</code>.</li>\n\t<li>After applying the mentioned algorithm to <code>arr</code>, the value <code>search_cost</code> is equal to <code>k</code>.</li>\n</ul>\n\n<p>Return <em>the number of ways</em> to build the array <code>arr</code> under the mentioned conditions. As the answer may grow large, the answer <strong>must be</strong> computed modulo <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2, m = 3, k = 1\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The possible arrays are [1, 1], [2, 1], [2, 2], [3, 1], [3, 2] [3, 3]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 5, m = 2, k = 3\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> There are no possible arrays that satisfy the mentioned conditions.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 9, m = 1, k = 1\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The only possible array is [1, 1, 1, 1, 1, 1, 1, 1, 1]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 50</code></li>\n\t<li><code>1 &lt;= m &lt;= 100</code></li>\n\t<li><code>0 &lt;= k &lt;= n</code></li>\n</ul>\n",
+  "patterns": [
+    "dynamic-programming",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * m * k)\n// Space: O(m * k)\n\nclass Solution {\npublic:\n    int numOfArrays(int n, int m, int k) {\n        static const int MOD = 1e9 + 7;\n        // dp[l][i][j] = number of ways of constructing array length l with max element i at search cost j\n        vector<vector<vector<uint64_t>>> dp(2, vector<vector<uint64_t>>(m + 1, vector<uint64_t>(k + 1)));\n        // prefix_dp[l][i][j] = sum(dp[l][i][j] for i in [1..i])\n        vector<vector<vector<uint64_t>>> prefix_dp(2, vector<vector<uint64_t>>(m + 1, vector<uint64_t>(k + 1)));\n        for (uint64_t i = 1; i <= m; ++i) {\n            dp[1][i][1] = 1;\n            prefix_dp[1][i][1] = (prefix_dp[1][i - 1][1] + dp[1][i][1]) % MOD;\n        }\n        for (uint64_t l = 2; l <= n; ++l) {\n            for (uint64_t i = 1; i <= m; ++i) {\n                for (uint64_t j = 1; j <= k; ++j) {\n                    dp[l % 2][i][j] = (i * dp[(l - 1) % 2][i][j] % MOD + prefix_dp[(l - 1) % 2][i - 1][j - 1]) % MOD;\n                    prefix_dp[l % 2][i][j] = (prefix_dp[l % 2][i - 1][j] + dp[l % 2][i][j]) % MOD;\n                }\n            }\n        }\n        return prefix_dp[n % 2][m][k];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * m * k)\n# Space: O(m * k)\n\nclass Solution(object):\n    def numOfArrays(self, n, m, k):\n        \"\"\"\n        :type n: int\n        :type m: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9 + 7\n        # dp[l][i][j] = number of ways of constructing array length l with max element i at search cost j\n        dp = [[[0]*(k+1) for _ in xrange(m+1)] for _ in xrange(2)]\n        # prefix_dp[l][i][j] = sum(dp[l][i][j] for i in [1..i])\n        prefix_dp = [[[0]*(k+1) for _ in xrange(m+1)] for _ in xrange(2)]\n        for i in xrange(1, m+1):\n            dp[1][i][1] = 1\n            prefix_dp[1][i][1] = (prefix_dp[1][i-1][1] + dp[1][i][1])%MOD\n        for l in xrange(2, n+1):\n            for i in xrange(1, m+1):\n                for j in xrange(1, k+1):\n                    dp[l%2][i][j] = (i*dp[(l-1)%2][i][j]%MOD + prefix_dp[(l-1)%2][i-1][j-1])%MOD\n                    prefix_dp[l%2][i][j] = (prefix_dp[l%2][i-1][j] + dp[l%2][i][j])%MOD\n        return prefix_dp[n%2][m][k]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

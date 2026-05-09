@@ -1,0 +1,35 @@
+{
+  "id": "84124364-ad08-40f1-9f89-b1c37638cdf1",
+  "slug": "maximum-average-subarray-ii",
+  "title": "Maximum Average Subarray II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    double findMaxAverage(vector<int>& nums, int k) {\n        double left = *min_element(nums.begin(), nums.end());\n        double delta = numeric_limits<double>::max();\n        while (delta > 1e-5) {\n            delta = getDelta(left, nums, k);\n            left += delta;\n        }\n        return left;\n    }\n\nprivate:\n    double getDelta(double avg, const vector<int>& nums, int k) {\n        vector<double> accu(nums.size() + 1);\n        int minval_pos = -1;\n        double delta = 0.0;\n        for (int i = 0; i < nums.size(); ++i) {\n            accu[i + 1] = nums[i] + accu[i] - avg;\n            if (i >= k - 1) {\n                if (minval_pos == -1 || accu[i - k + 1] < accu[minval_pos]) {\n                    minval_pos = i - k + 1;\n                }\n                if (accu[i+1] - accu[minval_pos] >= 0) {\n                    delta = max(delta, (accu[i + 1] - accu[minval_pos]) / (i + 1 - minval_pos));\n                }\n            }\n        }\n        return delta;\n    }\n};\n\n\n// Time:  O(nlogm), m is (max_val - min_val)\n// Space: O(1)\nclass Solution2 {\npublic:\n    double findMaxAverage(vector<int>& nums, int k) {\n        double left = *min_element(nums.begin(), nums.end());\n        double right = *max_element(nums.begin(), nums.end());\n        while (right - left > 1e-5) {\n            double mid = left + (right - left) / 2;\n            if (isMidLargerOrEqualToTarget(mid, nums, k)) {\n                right = mid;\n            } else {\n                left = mid;\n            }\n        }\n        return left;\n    }\n\nprivate:\n    bool isMidLargerOrEqualToTarget(double mid, const vector<int>& nums, int k) {\n        double sum = 0, prev = 0, min_sum = 0;\n        for (int i = 0; i < k; ++i) {\n            sum += nums[i] - mid;\n        }\n        if (sum > 0) {\n            return false;\n        }\n        for (int i = k; i < nums.size(); ++i) {\n            sum += nums[i] - mid;\n            prev += nums[i - k] - mid;\n            min_sum = min(prev, min_sum);\n            if (sum > min_sum) {\n                return false;\n            }\n        }\n        return true;  \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def findMaxAverage(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: float\n        \"\"\"\n        def getDelta(avg, nums, k):\n            accu = [0.0] * (len(nums) + 1)\n            minval_pos = None\n            delta = 0.0\n            for i in xrange(len(nums)):\n                accu[i+1] = nums[i] + accu[i] - avg\n                if i >= (k-1):\n                    if minval_pos == None or accu[i-k+1] < accu[minval_pos]:\n                        minval_pos = i-k+1\n                    if accu[i+1] - accu[minval_pos] >= 0:\n                        delta = max(delta, (accu[i+1] - accu[minval_pos]) / (i+1 - minval_pos))\n            return delta\n\n        left, delta = min(nums), float(\"inf\")\n        while delta > 1e-5:\n            delta = getDelta(left, nums, k)\n            left += delta\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

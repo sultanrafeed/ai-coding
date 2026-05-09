@@ -1,0 +1,33 @@
+{
+  "id": "74bddf5a-592f-44f0-b5a6-27c82acf81c5",
+  "slug": "angle-between-hands-of-a-clock",
+  "title": "Angle Between Hands of a Clock",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two numbers, <code>hour</code> and <code>minutes</code>, return <em>the smaller angle (in degrees) formed between the </em><code>hour</code><em> and the </em><code>minute</code><em> hand</em>.</p>\n\n<p>Answers within <code>10<sup>-5</sup></code> of the actual value will be accepted as correct.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/12/26/sample_1_1673.png\" style=\"width: 300px; height: 296px;\" />\n<pre>\n<strong>Input:</strong> hour = 12, minutes = 30\n<strong>Output:</strong> 165\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/12/26/sample_2_1673.png\" style=\"width: 300px; height: 301px;\" />\n<pre>\n<strong>Input:</strong> hour = 3, minutes = 30\n<strong>Output:</strong> 75\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/12/26/sample_3_1673.png\" style=\"width: 300px; height: 301px;\" />\n<pre>\n<strong>Input:</strong> hour = 3, minutes = 15\n<strong>Output:</strong> 7.5\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= hour &lt;= 12</code></li>\n\t<li><code>0 &lt;= minutes &lt;= 59</code></li>\n</ul>\n",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    double angleClock(int hour, int minutes) {\n        double angle1 = (hour % 12 * 60 + minutes) / 720.0;\n        double angle2 = minutes / 60.0;\n        double diff = abs(angle1 - angle2);\n        return min(diff, 1.0 - diff) * 360.0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def angleClock(self, hour, minutes):\n        \"\"\"\n        :type hour: int\n        :type minutes: int\n        :rtype: float\n        \"\"\"\n        angle1 = (hour % 12 * 60.0 + minutes) / 720.0\n        angle2 = minutes / 60.0\n        diff = abs(angle1-angle2)\n        return min(diff, 1.0-diff) * 360.0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

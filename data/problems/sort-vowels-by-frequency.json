@@ -1,0 +1,37 @@
+{
+  "id": "9fb9d921-ae75-4349-a03d-da1623c736ed",
+  "slug": "sort-vowels-by-frequency",
+  "title": "Sort Vowels by Frequency",
+  "difficulty": "medium",
+  "descriptionHtml": "<p data-end=\"271\" data-start=\"95\">You are given a string <code>s</code> consisting of lowercase English characters.</p>\n\n<p>Rearrange only the <strong>vowels</strong> in the string so that they appear in <strong>non-increasing</strong> order of their frequency.</p>\n\n<p>If multiple vowels have the same <strong>frequency</strong>, order them by the position of their <strong>first occurrence</strong> in <code>s</code>.</p>\n\n<p>Return the modified string.</p>\n\n<p>Vowels are <code>&#39;a&#39;</code>, <code>&#39;e&#39;</code>, <code>&#39;i&#39;</code>, <code>&#39;o&#39;</code>, and <code>&#39;u&#39;</code>.</p>\n\n<p>The <strong>frequency</strong> of a letter is the number of times it occurs in the string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;leetcode&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;leetcedo&quot;</span></p>\n\n<p><strong>Explanation:</strong>​​​​​​​</p>\n\n<ul>\n\t<li>Vowels in the string are <code>[&#39;e&#39;, &#39;e&#39;, &#39;o&#39;, &#39;e&#39;]</code> with frequencies: <code>e = 3</code>, <code>o = 1</code>.</li>\n\t<li>Sorting in non-increasing order of frequency and placing them back into the vowel positions results in <code>&quot;leetcedo&quot;</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;aeiaaioooa&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;aaaaoooiie&quot;</span></p>\n\n<p><strong>Explanation:</strong>​​​​​​​</p>\n\n<ul>\n\t<li>Vowels in the string are <code>[&#39;a&#39;, &#39;e&#39;, &#39;i&#39;, &#39;a&#39;, &#39;a&#39;, &#39;i&#39;, &#39;o&#39;, &#39;o&#39;, &#39;o&#39;, &#39;a&#39;]</code> with frequencies: <code>a = 4</code>, <code>o = 3</code>, <code>i = 2</code>, <code>e = 1</code>.</li>\n\t<li>Sorting them in non-increasing order of frequency and placing them back into the vowel positions results in <code>&quot;aaaaoooiie&quot;</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;baeiou&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;baeiou&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Each vowel appears exactly once, so all have the same frequency.</li>\n\t<li>Thus, they retain their relative order based on first occurrence, and the string remains unchanged.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists of lowercase English letters</li>\n</ul>\n",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"leetcode\"\n\"aeiaaioooa\"\n\"baeiou\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// freq table, sort\nclass Solution {\npublic:\n    string sortVowels(string s) {\n        static const string VOWELS = \"aeiou\";\n    \n        unordered_map<char, vector<int>> cnt;\n        for (int i = 0; i < size(s); ++i) {\n            if (VOWELS.find(s[i]) == string::npos) {\n                continue;\n            }\n            if (!cnt.count(s[i])) {\n                cnt[s[i]] = vector<int>{0, i};\n            }\n            ++cnt[s[i]][0];\n        }\n        vector<tuple<char, int, int>> sorted_cnt;\n        for (const auto& [k, v] : cnt) {\n            sorted_cnt.emplace_back(k, v[0], v[1]);\n        }\n        ranges::sort(sorted_cnt, [](const auto& a, const auto& b) {\n            return get<1>(a) == get<1>(b) ? get<2>(a) > get<2>(b) : get<1>(a) < get<1>(b);\n        });\n        for (int i = 0; i < size(s); ++i) {\n            if (VOWELS.find(s[i]) == string::npos) {\n                continue;\n            }\n            s[i] = get<0>(sorted_cnt.back());\n            if (!(--get<1>(sorted_cnt.back()))) {\n                sorted_cnt.pop_back();\n            }\n        }\n        return s;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# freq table, sort\nclass Solution(object):\n    def sortVowels(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        VOWELS = \"aeiou\"\n        cnt = {}\n        for i, x in enumerate(s):\n            if x not in VOWELS:\n                continue \n            if x not in cnt:\n                cnt[x] = [0, i]\n            cnt[x][0] += 1\n        sorted_cnt = sorted(([k, v, i] for k, (v, i) in cnt.iteritems()), key=lambda x: (-x[1], x[2]), reverse=True)\n        result = list(s)\n        for i in xrange(len(result)):\n            if result[i] not in VOWELS:\n                continue\n            result[i] = sorted_cnt[-1][0]\n            sorted_cnt[-1][1] -= 1\n            if not sorted_cnt[-1][1]:\n                sorted_cnt.pop()\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

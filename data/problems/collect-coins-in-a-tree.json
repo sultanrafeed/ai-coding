@@ -1,0 +1,36 @@
+{
+  "id": "eb9fd4ff-4c41-49f4-aebc-7a9c6c5ceb6d",
+  "slug": "collect-coins-in-a-tree",
+  "title": "Collect Coins in a Tree",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>There exists an undirected and unrooted tree with <code>n</code> nodes indexed from <code>0</code> to <code>n - 1</code>. You are given an integer <code>n</code> and a 2D integer array edges of length <code>n - 1</code>, where <code>edges[i] = [a<sub>i</sub>, b<sub>i</sub>]</code> indicates that there is an edge between nodes <code>a<sub>i</sub></code> and <code>b<sub>i</sub></code> in the tree. You are also given&nbsp;an array <code>coins</code> of size <code>n</code> where <code>coins[i]</code> can be either <code>0</code> or <code>1</code>, where <code>1</code> indicates the presence of a coin in the vertex <code>i</code>.</p>\n\n<p>Initially, you choose to start at any vertex in&nbsp;the tree.&nbsp;Then, you can perform&nbsp;the following operations any number of times:&nbsp;</p>\n\n<ul>\n\t<li>Collect all the coins that are at a distance of at most <code>2</code> from the current vertex, or</li>\n\t<li>Move to any adjacent vertex in the tree.</li>\n</ul>\n\n<p>Find <em>the minimum number of edges you need to go through to collect all the coins and go back to the initial vertex</em>.</p>\n\n<p>Note that if you pass an edge several times, you need to count it into the answer several times.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/03/01/graph-2.png\" style=\"width: 522px; height: 522px;\" />\n<pre>\n<strong>Input:</strong> coins = [1,0,0,0,0,1], edges = [[0,1],[1,2],[2,3],[3,4],[4,5]]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> Start at vertex 2, collect the coin at vertex 0, move to vertex 3, collect the coin at vertex 5 then move back to vertex 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2023/03/02/graph-4.png\" style=\"width: 522px; height: 522px;\" />\n<pre>\n<strong>Input:</strong> coins = [0,0,0,1,1,0,0,1], edges = [[0,1],[0,2],[1,3],[1,4],[2,5],[5,6],[5,7]]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> Start at vertex 0, collect the coins at vertices 4 and 3, move to vertex 2,  collect the coin at vertex 7, then move back to vertex 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == coins.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 3 * 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= coins[i] &lt;= 1</code></li>\n\t<li><code>edges.length == n - 1</code></li>\n\t<li><code>edges[i].length == 2</code></li>\n\t<li><code>0 &lt;= a<sub>i</sub>, b<sub>i</sub> &lt; n</code></li>\n\t<li><code>a<sub>i</sub> != b<sub>i</sub></code></li>\n\t<li><code>edges</code> represents a valid tree.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "tree",
+    "graph",
+    "topological-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// tree, bfs\nclass Solution {\npublic:\n    int collectTheCoins(vector<int>& coins, vector<vector<int>>& edges) {\n        static const int DISTANCE = 2;\n\n        vector<unordered_set<int>> adj(size(coins));\n        for (const auto& e : edges) {\n            adj[e[0]].emplace(e[1]);\n            adj[e[1]].emplace(e[0]);\n        }\n        int n = size(coins);\n        for (int i = 0; i < size(coins); ++i) {\n            int u = i;\n            while (size(adj[u]) == 1 && !coins[u]) {\n                const int v = *cbegin(adj[u]);\n                adj[u].erase(v);\n                adj[v].erase(u);\n                --n;\n                u = v;\n            }\n        }\n        vector<int> q;\n        for (int u = 0; u < size(coins); ++u) {\n            if (size(adj[u]) == 1) {\n                q.emplace_back(u);\n            }\n        }\n        for (int _ = 0; _ < DISTANCE; ++_) {\n            vector<int> new_q;\n            for (const auto& u : q) {\n                if (empty(adj[u])) {\n                    assert(n == 1);\n                    break;\n                }\n                const int v = *cbegin(adj[u]);\n                adj[u].erase(v);\n                adj[v].erase(u);\n                --n;\n                if (size(adj[v]) == 1) {\n                    new_q.emplace_back(v);\n                }\n            }\n            q = move(new_q);\n        }\n        return (n - 1) * 2;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# tree, bfs\nclass Solution(object):\n    def collectTheCoins(self, coins, edges):\n        \"\"\"\n        :type coins: List[int]\n        :type edges: List[List[int]]\n        :rtype: int\n        \"\"\"\n        DISTANCE = 2\n\n        adj = [set() for _ in xrange(len(coins))]\n        for u, v in edges:\n            adj[u].add(v)\n            adj[v].add(u)\n        n = len(coins)\n        q = []\n        for u in xrange(len(coins)):\n            while len(adj[u]) == 1 and not coins[u]:\n                v = adj[u].pop()\n                adj[v].remove(u)\n                n -= 1\n                u = v\n        q = [u for u in xrange(len(coins)) if len(adj[u]) == 1]\n        for _ in xrange(DISTANCE):\n            new_q = []\n            for u in q:\n                if not adj[u]:\n                    assert(n == 1)\n                    break\n                v = adj[u].pop()\n                adj[v].remove(u)\n                n -= 1\n                if len(adj[v]) == 1:\n                    new_q.append(v)\n            q = new_q\n        return (n-1)*2",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "e32d32ad-e580-48d0-99d6-5e04b2af94cc",
+  "slug": "connect",
+  "title": "Connect",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(1)\n\n/**\n * Definition for binary tree with next pointer.\n * struct TreeLinkNode {\n *  int val;\n *  TreeLinkNode *left, *right, *next;\n *  TreeLinkNode(int x) : val(x), left(NULL), right(NULL), next(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        void connect(TreeLinkNode *root) {\n            for(TreeLinkNode *list, *first; root; root = first) { // enumerate each level of depth\n                list = first = NULL;\n                for(; root; root = root->next) { // enumerate nodes at the same level of depth\n                    if(!first) first = (root->left)? root->left:root->right;\n                    if(root->left) {\n                        if(list) list->next = root->left;\n                        list = root->left;\n                    }\n                    if(root->right) {\n                        if(list) list->next = root->right;\n                        list = root->right;\n                    }\n                }\n            }\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

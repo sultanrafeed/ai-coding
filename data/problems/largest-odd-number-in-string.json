@@ -1,0 +1,35 @@
+{
+  "id": "8979e6d2-85a1-4336-b53f-6003ec6cfe0a",
+  "slug": "largest-odd-number-in-string",
+  "title": "Largest Odd Number in String",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a string <code>num</code>, representing a large integer. Return <em>the <strong>largest-valued odd</strong> integer (as a string) that is a <strong>non-empty substring</strong> of </em><code>num</code><em>, or an empty string </em><code>&quot;&quot;</code><em> if no odd integer exists</em>.</p>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters within a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;52&quot;\n<strong>Output:</strong> &quot;5&quot;\n<strong>Explanation:</strong> The only non-empty substrings are &quot;5&quot;, &quot;2&quot;, and &quot;52&quot;. &quot;5&quot; is the only odd number.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;4206&quot;\n<strong>Output:</strong> &quot;&quot;\n<strong>Explanation:</strong> There are no odd numbers in &quot;4206&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = &quot;35427&quot;\n<strong>Output:</strong> &quot;35427&quot;\n<strong>Explanation:</strong> &quot;35427&quot; is already an odd number.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>num</code> only consists of digits and does not contain any leading zeros.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string largestOddNumber(string num) {\n        for (int i = size(num) - 1; i >= 0; --i) {\n            if ((num[i] - '0') % 2) {\n                return num.substr(0, i + 1);\n            }\n        }\n        return \"\";\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def largestOddNumber(self, num):\n        \"\"\"\n        :type num: str\n        :rtype: str\n        \"\"\"\n        for i in reversed(xrange(len(num))):\n            if int(num[i])%2:\n                return num[:i+1]\n        return \"\"",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

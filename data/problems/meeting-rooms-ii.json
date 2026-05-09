@@ -1,0 +1,44 @@
+{
+  "id": "7e7f74bb-1fb6-4693-adb0-9a3dcf90e04d",
+  "slug": "meeting-rooms-ii",
+  "title": "Meeting Rooms II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "greedy",
+    "sorting",
+    "heap-priority-queue",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,30],[5,10],[15,20]]\n[[7,10],[2,4]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int minMeetingRooms(vector<vector<int>>& intervals) {\n        map<int, int> lookup;\n        for (const auto& i : intervals) {\n            ++lookup[i[0]];\n            --lookup[i[1]];\n        }\n        int result = 0, curr = 0;\n        for (const auto& [time, num] : lookup) {\n            result = max(result, curr += num);\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int minMeetingRooms(vector<vector<int>>& intervals) {\n        vector<int> starts, ends;\n        for (const auto& i : intervals) {\n            starts.emplace_back(i[0]);\n            ends.emplace_back(i[1]);\n        }\n        \n        sort(starts.begin(), starts.end());\n        sort(ends.begin(), ends.end());\n        \n        int min_rooms = 0, cnt_rooms = 0;\n        int s = 0, e = 0;\n        while (s < starts.size()) {\n            if (starts[s] < ends[e]) {\n                ++cnt_rooms;  // Acquire a room.\n                // Update the min number of rooms.\n                min_rooms = max(min_rooms, cnt_rooms);\n                ++s;\n            } else {\n                --cnt_rooms;  // Release a room.\n                ++e;\n            }\n        }\n        return min_rooms;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass Solution(object):\n    # @param {Interval[]} intervals\n    # @return {integer}\n    def minMeetingRooms(self, intervals):\n        result, curr = 0, 0\n        line = [x for i, j in intervals for x in [[i, 1], [j, -1]]]\n        line.sort()\n        for _, num in line:\n            curr += num\n            result = max(result, curr)\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nclass Solution2(object):\n    # @param {Interval[]} intervals\n    # @return {integer}\n    def minMeetingRooms(self, intervals):\n        starts, ends = [], []\n        for start, end in intervals:\n            starts.append(start)\n            ends.append(end)\n\n        starts.sort()\n        ends.sort()\n\n        s, e = 0, 0\n        min_rooms, cnt_rooms = 0, 0\n        while s < len(starts):\n            if starts[s] < ends[e]:\n                cnt_rooms += 1  # Acquire a room.\n                # Update the min number of rooms.\n                min_rooms = max(min_rooms, cnt_rooms)\n                s += 1\n            else:\n                cnt_rooms -= 1  # Release a room.\n                e += 1\n\n        return min_rooms\n\n\n# Time: O(nlogn)\n# Space: O(n)\nfrom heapq import heappush, heappop\n\n\nclass Solution3(object):\n    def minMeetingRooms(self, intervals):\n        \"\"\"\n        :type intervals: List[Interval]\n        :rtype: int\n        \"\"\"\n        if not intervals:\n            return 0\n        \n        intervals.sort(key=lambda x: x[0])\n        free_rooms = []\n        \n        heappush(free_rooms, intervals[0][1])\n        for interval in intervals[1:]:\n            if free_rooms[0] <= interval[0]:\n                heappop(free_rooms)\n            \n            heappush(free_rooms, interval[1])\n        \n        return len(free_rooms)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

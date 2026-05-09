@@ -1,0 +1,42 @@
+{
+  "id": "87f8cb05-f094-4fe5-8b21-8f83fe053673",
+  "slug": "ways-to-split-array-into-three-subarrays",
+  "title": "Ways to Split Array Into Three Subarrays",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A split of an integer array is <strong>good</strong> if:</p>\n\n<ul>\n\t<li>The array is split into three <strong>non-empty</strong> contiguous subarrays - named <code>left</code>, <code>mid</code>, <code>right</code> respectively from left to right.</li>\n\t<li>The sum of the elements in <code>left</code> is less than or equal to the sum of the elements in <code>mid</code>, and the sum of the elements in <code>mid</code> is less than or equal to the sum of the elements in <code>right</code>.</li>\n</ul>\n\n<p>Given <code>nums</code>, an array of <strong>non-negative</strong> integers, return <em>the number of <strong>good</strong> ways to split</em> <code>nums</code>. As the number may be too large, return it <strong>modulo</strong> <code>10<sup>9 </sup>+ 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,1,1]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> The only good way to split nums is [1] [1] [1].</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,2,2,5,0]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> There are three good ways of splitting nums:\n[1] [2] [2,2,5,0]\n[1] [2,2] [2,5,0]\n[1,2] [2,2] [5,0]\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,2,1]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> There is no good way to split nums.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,1]\n[1,2,2,2,5,0]\n[3,2,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int waysToSplit(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n        \n        vector<int> prefix(1);\n        for (const auto& x : nums) {\n            prefix.emplace_back(prefix.back() + x);\n        }\n\n        int result = 0, left = 0, right = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            left = max(left, i + 1);\n            while (left + 1 < size(nums) && prefix[i + 1] > prefix[left + 1] - prefix[i + 1]) {\n                ++left;\n            }\n            right = max(right, left);\n            while (right + 1 < size(nums) && prefix[right + 1] - prefix[i + 1] <= prefix.back() - prefix[right + 1]) {\n                ++right;\n            }\n            result = (result + (right - left)) % MOD;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def waysToSplit(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n\n        prefix = [0]\n        for x in nums:\n            prefix.append(prefix[-1]+x)\n\n        result = left = right = 0 \n        for i in xrange(len(nums)): \n            left = max(left, i+1)\n            while left+1 < len(nums) and prefix[i+1] > prefix[left+1]-prefix[i+1]:\n                left += 1\n            right = max(right, left)\n            while right+1 < len(nums) and prefix[right+1]-prefix[i+1] <= prefix[-1]-prefix[right+1]:\n                right += 1\n            result = (result + (right-left))%MOD\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

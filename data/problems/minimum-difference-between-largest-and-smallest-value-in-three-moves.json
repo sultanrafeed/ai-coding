@@ -1,0 +1,41 @@
+{
+  "id": "7b95ef4e-bf98-4d71-9ec7-eeabda176532",
+  "slug": "minimum-difference-between-largest-and-smallest-value-in-three-moves",
+  "title": "Minimum Difference Between Largest and Smallest Value in Three Moves",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>In one move, you can choose one element of <code>nums</code> and change it to <strong>any value</strong>.</p>\n\n<p>Return <em>the minimum difference between the largest and smallest value of <code>nums</code> <strong>after performing at most three moves</strong></em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,3,2,4]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> We can make at most 3 moves.\nIn the first move, change 2 to 3. nums becomes [5,3,3,4].\nIn the second move, change 4 to 3. nums becomes [5,3,3,3].\nIn the third move, change 5 to 3. nums becomes [3,3,3,3].\nAfter performing 3 moves, the difference between the minimum and maximum is 3 - 3 = 0.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,5,0,10,14]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> We can make at most 3 moves.\nIn the first move, change 5 to 0. nums becomes [1,0,0,10,14].\nIn the second move, change 10 to 0. nums becomes [1,0,0,0,14].\nIn the third move, change 14 to 1. nums becomes [1,0,0,0,1].\nAfter performing 3 moves, the difference between the minimum and maximum is 1 - 0 = 1.\nIt can be shown that there is no way to make the difference 0 in 3 moves.</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,100,20]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> We can make at most 3 moves.\nIn the first move, change 100 to 7. nums becomes [3,7,20].\nIn the second move, change 20 to 7. nums becomes [3,7,7].\nIn the third move, change 3 to 7. nums becomes [7,7,7].\nAfter performing 3 moves, the difference between the minimum and maximum is 7 - 7 = 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,3,2,4]\n[1,5,0,10,14]\n[3,100,20]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + klogk)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minDifference(vector<int>& nums) {\n        static const int k = 4;\n        if (nums.size() <= k) {\n            return 0;\n        }\n        nth_element(begin(nums), begin(nums) + k, end(nums));\n        sort(begin(nums), begin(nums) + k);\n        nth_element(begin(nums) + k, max(begin(nums) + k, end(nums) - k), end(nums));\n        sort(end(nums) - k, end(nums));\n        int result = numeric_limits<int>::max();\n        for (int i = 0; i < k; ++i) {\n            result = min(result, nums[nums.size() - k + i] - nums[i]);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + klogk)\n# Space: O(k)\n\nimport random\n\n\nclass Solution(object):\n    def minDifference(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def nth_element(nums, left, n, right, compare=lambda a, b: a < b):\n            def partition_around_pivot(left, right, pivot_idx, nums, compare):\n                new_pivot_idx = left\n                nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]\n                for i in xrange(left, right):\n                    if compare(nums[i], nums[right]):\n                        nums[i], nums[new_pivot_idx] = nums[new_pivot_idx], nums[i]\n                        new_pivot_idx += 1\n\n                nums[right], nums[new_pivot_idx] = nums[new_pivot_idx], nums[right]\n                return new_pivot_idx\n\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                new_pivot_idx = partition_around_pivot(left, right, pivot_idx, nums, compare)\n                if new_pivot_idx == n:\n                    return\n                elif new_pivot_idx > n:\n                    right = new_pivot_idx - 1\n                else:  # new_pivot_idx < n\n                    left = new_pivot_idx + 1\n\n        k = 4\n        if len(nums) <= k:\n            return 0\n        nth_element(nums, 0, k, len(nums)-1)\n        nums[:k] = sorted(nums[:k])\n        nth_element(nums, k, max(k, len(nums)-k), len(nums)-1)\n        nums[-k:] = sorted(nums[-k:])\n        return min(nums[-k+i]-nums[i] for i in xrange(k))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

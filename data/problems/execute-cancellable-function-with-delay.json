@@ -1,0 +1,25 @@
+{
+  "id": "16559f70-2930-4dc1-a3c4-504cbd88aa2a",
+  "slug": "execute-cancellable-function-with-delay",
+  "title": "Execute Cancellable Function With Delay",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nfunction cancellable(fn: Function, args: any[], t: number): Function {\n    const tid = setTimeout(() => fn(...args), t);\n    return () => clearTimeout(tid);\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

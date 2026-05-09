@@ -1,0 +1,39 @@
+{
+  "id": "b16e07f2-5657-42a6-871f-c163446a1fcf",
+  "slug": "number-of-squareful-arrays",
+  "title": "Number of Squareful Arrays",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>An array is <strong>squareful</strong> if the sum of every pair of adjacent elements is a <strong>perfect square</strong>.</p>\n\n<p>Given an integer array nums, return <em>the number of permutations of </em><code>nums</code><em> that are <strong>squareful</strong></em>.</p>\n\n<p>Two permutations <code>perm1</code> and <code>perm2</code> are different if there is some index <code>i</code> such that <code>perm1[i] != perm2[i]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,17,8]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> [1,8,17] and [17,8,1] are the valid permutations.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,2,2]\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 12</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "dynamic-programming",
+    "backtracking",
+    "bit-manipulation",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n!)\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    int numSquarefulPerms(vector<int>& A) {\n        unordered_map<int, int> count;\n        for (const auto& a : A) {\n            ++count[a];\n        }\n        unordered_map<int, unordered_set<int>> candidate;\n        for (const auto& i : count) {\n            for (const auto& j : count) {\n                int x = i.first, y = j.first, s = sqrt(x + y);\n                if (s * s == x + y) {\n                    candidate[x].emplace(y);\n                }\n            }\n        }\n\n        int result = 0;\n        for (const auto& i : count) {\n            dfs(candidate, i.first, A.size() - 1, &count, &result);\n        }\n        return result;\n    }\n\nprivate:\n    void dfs(const unordered_map<int, unordered_set<int>>& candidate,\n             int x,\n             int left,\n             unordered_map<int, int> *count,\n             int *result) {\n\n        --(*count)[x];\n        if (!left) {\n            ++(*result);\n        }\n        if (candidate.count(x)) {\n            for (const auto& y : candidate.at(x)) {\n                if ((*count)[y] > 0) {\n                    dfs(candidate, y, left - 1, count, result);\n                }\n            }\n        }\n        ++(*count)[x];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n!)\n# Space: O(n^2)\n\nimport collections\n\n\nclass Solution(object):\n    def numSquarefulPerms(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        def dfs(candidate, x, left, count, result):\n            count[x] -= 1\n            if left == 0:\n                result[0] += 1\n            for y in candidate[x]:\n                if count[y]:\n                    dfs(candidate, y, left-1, count, result)\n            count[x] += 1\n\n        count = collections.Counter(A)\n        candidate = {i: {j for j in count if int((i+j)**0.5) ** 2 == i+j} \n                           for i in count}\n\n        result = [0]\n        for x in count:\n            dfs(candidate, x, len(A)-1, count, result)\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

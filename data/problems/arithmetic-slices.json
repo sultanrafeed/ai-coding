@@ -1,0 +1,35 @@
+{
+  "id": "d7823fe6-52b0-4ff8-acba-b7f05c291004",
+  "slug": "arithmetic-slices",
+  "title": "Arithmetic Slices",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>An integer array is called arithmetic if it consists of <strong>at least three elements</strong> and if the difference between any two consecutive elements is the same.</p>\n\n<ul>\n\t<li>For example, <code>[1,3,5,7,9]</code>, <code>[7,7,7,7]</code>, and <code>[3,-1,-5,-9]</code> are arithmetic sequences.</li>\n</ul>\n\n<p>Given an integer array <code>nums</code>, return <em>the number of arithmetic <strong>subarrays</strong> of</em> <code>nums</code>.</p>\n\n<p>A <strong>subarray</strong> is a contiguous subsequence of the array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We have 3 arithmetic slices in nums: [1, 2, 3], [2, 3, 4] and [1,2,3,4] itself.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1]\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 5000</code></li>\n\t<li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int numberOfArithmeticSlices(vector<int>& A) {\n        int res = 0, i = 0;\n        for (int i = 0; i + 2 < A.size(); ++i) {\n            const auto start = i;\n            while (i + 2 < A.size() && A[i + 2] + A[i] == 2 * A[i + 1]) {\n                res += (i++) - start + 1;\n            }\n        }\n        return res;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def numberOfArithmeticSlices(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        res, i = 0, 0\n        while i+2 < len(A):\n            start = i\n            while i+2 < len(A) and A[i+2] + A[i] == 2*A[i+1]:\n                res += i - start + 1\n                i += 1\n            i += 1\n\n        return res",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

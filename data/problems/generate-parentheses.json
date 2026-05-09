@@ -1,0 +1,35 @@
+{
+  "id": "18f38523-24ec-4368-a39c-d156134f1147",
+  "slug": "generate-parentheses",
+  "title": "Generate Parentheses",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given <code>n</code> pairs of parentheses, write a function to <em>generate all combinations of well-formed parentheses</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> n = 3\n<strong>Output:</strong> [\"((()))\",\"(()())\",\"(())()\",\"()(())\",\"()()()\"]\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> n = 1\n<strong>Output:</strong> [\"()\"]\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 8</code></li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(4^n / n^(3/2)) ~= Catalan numbers\n// Space: O(n)\n\n// iterative solution\nclass Solution {\npublic:\n    vector<string> generateParenthesis(int n) {\n        vector<string> result;\n        string curr;\n        vector<tuple<int, int, int, char>> stk = {{1, n, n, 0}};\n        while (!stk.empty()) {\n            const auto [step, left, right, c] = move(stk.back()); stk.pop_back();\n            if (step == 1) {\n                if (left == 0 && right == 0) {\n                    result.emplace_back(curr);\n                }\n                if (left < right) {\n                    stk.emplace_back(3, 0, 0, 0);\n                    stk.emplace_back(1, left, right - 1, 0);\n                    stk.emplace_back(2, 0, 0, ')');\n                }\n                if (left > 0) {\n                    stk.emplace_back(3, 0, 0, 0);\n                    stk.emplace_back(1, left - 1, right, 0);\n                    stk.emplace_back(2, 0, 0, '(');\n                }\n            } else if (step == 2) {\n                curr.push_back(c);\n            } else if (step == 3) {\n                curr.pop_back();\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(4^n / n^(3/2)) ~= Catalan numbers\n// Space: O(n)\n// recursive solution\nclass Solution2 {\npublic:\n    vector<string> generateParenthesis(int n) {\n        vector<string> result;\n        string curr;\n        generateParenthesisRecu(n, n, &curr, &result);\n        return result;\n    }\n\nprivate:\n    void generateParenthesisRecu(int left, int right, string *curr, vector<string> *result) {\n        if (left == 0 && right == 0) {\n            result->emplace_back(*curr);\n        }\n        if (left > 0) {\n            curr->push_back('(');\n            generateParenthesisRecu(left - 1, right, curr, result);\n            curr->pop_back();\n        }\n        if (left < right) {\n            curr->push_back(')');\n            generateParenthesisRecu(left, right - 1, curr, result);\n            curr->pop_back();\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(4^n / n^(3/2)) ~= Catalan numbers\n# Space: O(n)\n\n# iterative solution\nclass Solution(object):\n    def generateParenthesis(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        result, curr = [], []\n        stk = [(1, (n, n))]\n        while stk:\n            step, args = stk.pop()\n            if step == 1:\n                left, right = args\n                if left == 0 and right == 0:\n                    result.append(\"\".join(curr))\n                if left < right:\n                    stk.append((3, tuple()))\n                    stk.append((1, (left, right-1)))\n                    stk.append((2, (')')))\n                if left > 0:\n                    stk.append((3, tuple()))\n                    stk.append((1, (left-1, right)))\n                    stk.append((2, ('(')))\n            elif step == 2:\n                curr.append(args[0])\n            elif step == 3:\n                curr.pop()\n        return result\n\n\n# Time:  O(4^n / n^(3/2)) ~= Catalan numbers\n# Space: O(n)\n# recursive solution\nclass Solution2(object):\n    def generateParenthesis(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: List[str]\n        \"\"\"\n        def generateParenthesisRecu(left, right, curr, result):\n            if left == 0 and right == 0:\n                result.append(\"\".join(curr))\n            if left > 0:\n                curr.append('(')\n                generateParenthesisRecu(left-1, right, curr, result)\n                curr.pop()\n            if left < right:\n                curr.append(')')\n                generateParenthesisRecu(left, right-1, curr, result)\n                curr.pop()\n\n        result = []\n        generateParenthesisRecu(n, n, [], result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

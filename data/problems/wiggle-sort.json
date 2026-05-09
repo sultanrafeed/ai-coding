@@ -1,0 +1,41 @@
+{
+  "id": "aa8c1ad5-5f7e-4f36-8cc4-88cc6635189f",
+  "slug": "wiggle-sort",
+  "title": "Wiggle Sort",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,5,2,1,6,4]\n[6,6,5,6,3,8]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    void wiggleSort(vector<int>& nums) {\n        for (int i = 1; i < nums.size(); ++i) {\n            if (((i % 2) && nums[i] < nums[i - 1]) ||\n                (!(i % 2) && nums[i] > nums[i - 1])) {\n                // Swap unordered elements.\n                swap(nums[i], nums[i - 1]);\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def wiggleSort(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: void Do not return anything, modify nums in-place instead.\n        \"\"\"\n        for i in xrange(1, len(nums)):\n            if ((i % 2) and nums[i - 1] > nums[i]) or \\\n                (not (i % 2) and nums[i - 1] < nums[i]):\n                # Swap unordered elements.\n                nums[i - 1], nums[i] = nums[i], nums[i - 1]\n\n\n# time: O(nlogn)\n# space: O(n)\nclass Solution2(object):\n    def wiggleSort(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: void Do not return anything, modify nums in-place instead.\n        \"\"\"\n        nums.sort()\n        med = (len(nums) - 1) // 2\n        nums[::2], nums[1::2] = nums[med::-1], nums[:med:-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "19eddc11-4e0e-4346-a6ec-a8a198d3d880",
+  "slug": "maximum-score-of-non-overlapping-intervals",
+  "title": "Maximum Score of Non-overlapping Intervals",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a 2D integer array <code>intervals</code>, where <code>intervals[i] = [l<sub>i</sub>, r<sub>i</sub>, weight<sub>i</sub>]</code>. Interval <code>i</code> starts at position <code>l<sub>i</sub></code> and ends at <code>r<sub>i</sub></code>, and has a weight of <code>weight<sub>i</sub></code>. You can choose <em>up to</em> 4 <strong>non-overlapping</strong> intervals. The <strong>score</strong> of the chosen intervals is defined as the total sum of their weights.</p>\n\n<p>Return the <span data-keyword=\"lexicographically-smaller-array\">lexicographically smallest</span> array of at most 4 indices from <code>intervals</code> with <strong>maximum</strong> score, representing your choice of non-overlapping intervals.</p>\n\n<p>Two intervals are said to be <strong>non-overlapping</strong> if they do not share any points. In particular, intervals sharing a left or right boundary are considered overlapping.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">intervals = [[1,3,2],[4,5,2],[1,5,5],[6,9,3],[6,7,1],[8,9,1]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[2,3]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>You can choose the intervals with indices 2, and 3 with respective weights of 5, and 3.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">intervals = [[5,8,1],[6,7,7],[4,7,3],[9,10,6],[7,8,2],[11,14,3],[3,5,5]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[1,3,5,6]</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>You can choose the intervals with indices 1, 3, 5, and 6 with respective weights of 7, 6, 3, and 5.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= intevals.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>intervals[i].length == 3</code></li>\n\t<li><code>intervals[i] = [l<sub>i</sub>, r<sub>i</sub>, weight<sub>i</sub>]</code></li>\n\t<li><code>1 &lt;= l<sub>i</sub> &lt;= r<sub>i</sub> &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= weight<sub>i</sub> &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "dynamic-programming",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,3,2],[4,5,2],[1,5,5],[6,9,3],[6,7,1],[8,9,1]]\n[[5,8,1],[6,7,7],[4,7,3],[9,10,6],[7,8,2],[11,14,3],[3,5,5]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn + n * k^2)\n// Space: O(n * k^2)\n\n// dp, binary search\nclass Solution {\npublic:\n    vector<int> maximumWeight(vector<vector<int>>& intervals) {\n        static const int K = 4;\n        map<tuple<int, int, int>, int> lookup;\n        for (int i = 0; i < size(intervals); ++i) {\n            const int l = intervals[i][0];\n            const int r = intervals[i][1];\n            const int w = intervals[i][2];\n            if (!lookup.count(tuple(r, l, w))) {\n                lookup[tuple(r, l, w)] = i;\n            }\n        }\n        vector<tuple<int, int, int>> sorted_intervals;\n        for (const auto& [k, _] : lookup) {\n            sorted_intervals.emplace_back(k);\n        }\n        vector<vector<pair<int64_t, vector<int>>>> dp(size(sorted_intervals) + 1, vector<pair<int64_t, vector<int>>>(K + 1));\n        for (int i = 0; i + 1 < size(dp); ++i) {\n            const int j = distance(cbegin(sorted_intervals), upper_bound(cbegin(sorted_intervals), cend(sorted_intervals), tuple(get<1>(sorted_intervals[i]), 0, 0))) - 1;\n            const int idx = lookup[sorted_intervals[i]];\n            for (int k = 1; k < size(dp[i]); ++k) {\n                auto new_dp = pair(get<0>(dp[j + 1][k - 1]) - get<2>(sorted_intervals[i]), get<1>(dp[j + 1][k - 1]));\n                auto& arr = get<1>(new_dp);\n                arr.insert(upper_bound(begin(arr), end(arr), idx), idx);\n                dp[i + 1][k] = min(dp[i][k], new_dp);\n            }\n        }\n        return get<1>(dp[size(sorted_intervals)][K]);\n    }\n};\n\n// Time:  O(nlogn + n * k^2)\n// Space: O(n * k^2)\n// dp, binary search\nclass Solution2 {\npublic:\n    vector<int> maximumWeight(vector<vector<int>>& intervals) {\n        static const int K = 4;\n        map<tuple<int, int, int>, int> lookup;\n        for (int i = 0; i < size(intervals); ++i) {\n            const int l = intervals[i][0];\n            const int r = intervals[i][1];\n            const int w = intervals[i][2];\n            if (!lookup.count(tuple(l, r, w))) {\n                lookup[tuple(l, r, w)] = i;\n            }\n        }\n        vector<tuple<int, int, int>> sorted_intervals;\n        for (const auto& [k, _] : lookup) {\n            sorted_intervals.emplace_back(k);\n        }\n        vector<vector<pair<int64_t, vector<int>>>> dp(size(sorted_intervals) + 1, vector<pair<int64_t, vector<int>>>(K + 1));\n        for (int i = size(dp) - 2; i >= 0; --i) {\n            const int j = distance(cbegin(sorted_intervals), upper_bound(cbegin(sorted_intervals), cend(sorted_intervals), tuple(get<1>(sorted_intervals[i]) + 1, 0, 0)));\n            const int idx = lookup[sorted_intervals[i]];\n            for (int k = 1; k < size(dp[i]); ++k) {\n                auto new_dp = pair(get<0>(dp[j][k - 1]) - get<2>(sorted_intervals[i]), get<1>(dp[j][k - 1]));\n                auto& arr = get<1>(new_dp);\n                arr.insert(upper_bound(begin(arr), end(arr), idx), idx);\n                dp[i][k] = min(dp[i + 1][k], new_dp);\n            }\n        }\n        return get<1>(dp[0][K]);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn + n * k^2)\n# Space: O(n * k^2)\n\nimport bisect\n\n\n# dp, binary search\nclass Solution(object):\n    def maximumWeight(self, intervals):\n        \"\"\"\n        :type intervals: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        K = 4\n        lookup = {}\n        for i, (l, r, w) in enumerate(intervals):\n            if (r, l, w) not in lookup:\n                lookup[r, l, w] = i\n        sorted_intervals = sorted(lookup.iterkeys(), key=lambda x: x[0])\n        dp = [[[0, []] for _ in xrange(K+1)] for _ in xrange(len(sorted_intervals)+1)]\n        for i in xrange(len(dp)-1):\n            j = bisect.bisect_right(sorted_intervals, (sorted_intervals[i][1], 0, 0))-1\n            idx = lookup[sorted_intervals[i]]\n            for k in xrange(1, len(dp[i])):\n                new_dp = [dp[j+1][k-1][0]-sorted_intervals[i][2], dp[j+1][k-1][1][:]]\n                insort(new_dp[1], idx)\n                dp[i+1][k] = min(dp[i][k], new_dp)\n        return dp[len(sorted_intervals)][K][1]\n\n\n# Time:  O(nlogn + n * k^2)\n# Space: O(n * k^2)\nimport bisect\n\n\n# dp, binary search\nclass Solution2(object):\n    def maximumWeight(self, intervals):\n        \"\"\"\n        :type intervals: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        K = 4\n        lookup = {}\n        for i, (l, r, w) in enumerate(intervals):\n            if (l, r, w) not in lookup:\n                lookup[l, r, w] = i\n        sorted_intervals = sorted(lookup.iterkeys(), key=lambda x: x[0])\n        dp = [[[0, []] for _ in xrange(K+1)] for _ in xrange(len(sorted_intervals)+1)]\n        for i in reversed(xrange(len(dp)-1)):\n            j = bisect.bisect_right(sorted_intervals, (sorted_intervals[i][1]+1, 0, 0))\n            idx = lookup[sorted_intervals[i]]\n            for k in xrange(1, len(dp[i])):\n                new_dp = [dp[j][k-1][0]-sorted_intervals[i][2], dp[j][k-1][1][:]]\n                insort(new_dp[1], idx)\n                dp[i][k] = min(dp[i+1][k], new_dp)\n        return dp[0][K][1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

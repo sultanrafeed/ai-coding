@@ -1,0 +1,34 @@
+{
+  "id": "3c07fac4-7641-4aa2-aff1-c4b392da8b54",
+  "slug": "number-of-distinct-binary-strings-after-applying-operations",
+  "title": "Number of Distinct Binary Strings After Applying Operations",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// combinatorics\nclass Solution {\npublic:\n    int countDistinctStrings(string s, int k) {\n        static const int MOD = 1e9 + 7;\n        return powmod(2, size(s) - k + 1, MOD);\n    }\n\nprivate:\n    uint32_t powmod(uint32_t a, uint32_t b, uint32_t mod) {\n        a %= mod;\n        uint64_t result = 1;\n        while (b) {\n            if (b & 1) {\n                result = result * a % mod;\n            }\n            a = uint64_t(a) * a % mod;\n            b >>= 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# combinatorics\nclass Solution(object):\n    def countDistinctStrings(self, s, k):\n        \"\"\"\n        :type s: str\n        :type k: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        return pow(2, len(s)-k+1, MOD)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

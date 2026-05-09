@@ -1,0 +1,34 @@
+{
+  "id": "c5f54e71-e7fc-4a3a-af6d-b1717ec443d2",
+  "slug": "largest-local-values-in-a-matrix",
+  "title": "Largest Local Values in a Matrix",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an <code>n x n</code> integer matrix <code>grid</code>.</p>\n\n<p>Generate an integer matrix <code>maxLocal</code> of size <code>(n - 2) x (n - 2)</code> such that:</p>\n\n<ul>\n\t<li><code>maxLocal[i][j]</code> is equal to the <strong>largest</strong> value of the <code>3 x 3</code> matrix in <code>grid</code> centered around row <code>i + 1</code> and column <code>j + 1</code>.</li>\n</ul>\n\n<p>In other words, we want to find the largest value in every contiguous <code>3 x 3</code> matrix in <code>grid</code>.</p>\n\n<p>Return <em>the generated matrix</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/06/21/ex1.png\" style=\"width: 371px; height: 210px;\" />\n<pre>\n<strong>Input:</strong> grid = [[9,9,8,1],[5,6,2,6],[8,2,6,4],[6,2,2,2]]\n<strong>Output:</strong> [[9,9],[8,6]]\n<strong>Explanation:</strong> The diagram above shows the original matrix and the generated matrix.\nNotice that each value in the generated matrix corresponds to the largest value of a contiguous 3 x 3 matrix in grid.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/07/02/ex2new2.png\" style=\"width: 436px; height: 240px;\" />\n<pre>\n<strong>Input:</strong> grid = [[1,1,1,1,1],[1,1,1,1,1],[1,1,2,1,1],[1,1,1,1,1],[1,1,1,1,1]]\n<strong>Output:</strong> [[2,2,2],[2,2,2],[2,2,2]]\n<strong>Explanation:</strong> Notice that the 2 is contained within every contiguous 3 x 3 matrix in grid.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == grid.length == grid[i].length</code></li>\n\t<li><code>3 &lt;= n &lt;= 100</code></li>\n\t<li><code>1 &lt;= grid[i][j] &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    vector<vector<int>> largestLocal(vector<vector<int>>& grid) {\n        const auto& find_max = [&](int i, int j) {\n            int result = 0;\n            for (int ni = i; ni < i + 3; ++ni) {\n                for (int nj = j; nj < j + 3; ++nj) {\n                    result = max(result, grid[ni][nj]);\n                }\n            }\n            return result;\n        };\n\n        vector<vector<int>> result(size(grid) - 2, vector<int>(size(grid[0]) - 2));\n        for (int i = 0; i < size(grid) - 2; ++i) {\n            for (int j = 0; j < size(grid[0]) - 2; ++j) {\n                result[i][j] = find_max(i, j);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def largestLocal(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: List[List[int]]\n        \"\"\"\n        def find_max(i, j):\n            return max(grid[ni][nj] for ni in xrange(i, i+3) for nj in xrange(j, j+3))\n\n        return [[find_max(i, j) for j in xrange(len(grid[0])-2)] for i in xrange(len(grid)-2)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

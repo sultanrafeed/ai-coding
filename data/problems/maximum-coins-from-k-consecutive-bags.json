@@ -1,0 +1,44 @@
+{
+  "id": "38eb5ff7-c5db-41b0-9364-a8cf43f8f501",
+  "slug": "maximum-coins-from-k-consecutive-bags",
+  "title": "Maximum Coins From K Consecutive Bags",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There are an infinite amount of bags on a number line, one bag for each coordinate. Some of these bags contain coins.</p>\n\n<p>You are given a 2D array <code>coins</code>, where <code>coins[i] = [l<sub>i</sub>, r<sub>i</sub>, c<sub>i</sub>]</code> denotes that every bag from <code>l<sub>i</sub></code> to <code>r<sub>i</sub></code> contains <code>c<sub>i</sub></code> coins.</p>\n\n<p>The segments that <code>coins</code> contain are non-overlapping.</p>\n\n<p>You are also given an integer <code>k</code>.</p>\n\n<p>Return the <strong>maximum</strong> amount of coins you can obtain by collecting <code>k</code> consecutive bags.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">coins = [[8,10,1],[1,3,2],[5,6,4]], k = 4</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">10</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Selecting bags at positions <code>[3, 4, 5, 6]</code> gives the maximum number of coins:&nbsp;<code>2 + 0 + 4 + 4 = 10</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">coins = [[1,10,3]], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Selecting bags at positions <code>[1, 2]</code> gives the maximum number of coins:&nbsp;<code>3 + 3 = 6</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= coins.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= 10<sup>9</sup></code></li>\n\t<li><code>coins[i] == [l<sub>i</sub>, r<sub>i</sub>, c<sub>i</sub>]</code></li>\n\t<li><code>1 &lt;= l<sub>i</sub> &lt;= r<sub>i</sub> &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= c<sub>i</sub> &lt;= 1000</code></li>\n\t<li>The given segments are non-overlapping.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "greedy",
+    "sliding-window",
+    "sorting",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[8,10,1],[1,3,2],[5,6,4]]\n4\n[[1,10,3]]\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// sort, two pointers, sliding window\nclass Solution {\npublic:\n    long long maximumCoins(vector<vector<int>>& coins, int k) {\n        const auto& max_amount = [&]() {\n            int64_t result = 0, curr = 0;\n            sort(begin(coins), end(coins));\n            for (int right = 0, left = 0; right < size(coins); ++right) {\n                curr += static_cast<int64_t>(coins[right][1] - coins[right][0] + 1) * coins[right][2];\n                for (; coins[right][1] - coins[left][1] + 1 > k; ++left) {\n                    curr -= static_cast<int64_t>(coins[left][1] - coins[left][0] + 1) * coins[left][2];\n                }\n                result = max(result, curr - static_cast<int64_t>(max((coins[right][1] - coins[left][0] + 1) - k, 0)) * coins[left][2]);\n            }\n            return result;\n        };\n\n        int64_t result = max_amount();\n        for (int i = 0; i < size(coins); ++i) {\n            tie(coins[i][0], coins[i][1]) = pair(-coins[i][1], -coins[i][0]);\n        }\n        result = max(result, max_amount());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# sort, two pointers, sliding window\nclass Solution(object):\n    def maximumCoins(self, coins, k):\n        \"\"\"\n        :type coins: List[List[int]]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def max_amount():\n            coins.sort()\n            result = curr = left = 0\n            for right in xrange(len(coins)):\n                curr += (coins[right][1]-coins[right][0]+1)*coins[right][2]\n                while coins[right][1]-coins[left][1]+1 > k:\n                    curr -= (coins[left][1]-coins[left][0]+1)*coins[left][2]\n                    left += 1\n                result = max(result, curr-max((coins[right][1]-coins[left][0]+1)-k, 0)*coins[left][2])\n            return result\n    \n        result = max_amount()\n        for i, (l, r, w) in enumerate(coins):\n            coins[i][:] = [-r, -l, w]\n        result = max(result, max_amount())\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

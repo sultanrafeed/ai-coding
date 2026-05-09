@@ -1,0 +1,34 @@
+{
+  "id": "85d1b72f-317f-4987-b398-ae6fd37d4b4f",
+  "slug": "shortest-common-supersequence",
+  "title": "Shortest Common Supersequence ",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given two strings <code>str1</code> and <code>str2</code>, return <em>the shortest string that has both </em><code>str1</code><em> and </em><code>str2</code><em> as <strong>subsequences</strong></em>. If there are multiple valid strings, return <strong>any</strong> of them.</p>\n\n<p>A string <code>s</code> is a <strong>subsequence</strong> of string <code>t</code> if deleting some number of characters from <code>t</code> (possibly <code>0</code>) results in the string <code>s</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> str1 = &quot;abac&quot;, str2 = &quot;cab&quot;\n<strong>Output:</strong> &quot;cabac&quot;\n<strong>Explanation:</strong> \nstr1 = &quot;abac&quot; is a subsequence of &quot;cabac&quot; because we can delete the first &quot;c&quot;.\nstr2 = &quot;cab&quot; is a subsequence of &quot;cabac&quot; because we can delete the last &quot;ac&quot;.\nThe answer provided is the shortest such string that satisfies these properties.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> str1 = &quot;aaaaaaaa&quot;, str2 = &quot;aaaaaaaa&quot;\n<strong>Output:</strong> &quot;aaaaaaaa&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= str1.length, str2.length &lt;= 1000</code></li>\n\t<li><code>str1</code> and <code>str2</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    string shortestCommonSupersequence(string str1, string str2) {\n        vector<vector<int>> dp(2, vector<int>(str2.size() + 1));\n        vector<vector<tuple<int, int, char>>> bt(str1.size() + 1,\n                                                 vector<tuple<int, int, char>>(str2.size() + 1));\n        for (int i = 0; i < str1.length(); ++i) {\n            bt[i + 1][0] = {i, 0, str1[i]};\n        }\n        for (int j = 0; j < str2.length(); ++j) {\n            bt[0][j + 1] = {0, j, str2[j]};\n        }\n        for (int i = 0; i < str1.length(); ++i) {\n            for (int j = 0; j < str2.length(); ++j) {\n                if (dp[i % 2][j + 1] > dp[(i + 1) % 2][j]) {\n                    dp[(i + 1) % 2][j + 1] = dp[i % 2][j + 1];\n                    bt[i + 1][j + 1] = {i, j + 1, str1[i]};\n                } else {\n                    dp[(i + 1) % 2][j + 1] = dp[(i + 1) % 2][j];\n                    bt[i + 1][j + 1] = {i + 1, j, str2[j]};\n                }\n                if (str1[i] != str2[j]) {\n                    continue;\n                }\n                if (dp[i % 2][j] + 1 > dp[(i + 1) % 2][j + 1]) {\n                    dp[(i + 1) % 2][j + 1] = dp[i % 2][j] + 1;\n                    bt[i + 1][j + 1] = {i, j, str1[i]};\n                }\n            }\n        }\n        \n        int i = str1.length(), j = str2.length();\n        char c = 0;\n        string result;\n        while (i != 0 || j != 0) {\n            tie(i, j, c) = bt[i][j];\n            result.push_back(c);\n        }\n        reverse(result.begin(), result.end());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\nclass Solution(object):\n    def shortestCommonSupersequence(self, str1, str2):\n        \"\"\"\n        :type str1: str\n        :type str2: str\n        :rtype: str\n        \"\"\"\n        dp = [[0 for _ in xrange(len(str2)+1)] for _ in xrange(2)]\n        bt = [[None for _ in xrange(len(str2)+1)] for _ in xrange(len(str1)+1)]\n        for i, c in enumerate(str1):\n            bt[i+1][0] = (i, 0, c)\n        for j, c in enumerate(str2):\n            bt[0][j+1] = (0, j, c)\n        for i in xrange(len(str1)):\n            for j in xrange(len(str2)):\n                if dp[i % 2][j+1] > dp[(i+1) % 2][j]:\n                    dp[(i+1) % 2][j+1] = dp[i % 2][j+1]\n                    bt[i+1][j+1] = (i, j+1, str1[i])\n                else:\n                    dp[(i+1) % 2][j+1] = dp[(i+1) % 2][j]\n                    bt[i+1][j+1] = (i+1, j, str2[j])\n                if str1[i] != str2[j]:\n                    continue\n                if dp[i % 2][j]+1 > dp[(i+1) % 2][j+1]:\n                    dp[(i+1) % 2][j+1] = dp[i % 2][j]+1\n                    bt[i+1][j+1] = (i, j, str1[i])\n        \n        i, j = len(str1), len(str2)\n        result = []\n        while i != 0 or j != 0:\n            i, j, c = bt[i][j]\n            result.append(c)\n        result.reverse()\n        return \"\".join(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

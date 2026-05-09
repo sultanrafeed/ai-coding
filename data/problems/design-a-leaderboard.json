@@ -1,0 +1,41 @@
+{
+  "id": "df4418e0-51cb-445f-a895-852b7075ab2f",
+  "slug": "design-a-leaderboard",
+  "title": "Design A Leaderboard",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "design",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"Leaderboard\",\"addScore\",\"addScore\",\"addScore\",\"addScore\",\"addScore\",\"top\",\"reset\",\"reset\",\"addScore\",\"top\"]\n[[],[1,73],[2,56],[3,39],[4,51],[5,4],[1],[1],[2],[2,51],[3]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:  O(1)\n//        add:   O(1)\n//        top:   O(n)\n//        reset: O(1)\n// Space: O(n)\n\nclass Leaderboard {\npublic:\n    Leaderboard() {\n        \n    }\n    \n    void addScore(int playerId, int score) {\n        lookup_[playerId] += score;\n    }\n    \n    int top(int K) {\n        vector<int> scores;\n        for (const auto& [k, v] : lookup_) {\n            scores.emplace_back(v);\n        }\n        nth_element(scores.begin(), scores.begin() + K, scores.end(), greater<int>());\n        return accumulate(scores.cbegin(), scores.cbegin() + K, 0);\n    }\n    \n    void reset(int playerId) {\n        lookup_[playerId] = 0;\n    }\n\nprivate:\n    unordered_map<int, int> lookup_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:  O(1)\n#        add:   O(1)\n#        top:   O(n)\n#        reset: O(1)\n# Space: O(n)\n\nimport collections\nimport random\n\n\nclass Leaderboard(object):\n\n    def __init__(self):\n        self.__lookup = collections.Counter()\n        \n    def addScore(self, playerId, score):\n        \"\"\"\n        :type playerId: int\n        :type score: int\n        :rtype: None\n        \"\"\"\n        self.__lookup[playerId] += score\n\n    def top(self, K):\n        \"\"\"\n        :type K: int\n        :rtype: int\n        \"\"\"\n        def kthElement(nums, k, compare):\n            def PartitionAroundPivot(left, right, pivot_idx, nums, compare):\n                new_pivot_idx = left\n                nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]\n                for i in xrange(left, right):\n                    if compare(nums[i], nums[right]):\n                        nums[i], nums[new_pivot_idx] = nums[new_pivot_idx], nums[i]\n                        new_pivot_idx += 1\n\n                nums[right], nums[new_pivot_idx] = nums[new_pivot_idx], nums[right]\n                return new_pivot_idx\n\n            left, right = 0, len(nums) - 1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                new_pivot_idx = PartitionAroundPivot(left, right, pivot_idx, nums, compare)\n                if new_pivot_idx == k:\n                    return\n                elif new_pivot_idx > k:\n                    right = new_pivot_idx - 1\n                else:  # new_pivot_idx < k.\n                    left = new_pivot_idx + 1\n        \n        scores = self.__lookup.values()\n        kthElement(scores, K, lambda a, b: a > b)\n        return sum(scores[:K])\n\n    def reset(self, playerId):\n        \"\"\"\n        :type playerId: int\n        :rtype: None\n        \"\"\"\n        self.__lookup[playerId] = 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

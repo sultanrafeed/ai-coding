@@ -1,0 +1,36 @@
+{
+  "id": "12d7cbf6-b39c-4b49-be1c-795598f32a42",
+  "slug": "find-a-value-of-a-mysterious-function-closest-to-target",
+  "title": "Find a Value of a Mysterious Function Closest to Target",
+  "difficulty": "hard",
+  "descriptionHtml": "<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/07/09/change.png\" style=\"width: 635px; height: 312px;\" /></p>\n\n<p>Winston was given the above mysterious function <code>func</code>. He has an integer array <code>arr</code> and an integer <code>target</code> and he wants to find the values <code>l</code> and <code>r</code> that make the value <code>|func(arr, l, r) - target|</code> minimum possible.</p>\n\n<p>Return <em>the minimum possible value</em> of <code>|func(arr, l, r) - target|</code>.</p>\n\n<p>Notice that <code>func</code> should be called with the values <code>l</code> and <code>r</code> where <code>0 &lt;= l, r &lt; arr.length</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [9,12,3,7,15], target = 5\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> Calling func with all the pairs of [l,r] = [[0,0],[1,1],[2,2],[3,3],[4,4],[0,1],[1,2],[2,3],[3,4],[0,2],[1,3],[2,4],[0,3],[1,4],[0,4]], Winston got the following results [9,12,3,7,15,8,0,3,7,0,0,3,0,0,0]. The value closest to 5 is 7 and 3, thus the minimum difference is 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1000000,1000000,1000000], target = 1\n<strong>Output:</strong> 999999\n<strong>Explanation:</strong> Winston called the func with all possible values of [l,r] and he always got 1000000, thus the min difference is 999999.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,2,4,8,16], target = 0\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= arr[i] &lt;= 10<sup>6</sup></code></li>\n\t<li><code>0 &lt;= target &lt;= 10<sup>7</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "bit-manipulation",
+    "segment-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogm), m is the max value of arr\n// Space: O(logm)\n\nclass Solution {\npublic:\n    int closestToTarget(std::vector<int>& arr, int target) {\n        static const int LOGM = 20;\n        BitCount count(LOGM);\n        int result = numeric_limits<int>::max();\n        for (int left = 0, right = 0; right < arr.size(); ++right) {\n            count += arr[right];\n            while (left <= right) {\n                const auto& f = count.bitAnd();\n                result = min(result, abs(f - target));\n                if (f >= target) {\n                    break;\n                }\n                count -= arr[left++];\n            }\n        }\n        return result;\n    }\n\nprivate:\n    class BitCount {\n    public:\n        BitCount(int n)\n          : l_(0)\n          , n_(n)\n          , count_(n) {\n            \n        }\n\n        int bitAnd() const {\n            int num = 0;\n            for (int i = 0; i < n_; ++i) {\n                if (count_[i] == l_) {\n                    num |= 1 << i;\n                }\n            }\n            return num;\n        }\n\n        void operator+=(int num) {\n            ++l_;\n            for (int i = 0; i < n_; ++i) {\n                if (num & (1 << i)) {\n                    ++count_[i];\n                }\n            }\n        }\n        \n        void operator-=(int num) {\n            --l_;\n            for (int i = 0; i < n_; ++i) {\n                if (num & (1 << i)) {\n                    --count_[i];\n                }\n            }\n        }\n\n    private:\n        int l_;\n        int n_;\n        vector<int> count_;\n    };\n};\n\n// Time:  O(nlogm), m is the max value of arr\n// Space: O(logm)\nclass Solution2 {\npublic:\n    int closestToTarget(vector<int>& arr, int target) {\n        int result = numeric_limits<int>::max();\n        unordered_set<int> dp;  // at most O(logm) dp states\n        for (const auto& x : arr) {\n            unordered_set<int> new_dp = {x};\n            for (const auto& f: dp) {\n                new_dp.emplace(f & x);\n            }\n            for (const auto& f : new_dp) {\n                result = min(result, abs(f - target));\n            }\n            dp = move(new_dp);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogm), m is the max value of arr\n# Space: O(logm)\n\nclass BitCount(object):\n    def __init__(self, n):\n        self.__l = 0\n        self.__n = n\n        self.__count = [0]*n\n    \n    def __iadd__(self, num):\n        self.__l += 1\n        base = 1\n        for i in xrange(self.__n):\n            if num&base:\n                self.__count[i] += 1\n            base <<= 1\n        return self\n\n    def __isub__(self, num):\n        self.__l -= 1\n        base = 1\n        for i in xrange(self.__n):\n            if num&base:\n                self.__count[i] -= 1\n            base <<= 1\n        return self\n            \n    def bit_and(self):\n        num, base = 0, 1\n        for i in xrange(self.__n):\n            if self.__count[i] == self.__l:\n                num |= base\n            base <<= 1\n        return num\n\n\nclass Solution(object):\n    def closestToTarget(self, arr, target):\n        \"\"\"\n        :type arr: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        count = BitCount(max(arr).bit_length())\n        result, left = float(\"inf\"), 0\n        for right in xrange(len(arr)):\n            count += arr[right]\n            while left <= right:\n                f = count.bit_and()\n                result = min(result, abs(f-target))\n                if f >= target:\n                    break\n                count -= arr[left]\n                left += 1\n        return result\n                    \n  \n# Time:  O(nlogm), m is the max value of arr\n# Space: O(logm)\nclass Solution2(object):\n    def closestToTarget(self, arr, target):\n        \"\"\"\n        :type arr: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        result, dp = float(\"inf\"), set()  # at most O(logm) dp states\n        for x in arr:\n            dp = {x}|{f&x for f in dp}\n            for f in dp:\n                result = min(result, abs(f-target))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

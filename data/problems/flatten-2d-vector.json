@@ -1,0 +1,42 @@
+{
+  "id": "b972fd49-efbd-4ef5-875e-da2925109dca",
+  "slug": "flatten-2d-vector",
+  "title": "Flatten 2D Vector",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "design",
+    "iterator"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"Vector2D\",\"next\",\"next\",\"next\",\"hasNext\",\"hasNext\",\"next\",\"hasNext\"]\n[[[[1,2],[3],[4]]],[],[],[],[],[],[],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Vector2D {\npublic:\n    Vector2D(vector<vector<int>>& vec2d) : vec(vec2d) {\n        x = vec.begin();\n        if (x != vec.end()) {\n            y = x->begin();\n            adjustNextIter();\n        }\n    }\n\n    int next() {\n        const auto ret = *y;\n        ++y;\n        adjustNextIter();\n        return ret;\n    }\n\n    bool hasNext() {\n        return x != vec.end() && y != x->end();\n    }\n    \n    void adjustNextIter() {\n        while (x != vec.end() && y == x->end()) { \n            ++x;\n            if (x != vec.end()) {\n                y = x->begin();\n            }\n        }\n    }\n\nprivate:\n    vector<vector<int>>& vec;\n    vector<vector<int>>::iterator x;\n    vector<int>::iterator y;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nfrom collections import deque\n\n\nclass Vector2D(object):\n\n    def __init__(self, vec2d):\n        \"\"\"\n        Initialize your data structure here.\n        :type vec2d: List[List[int]]\n        \"\"\"\n        self.stack = deque((len(v), iter(v)) for v in vec2d if v)\n\n    def next(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        length, iterator = self.stack.popleft()\n        if length > 1:\n            self.stack.appendleft((length-1, iterator))\n        return next(iterator)\n\n    def hasNext(self):\n        \"\"\"\n        :rtype: bool\n        \"\"\"\n        return bool(self.stack)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

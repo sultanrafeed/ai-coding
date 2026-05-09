@@ -1,0 +1,36 @@
+{
+  "id": "8b35f6f8-ee6f-4088-8027-a15afea0c7b0",
+  "slug": "all-paths-from-source-to-target",
+  "title": "All Paths From Source to Target",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a directed acyclic graph (<strong>DAG</strong>) of <code>n</code> nodes labeled from <code>0</code> to <code>n - 1</code>, find all possible paths from node <code>0</code> to node <code>n - 1</code> and return them in <strong>any order</strong>.</p>\n\n<p>The graph is given as follows: <code>graph[i]</code> is a list of all nodes you can visit from node <code>i</code> (i.e., there is a directed edge from node <code>i</code> to node <code>graph[i][j]</code>).</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/28/all_1.jpg\" style=\"width: 242px; height: 242px;\" />\n<pre>\n<strong>Input:</strong> graph = [[1,2],[3],[3],[]]\n<strong>Output:</strong> [[0,1,3],[0,2,3]]\n<strong>Explanation:</strong> There are two paths: 0 -&gt; 1 -&gt; 3 and 0 -&gt; 2 -&gt; 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/28/all_2.jpg\" style=\"width: 423px; height: 301px;\" />\n<pre>\n<strong>Input:</strong> graph = [[4,3,1],[3,2,4],[3],[4],[]]\n<strong>Output:</strong> [[0,4],[0,3,4],[0,1,3,4],[0,1,2,3,4],[0,1,4]]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == graph.length</code></li>\n\t<li><code>2 &lt;= n &lt;= 15</code></li>\n\t<li><code>0 &lt;= graph[i][j] &lt; n</code></li>\n\t<li><code>graph[i][j] != i</code> (i.e., there will be no self-loops).</li>\n\t<li>All the elements of <code>graph[i]</code> are <strong>unique</strong>.</li>\n\t<li>The input graph is <strong>guaranteed</strong> to be a <strong>DAG</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "backtracking",
+    "depth-first-search",
+    "breadth-first-search",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(p + r * n), p is the count of all the possible paths in graph,\n//                      r is the count of the result.\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<vector<int>> allPathsSourceTarget(vector<vector<int>>& graph) {\n        vector<vector<int>> result;\n        vector<int> path{0};\n        dfs(graph, 0, &path, &result);\n        return result;\n    }\n\nprivate:\n    void dfs(const vector<vector<int>>& graph,\n             int curr, vector<int> *path,\n             vector<vector<int>> *result) {\n        if (curr == graph.size() - 1) {\n            result->emplace_back(*path);\n            return;\n        }\n        for (const auto& node: graph[curr]) {\n            path->emplace_back(node);\n            dfs(graph, node, path, result);\n            path->pop_back();\n        }        \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(p + r * n), p is the count of all the possible paths in graph,\n#                      r is the count of the result.\n# Space: O(n)\n\nclass Solution(object):\n    def allPathsSourceTarget(self, graph):\n        \"\"\"\n        :type graph: List[List[int]]\n        :rtype: List[List[int]]\n        \"\"\"\n        def dfs(graph, curr, path, result):\n            if curr == len(graph)-1:\n                result.append(path[:])\n                return\n            for node in graph[curr]:\n                path.append(node)\n                dfs(graph, node, path, result)\n                path.pop()\n\n        result = []\n        dfs(graph, 0, [0], result)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "e202d4fe-680f-46fd-85a2-2a3748934997",
+  "slug": "make-a-positive-array",
+  "title": "Make a Positive Array",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// prefix sum, greedy\nclass Solution {\npublic:\n    int makeArrayPositive(vector<int>& nums) {\n        using int128_t = __int128;\n        static const int64_t MAX_VAL = 1e18;\n\n        int result = 0;\n        int128_t prev1 = nums[0] + nums[1];\n        int128_t prev2 = nums[0];\n        int128_t max_prev3 = 0;\n        for (int i = 2; i < size(nums); ++i) {\n            int128_t prefix = prev1 + nums[i];\n            if (prefix - max_prev3 <= 0) {\n                prefix = prev1 + MAX_VAL;\n                ++result;\n            }\n            max_prev3 = max(max_prev3, prev2);\n            prev2 = prev1;\n            prev1 = prefix;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# prefix sum, greedy\nclass Solution(object):\n    def makeArrayPositive(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MAX_VAL = 10**18\n        result = 0\n        prev1 = nums[0]+nums[1]\n        prev2 = nums[0]\n        max_prev3 = 0\n        for i in xrange(2, len(nums)):\n            prefix = prev1+nums[i]\n            if prefix-max_prev3 <= 0:\n                prefix = prev1+MAX_VAL\n                result += 1\n            max_prev3 = max(max_prev3, prev2)\n            prev1, prev2 = prefix, prev1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

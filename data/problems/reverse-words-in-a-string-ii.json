@@ -1,0 +1,40 @@
+{
+  "id": "9f57983b-2b6c-47b1-8c30-28496e1a9990",
+  "slug": "reverse-words-in-a-string-ii",
+  "title": "Reverse Words in a String II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"t\",\"h\",\"e\",\" \",\"s\",\"k\",\"y\",\" \",\"i\",\"s\",\" \",\"b\",\"l\",\"u\",\"e\"]\n[\"a\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    void reverseWords(string &s) {\n        reverse(s.begin(), s.end());\n        for (int i = 0, j = 0; j <= s.length(); ++j) {\n            if (j == s.length() || s[j] == ' ') {\n                reverse(s.begin() + i, s.begin() + j);\n                i = j + 1;\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time: O(n)\n# Space:O(1)\n\nclass Solution(object):\n    def reverseWords(self, s):\n        \"\"\"\n        :type s: a list of 1 length strings (List[str])\n        :rtype: nothing\n        \"\"\"\n        def reverse(s, begin, end):\n            for i in xrange((end - begin) / 2):\n                s[begin + i], s[end - 1 - i] = s[end - 1 - i], s[begin + i]\n\n        reverse(s, 0, len(s))\n        i = 0\n        for j in xrange(len(s) + 1):\n            if j == len(s) or s[j] == ' ':\n                reverse(s, i, j)\n                i = j + 1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

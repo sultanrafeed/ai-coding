@@ -1,0 +1,40 @@
+{
+  "id": "4e67b246-22fb-406f-a984-2d3460ebb58f",
+  "slug": "count-triplets-with-even-xor-set-bits-ii",
+  "title": "Count Triplets with Even XOR Set Bits II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1]\n[2]\n[3]\n[1,1]\n[2,3]\n[1,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr), r = max(max(a), max(b), max(c))\n// Space: O(1)\n\n// bit manipulation, parity\nclass Solution {\npublic:\n    long long tripletCount(vector<int>& a, vector<int>& b, vector<int>& c) {\n        const auto& count = [](const auto& a) {\n            const auto& odd = accumulate(cbegin(a), cend(a), 0, [](const auto& total, const auto& x) {\n                return total + (__builtin_popcount(x) & 1);\n            });\n            return vector<int64_t>{static_cast<int>(size(a)) - odd, odd};\n        };\n\n        vector<vector<int64_t>> cnt = {count(a), count(b), count(c)};\n        int64_t result = 0;\n        for (int i = 0; i < 4; ++i) {\n            result += cnt[0][i == 0 || i == 1 ? 0 : 1] * \n                      cnt[1][i == 0 || i == 2 ? 0 : 1] *\n                      cnt[2][i == 0 || i == 3 ? 0 : 1];\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogr), r = max(max(a), max(b), max(c))\n// Space: O(1)\n// bit manipulation, parity\nclass Solution2 {\npublic:\n    long long tripletCount(vector<int>& a, vector<int>& b, vector<int>& c) {\n        const auto& count = [](const auto& a) {\n            const auto& odd = accumulate(cbegin(a), cend(a), 0, [](const auto& total, const auto& x) {\n                return total + (__builtin_popcount(x) & 1);\n            });\n            return pair<int64_t, int64_t>(static_cast<int>(size(a)) - odd, odd);\n        };\n\n        const auto& [even1, odd1] = count(a);\n        const auto& [even2, odd2] = count(b);\n        const auto& [even3, odd3] = count(c);\n        return even1 * even2 * even3 + even1 * odd2 * odd3 + odd1 * even2 * odd3 + odd1 * odd2 * even3;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr), r = max(max(a), max(b), max(c))\n# Space: O(1)\n\n# bit manipulation, parity\nclass Solution(object):\n    def tripletCount(self, a, b, c):\n        \"\"\"\n        :type a: List[int]\n        :type b: List[int]\n        :type c: List[int]\n        :rtype: int\n        \"\"\"\n        def popcount(x):\n            return bin(x).count('1')\n\n        def count(a):\n            odd = sum(popcount(x)&1 for x in a)\n            return [len(a)-odd, odd]\n        \n        cnt = map(count, (a, b, c))\n        return sum(cnt[0][0 if i == 0 or i == 1 else 1]*cnt[1][0 if i == 0 or i == 2 else 1]*cnt[2][0 if i == 0 or i == 3 else 1] for i in xrange(4))\n    \n\n# Time:  O(nlogr), r = max(max(a), max(b), max(c))\n# Space: O(1)\n# bit manipulation, parity\nclass Solution2(object):\n    def tripletCount(self, a, b, c):\n        \"\"\"\n        :type a: List[int]\n        :type b: List[int]\n        :type c: List[int]\n        :rtype: int\n        \"\"\"\n        def popcount(x):\n            return bin(x).count('1')\n\n        def count(a):\n            odd = sum(popcount(x)&1 for x in a)\n            return [len(a)-odd, odd]\n        \n        even1, odd1 = count(a)\n        even2, odd2 = count(b)\n        even3, odd3 = count(c)\n        return even1*even2*even3 + even1*odd2*odd3 + odd1*even2*odd3 + odd1*odd2*even3",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "6967a404-c27e-4cbe-9b41-474ed967f4ad",
+  "slug": "maximum-number-of-distinct-elements-after-operations",
+  "title": "Maximum Number of Distinct Elements After Operations",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> and an integer <code>k</code>.</p>\n\n<p>You are allowed to perform the following <strong>operation</strong> on each element of the array <strong>at most</strong> <em>once</em>:</p>\n\n<ul>\n\t<li>Add an integer in the range <code>[-k, k]</code> to the element.</li>\n</ul>\n\n<p>Return the <strong>maximum</strong> possible number of <strong>distinct</strong> elements in <code>nums</code> after performing the <strong>operations</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,2,3,3,4], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><code>nums</code> changes to <code>[-1, 0, 1, 2, 3, 4]</code> after performing operations on the first four elements.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [4,4,4,4], k = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>By adding -1 to <code>nums[0]</code> and 1 to <code>nums[1]</code>, <code>nums</code> changes to <code>[3, 5, 4, 4]</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n\t<li><code>0 &lt;= k &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,2,3,3,4]\n2\n[4,4,4,4]\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\n// sort, greedy\nclass Solution {\npublic:\n    int maxDistinctElements(vector<int>& nums, int k) {\n        int result = 0;\n        sort(begin(nums), end(nums));\n        int curr = numeric_limits<int>::min();\n        for (const auto& x : nums) {\n            if (curr > x + k) {\n                continue;\n            }\n            curr = max(curr, x - k) + 1;\n            ++result;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\n# sort, greedy\nclass Solution(object):\n    def maxDistinctElements(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = 0\n        nums.sort()\n        curr = float(\"-inf\")\n        for x in nums:\n            if curr > x+k:\n                continue\n            curr = max(curr, x-k)+1\n            result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

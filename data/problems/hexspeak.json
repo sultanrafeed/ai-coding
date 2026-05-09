@@ -1,0 +1,40 @@
+{
+  "id": "057f0667-5efb-4325-b52b-2bfcdcb1e645",
+  "slug": "hexspeak",
+  "title": "Hexspeak",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"257\"\n\"3\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string toHexspeak(string num) {\n        unordered_map<int, char> lookup = {{0, 'O'}, {1,'I'}};\n        for (int i = 0; i < 6; ++i) {\n            lookup[10 + i] = 'A' + i;\n        }\n        string result;\n        uint64_t n = stoul(num), r = 0;\n        while (n) {\n            r = n % 16;\n            n /= 16;\n            if (!lookup.count(r)) {\n                return \"ERROR\";\n            }\n            result.push_back(lookup[r]);\n        }\n        reverse(result.begin(), result.end());\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution2 {\npublic:\n    string toHexspeak(string num) {\n        stringstream ss;\n        ss << hex << uppercase  << stoul(num);\n        string result(ss.str());\n        for (auto i = 0; i < result.length(); ++i) {\n            if ('2' <= result[i] && result[i] <= '9') {\n                return \"ERROR\";\n            }\n            if (result[i] == '0') {\n                result[i] = 'O';\n            }\n            if (result[i] == '1') {\n                result[i] = 'I';\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def toHexspeak(self, num):\n        \"\"\"\n        :type num: str\n        :rtype: str\n        \"\"\"\n        lookup = {0:'O', 1:'I'}\n        for i in xrange(6):\n            lookup[10+i] = chr(ord('A')+i)\n        result = []\n        n = int(num)\n        while n:\n            n, r = divmod(n, 16)\n            if r not in lookup:\n                return \"ERROR\"\n            result.append(lookup[r])\n        return \"\".join(reversed(result))\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    def toHexspeak(self, num):\n        \"\"\"\n        :type num: str\n        :rtype: str\n        \"\"\"\n        result = hex(int(num)).upper()[2:].replace('0', 'O').replace('1', 'I')\n        return result if all(c in \"ABCDEFOI\" for c in result) else \"ERROR\"",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "71163255-102d-4539-b5d7-69c81c73018a",
+  "slug": "substrings-of-size-three-with-distinct-characters",
+  "title": "Substrings of Size Three with Distinct Characters",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>A string is <strong>good</strong> if there are no repeated characters.</p>\n\n<p>Given a string <code>s</code>​​​​​, return <em>the number of <strong>good substrings</strong> of length <strong>three </strong>in </em><code>s</code>​​​​​​.</p>\n\n<p>Note that if there are multiple occurrences of the same substring, every occurrence should be counted.</p>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters in a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;xyzzaz&quot;\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> There are 4 substrings of size 3: &quot;xyz&quot;, &quot;yzz&quot;, &quot;zza&quot;, and &quot;zaz&quot;. \nThe only good substring of length 3 is &quot;xyz&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aababcabc&quot;\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> There are 7 substrings of size 3: &quot;aab&quot;, &quot;aba&quot;, &quot;bab&quot;, &quot;abc&quot;, &quot;bca&quot;, &quot;cab&quot;, and &quot;abc&quot;.\nThe good substrings are &quot;abc&quot;, &quot;bca&quot;, &quot;cab&quot;, and &quot;abc&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>s</code>​​​​​​ consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"xyzzaz\"\n\"aababcabc\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countGoodSubstrings(string s) {\n        static const int K = 3;\n\n        int result = 0;\n        unordered_map<int, int> count;\n        for (int i = 0; i < size(s); ++i) {\n            if (i >= K) {\n                if (--count[s[i - K]] == 0) {\n                    count.erase(s[i - K]);\n                }\n            }\n            ++count[s[i]];\n            if (size(count) == K) {\n                ++result;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def countGoodSubstrings(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        K = 3\n\n        result = 0\n        count = collections.Counter()\n        for i in xrange(len(s)):\n            if i >= K:\n                count[s[i-K]] -= 1\n                if not count[s[i-K]]:\n                    del count[s[i-K]]\n            count[s[i]] += 1\n            if len(count) == K:\n                result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

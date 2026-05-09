@@ -1,0 +1,36 @@
+{
+  "id": "0896c073-c03a-4941-b3e3-f6a690f11d35",
+  "slug": "implement-trie-prefix-tree",
+  "title": "Implement Trie (Prefix Tree)",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>A <a href=\"https://en.wikipedia.org/wiki/Trie\" target=\"_blank\"><strong>trie</strong></a> (pronounced as &quot;try&quot;) or <strong>prefix tree</strong> is a tree data structure used to efficiently store and retrieve keys in a dataset of strings. There are various applications of this data structure, such as autocomplete and spellchecker.</p>\n\n<p>Implement the Trie class:</p>\n\n<ul>\n\t<li><code>Trie()</code> Initializes the trie object.</li>\n\t<li><code>void insert(String word)</code> Inserts the string <code>word</code> into the trie.</li>\n\t<li><code>boolean search(String word)</code> Returns <code>true</code> if the string <code>word</code> is in the trie (i.e., was inserted before), and <code>false</code> otherwise.</li>\n\t<li><code>boolean startsWith(String prefix)</code> Returns <code>true</code> if there is a previously inserted string <code>word</code> that has the prefix <code>prefix</code>, and <code>false</code> otherwise.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;Trie&quot;, &quot;insert&quot;, &quot;search&quot;, &quot;search&quot;, &quot;startsWith&quot;, &quot;insert&quot;, &quot;search&quot;]\n[[], [&quot;apple&quot;], [&quot;apple&quot;], [&quot;app&quot;], [&quot;app&quot;], [&quot;app&quot;], [&quot;app&quot;]]\n<strong>Output</strong>\n[null, null, true, false, true, null, true]\n\n<strong>Explanation</strong>\nTrie trie = new Trie();\ntrie.insert(&quot;apple&quot;);\ntrie.search(&quot;apple&quot;);   // return True\ntrie.search(&quot;app&quot;);     // return False\ntrie.startsWith(&quot;app&quot;); // return True\ntrie.insert(&quot;app&quot;);\ntrie.search(&quot;app&quot;);     // return True\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= word.length, prefix.length &lt;= 2000</code></li>\n\t<li><code>word</code> and <code>prefix</code> consist only of lowercase English letters.</li>\n\t<li>At most <code>3 * 10<sup>4</sup></code> calls <strong>in total</strong> will be made to <code>insert</code>, <code>search</code>, and <code>startsWith</code>.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "design",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n), per operation\n// Space: O(1)\n\nclass TrieNode {\npublic:\n    // Initialize your data structure here.\n    TrieNode() : is_string(false) {\n        \n    }\n    bool is_string;\n    unordered_map<char, TrieNode *> leaves;\n};\n\nclass Trie {\npublic:\n    Trie() {\n        root_ = new TrieNode();\n    }\n\n    // Inserts a word into the trie.\n    void insert(string word) {\n        auto *cur = root_;\n        for (const auto& c : word) {\n            if (!cur->leaves.count(c)) {\n                cur->leaves[c] = new TrieNode();\n            }\n            cur = cur->leaves[c];\n        }\n        cur->is_string = true;\n    }\n\n    // Returns if the word is in the trie.\n    bool search(string word) {\n        auto *node = childSearch(word);\n        if (node) {\n            return node->is_string;\n        }\n        return false;   \n    }\n\n    // Returns if there is any word in the trie\n    // that starts with the given prefix.\n    bool startsWith(string prefix) {\n        return childSearch(prefix);\n    }\n\n    TrieNode *childSearch(const string& word) {\n        auto *cur = root_;\n        for (const auto& c : word) {\n            if (cur->leaves.count(c)) {\n                cur = cur->leaves[c];\n            } else {\n                return nullptr;\n            }\n        }\n        return cur;\n    }\n\nprivate:\n    TrieNode *root_;\n};\n\n// Your Trie object will be instantiated and called as such:\n// Trie trie;\n// trie.insert(\"somestring\");\n// trie.search(\"key\");",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n), per operation\n# Space: O(1)\n\nclass TrieNode(object):\n    # Initialize your data structure here.\n    def __init__(self):\n        self.is_string = False\n        self.leaves = {}\n\n\nclass Trie(object):\n\n    def __init__(self):\n        self.root = TrieNode()\n\n    # @param {string} word\n    # @return {void}\n    # Inserts a word into the trie.\n    def insert(self, word):\n        cur = self.root\n        for c in word:\n            if not c in cur.leaves:\n                cur.leaves[c] = TrieNode()\n            cur = cur.leaves[c]\n        cur.is_string = True\n\n    # @param {string} word\n    # @return {boolean}\n    # Returns if the word is in the trie.\n    def search(self, word):\n        node = self.childSearch(word)\n        if node:\n            return node.is_string\n        return False\n\n    # @param {string} prefix\n    # @return {boolean}\n    # Returns if there is any word in the trie\n    # that starts with the given prefix.\n    def startsWith(self, prefix):\n        return self.childSearch(prefix) is not None\n\n    def childSearch(self, word):\n        cur = self.root\n        for c in word:\n            if c in cur.leaves:\n                cur = cur.leaves[c]\n            else:\n                return None\n        return cur",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

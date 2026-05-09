@@ -1,0 +1,33 @@
+{
+  "id": "001f6dab-2114-40b7-b7f5-2e46113064b8",
+  "slug": "goat-latin",
+  "title": "Goat Latin",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a string <code>sentence</code> that consist of words separated by spaces. Each word consists of lowercase and uppercase letters only.</p>\n\n<p>We would like to convert the sentence to &quot;Goat Latin&quot; (a made-up language similar to Pig Latin.) The rules of Goat Latin are as follows:</p>\n\n<ul>\n\t<li>If a word begins with a vowel (<code>&#39;a&#39;</code>, <code>&#39;e&#39;</code>, <code>&#39;i&#39;</code>, <code>&#39;o&#39;</code>, or <code>&#39;u&#39;</code>), append <code>&quot;ma&quot;</code> to the end of the word.\n\n\t<ul>\n\t\t<li>For example, the word <code>&quot;apple&quot;</code> becomes <code>&quot;applema&quot;</code>.</li>\n\t</ul>\n\t</li>\n\t<li>If a word begins with a consonant (i.e., not a vowel), remove the first letter and append it to the end, then add <code>&quot;ma&quot;</code>.\n\t<ul>\n\t\t<li>For example, the word <code>&quot;goat&quot;</code> becomes <code>&quot;oatgma&quot;</code>.</li>\n\t</ul>\n\t</li>\n\t<li>Add one letter <code>&#39;a&#39;</code> to the end of each word per its word index in the sentence, starting with <code>1</code>.\n\t<ul>\n\t\t<li>For example, the first word gets <code>&quot;a&quot;</code> added to the end, the second word gets <code>&quot;aa&quot;</code> added to the end, and so on.</li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>Return<em> the final sentence representing the conversion from sentence to Goat Latin</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> sentence = \"I speak Goat Latin\"\n<strong>Output:</strong> \"Imaa peaksmaaa oatGmaaaa atinLmaaaaa\"\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> sentence = \"The quick brown fox jumped over the lazy dog\"\n<strong>Output:</strong> \"heTmaa uickqmaaa rownbmaaaa oxfmaaaaa umpedjmaaaaaa overmaaaaaaa hetmaaaaaaaa azylmaaaaaaaaa ogdmaaaaaaaaaa\"\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= sentence.length &lt;= 150</code></li>\n\t<li><code>sentence</code> consists of English letters and spaces.</li>\n\t<li><code>sentence</code> has no leading or trailing spaces.</li>\n\t<li>All the words in <code>sentence</code> are separated by a single space.</li>\n</ul>\n",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + w^2), n = w * l,\n//                    n is the length of S,\n//                    w is the number of words,\n//                    l is the average of word lengths\n// Space: O(l)\n\nclass Solution {\npublic:\n    string toGoatLatin(string S) {\n        unordered_set<char> vowel{'a', 'e', 'i', 'o', 'u', 'A', 'E', 'I', 'O', 'U'};\n        string result, word;\n        int count = 0;\n        for (int i = 0; i < S.length(); ++i) {\n            if (S[i] != ' ') {\n                word.push_back(S[i]);\n                if (i != S.length() - 1) {\n                    continue;\n                }\n            }\n            if (!vowel.count(word.front())) {\n                word.push_back(word.front());\n                word = word.substr(1);\n            }\n            word += \"ma\";\n            word += string(++count, 'a');\n            result += word;\n            result += \" \";\n            word.clear();\n        }\n        result.pop_back();\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + w^2), n = w * l,\n#                    n is the length of S,\n#                    w is the number of word,\n#                    l is the average length of word\n# Space: O(n)\n\nclass Solution(object):\n    def toGoatLatin(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: str\n        \"\"\"\n        def convert(S):\n            vowel = set('aeiouAEIOU')\n            for i, word in enumerate(S.split(), 1):\n                if word[0] not in vowel:\n                    word = word[1:] + word[:1]\n                yield word + 'ma' + 'a'*i\n        return \" \".join(convert(S))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

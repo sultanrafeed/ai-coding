@@ -1,0 +1,40 @@
+{
+  "id": "40223989-805b-45ce-a27d-eb7831e2ccff",
+  "slug": "cutting-ribbons",
+  "title": "Cutting Ribbons",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[9,7,5]\n3\n[7,5,9]\n4\n[5,7,9]\n22",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr), r is sum(ribbons)/k\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxLength(vector<int>& ribbons, int k) {\n        int64_t left = 1, right = accumulate(cbegin(ribbons), cend(ribbons), 0LL) / k;\n        while (left <= right) {\n            int mid = left + (right - left) / 2;\n            if (!check(ribbons, k, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return right;\n    }\n\nprivate:\n    bool check(const vector<int>& ribbons, int k, int s) {\n        return accumulate(cbegin(ribbons), cend(ribbons), 0LL,\n                          [&s](auto total, auto x) {\n                              return total + x / s;\n                          }) >= k;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr), r is sum(ribbons)/k\n# Space: O(1)\n\nclass Solution(object):\n    def maxLength(self, ribbons, k):\n        \"\"\"\n        :type ribbons: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def check(ribbons, k, s):\n            return reduce(lambda total,x: total+x//s, ribbons, 0) >= k\n\n        left, right = 1, sum(ribbons)//k\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(ribbons, k, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return right",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "c9860c90-c4d8-42d5-a661-0c7efe29826c",
+  "slug": "maximum-requests-without-violating-the-limit",
+  "title": "Maximum Requests Without Violating the Limit",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "sliding-window",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,1],[2,1],[1,7],[2,8]]\n1\n4\n[[1,2],[1,5],[1,2],[1,6]]\n2\n5\n[[1,1],[2,5],[1,2],[3,9]]\n1\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// hash table, sort, deque, sliding window\nclass Solution {\npublic:\n    int maxRequests(vector<vector<int>>& requests, int k, int window) {\n        unordered_map<int, vector<int>> lookup;\n        for (const auto& r : requests) {\n            lookup[r[0]].emplace_back(r[1]);\n        }\n        int result = size(requests);\n        for (auto& [_, l] : lookup) {\n            ranges::sort(l);\n            deque<int> dq;\n            for (const auto& x : l) {\n                dq.emplace_back(x);\n                if (size(dq) <= k) {\n                    continue;\n                }\n                if (dq.back() - dq.front() > window) {\n                    dq.pop_front();\n                    continue;\n                }\n                dq.pop_back();\n                --result;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport collections\n\n\n# hash table, sort, deque, sliding window\nclass Solution(object):\n    def maxRequests(self, requests, k, window):\n        \"\"\"\n        :type requests: List[List[int]]\n        :type k: int\n        :type window: int\n        :rtype: int\n        \"\"\"\n        lookup = collections.defaultdict(list)\n        for u, t in requests:\n            lookup[u].append(t)\n        result = len(requests)\n        for l in lookup.itervalues():\n            l.sort()\n            dq = collections.deque()\n            for x in l:\n                dq.append(x)\n                if len(dq) <= k:\n                    continue\n                if dq[-1]-dq[0] > window:\n                    dq.popleft()\n                    continue\n                dq.pop()\n                result -= 1                    \n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

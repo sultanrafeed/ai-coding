@@ -1,0 +1,41 @@
+{
+  "id": "f267e6b6-a959-4d76-89f3-d3e380017738",
+  "slug": "minimum-time-takes-to-reach-destination-without-drowning",
+  "title": "Minimum Time Takes to Reach Destination Without Drowning",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[\"D\",\".\",\"*\"],[\".\",\".\",\".\"],[\".\",\"S\",\".\"]]\n[[\"D\",\"X\",\"*\"],[\".\",\".\",\".\"],[\".\",\".\",\"S\"]]\n[[\"D\",\".\",\".\",\".\",\"*\",\".\"],[\".\",\"X\",\".\",\"X\",\".\",\".\"],[\".\",\".\",\".\",\".\",\"S\",\".\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\n// simulation, bfs\nclass Solution {\npublic:\n    int minimumSeconds(vector<vector<string>>& land) {\n        static const vector<pair<int, int>> DIRECTIONS {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};\n        vector<vector<int>> lookup(size(land), vector<int>(size(land[0])));\n        vector<tuple<int, int, int>> q;\n        int i0 = -1, j0 = -1;\n        for (int i = 0; i < size(land); ++i) {\n            for (int j = 0; j < size(land[0]); ++j) {\n                if (land[i][j] == \"*\") {\n                    q.emplace_back(i, j, -1);\n                    lookup[i][j] = -1;\n                } else if (land[i][j] == \"S\") {\n                    i0 = i, j0 = j;\n                }\n            }\n        }\n        q.emplace_back(i0, j0, 1);\n        lookup[i0][j0] = 1;\n        while (!empty(q)) {\n            vector<tuple<int, int, int>> new_q;\n            for (const auto& [i, j, d] : q) {\n                if (land[i][j] == \"D\") {\n                    return d - 1;\n                }\n                for (const auto& [di, dj] : DIRECTIONS) {\n                    const int ni = i + di, nj = j + dj;\n                    if (!(0 <= ni && ni < size(land) && 0 <= nj && nj < size(land[0]) && land[ni][nj] != \"X\" && lookup[ni][nj] != -1)) {\n                        continue;\n                    }\n                    if (d != -1 && lookup[ni][nj] == 0) {\n                        lookup[ni][nj] = 1;\n                        new_q.emplace_back(ni, nj, d + 1);\n                    } else if (d == -1 && land[ni][nj] != \"D\") {\n                        lookup[ni][nj] = -1;\n                        new_q.emplace_back(ni, nj, -1);\n                    }\n                }\n            }\n            q = move(new_q);\n        }\n        return -1;\n    }\n};\n\n// Time:  O(m * n)\n// Space: O(m * n)\n// simulation, bfs\nclass Solution2 {\npublic:\n    int minimumSeconds(vector<vector<string>>& land) {\n        static const vector<pair<int, int>> DIRECTIONS {{1, 0}, {0, 1}, {-1, 0}, {0, -1}};\n        vector<vector<int>> lookup1(size(land), vector<int>(size(land[0]), -1));\n        vector<vector<int>> lookup2(size(land), vector<int>(size(land[0]), -1));\n        vector<pair<int, int>> q1;\n        vector<pair<int, int>> q2;\n        for (int i = 0; i < size(land); ++i) {\n            for (int j = 0; j < size(land[0]); ++j) {\n                if (land[i][j] == \"*\") {\n                    q1.emplace_back(i, j);\n                    lookup2[i][j] = 0;\n                } else if (land[i][j] == \"S\") {\n                    q2.emplace_back(i, j);\n                    lookup2[i][j] = 0;\n                }\n            }\n        }\n        while (!empty(q1) || !empty(q2)) {\n            vector<pair<int, int>> new_q1;\n            vector<pair<int, int>> new_q2;\n            for (const auto& [i, j] : q1) {\n                for (const auto& [di, dj] : DIRECTIONS) {\n                    const int ni = i + di, nj = j + dj;\n                    if (!(0 <= ni && ni < size(land) && 0 <= nj && nj < size(land[0]) && land[ni][nj] != \"X\" && land[ni][nj] != \"D\" && lookup1[ni][nj] == -1)) {\n                        continue;\n                    }\n                    lookup1[ni][nj] = 0;\n                    new_q1.emplace_back(ni, nj);\n                }\n            }\n            for (const auto& [i, j] : q2) {\n                if (land[i][j] == \"D\") {\n                    return lookup2[i][j];\n                }\n                for (const auto& [di, dj] : DIRECTIONS) {\n                    const int ni = i + di, nj = j + dj;\n                    if (!(0 <= ni && ni < size(land) && 0 <= nj && nj < size(land[0]) && land[ni][nj] != \"X\" && lookup2[ni][nj] == -1 && lookup1[ni][nj] == -1)) {\n                        continue;\n                    }\n                    lookup2[ni][nj] = lookup2[i][j] + 1;\n                    new_q2.emplace_back(ni, nj);\n                }\n            }\n            q1 = move(new_q1);\n            q2 = move(new_q2);\n        }\n        return -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\n# simulation, bfs\nclass Solution(object):\n    def minimumSeconds(self, land):\n        \"\"\"\n        :type land: List[List[str]]\n        :rtype: int\n        \"\"\"\n        DIRECTIONS = ((1, 0), (0, 1), (-1, 0), (0, -1))\n        lookup = [[-1 if land[i][j] == \"*\" else 0 for j in xrange(len(land[0]))] for i in xrange(len(land))]\n        q = [(i, j, -1) for i in xrange(len(land)) for j in xrange(len(land[0])) if land[i][j] == \"*\"]\n        q.append(next((i, j, 1) for i in xrange(len(land)) for j in xrange(len(land[0])) if land[i][j] == \"S\"))\n        lookup[q[-1][0]][q[-1][1]] = 1\n        while q:\n            new_q = []\n            for i, j, d in q:\n                if land[i][j] == \"D\":\n                    return d-1\n                for di, dj in DIRECTIONS:\n                    ni, nj = i+di, j+dj\n                    if not (0 <= ni < len(land) and 0 <= nj < len(land[0]) and land[ni][nj] != \"X\" and lookup[ni][nj] != -1):\n                        continue\n                    if d != -1 and lookup[ni][nj] == 0:\n                        lookup[ni][nj] = 1\n                        new_q.append((ni, nj, d+1))\n                    elif d == -1 and land[ni][nj] != \"D\":\n                        lookup[ni][nj] = -1\n                        new_q.append((ni, nj, -1))\n            q = new_q\n        return -1\n\n\n# Time:  O(m * n)\n# Space: O(m * n)\n# simulation, bfs\nclass Solution2(object):\n    def minimumSeconds(self, land):\n        \"\"\"\n        :type land: List[List[str]]\n        :rtype: int\n        \"\"\"\n        DIRECTIONS = ((1, 0), (0, 1), (-1, 0), (0, -1))\n        lookup1 = [[0 if land[i][j] == \"*\" else -1 for j in xrange(len(land[0]))] for i in xrange(len(land))]\n        lookup2 = [[-1]*len(land[0]) for _ in xrange(len(land))]\n        q1 = [(i, j) for i in xrange(len(land)) for j in xrange(len(land[0])) if land[i][j] == \"*\"]\n        q2 = [next((i, j) for i in xrange(len(land)) for j in xrange(len(land[0])) if land[i][j] == \"S\")]\n        lookup2[q2[0][0]][q2[0][1]] = 0\n        while q1 or q2:\n            new_q1, new_q2 = [], []\n            for i, j in q1:\n                for di, dj in DIRECTIONS:\n                    ni, nj = i+di, j+dj\n                    if not (0 <= ni < len(land) and 0 <= nj < len(land[0]) and land[ni][nj] != \"X\" and land[ni][nj] != \"D\" and lookup1[ni][nj] == -1):\n                        continue\n                    lookup1[ni][nj] = 0\n                    new_q1.append((ni, nj))\n            for i, j in q2:\n                if land[i][j] == \"D\":\n                    return lookup2[i][j]\n                for di, dj in DIRECTIONS:\n                    ni, nj = i+di, j+dj\n                    if not (0 <= ni < len(land) and 0 <= nj < len(land[0]) and land[ni][nj] != \"X\" and lookup2[ni][nj] == lookup1[ni][nj] == -1):\n                        continue\n                    lookup2[ni][nj] = lookup2[i][j]+1\n                    new_q2.append((ni, nj))\n            q1, q2 = new_q1, new_q2\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "452f3962-c002-4129-923d-e27248b3cf98",
+  "slug": "smallest-even-multiple",
+  "title": "Smallest Even Multiple",
+  "difficulty": "easy",
+  "descriptionHtml": "Given a <strong>positive</strong> integer <code>n</code>, return <em>the smallest positive integer that is a multiple of <strong>both</strong> </em><code>2</code><em> and </em><code>n</code>.\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 5\n<strong>Output:</strong> 10\n<strong>Explanation:</strong> The smallest multiple of both 5 and 2 is 10.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 6\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The smallest multiple of both 6 and 2 is 6. Note that a number is a multiple of itself.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 150</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "5\n6",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// math, bit manipulation\nclass Solution {\npublic:\n    int smallestEvenMultiple(int n) {\n        return n << (n & 1);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# math, bit manipulation\nclass Solution(object):\n    def smallestEvenMultiple(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        return n<<(n&1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

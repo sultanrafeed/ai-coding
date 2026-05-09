@@ -1,0 +1,36 @@
+{
+  "id": "ae851816-5d1e-4505-b0b7-24635e62e621",
+  "slug": "number-of-subsequences-that-satisfy-the-given-sum-condition",
+  "title": "Number of Subsequences That Satisfy the Given Sum Condition",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array of integers <code>nums</code> and an integer <code>target</code>.</p>\n\n<p>Return <em>the number of <strong>non-empty</strong> subsequences of </em><code>nums</code><em> such that the sum of the minimum and maximum element on it is less or equal to </em><code>target</code>. Since the answer may be too large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,5,6,7], target = 9\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> There are 4 subsequences that satisfy the condition.\n[3] -&gt; Min value + max value &lt;= target (3 + 3 &lt;= 9)\n[3,5] -&gt; (3 + 5 &lt;= 9)\n[3,5,6] -&gt; (3 + 6 &lt;= 9)\n[3,6] -&gt; (3 + 6 &lt;= 9)\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,3,6,8], target = 10\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> There are 6 subsequences that satisfy the condition. (nums can have repeated numbers).\n[3] , [3] , [3,3], [3,6] , [3,6] , [3,3,6]\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,3,3,4,6,7], target = 12\n<strong>Output:</strong> 61\n<strong>Explanation:</strong> There are 63 non-empty subsequences, two of them do not satisfy the condition ([6,7], [7]).\nNumber of valid subsequences (63 - 2 = 61).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>6</sup></code></li>\n\t<li><code>1 &lt;= target &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int numSubseq(vector<int>& nums, int target) {\n        static const int MOD = 1e9 + 7;\n        sort(begin(nums), end(nums));\n        int result = 0;\n        int left = 0, right = nums.size() - 1;\n        while (left <= right) {\n            if (nums[left] + nums[right] > target) {\n                --right;\n            } else {\n                result = (result + pow(2, right - left, MOD)) % MOD;\n                ++left;\n            }\n        }\n        return result;\n    }\n\nprivate:\n    uint64_t pow(uint64_t a,uint64_t b, uint64_t m) {\n        a %= m;\n        uint64_t result = 1;\n        while (b) {\n            if (b & 1) {\n                result = (result * a) % m;\n            }\n            a = (a * a) % m;\n            b >>= 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass Solution(object):\n    def numSubseq(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9 + 7\n        nums.sort()\n        result = 0\n        left, right = 0, len(nums)-1\n        while left <= right:\n            if nums[left]+nums[right] > target:\n                right -= 1\n            else:\n                result = (result+pow(2, right-left, MOD))%MOD\n                left += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

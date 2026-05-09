@@ -1,0 +1,34 @@
+{
+  "id": "9dff627b-fcb8-420b-87ae-a40b5dcc1026",
+  "slug": "koko-eating-bananas",
+  "title": "Koko Eating Bananas",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Koko loves to eat bananas. There are <code>n</code> piles of bananas, the <code>i<sup>th</sup></code> pile has <code>piles[i]</code> bananas. The guards have gone and will come back in <code>h</code> hours.</p>\n\n<p>Koko can decide her bananas-per-hour eating speed of <code>k</code>. Each hour, she chooses some pile of bananas and eats <code>k</code> bananas from that pile. If the pile has less than <code>k</code> bananas, she eats all of them instead and will not eat any more bananas during this hour.</p>\n\n<p>Koko likes to eat slowly but still wants to finish eating all the bananas before the guards return.</p>\n\n<p>Return <em>the minimum integer</em> <code>k</code> <em>such that she can eat all the bananas within</em> <code>h</code> <em>hours</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> piles = [3,6,7,11], h = 8\n<strong>Output:</strong> 4\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> piles = [30,11,23,4,20], h = 5\n<strong>Output:</strong> 30\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> piles = [30,11,23,4,20], h = 6\n<strong>Output:</strong> 23\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= piles.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>piles.length &lt;= h &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= piles[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minEatingSpeed(vector<int>& piles, int H) {\n        int left = 1, right = *max_element(piles.cbegin(), piles.cend());\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (possible(piles, H, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n\nprivate:\n    bool possible(const vector<int>& piles, int H, int K) {\n        int time = 0;\n        for (const auto& pile : piles) {\n            time += (pile - 1) / K + 1;\n        }\n        return time <= H;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr)\n# Space: O(1)\n\nclass Solution(object):\n    def minEatingSpeed(self, piles, H):\n        \"\"\"\n        :type piles: List[int]\n        :type H: int\n        :rtype: int\n        \"\"\"\n        def possible(piles, H, K):\n            return sum((pile-1)//K+1 for pile in piles) <= H\n\n        left, right = 1, max(piles)\n        while left <= right:\n            mid = left + (right-left)//2\n            if possible(piles, H, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

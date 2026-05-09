@@ -1,0 +1,36 @@
+{
+  "id": "3da47aef-9f09-4d29-8e13-438ff1f20596",
+  "slug": "longest-balanced-substring-i",
+  "title": "Longest Balanced Substring I",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a string <code>s</code> consisting of lowercase English letters.</p>\n\n<p>A <strong><span data-keyword=\"substring-nonempty\">substring</span></strong> of <code>s</code> is called <strong>balanced</strong> if all <strong>distinct</strong> characters in the <strong>substring</strong> appear the <strong>same</strong> number of times.</p>\n\n<p>Return the <strong>length</strong> of the <strong>longest balanced substring</strong> of <code>s</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abbac&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The longest balanced substring is <code>&quot;abba&quot;</code> because both distinct characters <code>&#39;a&#39;</code> and <code>&#39;b&#39;</code> each appear exactly 2 times.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;zzabccy&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The longest balanced substring is <code>&quot;zabc&quot;</code> because the distinct characters <code>&#39;z&#39;</code>, <code>&#39;a&#39;</code>, <code>&#39;b&#39;</code>, and <code>&#39;c&#39;</code> each appear exactly 1 time.​​​​​​​</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;aba&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><strong>​​​​​​​</strong>One of the longest balanced substrings is <code>&quot;ab&quot;</code> because both distinct characters <code>&#39;a&#39;</code> and <code>&#39;b&#39;</code> each appear exactly 1 time. Another longest balanced substring is <code>&quot;ba&quot;</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 1000</code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "counting",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * (26 + n))\n// Space: O(26)\n\n// freq table\nclass Solution {\npublic:\n    int longestBalanced(string s) {\n        int result = 0;\n        for (int i = 0; i < size(s); ++i) {\n            vector<int> cnt(26);\n            int mx = 0, unique = 0;\n            for (int j = i; j < size(s); ++j) {\n                if (++cnt[s[j] - 'a'] == 1) {\n                    ++unique;\n                }\n                mx = max(mx, cnt[s[j] - 'a']);\n                if ((j - i + 1) % unique == 0 && (j - i + 1) / unique == mx) {\n                    result = max(result, j - i + 1);\n                }\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n * (a + n)), a = len(set(s))\n// Space: O(a)\n// freq table\nclass Solution2 {\npublic:\n    int longestBalanced(string s) {\n        int result = 0;\n        for (int i = 0; i < size(s); ++i) {\n            unordered_map<char, int> cnt;\n            int mx = 0;\n            for (int j = i; j < size(s); ++j) {\n                mx = max(mx, ++cnt[s[j]]);\n                if ((j - i + 1) % size(cnt) == 0 && (j - i + 1) / size(cnt) == mx) {\n                    result = max(result, j - i + 1);\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * (a + n))), a = len(set(s))\n# Space: O(a)\n\nimport collections\n\n\n# freq table\nclass Solution(object):\n    def longestBalanced(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = 0\n        for i in xrange(len(s)):\n            cnt = collections.defaultdict(int)\n            mx = 0\n            for j in xrange(i, len(s)):\n                cnt[s[j]] += 1\n                mx = max(mx, cnt[s[j]])\n                if (j-i+1)%len(cnt) == 0 and (j-i+1)//len(cnt) == mx:\n                    result = max(result, j-i+1)\n        return result\n\n\n# Time:  O(n * (26 + n))\n# Space: O(26)\n# freq table\nclass Solution2(object):\n    def longestBalanced(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = 0\n        for i in xrange(len(s)):\n            cnt = [0]*26\n            mx = unique = 0\n            for j in xrange(i, len(s)):\n                if cnt[ord(s[j])-ord('a')] == 0:\n                    unique += 1\n                cnt[ord(s[j])-ord('a')] += 1\n                mx = max(mx, cnt[ord(s[j])-ord('a')])\n                if (j-i+1)%unique == 0 and (j-i+1)//unique == mx:\n                    result = max(result, j-i+1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

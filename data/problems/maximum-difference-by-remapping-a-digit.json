@@ -1,0 +1,34 @@
+{
+  "id": "906c4fe7-cca6-43f6-8ebe-f8d0998c32ea",
+  "slug": "maximum-difference-by-remapping-a-digit",
+  "title": "Maximum Difference by Remapping a Digit",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer <code>num</code>. You know that Bob will sneakily <strong>remap</strong> one of the <code>10</code> possible digits (<code>0</code> to <code>9</code>) to another digit.</p>\n\n<p>Return <em>the difference between the maximum and minimum&nbsp;values Bob can make by remapping&nbsp;<strong>exactly</strong> <strong>one</strong> digit in </em><code>num</code>.</p>\n\n<p><strong>Notes:</strong></p>\n\n<ul>\n\t<li>When Bob remaps a digit <font face=\"monospace\">d1</font>&nbsp;to another digit <font face=\"monospace\">d2</font>, Bob replaces all occurrences of <code>d1</code>&nbsp;in <code>num</code>&nbsp;with <code>d2</code>.</li>\n\t<li>Bob can remap a digit to itself, in which case <code>num</code>&nbsp;does not change.</li>\n\t<li>Bob can remap different digits for obtaining minimum and maximum values respectively.</li>\n\t<li>The resulting number after remapping can contain leading zeroes.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 11891\n<strong>Output:</strong> 99009\n<strong>Explanation:</strong> \nTo achieve the maximum value, Bob can remap the digit 1 to the digit 9 to yield 99899.\nTo achieve the minimum value, Bob can remap the digit 1 to the digit 0, yielding 890.\nThe difference between these two numbers is 99009.\n</pre>\n\n<p><strong>Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 90\n<strong>Output:</strong> 99\n<strong>Explanation:</strong>\nThe maximum value that can be returned by the function is 99 (if 0 is replaced by 9) and the minimum value that can be returned by the function is 0 (if 9 is replaced by 0).\nThus, we return 99.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num &lt;= 10<sup>8</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    int minMaxDifference(int num) {\n        const auto& f = [&](int dst) {\n            int result = 0, base = 1;\n            for (; base <= num; base *= 10);\n            base /= 10;\n            for (int src = -1; base; base /= 10) {\n                const int d = num / base % 10;\n                if (src == -1 && d != dst) {\n                    src = d;\n                }\n                result += base * (d == src ? dst : d);\n            }\n            return result;\n        };\n\n        return f(9) - f(0);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def minMaxDifference(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: int\n        \"\"\"\n        def f(dst):\n            result = 0\n            base = 1\n            while base <= num:\n                base *= 10\n            base //= 10\n            src = -1\n            while base:\n                d = num//base%10\n                if src == -1 and d != dst:\n                    src = d\n                result += base*(dst if d == src else d)\n                base //= 10\n            return result\n    \n        return f(9)-f(0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

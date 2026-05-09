@@ -20,6 +20,7 @@ class HintRequest(BaseModel):
 class ComplexityRequest(BaseModel):
     code: str
     language: str = "python"
+    problem_id: str | None = None  # optional — enables canonical complexity comparison
 
 
 class ComplexityResponse(BaseModel):

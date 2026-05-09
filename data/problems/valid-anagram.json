@@ -1,0 +1,41 @@
+{
+  "id": "e6a5ed4a-ba65-43fa-b156-deef46165d1e",
+  "slug": "valid-anagram",
+  "title": "Valid Anagram",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two strings <code>s</code> and <code>t</code>, return <code>true</code> if <code>t</code> is an <span data-keyword=\"anagram\">anagram</span> of <code>s</code>, and <code>false</code> otherwise.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;anagram&quot;, t = &quot;nagaram&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">true</span></p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;rat&quot;, t = &quot;car&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">false</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length, t.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>s</code> and <code>t</code> consist of lowercase English letters.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong> What if the inputs contain Unicode characters? How would you adapt your solution to such a case?</p>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"anagram\"\n\"nagaram\"\n\"rat\"\n\"car\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isAnagram(string s, string t) {\n        if (size(s) != size(t)) {\n            return false;\n        }\n\n        unordered_map<char, int> count;\n        for (const auto& c: s) {\n            ++count[c];\n        }\n        for (const auto& c: t) {\n            --count[c];\n            if (count[c] < 0) {\n                return false;\n            }\n        }\n        return true;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\nclass Solution2 {\npublic:\n    bool isAnagram(string s, string t) {\n        if (size(s) != size(t)) {\n            return false;\n        }\n\n        sort(begin(s), end(s));\n        sort(begin(t), end(t));\n        return s == t;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\n\n\nclass Solution(object):\n    def isAnagram(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        if len(s) != len(t):\n            return False\n        count = collections.defaultdict(int)\n        for c in s:\n            count[c] += 1\n        for c in t:\n            count[c] -= 1\n            if count[c] < 0:\n                return False\n        return True\n\n\n# Time:  O(n)\n# Space: O(1)\nclass Solution2(object):\n    def isAnagram(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        return collections.Counter(s) == collections.Counter(t)\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nclass Solution3(object):\n    def isAnagram(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: bool\n        \"\"\"\n        return sorted(s) == sorted(t)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

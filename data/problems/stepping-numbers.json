@@ -1,0 +1,35 @@
+{
+  "id": "3ca5e7ad-4278-4d4b-affc-301a1b1123ec",
+  "slug": "stepping-numbers",
+  "title": "Stepping Numbers",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "backtracking",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logk + r), r is the size of result\n// Space: O(k), k is the size of stepping numbers in [0, high]\n\nconstexpr auto result = []() {\n    const int MAX_HIGH = 2e9;\n    array<int, 3504> result{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};\n    for (int i = 1, l = 10; result[l - 1] < MAX_HIGH; ++i) {\n        int d1 = result[i] % 10 - 1, d2 = result[i] % 10 + 1;\n        if (d1 >= 0) {\n            result[l++] = result[i] * 10 + d1;\n        }\n        if (d2 <= 9) {\n            result[l++] = result[i] * 10 + d2;\n        }\n    }\n    result.back() = numeric_limits<int>::max();\n    return result;\n}();\n\nclass Solution {\npublic:\n\tvector<int> countSteppingNumbers(int low, int high) {\n\t\tconst auto lit = lower_bound(result.cbegin(), result.cend(), low);\n\t\tconst auto rit = upper_bound(result.cbegin(), result.cend(), high);\n\t\treturn vector<int>(lit, rit);\n\t}\n};\n\n// Time:  O(k + r), r is the size of result\n// Space: O(k), k is the size of stepping numbers in [0, high]\nclass Solution2 {\npublic:\n\tvector<int> countSteppingNumbers(int low, int high) {\n        vector<int> result{0, 1, 2, 3, 4, 5, 6, 7, 8, 9};\n        for (int i = 1; result.back() < high; ++i) {\n            int d1 = result[i] % 10 - 1;\n            if (d1 >= 0) {\n                result.emplace_back(result[i] * 10 + d1);\n            }\n            int d2 = result[i] % 10 + 1;\n            if (d2 <= 9) {\n                result.emplace_back(result[i] * 10 + d2);\n            }\n        }\n        result.emplace_back(numeric_limits<int>::max());\n\n\t\tconst auto lit = lower_bound(result.cbegin(), result.cend(), low);\n\t\tconst auto rit = upper_bound(result.cbegin(), result.cend(), high);\n\t\treturn vector<int>(lit, rit);\n\t}\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logk + r), r is the size of result\n# Space: O(k), k is the size of stepping numbers in [0, high]\n\nimport bisect\n\n\nMAX_HIGH = int(2e9)\nresult = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]\nfor i in xrange(1, MAX_HIGH):\n    if result[-1] >= MAX_HIGH:\n        break\n    d1 = result[i]%10 - 1\n    if d1 >= 0:\n        result.append(result[i]*10 + d1)\n    d2 = result[i]%10 + 1\n    if d2 <= 9:\n        result.append(result[i]*10 + d2)\nresult.append(float(\"inf\"))\n\n\nclass Solution(object):\n    def countSteppingNumbers(self, low, high):\n        \"\"\"\n        :type low: int\n        :type high: int\n        :rtype: List[int]\n        \"\"\"\n        lit = bisect.bisect_left(result, low)\n        rit = bisect.bisect_right(result, high)\n        return result[lit:rit]\n\n\n# Time:  O(k + r), r is the size of result\n# Space: O(k), k is the size of stepping numbers in [0, high]\nclass Solution2(object):\n    def countSteppingNumbers(self, low, high):\n        \"\"\"\n        :type low: int\n        :type high: int\n        :rtype: List[int]\n        \"\"\"\n        result = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9]\n        for i in xrange(1, high):\n            if result[-1] >= high:\n                break\n            d1 = result[i]%10 - 1\n            if d1 >= 0:\n                result.append(result[i]*10 + d1)\n            d2 = result[i]%10 + 1\n            if d2 <= 9:\n                result.append(result[i]*10 + d2)\n        result.append(float(\"inf\"))\n        lit = bisect.bisect_left(result, low)\n        rit = bisect.bisect_right(result, high)\n        return result[lit:rit]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,37 @@
+{
+  "id": "37083a50-25c2-4069-9835-4729865c6f1f",
+  "slug": "matchsticks-to-square",
+  "title": "Matchsticks to Square",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>matchsticks</code> where <code>matchsticks[i]</code> is the length of the <code>i<sup>th</sup></code> matchstick. You want to use <strong>all the matchsticks</strong> to make one square. You <strong>should not break</strong> any stick, but you can link them up, and each matchstick must be used <strong>exactly one time</strong>.</p>\n\n<p>Return <code>true</code> if you can make this square and <code>false</code> otherwise.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/04/09/matchsticks1-grid.jpg\" style=\"width: 253px; height: 253px;\" />\n<pre>\n<strong>Input:</strong> matchsticks = [1,1,2,2,2]\n<strong>Output:</strong> true\n<strong>Explanation:</strong> You can form a square with length 2, one side of the square came two sticks with length 1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> matchsticks = [3,3,3,3,4]\n<strong>Output:</strong> false\n<strong>Explanation:</strong> You cannot find a way to form a square with all the matchsticks.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= matchsticks.length &lt;= 15</code></li>\n\t<li><code>1 &lt;= matchsticks[i] &lt;= 10<sup>8</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "backtracking",
+    "bit-manipulation",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * s * 2^n), s is the number of subset of which sum equals to side length.\n// Space: O(n * (2^n + s))\n\nclass Solution {\npublic:\n    bool makesquare(vector<int>& nums) {\n        int sum = accumulate(nums.begin(), nums.end(), 0);\n        if (sum % 4) {\n            return false;\n        }\n\n        const auto side_len = sum / 4;\n        const auto all = (1 << nums.size()) - 1;\n\n        vector<int> used_subsets;\n        vector<bool> valid_half_subsets(1 << nums.size());\n\n        for (int subset = 0; subset <= all; ++subset) {\n            int subset_sum = 0;\n            for (int i = 0; i < nums.size(); ++i) {\n                if (subset & (1 << i)) {\n                    subset_sum += nums[i];\n                }\n            }\n            if (subset_sum == side_len) {\n                for (const auto& used_subset : used_subsets) {\n                    if ((used_subset & subset) == 0) {\n                        int valid_half_subset = used_subset | subset;\n                        valid_half_subsets[valid_half_subset] = true;\n                        if (valid_half_subsets[all ^ valid_half_subset]) {\n                            return true;\n                        }\n                    }\n                }\n                used_subsets.emplace_back(subset);\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * s * 2^n), s is the number of subset of which sum equals to side length.\n# Space: O(n * (2^n + s))\n\nclass Solution(object):\n    def makesquare(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: bool\n        \"\"\"\n        total_len = sum(nums)\n        if total_len % 4:\n            return False\n\n        side_len = total_len / 4\n        fullset = (1 << len(nums)) - 1\n\n        used_subsets = []\n        valid_half_subsets = [0] * (1 << len(nums))\n\n        for subset in xrange(fullset+1):\n            subset_total_len = 0\n            for i in xrange(len(nums)):\n                if subset & (1 << i):\n                    subset_total_len += nums[i]\n\n            if subset_total_len == side_len:\n                for used_subset in used_subsets:\n                    if (used_subset & subset) == 0:\n                        valid_half_subset = used_subset | subset\n                        valid_half_subsets[valid_half_subset] = True\n                        if valid_half_subsets[fullset ^ valid_half_subset]:\n                            return True\n                used_subsets.append(subset)\n\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

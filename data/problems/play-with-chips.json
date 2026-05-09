@@ -1,0 +1,31 @@
+{
+  "id": "39f8833a-2773-4567-883b-054d11ccf9fb",
+  "slug": "play-with-chips",
+  "title": "Play With Chips",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minCostToMoveChips(vector<int>& chips) {\n        vector<int> count(2);\n        for (const auto& p : chips) {\n            ++count[p % 2];\n        }\n        return min(count[0], count[1]);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minCostToMoveChips(self, chips):\n        \"\"\"\n        :type chips: List[int]\n        :rtype: int\n        \"\"\"\n        count = [0]*2\n        for p in chips:\n            count[p%2] += 1\n        return min(count)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

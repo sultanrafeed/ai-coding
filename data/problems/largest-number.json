@@ -1,0 +1,36 @@
+{
+  "id": "495d4633-9acf-4785-a1e3-db2221b13037",
+  "slug": "largest-number",
+  "title": "Largest Number",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a list of non-negative integers <code>nums</code>, arrange them such that they form the largest number and return it.</p>\n\n<p>Since the result may be very large, so you need to return a string instead of an integer.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [10,2]\n<strong>Output:</strong> &quot;210&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,30,34,5,9]\n<strong>Output:</strong> &quot;9534330&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "string",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string largestNumber(vector<int>& nums) {\n        // sort numbers\n        sort(nums.begin(), nums.end(), [](const int &i, const int &j) {\n            return to_string(i) + to_string(j) > to_string(j) + to_string(i);\n        });\n\n        // combine the numbers\n        string max_num;\n        for (const auto& i : nums) {\n            max_num.append(to_string(i));\n        }\n\n        // special case: start with zero (e.g. [0, 0])\n        if (!max_num.empty() && max_num[0] == '0')  {\n            return \"0\";\n        }\n\n        return max_num;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    # @param num, a list of integers\n    # @return a string\n    def largestNumber(self, num):\n        num = [str(x) for x in num]\n        num.sort(cmp=lambda x, y: cmp(y + x, x + y))\n        largest = ''.join(num)\n        return largest.lstrip('0') or '0'",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

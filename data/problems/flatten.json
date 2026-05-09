@@ -1,0 +1,25 @@
+{
+  "id": "cdca3df8-3adc-4f4b-aacd-7791d7e1382a",
+  "slug": "flatten",
+  "title": "Flatten",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(logn)\n\n/**\n * Definition for binary tree\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        void flatten(TreeNode *root) {\n            if(!root)\n                return;\n\n            p = root;\n            flatten(root->left);\n            p->right = root->right;\n            flatten(root->right);\n            if(root->left) {\n                root->right = root->left;\n                root->left = NULL;\n            }\n        }\n    private:\n        TreeNode *p;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

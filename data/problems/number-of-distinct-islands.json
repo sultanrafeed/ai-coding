@@ -1,0 +1,46 @@
+{
+  "id": "a0d2a90a-b2d6-444a-b041-e442e1bf0c79",
+  "slug": "number-of-distinct-islands",
+  "title": "Number of Distinct Islands",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "depth-first-search",
+    "breadth-first-search",
+    "union-find",
+    "sorting",
+    "matrix",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,1,0,0,0],[1,1,0,0,0],[0,0,0,1,1],[0,0,0,1,1]]\n[[1,1,0,1,1],[1,0,0,0,0],[0,0,0,0,1],[1,1,0,1,1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    int numDistinctIslands(vector<vector<int>>& grid) {\n        unordered_set<string> islands;\n        for (int i = 0; i < grid.size(); ++i) {\n            for (int j = 0; j < grid[0].size(); ++j) {\n                string island;\n                if (dfs(i, j, &grid, &island)) {\n                    islands.emplace(island);\n                }\n            }\n        }\n        return islands.size();\n    }\n\nprivate:\n    bool dfs(const int i, const int j,\n             vector<vector<int>> *grid, string *island) {\n        \n        static const unordered_map<char, pair<int, int>>\n            directions = { {'l', {-1,  0} }, {'r', { 1,  0} },\n                           {'u', { 0,  1} }, {'d', { 0, -1} }};\n\n        if (i < 0 || i >= grid->size() ||\n            j < 0 || j >= (*grid)[0].size() ||\n            (*grid)[i][j] <= 0) {\n            return false;\n        }\n        (*grid)[i][j] *= -1;\n        for (const auto& kvp : directions) {\n            island->push_back(kvp.first);\n            dfs(i + kvp.second.first, j + kvp.second.second, grid, island);\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\nclass Solution(object):\n    def numDistinctIslands(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        directions = {'l':[-1,  0], 'r':[ 1,  0], \\\n                      'u':[ 0,  1], 'd':[ 0, -1]}\n\n        def dfs(i, j, grid, island):\n            if not (0 <= i < len(grid) and \\\n                    0 <= j < len(grid[0]) and \\\n                    grid[i][j] > 0):\n                return False\n            grid[i][j] *= -1\n            for k, v in directions.iteritems():\n                island.append(k)\n                dfs(i+v[0], j+v[1], grid, island)\n            return True\n\n        islands = set()\n        for i in xrange(len(grid)):\n            for j in xrange(len(grid[0])):\n                island = []\n                if dfs(i, j, grid, island):\n                    islands.add(\"\".join(island))\n        return len(islands)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

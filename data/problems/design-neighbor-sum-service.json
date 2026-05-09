@@ -1,0 +1,37 @@
+{
+  "id": "79863946-b7e0-401d-8727-af30f2b7f3b4",
+  "slug": "design-neighbor-sum-service",
+  "title": "Design Neighbor Sum Service",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a <code>n x n</code> 2D array <code>grid</code> containing <strong>distinct</strong> elements in the range <code>[0, n<sup>2</sup> - 1]</code>.</p>\n\n<p>Implement the <code>NeighborSum</code> class:</p>\n\n<ul>\n\t<li><code>NeighborSum(int [][]grid)</code> initializes the object.</li>\n\t<li><code>int adjacentSum(int value)</code> returns the <strong>sum</strong> of elements which are adjacent neighbors of <code>value</code>, that is either to the top, left, right, or bottom of <code>value</code> in <code>grid</code>.</li>\n\t<li><code>int diagonalSum(int value)</code> returns the <strong>sum</strong> of elements which are diagonal neighbors of <code>value</code>, that is either to the top-left, top-right, bottom-left, or bottom-right of <code>value</code> in <code>grid</code>.</li>\n</ul>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/06/24/design.png\" style=\"width: 400px; height: 248px;\" /></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong></p>\n\n<p>[&quot;NeighborSum&quot;, &quot;adjacentSum&quot;, &quot;adjacentSum&quot;, &quot;diagonalSum&quot;, &quot;diagonalSum&quot;]</p>\n\n<p>[[[[0, 1, 2], [3, 4, 5], [6, 7, 8]]], [1], [4], [4], [8]]</p>\n\n<p><strong>Output:</strong> [null, 6, 16, 16, 4]</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><strong class=\"example\"><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/06/24/designexample0.png\" style=\"width: 250px; height: 249px;\" /></strong></p>\n\n<ul>\n\t<li>The adjacent neighbors of 1 are 0, 2, and 4.</li>\n\t<li>The adjacent neighbors of 4 are 1, 3, 5, and 7.</li>\n\t<li>The diagonal neighbors of 4 are 0, 2, 6, and 8.</li>\n\t<li>The diagonal neighbor of 8 is 4.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong></p>\n\n<p>[&quot;NeighborSum&quot;, &quot;adjacentSum&quot;, &quot;diagonalSum&quot;]</p>\n\n<p>[[[[1, 2, 0, 3], [4, 7, 15, 6], [8, 9, 10, 11], [12, 13, 14, 5]]], [15], [9]]</p>\n\n<p><strong>Output:</strong> [null, 23, 45]</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><strong class=\"example\"><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/06/24/designexample2.png\" style=\"width: 300px; height: 300px;\" /></strong></p>\n\n<ul>\n\t<li>The adjacent neighbors of 15 are 0, 10, 7, and 6.</li>\n\t<li>The diagonal neighbors of 9 are 4, 12, 14, and 15.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= n == grid.length == grid[0].length &lt;= 10</code></li>\n\t<li><code>0 &lt;= grid[i][j] &lt;= n<sup>2</sup> - 1</code></li>\n\t<li>All <code>grid[i][j]</code> are distinct.</li>\n\t<li><code>value</code> in <code>adjacentSum</code> and <code>diagonalSum</code> will be in the range <code>[0, n<sup>2</sup> - 1]</code>.</li>\n\t<li>At most <code>2 * n<sup>2</sup></code> calls will be made to <code>adjacentSum</code> and <code>diagonalSum</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "design",
+    "matrix",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:        O(n^2)\n//        adjacentSum: O(1)\n//        diagonalSum: O(1)\n// Space: O(n^2)\n\n// hash table\nclass neighborSum {\npublic:\n    neighborSum(vector<vector<int>>& grid)\n        : grid_(grid)\n        , lookup_(size(grid) * size(grid[0]))\n    {\n        for (int i = 0; i < size(grid); ++i) {\n            for (int j = 0; j < size(grid[0]); ++j) {\n                lookup_[grid[i][j]] = {i, j};\n            }\n        }\n    }\n    \n    int adjacentSum(int value) {\n        static const vector<pair<int, int>> ADJACENTS{{1, 0}, {0, 1}, {-1, 0}, {0, -1}};\n    \n        return sum(value, ADJACENTS);\n    }\n    \n    int diagonalSum(int value) {\n        static const vector<pair<int, int>> DIAGONALS{{1, 1}, {1, -1}, {-1, 1}, {-1, -1}};\n\n        return sum(value, DIAGONALS);\n    }\n\nprivate:\n    int sum(int value, const auto& directions) {\n        const auto& [i, j] = lookup_[value];\n        int total = 0;\n        for (const auto& [di, dj] : directions) {\n            const int ni = i + di, nj = j + dj;\n            if (!(0 <= ni && ni < size(grid_) && 0 <= nj && nj < size(grid_[0]))) {\n                continue;\n            }\n            total += grid_[ni][nj];\n        }\n        return total;\n    }\n\n    vector<vector<int>> grid_;\n    vector<pair<int, int>> lookup_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:        O(n^2)\n#        adjacentSum: O(1)\n#.       diagonalSum: O(1)\n# Space: O(n^2)\n\n# hash table\nclass neighborSum(object):\n    ADJACENTS = ((1, 0), (0, 1), (-1, 0), (0, -1))\n    DIAGONALS = ((1, 1), (1, -1), (-1, 1), (-1, -1))\n\n\n    def __init__(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        \"\"\"\n        self.__grid = grid\n        self.__lookup = [None]*(len(grid)*len(grid[0]))\n        for i in xrange(len(grid)):\n            for j in xrange(len(grid[0])):\n                self.__lookup[grid[i][j]] = (i, j)\n\n\n    def adjacentSum(self, value):\n        \"\"\"\n        :type value: int\n        :rtype: int\n        \"\"\"\n        return self.__sum(value, neighborSum.ADJACENTS)\n    \n\n    def diagonalSum(self, value):\n        \"\"\"\n        :type value: int\n        :rtype: int\n        \"\"\"\n        return self.__sum(value, neighborSum.DIAGONALS)\n\n\n    def __sum(self, value, directions):\n        i, j = self.__lookup[value]\n        total = 0\n        for di, dj in directions:\n            ni, nj = i+di, j+dj\n            if not (0 <= ni < len(self.__grid) and 0 <= nj < len(self.__grid[0])):\n                continue\n            total += self.__grid[ni][nj]\n        return total",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

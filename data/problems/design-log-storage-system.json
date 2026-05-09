@@ -1,0 +1,42 @@
+{
+  "id": "32b91014-e3c6-4c1b-a6eb-6f5349fa5597",
+  "slug": "design-log-storage-system",
+  "title": "Design Log Storage System",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "design",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"LogSystem\",\"put\",\"put\",\"put\",\"retrieve\",\"retrieve\"]\n[[],[1,\"2017:01:01:23:59:59\"],[2,\"2017:01:01:22:59:59\"],[3,\"2016:01:01:00:00:00\"],[\"2016:01:01:01:01:01\",\"2017:01:01:23:00:00\",\"Year\"],[\"2016:01:01:01:01:01\",\"2017:01:01:23:00:00\",\"Hour\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  put:      O(logn), n is the size of the total logs\n//        retrieve: O(logn + d), d is the size of the found logs\n// Space: O(n)\n\nclass LogSystem {\npublic:\n    LogSystem() {\n        granularity_[\"Year\"] = 4;\n        granularity_[\"Month\"] = 7;\n        granularity_[\"Day\"] = 10;\n        granularity_[\"Hour\"] = 13;\n        granularity_[\"Minute\"] = 16;\n        granularity_[\"Second\"] = 19;\n    }\n    \n    void put(int id, string timestamp) {\n        lookup_.emplace(timestamp, id);\n    }\n    \n    vector<int> retrieve(string s, string e, string gra) {\n        s = s.substr(0, granularity_[gra]) + s_filter_.substr(granularity_[gra]);\n        e = e.substr(0, granularity_[gra]) + e_filter_.substr(granularity_[gra]);\n\n        vector<int> result;\n        auto end = lookup_.upper_bound(e);\n        for (auto it = lookup_.lower_bound(s); it != end; ++it) {\n            result.emplace_back(it->second);\n        }\n        return result;\n    }\n\nprivate:\n    string s_filter_ = \"0001:01:01:00:00:00\";\n    string e_filter_ = \"9999:12:31:23:59:59\";\n    unordered_map<string, int> granularity_;\n    multimap<string, int> lookup_;\n};\n\n/**\n * Your LogSystem object will be instantiated and called as such:\n * LogSystem obj = new LogSystem();\n * obj.put(id,timestamp);\n * vector<int> param_2 = obj.retrieve(s,e,gra);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  put:      O(1)\n#        retrieve: O(n + dlogd), n is the size of the total logs\n#                              , d is the size of the found logs\n# Space: O(n)\n\nclass LogSystem(object):\n\n    def __init__(self):\n        self.__logs = []\n        self.__granularity = {'Year': 4, 'Month': 7, 'Day': 10, \\\n                              'Hour': 13, 'Minute': 16, 'Second': 19}\n\n\n    def put(self, id, timestamp):\n        \"\"\"\n        :type id: int\n        :type timestamp: str\n        :rtype: void\n        \"\"\"\n        self.__logs.append((id, timestamp))\n\n\n    def retrieve(self, s, e, gra):\n        \"\"\"\n        :type s: str\n        :type e: str\n        :type gra: str\n        :rtype: List[int]\n        \"\"\"\n        i = self.__granularity[gra]\n        begin = s[:i]\n        end = e[:i]\n        return sorted(id for id, timestamp in self.__logs \\\n                      if begin <= timestamp[:i] <= end)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

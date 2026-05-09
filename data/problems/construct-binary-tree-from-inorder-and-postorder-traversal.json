@@ -1,0 +1,37 @@
+{
+  "id": "d4b06eb2-2774-423b-9cd1-14877d2dfa3f",
+  "slug": "construct-binary-tree-from-inorder-and-postorder-traversal",
+  "title": "Construct Binary Tree from Inorder and Postorder Traversal",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two integer arrays <code>inorder</code> and <code>postorder</code> where <code>inorder</code> is the inorder traversal of a binary tree and <code>postorder</code> is the postorder traversal of the same tree, construct and return <em>the binary tree</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/02/19/tree.jpg\" style=\"width: 277px; height: 302px;\" />\n<pre>\n<strong>Input:</strong> inorder = [9,3,15,20,7], postorder = [9,15,7,20,3]\n<strong>Output:</strong> [3,9,20,null,null,15,7]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> inorder = [-1], postorder = [-1]\n<strong>Output:</strong> [-1]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= inorder.length &lt;= 3000</code></li>\n\t<li><code>postorder.length == inorder.length</code></li>\n\t<li><code>-3000 &lt;= inorder[i], postorder[i] &lt;= 3000</code></li>\n\t<li><code>inorder</code> and <code>postorder</code> consist of <strong>unique</strong> values.</li>\n\t<li>Each value of <code>postorder</code> also appears in <code>inorder</code>.</li>\n\t<li><code>inorder</code> is <strong>guaranteed</strong> to be the inorder traversal of the tree.</li>\n\t<li><code>postorder</code> is <strong>guaranteed</strong> to be the postorder traversal of the tree.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "divide-and-conquer",
+    "tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    TreeNode* buildTree(vector<int>& inorder, vector<int>& postorder) {\n        unordered_map<int, size_t> in_entry_idx_map;\n        for (size_t i = 0; i < inorder.size(); ++i) {\n            in_entry_idx_map.emplace(inorder[i], i);\n        }\n        return ReconstructPostInOrdersHelper(postorder, 0, postorder.size(), inorder, 0, inorder.size(),\n                                             in_entry_idx_map);\n    }\n\n    TreeNode * ReconstructPostInOrdersHelper(const vector<int>& postorder, size_t post_s, size_t post_e,\n                                             const vector<int>& inorder, size_t in_s, size_t in_e,\n                                             const unordered_map<int, size_t>& in_entry_idx_map) {\n        if (post_s == post_e || in_s == in_e) {\n            return nullptr;\n        }\n        \n        auto idx = in_entry_idx_map.at(postorder[post_e - 1]);\n        auto left_tree_size = idx - in_s;\n\n        TreeNode *node = new TreeNode(postorder[post_e - 1]);\n        // Recursively builds the left subtree.\n        node->left =ReconstructPostInOrdersHelper(postorder, post_s, post_s + left_tree_size,\n                                                  inorder, in_s, idx, in_entry_idx_map);\n        // Recursively builds the right subtree.\n        node->right = ReconstructPostInOrdersHelper(postorder, post_s + left_tree_size, post_e - 1,\n                                                    inorder, idx + 1, in_e, in_entry_idx_map);\n        return node;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\nclass Solution(object):\n    # @param inorder, a list of integers\n    # @param postorder, a list of integers\n    # @return a tree node\n    def buildTree(self, inorder, postorder):\n        lookup = {}\n        for i, num in enumerate(inorder):\n            lookup[num] = i\n        return self.buildTreeRecu(lookup, postorder, inorder, len(postorder), 0, len(inorder))\n\n    def buildTreeRecu(self, lookup, postorder, inorder, post_end, in_start, in_end):\n        if in_start == in_end:\n            return None\n        node = TreeNode(postorder[post_end - 1])\n        i = lookup[postorder[post_end - 1]]\n        node.left = self.buildTreeRecu(lookup, postorder, inorder, post_end - 1 - (in_end - i - 1), in_start, i)\n        node.right = self.buildTreeRecu(lookup, postorder, inorder, post_end - 1, i + 1, in_end)\n        return node",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

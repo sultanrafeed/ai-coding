@@ -1,0 +1,36 @@
+{
+  "id": "1663d80a-191f-45b3-bae2-c3e5a523098d",
+  "slug": "shortest-uncommon-substring-in-an-array",
+  "title": "Shortest Uncommon Substring in an Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array <code>arr</code> of size <code>n</code> consisting of <strong>non-empty</strong> strings.</p>\n\n<p>Find a string array <code>answer</code> of size <code>n</code> such that:</p>\n\n<ul>\n\t<li><code>answer[i]</code> is the <strong>shortest</strong> <span data-keyword=\"substring\">substring</span> of <code>arr[i]</code> that does <strong>not</strong> occur as a substring in any other string in <code>arr</code>. If multiple such substrings exist, <code>answer[i]</code> should be the <span data-keyword=\"lexicographically-smaller-string\">lexicographically smallest</span>. And if no such substring exists, <code>answer[i]</code> should be an empty string.</li>\n</ul>\n\n<p>Return <em>the array </em><code>answer</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [&quot;cab&quot;,&quot;ad&quot;,&quot;bad&quot;,&quot;c&quot;]\n<strong>Output:</strong> [&quot;ab&quot;,&quot;&quot;,&quot;ba&quot;,&quot;&quot;]\n<strong>Explanation:</strong> We have the following:\n- For the string &quot;cab&quot;, the shortest substring that does not occur in any other string is either &quot;ca&quot; or &quot;ab&quot;, we choose the lexicographically smaller substring, which is &quot;ab&quot;.\n- For the string &quot;ad&quot;, there is no substring that does not occur in any other string.\n- For the string &quot;bad&quot;, the shortest substring that does not occur in any other string is &quot;ba&quot;.\n- For the string &quot;c&quot;, there is no substring that does not occur in any other string.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [&quot;abc&quot;,&quot;bcd&quot;,&quot;abcd&quot;]\n<strong>Output:</strong> [&quot;&quot;,&quot;&quot;,&quot;abcd&quot;]\n<strong>Explanation:</strong> We have the following:\n- For the string &quot;abc&quot;, there is no substring that does not occur in any other string.\n- For the string &quot;bcd&quot;, there is no substring that does not occur in any other string.\n- For the string &quot;abcd&quot;, the shortest substring that does not occur in any other string is &quot;abcd&quot;.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == arr.length</code></li>\n\t<li><code>2 &lt;= n &lt;= 100</code></li>\n\t<li><code>1 &lt;= arr[i].length &lt;= 20</code></li>\n\t<li><code>arr[i]</code> consists only of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l^2)\n// Space: O(t)\n\n// trie\nclass Solution {\nprivate:\n    class Trie {\n    public:\n        Trie() {\n             new_node();\n         }\n\n        void add(const string& s, int d) {\n            for (int i = 0; i < size(s); ++i) {\n                int curr = 0;\n                for (int j = i; j < size(s); ++j) {\n                    const int x = s[j] - 'a';\n                    if (nodes_[curr][x] == -1) {\n                        nodes_[curr][x] = new_node();\n                    }\n                    curr = nodes_[curr][x];\n                    cnts_[curr] += d;\n                }\n            }\n        }\n\n        string query(const string& s) {\n            pair<int, string> result = {numeric_limits<int>::max(), \"\"};\n            for (int i = 0; i < size(s); ++i) {\n                int curr = 0;\n                for (int j = i; j < size(s); ++j) {\n                    const int x = s[j] - 'a';\n                    curr = nodes_[curr][x];\n                    if (cnts_[curr] == 0) {\n                        result = min(result, {j - i + 1, s.substr(i, j - i + 1)});\n                        break;\n                    }\n                }\n            }\n            return result.second;\n        }\n\n    private:\n        int new_node() {\n            nodes_.emplace_back(26, -1);\n            cnts_.emplace_back(0);\n            return size(nodes_) - 1;\n        }\n\n        vector<vector<int>> nodes_;\n        vector<int> cnts_;\n    };\n\npublic:\n    vector<string> shortestSubstrings(vector<string>& arr) {\n        Trie trie;\n        for (const auto& x : arr) {\n            trie.add(x, +1);\n        }\n        vector<string> result;\n        for (const auto& x: arr) {\n            trie.add(x, -1);\n            result.emplace_back(trie.query(x));\n            trie.add(x, +1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l^2)\n# Space: O(t)\n\n# trie\nclass Solution(object):\n    def shortestSubstrings(self, arr):\n        \"\"\"\n        :type arr: List[str]\n        :rtype: List[str]\n        \"\"\"\n        class Trie(object):\n            def __init__(self):\n                self.__nodes = []\n                self.__cnts = []\n                self.__new_node()\n            \n            def __new_node(self):\n                self.__nodes.append([-1]*26)\n                self.__cnts.append(0)\n                return len(self.__nodes)-1\n\n            def add(self, s, d):\n                for i in xrange(len(s)):\n                    curr = 0\n                    for j in xrange(i, len(s)):\n                        x = ord(s[j])-ord('a')\n                        if self.__nodes[curr][x] == -1:\n                            self.__nodes[curr][x] = self.__new_node()\n                        curr = self.__nodes[curr][x]\n                        self.__cnts[curr] += d\n    \n            def query(self, s):\n                result = (float(\"inf\"), \"\")\n                for i in xrange(len(s)):\n                    curr = 0\n                    for j in xrange(i, len(s)):\n                        curr = self.__nodes[curr][ord(s[j])-ord('a')]\n                        if self.__cnts[curr] == 0:\n                            result = min(result, (j-i+1, s[i:j+1]))\n                            break\n                return result[1]\n    \n        trie = Trie()\n        for x in arr:\n            trie.add(x, +1)\n        result = []\n        for x in arr:\n            trie.add(x, -1)\n            result.append(trie.query(x))\n            trie.add(x, +1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "750d2259-0130-4fb6-8511-adc57d9dd9b5",
+  "slug": "maximum-value-of-k-coins-from-piles",
+  "title": "Maximum Value of K Coins From Piles",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>There are <code>n</code> <strong>piles</strong> of coins on a table. Each pile consists of a <strong>positive number</strong> of coins of assorted denominations.</p>\n\n<p>In one move, you can choose any coin on <strong>top</strong> of any pile, remove it, and add it to your wallet.</p>\n\n<p>Given a list <code>piles</code>, where <code>piles[i]</code> is a list of integers denoting the composition of the <code>i<sup>th</sup></code> pile from <strong>top to bottom</strong>, and a positive integer <code>k</code>, return <em>the <strong>maximum total value</strong> of coins you can have in your wallet if you choose <strong>exactly</strong></em> <code>k</code> <em>coins optimally</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2019/11/09/e1.png\" style=\"width: 600px; height: 243px;\" />\n<pre>\n<strong>Input:</strong> piles = [[1,100,3],[7,8,9]], k = 2\n<strong>Output:</strong> 101\n<strong>Explanation:</strong>\nThe above diagram shows the different ways we can choose k coins.\nThe maximum total we can obtain is 101.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> piles = [[100],[100],[100],[100],[100],[100],[1,1,1,1,1,1,700]], k = 7\n<strong>Output:</strong> 706\n<strong>Explanation:\n</strong>The maximum total can be obtained if we choose all coins from the last pile.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == piles.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 1000</code></li>\n\t<li><code>1 &lt;= piles[i][j] &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= sum(piles[i].length) &lt;= 2000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,100,3],[7,8,9]]\n2\n[[100],[100],[100],[100],[100],[100],[1,1,1,1,1,1,700]]\n7",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(min(n * k^2, m * k)), m = sum(len(pile) for pile in piles)\n// Space: O(k)\n\n// dp\nclass Solution {\npublic:\n    int maxValueOfCoins(vector<vector<int>>& piles, int k) {\n        vector<int> dp(1);\n        for (const auto& pile : piles) {\n            vector<int> new_dp(min(static_cast<int>(size(dp) + size(pile)), k + 1));\n            for (int i = 0; i < size(dp); ++i) {\n                for (int j = 0, curr = 0; j <= min(k - i, static_cast<int>(size(pile))); ++j) {\n                    new_dp[i + j] = max(new_dp[i + j], dp[i] + curr);\n                    curr += j < size(pile) ? pile[j] : 0;\n                }\n            }\n            dp = move(new_dp);\n        }\n        return dp.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(min(n * k^2, m * k)), m = sum(len(pile) for pile in piles)\n# Space: O(k)\n\n# dp\nclass Solution(object):\n    def maxValueOfCoins(self, piles, k):\n        \"\"\"\n        :type piles: List[List[int]]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        dp = [0]\n        for pile in piles:\n            new_dp = [0]*min(len(dp)+len(pile), k+1)\n            for i in xrange(len(dp)):\n                curr = 0\n                for j in xrange(min(k-i, len(pile))+1):\n                    new_dp[i+j] = max(new_dp[i+j], dp[i]+curr)\n                    curr += pile[j] if j < len(pile) else 0\n            dp = new_dp\n        return dp[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

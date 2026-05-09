@@ -1,0 +1,35 @@
+{
+  "id": "b58c2c5a-137c-49a2-abfe-c079c41140a7",
+  "slug": "check-if-all-the-integers-in-a-range-are-covered",
+  "title": "Check if All the Integers in a Range Are Covered",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a 2D integer array <code>ranges</code> and two integers <code>left</code> and <code>right</code>. Each <code>ranges[i] = [start<sub>i</sub>, end<sub>i</sub>]</code> represents an <strong>inclusive</strong> interval between <code>start<sub>i</sub></code> and <code>end<sub>i</sub></code>.</p>\n\n<p>Return <code>true</code> <em>if each integer in the inclusive range</em> <code>[left, right]</code> <em>is covered by <strong>at least one</strong> interval in</em> <code>ranges</code>. Return <code>false</code> <em>otherwise</em>.</p>\n\n<p>An integer <code>x</code> is covered by an interval <code>ranges[i] = [start<sub>i</sub>, end<sub>i</sub>]</code> if <code>start<sub>i</sub> &lt;= x &lt;= end<sub>i</sub></code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> ranges = [[1,2],[3,4],[5,6]], left = 2, right = 5\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Every integer between 2 and 5 is covered:\n- 2 is covered by the first range.\n- 3 and 4 are covered by the second range.\n- 5 is covered by the third range.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> ranges = [[1,10],[10,20]], left = 21, right = 21\n<strong>Output:</strong> false\n<strong>Explanation:</strong> 21 is not covered by any range.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= ranges.length &lt;= 50</code></li>\n\t<li><code>1 &lt;= start<sub>i</sub> &lt;= end<sub>i</sub> &lt;= 50</code></li>\n\t<li><code>1 &lt;= left &lt;= right &lt;= 50</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + r)\n// Space: O(r)\n\n// if r is small, this is better\nclass Solution {\npublic:\n    bool isCovered(vector<vector<int>>& ranges, int left, int right) {\n        static const int RANGE_SIZE = 50;\n\n        vector<int> interval(RANGE_SIZE + 1);\n        for (const auto& r : ranges) {\n            ++interval[r[0] - 1];\n            --interval[(r[1] - 1) + 1];\n        }\n        for (int i = 0, cnt = 0; i <= right - 1; ++i) {\n            cnt += interval[i];\n            if (i >= left - 1 && !cnt) {\n                return false;\n            }\n        }\n        return true;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\n// if r is big, this is better\nclass Solution2 {\npublic:\n    bool isCovered(vector<vector<int>>& ranges, int left, int right) {\n        sort(begin(ranges), end(ranges));\n        for (const auto& r : ranges) {\n            if (r[0] <= left && left <= r[1]) {\n                left = r[1] + 1;\n            }\n        }\n        return left > right;\n    }\n};\n\n// Time:  O(n * r)\n// Space: O(1)\nclass Solution3 {\npublic:\n    bool isCovered(vector<vector<int>>& ranges, int left, int right) {\n        for (int i = left; i <= right; ++i) {\n            bool found = false;\n            for (const auto& r : ranges) {\n                if (r[0] <= i && i <= r[1]) {\n                    found = true;\n                    break;\n                }\n            }\n            if (!found) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + r)\n# Space: O(r)\n\n# if r is small, this is better\nclass Solution(object):\n    def isCovered(self, ranges, left, right):\n        \"\"\"\n        :type ranges: List[List[int]]\n        :type left: int\n        :type right: int\n        :rtype: bool\n        \"\"\"\n        RANGE_SIZE = 50\n\n        interval = [0]*(RANGE_SIZE+1)\n        for l, r in ranges:\n            interval[l-1] += 1\n            interval[(r-1)+1] -= 1\n        cnt = 0\n        for i in xrange((right-1)+1):\n            cnt += interval[i]\n            if i >= left-1 and not cnt:\n                return False\n        return True\n\n\n# Time:  O(nlogn)\n# Space: O(1)\n# if r is big, this is better\nclass Solution2(object):\n    def isCovered(self, ranges, left, right):\n        \"\"\"\n        :type ranges: List[List[int]]\n        :type left: int\n        :type right: int\n        :rtype: bool\n        \"\"\"\n        ranges.sort()\n        for l, r in ranges:\n            if l <= left <= r:\n                left = r+1\n        return left > right\n\n\n# Time:  O(n * r)\n# Space: O(1)\nclass Solution3(object):\n    def isCovered(self, ranges, left, right):\n        \"\"\"\n        :type ranges: List[List[int]]\n        :type left: int\n        :type right: int\n        :rtype: bool\n        \"\"\"\n        return all(any(l <= i <= r for l, r in ranges) for i in xrange(left, right+1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,43 @@
+{
+  "id": "55f2035f-f426-498a-ae02-d9c175517fed",
+  "slug": "count-the-number-of-k-free-subsets",
+  "title": "Count the Number of K-Free Subsets",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "sorting",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,4,6]\n1\n[2,3,5,8]\n5\n[10,5,9,11]\n20",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// combinatorics, dp\nclass Solution {\npublic:\n    long long countTheNumOfKFreeSubsets(vector<int>& nums, int k) {\n        unordered_map<int, int> cnt;\n        for (const auto& x : nums) {\n            ++cnt[x];\n        }\n        const auto& count = [&](int x) {\n            int y = x;\n            for (; cnt.count(y - k); y -= k);\n            vector<int64_t> dp = {1, 0};  // dp[0]: count without i, dp[1]: count with i\n            for (int i = y; i <= x; i += k) {\n                dp = {dp[0] + dp[1], dp[0] * ((1 << cnt[i]) - 1)};\n            }\n            return dp[0] + dp[1];\n        };\n\n        int64_t result = 1;\n        for (const auto& [i, _] : cnt) {\n            if (!cnt.count(i + k)) {\n                result *= count(i);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\nimport operator\n\n\n# combinatorics, dp\nclass Solution(object):\n    def countTheNumOfKFreeSubsets(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def count(x):\n            y = x\n            while y-k in cnt:\n                y -= k\n            dp = [1, 0]  # dp[0]: count without i, dp[1]: count with i\n            for i in xrange(y, x+1, k):\n                dp = [dp[0]+dp[1], dp[0]*((1<<cnt[i])-1)]\n            return sum(dp)\n\n        cnt = collections.Counter(nums)\n        return reduce(operator.mul, (count(i) for i in cnt.iterkeys() if i+k not in cnt))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

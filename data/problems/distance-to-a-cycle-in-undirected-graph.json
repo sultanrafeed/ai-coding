@@ -1,0 +1,42 @@
+{
+  "id": "13e11704-d1b5-4e67-8550-c823b082bf4a",
+  "slug": "distance-to-a-cycle-in-undirected-graph",
+  "title": "Distance to a Cycle in Undirected Graph",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "depth-first-search",
+    "breadth-first-search",
+    "graph",
+    "topological-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "7\n[[1,2],[2,4],[4,3],[3,1],[0,1],[5,2],[6,5]]\n9\n[[0,1],[1,2],[0,2],[2,6],[6,7],[6,8],[0,3],[3,4],[3,5]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(|V| + |E|)\n// Space: O(|V| + |E|)\n\n// graph, dfs, bfs\nclass Solution {\npublic:\n    vector<int> distanceToCycle(int n, vector<vector<int>>& edges) {\n        vector<vector<int>> adj(n);\n        for (const auto& e : edges) {\n            adj[e[0]].emplace_back(e[1]);\n            adj[e[1]].emplace_back(e[0]);\n        }\n        return bfs(adj, iter_dfs(adj));\n    }\n\nprivate:\n    vector<int> cycle(const vector<int>& parent, int v, int u) {\n        vector<int> result = {parent[v], v};\n        for (; u != parent[v]; u = parent[u]) {\n            result.emplace_back(u);\n        }\n        return result;\n    }\n\n    vector<int> iter_dfs(const vector<vector<int>>& adj) {\n        vector<int> stk = {0};\n        vector<int> parent(size(adj), -2);\n        parent[0] = -1;\n        while (!empty(stk)) {\n            const int u = stk.back(); stk.pop_back();\n            for (const auto& v : adj[u]) {\n                if (parent[v] != -2) {\n                    if (v == parent[u]) {\n                        continue;\n                    }\n                    return cycle(parent, v, u);\n                }\n                parent[v] = u;\n                stk.emplace_back(v);\n            }\n        }\n        return {};\n    }\n\n    vector<int> bfs(const vector<vector<int>>& adj, vector<int> q) {\n        vector<int> result(size(adj), -1);\n        for (const auto& x : q) {\n            result[x] = 0;\n        }\n        for (int d = 1; !empty(q); ++d) {\n            vector<int> new_q;\n            for (const auto& u : q) {\n                for (const auto& v : adj[u]) {\n                    if (result[v] != -1) {\n                        continue;\n                    }\n                    result[v] = d;\n                    new_q.emplace_back(v);\n                }\n            }\n            q = move(new_q);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(|V| + |E|)\n# Space: O(|V| + |E|)\n\n# graph, dfs, bfs\nclass Solution(object):\n    def distanceToCycle(self, n, edges):\n        \"\"\"\n        :type n: int\n        :type edges: List[List[int]]\n        :rtype: List[int]\n        \"\"\"\n        def cycle(parent, v, u):\n            result = [parent[v], v]\n            while u != parent[v]:\n                result.append(u)\n                u = parent[u]\n            return result\n    \n        def iter_dfs(adj):\n            stk = [0]\n            parent = [-2]*len(adj)\n            parent[0] = -1\n            while stk:\n                u = stk.pop()\n                for v in reversed(adj[u]):\n                    if parent[v] != -2:\n                        if v == parent[u]:\n                            continue\n                        return cycle(parent, v, u)\n                    parent[v] = u\n                    stk.append(v)\n\n        def bfs(adj, q):\n            result = [-1]*n\n            for x in q:\n                result[x] = 0\n            d = 1\n            while q:\n                new_q = []\n                for u in q:\n                    for v in adj[u]:\n                        if result[v] != -1:\n                            continue\n                        result[v] = d\n                        new_q.append(v)\n                q = new_q\n                d += 1\n            return result\n    \n        adj = [[] for _ in xrange(n)]\n        for u, v in edges:\n            adj[u].append(v)\n            adj[v].append(u)\n        return bfs(adj, iter_dfs(adj))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

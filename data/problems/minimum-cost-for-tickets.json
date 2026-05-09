@@ -1,0 +1,40 @@
+{
+  "id": "b53c3c38-af30-4e74-927e-ee68596b5cb8",
+  "slug": "minimum-cost-for-tickets",
+  "title": "Minimum Cost For Tickets",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You have planned some train traveling one year in advance. The days of the year in which you will travel are given as an integer array <code>days</code>. Each day is an integer from <code>1</code> to <code>365</code>.</p>\n\n<p>Train tickets are sold in <strong>three different ways</strong>:</p>\n\n<ul>\n\t<li>a <strong>1-day</strong> pass is sold for <code>costs[0]</code> dollars,</li>\n\t<li>a <strong>7-day</strong> pass is sold for <code>costs[1]</code> dollars, and</li>\n\t<li>a <strong>30-day</strong> pass is sold for <code>costs[2]</code> dollars.</li>\n</ul>\n\n<p>The passes allow that many days of consecutive travel.</p>\n\n<ul>\n\t<li>For example, if we get a <strong>7-day</strong> pass on day <code>2</code>, then we can travel for <code>7</code> days: <code>2</code>, <code>3</code>, <code>4</code>, <code>5</code>, <code>6</code>, <code>7</code>, and <code>8</code>.</li>\n</ul>\n\n<p>Return <em>the minimum number of dollars you need to travel every day in the given list of days</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> days = [1,4,6,7,8,20], costs = [2,7,15]\n<strong>Output:</strong> 11\n<strong>Explanation:</strong> For example, here is one way to buy passes that lets you travel your travel plan:\nOn day 1, you bought a 1-day pass for costs[0] = $2, which covered day 1.\nOn day 3, you bought a 7-day pass for costs[1] = $7, which covered days 3, 4, ..., 9.\nOn day 20, you bought a 1-day pass for costs[0] = $2, which covered day 20.\nIn total, you spent $11 and covered all the days of your travel.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> days = [1,2,3,4,5,6,7,8,9,10,30,31], costs = [2,7,15]\n<strong>Output:</strong> 17\n<strong>Explanation:</strong> For example, here is one way to buy passes that lets you travel your travel plan:\nOn day 1, you bought a 30-day pass for costs[2] = $15 which covered days 1, 2, ..., 30.\nOn day 31, you bought a 1-day pass for costs[0] = $2 which covered day 31.\nIn total, you spent $17 and covered all the days of your travel.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= days.length &lt;= 365</code></li>\n\t<li><code>1 &lt;= days[i] &lt;= 365</code></li>\n\t<li><code>days</code> is in strictly increasing order.</li>\n\t<li><code>costs.length == 3</code></li>\n\t<li><code>1 &lt;= costs[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,4,6,7,8,20]\n[2,7,15]\n[1,2,3,4,5,6,7,8,9,10,30,31]\n[2,7,15]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// space: O(1)\n\nclass Solution {\npublic:\n    int mincostTickets(vector<int>& days, vector<int>& costs) {\n        static vector<int> durations{1, 7, 30};\n        \n        const int W = durations.back();\n        vector<int> dp(W, numeric_limits<int>::max());\n        dp[0] = 0;\n        vector<int> last_buy_days{0, 0, 0};\n        for (int i = 1; i < days.size() + 1; ++i) {\n            dp[i % W] = numeric_limits<int>::max();\n            for (int j = 0; j < durations.size(); ++j) {\n                while (i - 1 < days.size() &&\n                       days[i - 1] > days[last_buy_days[j]] + durations[j] - 1) {\n                    ++last_buy_days[j];  // Time: O(n)\n                }\n                dp[i % W] = min(dp[i % W], dp[last_buy_days[j] % W] + costs[j]);\n            }\n        }\n        return dp[days.size() % W];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# space: O(1)\n\nclass Solution(object):\n    def mincostTickets(self, days, costs):\n        \"\"\"\n        :type days: List[int]\n        :type costs: List[int]\n        :rtype: int\n        \"\"\"\n        durations = [1, 7, 30]\n        W = durations[-1]\n        dp = [float(\"inf\") for i in xrange(W)]\n        dp[0] = 0\n        last_buy_days = [0, 0, 0]\n        for i in xrange(1,len(days)+1):\n            dp[i%W] = float(\"inf\")\n            for j in xrange(len(durations)):\n                while i-1 < len(days) and \\\n                      days[i-1] > days[last_buy_days[j]]+durations[j]-1:\n                    last_buy_days[j] += 1  # Time: O(n)\n                dp[i%W] = min(dp[i%W], dp[last_buy_days[j]%W]+costs[j])\n        return dp[len(days)%W]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

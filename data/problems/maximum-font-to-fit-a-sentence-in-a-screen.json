@@ -1,0 +1,36 @@
+{
+  "id": "7b1eb87d-7e96-43fd-bddb-59d64b309c45",
+  "slug": "maximum-font-to-fit-a-sentence-in-a-screen",
+  "title": "Maximum Font to Fit a Sentence in a Screen",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "binary-search",
+    "interactive"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + logm), n is the length of text, m is the number of fonts\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxFont(string text, int w, int h, vector<int>& fonts, FontInfo fontInfo) {\n        vector<int> count(26);\n        for (const auto& c : text) {\n            ++count[c - 'a'];\n        }\n        int left = 0, right = size(fonts) - 1;\n        while (left <= right) {\n            const auto& mid = left + (right - left) / 2;\n            if (!check(count, w, h, fonts, fontInfo, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return right >= 0 ? fonts[right] : -1;\n    }\n\nprivate:\n    bool check(const vector<int>& count, int w, int h, const vector<int>& fonts, FontInfo& fontInfo, int x) {\n        if (fontInfo.getHeight(fonts[x]) > h) {\n            return false;\n        }\n        int width = 0;\n        for (int c = 0; c < size(count); ++c) {\n            width += count[c] * fontInfo.getWidth(fonts[x], 'a' + c);\n            if (width > w) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + logm), n is the length of text, m is the number of fonts\n# Space: O(1)\n\nimport collections\n\n\nclass FontInfo(object):\n    def getWidth(self, fontSize, ch):\n        \"\"\"\n        :type fontSize: int\n        :type ch: char\n        :rtype int\n        \"\"\"\n        pass\n    \n    def getHeight(self, fontSize):\n        \"\"\"\n        :type fontSize: int\n        :rtype int\n        \"\"\"\n        pass\n\n\nclass Solution(object):\n    def maxFont(self, text, w, h, fonts, fontInfo):\n        \"\"\"\n        :type text: str\n        :type w: int\n        :type h: int\n        :type fonts: List[int]\n        :type fontInfo: FontInfo\n        :rtype: int\n        \"\"\"\n        def check(count, w, h, fonts, fontInfo, x):  # Time: O(1)\n            return (fontInfo.getHeight(fonts[x]) <= h and\n                    sum(cnt * fontInfo.getWidth(fonts[x], c) for c, cnt in count.iteritems()) <= w)\n\n        count = collections.Counter(text)\n        left, right = 0, len(fonts)-1\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(count, w, h, fonts, fontInfo, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return fonts[right] if right >= 0 else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "c076aa3c-c10b-4f48-8fdc-8a6d28ea7b90",
+  "slug": "split-array-by-prime-indices",
+  "title": "Split Array by Prime Indices",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>Split <code>nums</code> into two arrays <code>A</code> and <code>B</code> using the following rule:</p>\n\n<ul>\n\t<li>Elements at <strong><span data-keyword=\"prime-number\">prime</span></strong> indices in <code>nums</code> must go into array <code>A</code>.</li>\n\t<li>All other elements must go into array <code>B</code>.</li>\n</ul>\n\n<p>Return the <strong>absolute</strong> difference between the sums of the two arrays: <code>|sum(A) - sum(B)|</code>.</p>\n\n<p><strong>Note:</strong> An empty array has a sum of 0.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,3,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The only prime index in the array is 2, so <code>nums[2] = 4</code> is placed in array <code>A</code>.</li>\n\t<li>The remaining elements, <code>nums[0] = 2</code> and <code>nums[1] = 3</code> are placed in array <code>B</code>.</li>\n\t<li><code>sum(A) = 4</code>, <code>sum(B) = 2 + 3 = 5</code>.</li>\n\t<li>The absolute difference is <code>|4 - 5| = 1</code>.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [-1,5,7,0]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>The prime indices in the array are 2 and 3, so <code>nums[2] = 7</code> and <code>nums[3] = 0</code> are placed in array <code>A</code>.</li>\n\t<li>The remaining elements, <code>nums[0] = -1</code> and <code>nums[1] = 5</code> are placed in array <code>B</code>.</li>\n\t<li><code>sum(A) = 7 + 0 = 7</code>, <code>sum(B) = -1 + 5 = 4</code>.</li>\n\t<li>The absolute difference is <code>|7 - 4| = 3</code>.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>9</sup> &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  precompute: O(max_n), max_n = max(len(nums))\n//        runtime:    O(n)\n// Space: O(max_n)\n\n// number theory\nvector<int64_t> linear_sieve_of_eratosthenes(int64_t n) {  // Time: O(n), Space: O(n)\n    vector<int64_t> spf(n + 1, -1);\n    vector<int64_t> primes;\n    for (int64_t i = 2; i <= n; ++i) {\n        if (spf[i] == -1) {\n            spf[i] = i;\n            primes.emplace_back(i);\n        }\n        for (const auto& p : primes) {\n            if (i * p > n || p > spf[i]) {\n                break;\n            }\n            spf[i * p] = p;\n        }\n    }\n    return spf;\n}\n\nstatic const int MAX_IDX = 1e5 - 1;\nconst auto& SPF = linear_sieve_of_eratosthenes(MAX_IDX);\nclass Solution {\npublic:\n    long long splitArray(vector<int>& nums) {\n        int64_t result = 0;\n        for (int i = 0; i < size(nums); ++i) {\n            result += SPF[i] == i ? nums[i] : -nums[i];\n        }\n        return abs(result);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  precompute: O(max_n), max_n = max(len(nums))\n#        runtime:    O(n)\n# Space: O(max_n)\n\n# number theory\ndef linear_sieve_of_eratosthenes(n):  # Time: O(n), Space: O(n)\n    primes = []\n    spf = [-1]*(n+1)  # the smallest prime factor\n    for i in xrange(2, n+1):\n        if spf[i] == -1:\n            spf[i] = i\n            primes.append(i)\n        for p in primes:\n            if i*p > n or p > spf[i]:\n                break\n            spf[i*p] = p\n    return spf\n\n\nMAX_IDX = 10**5-1\nSPF = linear_sieve_of_eratosthenes(MAX_IDX)\nclass Solution(object):\n    def splitArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return abs(sum(x if SPF[i] == i else -x for i, x in enumerate(nums)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

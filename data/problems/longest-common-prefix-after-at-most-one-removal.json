@@ -1,0 +1,40 @@
+{
+  "id": "f639af1a-0e6d-457a-92fc-05f4544a5547",
+  "slug": "longest-common-prefix-after-at-most-one-removal",
+  "title": "Longest Common Prefix After at Most One Removal",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"madxa\"\n\"madam\"\n\"leetcode\"\n\"eetcode\"\n\"one\"\n\"one\"\n\"a\"\n\"b\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// two pointers\nclass Solution {\npublic:\n    int longestCommonPrefix(string s, string t) {\n        int result = 0;\n        bool removed = false;\n        for (int i = 0, j = 0; i < size(s) && j <size(t);) {\n            if (s[i] == t[j]) {\n                ++result;\n                ++i, ++j;\n            } else if (!removed) {\n                removed = true;\n                ++i;\n            } else {\n                break;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# two pointers\nclass Solution(object):\n    def longestCommonPrefix(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: int\n        \"\"\"\n        result = i = j = 0\n        removed = False\n        while i < len(s) and j < len(t):\n            if s[i] == t[j]:\n                result += 1\n                i += 1\n                j += 1\n            elif not removed:\n                removed = True\n                i += 1\n            else:\n                break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

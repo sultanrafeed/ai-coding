@@ -1,0 +1,41 @@
+{
+  "id": "b1e07cc6-430e-459a-b18f-39b7541118ad",
+  "slug": "maximum-vacation-days",
+  "title": "Maximum Vacation Days",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,1,1],[1,0,1],[1,1,0]]\n[[1,3,1],[6,0,3],[3,3,3]]\n[[0,0,0],[0,0,0],[0,0,0]]\n[[1,1,1],[7,7,7],[7,7,7]]\n[[0,1,1],[1,0,1],[1,1,0]]\n[[7,0,0],[0,7,0],[0,0,7]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2 * k)\n// Space: O(k)\n\nclass Solution {\npublic:\n    int maxVacationDays(vector<vector<int>>& flights, vector<vector<int>>& days) {\n        if (days.empty() || flights.empty()) {\n            return 0;\n        }\n        vector<vector<int>> dp(2, vector<int>(days.size()));\n        for (int week = days[0].size() - 1; week >= 0; --week) {\n            for (int cur_city = 0; cur_city < days.size(); ++cur_city) {\n                dp[week % 2][cur_city] = days[cur_city][week] + dp[(week + 1) % 2][cur_city];\n                for (int dest_city = 0; dest_city < days.size(); ++dest_city) {\n                    if (flights[cur_city][dest_city] == 1) {\n                        dp[week % 2][cur_city] = max(dp[week % 2][cur_city],\n                                                     days[dest_city][week] + dp[(week + 1) % 2][dest_city]);\n                    }\n                }\n            }\n        }\n        return dp[0][0];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2 * k)\n# Space: O(k)\n\nclass Solution(object):\n    def maxVacationDays(self, flights, days):\n        \"\"\"\n        :type flights: List[List[int]]\n        :type days: List[List[int]]\n        :rtype: int\n        \"\"\"\n        if not days or not flights:\n            return 0\n        dp = [[0] * len(days) for _ in xrange(2)]\n        for week in reversed(xrange(len(days[0]))):\n            for cur_city in xrange(len(days)):\n                dp[week % 2][cur_city] = days[cur_city][week] + dp[(week+1) % 2][cur_city]\n                for dest_city in xrange(len(days)):\n                    if flights[cur_city][dest_city] == 1:\n                        dp[week % 2][cur_city] = max(dp[week % 2][cur_city], \\\n                                                     days[dest_city][week] + dp[(week+1) % 2][dest_city])\n        return dp[0][0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,39 @@
+{
+  "id": "825593be-53e3-4598-ab27-99c137fd4ebf",
+  "slug": "minimum-operations-to-sort-a-string",
+  "title": "Minimum Operations to Sort a String",
+  "difficulty": "medium",
+  "descriptionHtml": "<p data-end=\"244\" data-start=\"156\">You are given a string <code>s</code> consisting of lowercase English letters.</p>\n\n<p>In one operation, you can select any <strong><span data-keyword=\"substring-nonempty\">substring</span></strong> of <code>s</code> that is <strong>not</strong> the entire string and <strong>sort</strong> it in <strong>non-descending alphabetical</strong> order.</p>\n\n<p>Return the <strong>minimum</strong> number of operations required to make <code>s</code> sorted in <strong>non-descending</strong> order. If it is not possible, return -1.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;dog&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong>​​​​​​​</p>\n\n<ul>\n\t<li>Sort substring <code>&quot;og&quot;</code> to <code>&quot;go&quot;</code>.</li>\n\t<li>Now, <code>s = &quot;dgo&quot;</code>, which is sorted in ascending order. Thus, the answer is 1.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;card&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Sort substring <code>&quot;car&quot;</code> to <code>&quot;acr&quot;</code>, so <code>s = &quot;acrd&quot;</code>.</li>\n\t<li>Sort substring <code>&quot;rd&quot;</code> to <code>&quot;dr&quot;</code>, making <code>s = &quot;acdr&quot;</code>, which is sorted in ascending order. Thus, the answer is 2.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;gf&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>It is impossible to sort <code>s</code> under the given constraints. Thus, the answer is -1.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s</code> consists of only lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"dog\"\n\"card\"\n\"gf\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    int minOperations(string s) {\n        if (is_sorted(cbegin(s), cend(s))) {\n            return 0;\n        }\n        if (size(s) == 2) {\n            return -1;\n        }\n        const auto& [mn, mx] = minmax_element(next(cbegin(s)), prev(cend(s)));\n        return (s[0] == ranges::min(s) || s.back() == ranges::max(s)) ? 1 : ((s[0] <= *mx || s.back() >= *mn) ? 2 : 3);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def minOperations(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        if all(s[i] <= s[i+1] for i in xrange(len(s)-1)):\n            return 0\n        if len(s) == 2:\n            return -1\n        mn = min(s[i] for i in xrange(1, len(s)-1))\n        mx = max(s[i] for i in xrange(1, len(s)-1))\n        return 1 if s[0] == min(s) or s[-1] == max(s) else 2 if s[-1] >= mn or s[0] <= mx else 3",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

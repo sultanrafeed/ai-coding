@@ -1,0 +1,31 @@
+{
+  "id": "0cf0f926-779a-4e4c-9007-beeb5825e261",
+  "slug": "minimum-deletion-cost-to-avoid-repeating-letters",
+  "title": "Minimum Deletion Cost To Avoid Repeating Letters",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minCost(string s, vector<int>& cost) {\n        int result = 0, accu = 0, max_cost = 0;\n        for (int i = 0; i < s.length(); ++i) {\n            if (i && s[i] != s[i - 1]) {\n                result += accu - max_cost;\n                accu = max_cost = 0;\n            }\n            accu += cost[i];\n            max_cost = max(max_cost, cost[i]);\n        }\n        result += accu - max_cost;\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minCost(self, s, cost):\n        \"\"\"\n        :type s: str\n        :type cost: List[int]\n        :rtype: int\n        \"\"\"\n        result = accu = max_cost = 0\n        for i in xrange(len(s)):\n            if i and s[i] != s[i-1]:\n                result += accu-max_cost\n                accu = max_cost = 0\n            accu += cost[i]\n            max_cost = max(max_cost, cost[i])\n        result += accu-max_cost\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

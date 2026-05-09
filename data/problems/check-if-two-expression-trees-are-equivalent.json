@@ -1,0 +1,43 @@
+{
+  "id": "862784c6-04b8-41ea-8d2b-22de3bb11310",
+  "slug": "check-if-two-expression-trees-are-equivalent",
+  "title": "Check If Two Expression Trees are Equivalent",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "tree",
+    "depth-first-search",
+    "binary-tree",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[x]\n[x]\n[+,a,+,null,null,b,c]\n[+,+,a,b,c]\n[+,a,+,null,null,b,c]\n[+,+,a,b,d]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// morris traversal\nclass Solution {\npublic:\n    bool checkEquivalence(Node* root1, Node* root2) {\n        unordered_map<char, int> count;   \n        char prev = '+';\n        morrisInorderTraversal(root1, bind(&Solution::addCounter, this,\n                                           &count, &prev, 1, placeholders::_1));\n        prev = '+';\n        morrisInorderTraversal(root2, bind(&Solution::addCounter, this,\n                                           &count, &prev, -1, placeholders::_1));\n        return all_of(cbegin(count), cend(count),\n                      [](const auto& kvp) {\n                          return kvp.second == 0;\n                      });\n    }\n\nprivate:\n    void morrisInorderTraversal(Node *root, const function<void(char)>& cb) {\n        auto curr = root;\n        while (curr) {\n            if (!curr->left) {\n                cb(curr->val);\n                curr = curr->right;\n            } else {\n                auto node = curr->left;\n                while (node->right && node->right != curr) {\n                    node = node->right;\n                }\n                if (!node->right) {\n                    node->right = curr;\n                    curr = curr->left;\n                } else {\n                    cb(curr->val);\n                    node->right = nullptr;\n                    curr = curr->right;\n                }\n            }\n        }\n    }\n    \n    void addCounter(unordered_map<char, int> *count, char *prev, int d, char val) {\n        if (isalpha(val)) {\n            (*count)[val] += (*prev == '+') ? d : -d;\n        }\n        *prev = val;\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\nclass Solution2 {\npublic:\n    bool checkEquivalence(Node* root1, Node* root2) {\n        unordered_map<char, int> count;     \n        char prev = '+';\n        inorderTraversal(root1, bind(&Solution2::addCounter, this,\n                                     &count, &prev, 1, placeholders::_1));\n        prev = '+';\n        inorderTraversal(root2, bind(&Solution2::addCounter, this,\n                                     &count, &prev, -1, placeholders::_1));\n        return all_of(cbegin(count), cend(count),\n                      [](const auto& kvp) {\n                          return kvp.second == 0;\n                      });\n    }\n\nprivate:\n    void traverseLeft(Node* node, vector<Node *> *stk) {\n        for (; node; node = node->left) {\n            stk->emplace_back(node);\n        }\n    }\n\n    void inorderTraversal(Node *root, const function<void(char)>& cb) {\n        vector<Node *> stk;\n        char prev = '+';\n        traverseLeft(root, &stk);\n        while (!empty(stk)) {\n            auto curr = move(stk.back()); stk.pop_back();\n            cb(curr->val);\n            traverseLeft(curr->right, &stk);\n        }\n    }\n    \n    void addCounter(unordered_map<char, int> *count, char *prev, int d, char val) {\n        if (isalpha(val)) {\n            (*count)[val] += (*prev == '+') ? d : -d;\n        }\n        *prev = val;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport collections\nimport functools\n\n\n# Definition for a binary tree node.\nclass Node(object):\n    def __init__(self, val=\" \", left=None, right=None):\n        pass\n\n\n# morris traversal\nclass Solution(object):\n    def checkEquivalence(self, root1, root2):\n        \"\"\"\n        :type root1: Node\n        :type root2: Node\n        :rtype: bool\n        \"\"\"\n        def add_counter(counter, prev, d, val):\n            if val.isalpha():\n                counter[ord(val)-ord('a')] += d if prev[0] == '+' else -d\n            prev[0] = val\n    \n        def morris_inorder_traversal(root, cb):\n            curr = root\n            while curr:\n                if curr.left is None:\n                    cb(curr.val)\n                    curr = curr.right\n                else:\n                    node = curr.left\n                    while node.right and node.right != curr:\n                        node = node.right\n                    if node.right is None:\n                        node.right = curr\n                        curr = curr.left\n                    else:\n                        cb(curr.val)\n                        node.right = None\n                        curr = curr.right\n\n        counter = collections.defaultdict(int)\n        morris_inorder_traversal(root1, functools.partial(add_counter, counter, ['+'], 1))\n        morris_inorder_traversal(root2, functools.partial(add_counter, counter, ['+'], -1))\n        return all(v == 0 for v in counter.itervalues())\n\n\n# Time:  O(n)\n# Space: O(h)\nimport collections\nimport functools\n\n\nclass Solution2(object):\n    def checkEquivalence(self, root1, root2):\n        \"\"\"\n        :type root1: Node\n        :type root2: Node\n        :rtype: bool\n        \"\"\"\n        def add_counter(counter, prev, d, val):\n            if val.isalpha():\n                counter[ord(val)-ord('a')] += d if prev[0] == '+' else -d\n            prev[0] = val\n\n        def inorder_traversal(root, cb):\n            def traverseLeft(node, stk):\n                while node:\n                    stk.append(node)\n                    node = node.left \n\n            stk = []\n            traverseLeft(root, stk)\n            while stk:\n                curr = stk.pop()\n                cb(curr.val)\n                traverseLeft(curr.right, stk)\n                \n        counter = collections.defaultdict(int)\n        inorder_traversal(root1, functools.partial(add_counter, counter, ['+'], 1))\n        inorder_traversal(root2, functools.partial(add_counter, counter, ['+'], -1))\n        return all(v == 0 for v in counter.itervalues())",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

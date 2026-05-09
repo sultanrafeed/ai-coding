@@ -1,0 +1,31 @@
+{
+  "id": "97d23eea-6652-437d-a1ef-1ab149a1a0a7",
+  "slug": "bulb-switcher-iii",
+  "title": "Bulb Switcher Iii",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int numTimesAllBlue(vector<int>& light) {\n        int result = 0, right = 0;\n        for (int i = 0; i < light.size(); ++i) {\n            right = max(right, light[i]);\n            result += (i + 1 == right);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def numTimesAllBlue(self, light):\n        \"\"\"\n        :type light: List[int]\n        :rtype: int\n        \"\"\"\n        result, right = 0, 0\n        for i, num in enumerate(light, 1):\n            right = max(right, num)\n            result += (right == i)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

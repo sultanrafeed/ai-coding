@@ -1,0 +1,35 @@
+{
+  "id": "511c48d3-d3f2-43c1-a277-fc02de2b9081",
+  "slug": "count-substrings-that-can-be-rearranged-to-contain-a-string-ii",
+  "title": "Count Substrings That Can Be Rearranged to Contain a String II",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two strings <code>word1</code> and <code>word2</code>.</p>\n\n<p>A string <code>x</code> is called <strong>valid</strong> if <code>x</code> can be rearranged to have <code>word2</code> as a <span data-keyword=\"string-prefix\">prefix</span>.</p>\n\n<p>Return the total number of <strong>valid</strong> <span data-keyword=\"substring-nonempty\">substrings</span> of <code>word1</code>.</p>\n\n<p><strong>Note</strong> that the memory limits in this problem are <strong>smaller</strong> than usual, so you <strong>must</strong> implement a solution with a <em>linear</em> runtime complexity.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word1 = &quot;bcca&quot;, word2 = &quot;abc&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The only valid substring is <code>&quot;bcca&quot;</code> which can be rearranged to <code>&quot;abcc&quot;</code> having <code>&quot;abc&quot;</code> as a prefix.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word1 = &quot;abcabc&quot;, word2 = &quot;abc&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">10</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>All the substrings except substrings of size 1 and size 2 are valid.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">word1 = &quot;abcabc&quot;, word2 = &quot;aaabc&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= word1.length &lt;= 10<sup>6</sup></code></li>\n\t<li><code>1 &lt;= word2.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>word1</code> and <code>word2</code> consist only of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// two pointers, sliding window, freq table\nclass Solution {\npublic:\n    long long validSubstringCount(string word1, string word2) {\n        vector<int> cnt(26);\n        int curr = 0;\n        for (const auto& x : word2) {\n            if (cnt[x - 'a']++ == 0) {\n                ++curr;\n            }\n        }\n        int64_t result = 0;\n        for (int right = 0, left = 0; right < size(word1); ++right) {\n            if (--cnt[word1[right] - 'a'] == 0) {\n                --curr;\n            }\n            for (; !curr; ++left) {\n                result += size(word1) - right;\n                if (cnt[word1[left] - 'a']++ == 0) {\n                    ++curr;\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# two pointers, sliding window, freq table\nclass Solution(object):\n    def validSubstringCount(self, word1, word2):\n        \"\"\"\n        :type word1: str\n        :type word2: str\n        :rtype: int\n        \"\"\"\n        cnt = [0]*26\n        curr = 0\n        for x in word2:\n            curr += int(cnt[ord(x)-ord('a')] == 0)\n            cnt[ord(x)-ord('a')] += 1\n        result = left = 0\n        for right in xrange(len(word1)):\n            cnt[ord(word1[right])-ord('a')] -= 1\n            curr -= int(cnt[ord(word1[right])-ord('a')] == 0)\n            while not curr:\n                result += len(word1)-right\n                curr += int(cnt[ord(word1[left])-ord('a')] == 0)\n                cnt[ord(word1[left])-ord('a')] += 1\n                left += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

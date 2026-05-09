@@ -1,0 +1,40 @@
+{
+  "id": "6ddbfa4a-a2b3-408b-a099-0beff34a1de6",
+  "slug": "partition-array-into-two-arrays-to-minimize-sum-difference",
+  "title": "Partition Array Into Two Arrays to Minimize Sum Difference",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code> of <code>2 * n</code> integers. You need to partition <code>nums</code> into <strong>two</strong> arrays of length <code>n</code> to <strong>minimize the absolute difference</strong> of the <strong>sums</strong> of the arrays. To partition <code>nums</code>, put each element of <code>nums</code> into <strong>one</strong> of the two arrays.</p>\n\n<p>Return <em>the <strong>minimum</strong> possible absolute difference</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"example-1\" src=\"https://assets.leetcode.com/uploads/2021/10/02/ex1.png\" style=\"width: 240px; height: 106px;\" />\n<pre>\n<strong>Input:</strong> nums = [3,9,7,3]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> One optimal partition is: [3,9] and [7,3].\nThe absolute difference between the sums of the arrays is abs((3 + 9) - (7 + 3)) = 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [-36,36]\n<strong>Output:</strong> 72\n<strong>Explanation:</strong> One optimal partition is: [-36] and [36].\nThe absolute difference between the sums of the arrays is abs((-36) - (36)) = 72.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"example-3\" src=\"https://assets.leetcode.com/uploads/2021/10/02/ex3.png\" style=\"width: 316px; height: 106px;\" />\n<pre>\n<strong>Input:</strong> nums = [2,-1,0,4,-2,-9]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> One optimal partition is: [2,4,-9] and [-1,0,-2].\nThe absolute difference between the sums of the arrays is abs((2 + 4 + -9) - (-1 + 0 + -2)) = 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 15</code></li>\n\t<li><code>nums.length == 2 * n</code></li>\n\t<li><code>-10<sup>7</sup> &lt;= nums[i] &lt;= 10<sup>7</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "binary-search",
+    "dynamic-programming",
+    "bit-manipulation",
+    "sorting",
+    "ordered-set",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^n)\n// Space: O(2^n)\n\nclass Solution {\npublic:\n    int minimumDifference(vector<int>& nums) {\n        vector<int> left, right; \n        for (int i = 0; i < size(nums); ++i) {\n            if (i < size(nums) / 2) {\n                left.emplace_back(nums[i]); \n            } else {\n                right.emplace_back(nums[i]); \n            }\n        }\n        const auto& total1 = accumulate(cbegin(left), cend(left), 0);\n        const auto& total2 = accumulate(cbegin(right), cend(right), 0);\n        const int bound = (1 << size(left));\n        unordered_map<int, vector<int>> sums;\n        for (int mask = 0; mask < bound; ++mask) {\n            int total = 0, bit = 1;\n            for (const auto& x : left) {\n                if (mask & bit) {\n                    total += x; \n                }\n                bit <<= 1;\n            }\n            sums[__builtin_popcount(mask)].emplace_back(2 * total - total1); \n        }\n        for (auto& [_, v] : sums) {\n            sort(begin(v), end(v));\n        }\n        int result = numeric_limits<int>::max();\n        for (int mask = 0; mask < bound; ++mask) {\n            int total = 0, bit = 1;\n            for (const auto& x : right) {\n                if (mask & bit) {\n                    total += x; \n                }\n                bit <<= 1;\n            }\n            const int k = size(right) - __builtin_popcount(mask);\n            const int diff = 2 * total - total2; \n            const auto cit = lower_bound(cbegin(sums[k]), cend(sums[k]), -diff); \n            if (cit != cend(sums[k])) {\n                result = min(result, abs(*cit + diff)); \n            }\n            if (cit != cbegin(sums[k])) {\n                result = min(result, abs(*prev(cit) + diff));    \n            }\n        }\n        return result; \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^n)\n# Space: O(2^n)\n\nimport itertools\nimport bisect\n\n\nclass Solution(object):\n    def minimumDifference(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        left, right = nums[:len(nums)//2], nums[len(nums)//2:]\n        total1, total2 = sum(left), sum(right)\n        result = float(\"inf\")\n        for k in xrange(len(left)+1): \n            sums = sorted(2*sum(comb)-total1 for comb in itertools.combinations(left, k))\n            for comb in itertools.combinations(right, len(left)-k): \n                diff = 2*sum(comb)-total2\n                i = bisect.bisect_left(sums, -diff)\n                if i < len(sums):\n                    result = min(result, abs(sums[i]+diff))\n                if i > 0:\n                    result = min(result, abs(sums[i-1]+diff))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "879a3fff-7fe9-45c0-bd7b-0189c5d3737f",
+  "slug": "encode-string-with-shortest-length",
+  "title": "Encode String with Shortest Length",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"aaa\"\n\"aaaaa\"\n\"aaaaaaaaaa\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^3) on average\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    string encode(string s) {\n        vector<vector<string>> dp(s.length(), vector<string>(s.length()));\n        for (int len = 1; len <= s.length(); ++len) {\n            for (int i = 0; i + len - 1 < s.length(); ++i) {\n                int j = i + len - 1;\n                dp[i][j] = s.substr(i, len);\n                for (int k = i; k < j; ++k) {\n                    if (dp[i][k].length() + dp[k + 1][j].length() < dp[i][j].length()) {\n                        dp[i][j] = dp[i][k] + dp[k + 1][j];\n                    }\n                }\n                string encoded_string = encode_substr(dp, s, i, j);\n                if (encoded_string.length() < dp[i][j].length()) {\n                    dp[i][j] = encoded_string;\n                }\n            }\n        }\n        return dp[0][s.length() - 1];\n    }\n\nprivate:\n    string encode_substr(const vector<vector<string>>& dp, const string& s, int i, int j) {\n        string temp = s.substr(i, j - i + 1);\n        auto pos = (temp + temp).find(temp, 1);  // O(n) on average\n        if (pos >= temp.length()) {\n            return temp;\n        }\n        return to_string(temp.length() / pos) + '[' + dp[i][i + pos - 1] + ']';\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^3) on average\n# Space: O(n^2)\n\nclass Solution(object):\n    def encode(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        def encode_substr(dp, s, i, j):\n            temp = s[i:j+1]\n            pos = (temp + temp).find(temp, 1)  # O(n) on average\n            if pos >= len(temp):\n                return temp\n            return str(len(temp)/pos) + '[' + dp[i][i + pos - 1] + ']'\n\n        dp = [[\"\" for _ in xrange(len(s))] for _ in xrange(len(s))]\n        for length in xrange(1, len(s)+1):\n            for i in xrange(len(s)+1-length):\n                j = i+length-1\n                dp[i][j] = s[i:i+length]\n                for k in xrange(i, j):\n                    if len(dp[i][k]) + len(dp[k+1][j]) < len(dp[i][j]):\n                        dp[i][j] = dp[i][k] + dp[k+1][j]\n                encoded_string = encode_substr(dp, s, i, j)\n                if len(encoded_string) < len(dp[i][j]):\n                    dp[i][j] = encoded_string\n        return dp[0][len(s) - 1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "b345ec48-b193-4864-b5dd-1c706ed530d8",
+  "slug": "range-sum-query-2d-immutable",
+  "title": "Range Sum Query 2D - Immutable",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a 2D matrix <code>matrix</code>, handle multiple queries of the following type:</p>\n\n<ul>\n\t<li>Calculate the <strong>sum</strong> of the elements of <code>matrix</code> inside the rectangle defined by its <strong>upper left corner</strong> <code>(row1, col1)</code> and <strong>lower right corner</strong> <code>(row2, col2)</code>.</li>\n</ul>\n\n<p>Implement the <code>NumMatrix</code> class:</p>\n\n<ul>\n\t<li><code>NumMatrix(int[][] matrix)</code> Initializes the object with the integer matrix <code>matrix</code>.</li>\n\t<li><code>int sumRegion(int row1, int col1, int row2, int col2)</code> Returns the <strong>sum</strong> of the elements of <code>matrix</code> inside the rectangle defined by its <strong>upper left corner</strong> <code>(row1, col1)</code> and <strong>lower right corner</strong> <code>(row2, col2)</code>.</li>\n</ul>\n\n<p>You must design an algorithm where <code>sumRegion</code> works on <code>O(1)</code> time complexity.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/14/sum-grid.jpg\" style=\"width: 415px; height: 415px;\" />\n<pre>\n<strong>Input</strong>\n[&quot;NumMatrix&quot;, &quot;sumRegion&quot;, &quot;sumRegion&quot;, &quot;sumRegion&quot;]\n[[[[3, 0, 1, 4, 2], [5, 6, 3, 2, 1], [1, 2, 0, 1, 5], [4, 1, 0, 1, 7], [1, 0, 3, 0, 5]]], [2, 1, 4, 3], [1, 1, 2, 2], [1, 2, 2, 4]]\n<strong>Output</strong>\n[null, 8, 11, 12]\n\n<strong>Explanation</strong>\nNumMatrix numMatrix = new NumMatrix([[3, 0, 1, 4, 2], [5, 6, 3, 2, 1], [1, 2, 0, 1, 5], [4, 1, 0, 1, 7], [1, 0, 3, 0, 5]]);\nnumMatrix.sumRegion(2, 1, 4, 3); // return 8 (i.e sum of the red rectangle)\nnumMatrix.sumRegion(1, 1, 2, 2); // return 11 (i.e sum of the green rectangle)\nnumMatrix.sumRegion(1, 2, 2, 4); // return 12 (i.e sum of the blue rectangle)\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == matrix.length</code></li>\n\t<li><code>n == matrix[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 200</code></li>\n\t<li><code>-10<sup>4</sup> &lt;= matrix[i][j] &lt;= 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= row1 &lt;= row2 &lt; m</code></li>\n\t<li><code>0 &lt;= col1 &lt;= col2 &lt; n</code></li>\n\t<li>At most <code>10<sup>4</sup></code> calls will be made to <code>sumRegion</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "design",
+    "matrix",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:   O(m * n),\n//        lookup: O(1)\n// Space: O(m * n)\n\nclass NumMatrix {\npublic:\n    NumMatrix(vector<vector<int>> &matrix) {\n        if (matrix.empty()) {\n            return;\n        }\n\n        const auto m = matrix.size(), n = matrix[0].size();\n        for (int i = 0; i <= m; ++i) {\n            sums_.emplace_back(n + 1, 0);\n        }\n        for (int i = 1; i <= m; ++i) {\n            for (int j = 1; j <= n; ++j) {\n                sums_[i][j] = sums_[i][j - 1] + sums_[i - 1][j] -\n                              sums_[i - 1][j - 1] + matrix[i - 1][j - 1];\n            }\n        }\n    }\n\n    int sumRegion(int row1, int col1, int row2, int col2) {\n        return sums_[row2 + 1][col2 + 1] - sums_[row2 + 1][col1] - \n               sums_[row1][col2 + 1] + sums_[row1][col1];   \n    }\n\nprivate:\n    vector<vector<int>> sums_;\n};\n\n\n// Your NumMatrix object will be instantiated and called as such:\n// NumMatrix numMatrix(matrix);\n// numMatrix.sumRegion(0, 1, 2, 3);\n// numMatrix.sumRegion(1, 2, 3, 4);",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:   O(m * n),\n#        lookup: O(1)\n# Space: O(m * n)\n\nclass NumMatrix(object):\n    def __init__(self, matrix):\n        \"\"\"\n        initialize your data structure here.\n        :type matrix: List[List[int]]\n        \"\"\"\n        if not matrix:\n            return\n\n        m, n = len(matrix), len(matrix[0])\n        self.__sums = [[0 for _ in xrange(n+1)] for _ in xrange(m+1)]\n        for i in xrange(1, m+1):\n            for j in xrange(1, n+1):\n                self.__sums[i][j] = self.__sums[i][j-1] + self.__sums[i-1][j] - \\\n                                    self.__sums[i-1][j-1] + matrix[i-1][j-1]\n\n    def sumRegion(self, row1, col1, row2, col2):\n        \"\"\"\n        sum of elements matrix[(row1,col1)..(row2,col2)], inclusive.\n        :type row1: int\n        :type col1: int\n        :type row2: int\n        :type col2: int\n        :rtype: int\n        \"\"\"\n        return self.__sums[row2+1][col2+1] - self.__sums[row2+1][col1] - \\\n               self.__sums[row1][col2+1] + self.__sums[row1][col1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

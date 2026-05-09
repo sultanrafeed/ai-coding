@@ -1,0 +1,34 @@
+{
+  "id": "0990264a-77b7-4675-884c-3b0177f32813",
+  "slug": "maximum-height-of-a-triangle",
+  "title": "Maximum Height of a Triangle",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given two integers <code>red</code> and <code>blue</code> representing the count of red and blue colored balls. You have to arrange these balls to form a triangle such that the 1<sup>st</sup> row will have 1 ball, the 2<sup>nd</sup> row will have 2 balls, the 3<sup>rd</sup> row will have 3 balls, and so on.</p>\n\n<p>All the balls in a particular row should be the <strong>same</strong> color, and adjacent rows should have <strong>different</strong> colors.</p>\n\n<p>Return the <strong>maximum</strong><em> height of the triangle</em> that can be achieved.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">red = 2, blue = 4</span></p>\n\n<p><strong>Output:</strong> 3</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/06/16/brb.png\" style=\"width: 300px; height: 240px; padding: 10px;\" /></p>\n\n<p>The only possible arrangement is shown above.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">red = 2, blue = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/06/16/br.png\" style=\"width: 150px; height: 135px; padding: 10px;\" /><br />\nThe only possible arrangement is shown above.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">red = 1, blue = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n</div>\n\n<p><strong class=\"example\">Example 4:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">red = 10, blue = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/06/16/br.png\" style=\"width: 150px; height: 135px; padding: 10px;\" /><br />\nThe only possible arrangement is shown above.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= red, blue &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// math\nclass Solution {\npublic:\n    int maxHeightOfTriangle(int red, int blue) {\n        const auto& f = [](int x, int y) {\n            // odd level:\n            // (1+h)*((1+h)//2)//2 <= x\n            // => h <= int(2*x**0.5)-1\n            // even level:\n            // (2+h)*(h//2)//2 <= y\n            // => h <= int((4*y+1)**0.5)-1\n            const int a = static_cast<int>(2 * sqrt(x)) - 1;\n            const int b = static_cast<int>(sqrt(4 * y + 1)) - 1;\n            return min(a, b) + (a != b ? 1 : 0);\n        };\n    \n        return max(f(red, blue), f(blue, red));\n    }\n};\n\n// Time:  O(sqrt(n))\n// Space: O(1)\n// simulation\nclass Solution2 {\npublic:\n    int maxHeightOfTriangle(int red, int blue) {\n        const auto& f = [](int x, int y) {\n            int h = 0;\n            for (; x >= h + 1; swap(x, y)) {\n                x -= ++h;\n            } \n            return h;\n        };\n    \n        return max(f(red, blue), f(blue, red));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# math\nclass Solution(object):\n    def maxHeightOfTriangle(self, red, blue):\n        \"\"\"\n        :type red: int\n        :type blue: int\n        :rtype: int\n        \"\"\"\n        def f(x, y):\n            # odd level:\n            # (1+h)*((1+h)//2)//2 <= x\n            # => h <= int(2*x**0.5)-1\n            # even level:\n            # (2+h)*(h//2)//2 <= y\n            # => h <= int((4*y+1)**0.5)-1\n            a, b = int(2*x**0.5)-1, int((4*y+1)**0.5)-1\n            return min(a, b)+int(a != b)\n        \n        return max(f(red, blue), f(blue, red))\n\n\n# Time:  O(sqrt(n))\n# Space: O(1)\n# simulation\nclass Solution2(object):\n    def maxHeightOfTriangle(self, red, blue):\n        \"\"\"\n        :type red: int\n        :type blue: int\n        :rtype: int\n        \"\"\"\n        def f(x, y):\n            h = 0\n            while x >= h+1:\n                h += 1\n                x -= h\n                x, y = y, x\n            return h\n\n        return max(f(red, blue), f(blue, red))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

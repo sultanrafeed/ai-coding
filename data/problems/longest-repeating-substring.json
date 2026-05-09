@@ -1,0 +1,44 @@
+{
+  "id": "abd84a11-f35a-429b-b9cf-72c27b57e1ea",
+  "slug": "longest-repeating-substring",
+  "title": "Longest Repeating Substring",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "binary-search",
+    "dynamic-programming",
+    "rolling-hash",
+    "suffix-array",
+    "hash-function"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abcd\"\n\"abbaba\"\n\"aabcaabdaab\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int longestRepeatingSubstring(string S) {\n        auto left = 1ul, right = S.length() - 1;\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (!check(S, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return right;\n    }\n    \nprivate:\n    uint64_t check(const string& S, uint64_t L) {\n        static const uint64_t M = 1e9 + 7;\n        static const uint64_t D = 26;\n        uint64_t p = power(D, L, M);\n        uint64_t curr = 0;\n        for (uint64_t i = 0; i < L; ++i) {\n            curr = ((D * curr) + S[i] - 'a') % M;\n        }\n        unordered_map<uint64_t, vector<uint64_t>> lookup;\n        lookup[curr].emplace_back(L - 1);\n        for (uint64_t i = L; i < S.length(); ++i) {\n            curr = (D * curr) % M;\n            curr = (curr + (S[i] - 'a')) % M;\n            curr = (curr + (M - ((S[i - L] - 'a') * p) % M)) % M;\n            if (lookup.count(curr)) {\n                for (const auto& j : lookup[curr]) {  // check if string is the same when hash is the same\n                    if (S.substr(j - L + 1, L) == S.substr(i - L + 1, L)) {\n                        return i - L + 1;\n                    }\n                }\n            }\n            lookup[curr].emplace_back(i);\n        }\n        return 0;\n    }\n    \n    uint64_t power(uint64_t D, uint64_t L, uint64_t M) {\n        uint64_t result = 1;\n        for (uint64_t i = 0; i < L; ++i) {\n            result = (result * D) % M;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def longestRepeatingSubstring(self, S):\n        \"\"\"\n        :type S: str\n        :rtype: int\n        \"\"\"\n        M = 10**9+7\n        D = 26\n\n        def check(S, L):\n            p = pow(D, L, M)\n            curr = reduce(lambda x, y: (D*x+ord(y)-ord('a')) % M, S[:L], 0)\n            lookup = collections.defaultdict(list)\n            lookup[curr].append(L-1)\n            result = 0\n            for i in xrange(L, len(S)):\n                curr = ((D*curr) % M + ord(S[i])-ord('a') -\n                        ((ord(S[i-L])-ord('a'))*p) % M) % M\n                if curr in lookup:\n                    for j in lookup[curr]:\n                        if S[j-L+1:j+1] == S[i-L+1:i+1]:\n                            if result == 0:\n                                result = i\n                            return result-L+1\n                lookup[curr].append(i)\n            return result\n\n        left, right = 0, len(S)-1\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(S, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return right",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "e72984b1-1fb7-420c-8bd1-5f46905ff59f",
+  "slug": "delete-tree-nodes",
+  "title": "Delete Tree Nodes",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "tree",
+    "depth-first-search",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "7\n[-1,0,0,1,2,2,2]\n[1,-2,4,0,-2,-1,-1]\n7\n[-1,0,0,1,2,2,2]\n[1,-2,4,0,-2,-1,-2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int deleteTreeNodes(int nodes, vector<int>& parent, vector<int>& value) {\n        unordered_map<int, vector<int>> children;\n        for (int i = 1; i < parent.size(); ++i) {\n            children[parent[i]].emplace_back(i);\n        }\n        return dfs(value, &children, 0).second;\n    }\n\nprivate:\n    pair<int, int> dfs(const vector<int>& value, \n                       unordered_map<int, vector<int>> *children,\n                       int x) {\n        int total = value[x], count = 1;\n        for (const auto& y : (*children)[x]) {\n            const auto& [t, c] = dfs(value, children, y);\n            total += t;\n            count += t ? c : 0;\n        }\n        return {total, total ? count : 0};\n    }\n};\n\n\n// Time:  O(n)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int deleteTreeNodes(int nodes, vector<int>& parent, vector<int>& value) {\n        // assuming parent[i] < i for all i > 0\n        vector<int> result(nodes, 1);\n        for (int i = nodes - 1; i >= 1; --i) {\n            value[parent[i]] += value[i];\n            result[parent[i]] += value[i] ? result[i] : 0;\n        }\n        return result[0];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def deleteTreeNodes(self, nodes, parent, value):\n        \"\"\"\n        :type nodes: int\n        :type parent: List[int]\n        :type value: List[int]\n        :rtype: int\n        \"\"\"\n        def dfs(value, children, x):\n            total, count = value[x], 1\n            for y in children[x]:\n                t, c = dfs(value, children, y)\n                total += t\n                count += c if t else 0\n            return total, count if total else 0\n\n        children = collections.defaultdict(list)\n        for i, p in enumerate(parent):\n            if i:\n                children[p].append(i)\n        return dfs(value, children, 0)[1]\n\n\n# Time:  O(n)\n# Space: O(n)\nclass Solution2(object):\n    def deleteTreeNodes(self, nodes, parent, value):\n        \"\"\"\n        :type nodes: int\n        :type parent: List[int]\n        :type value: List[int]\n        :rtype: int\n        \"\"\"\n        # assuming parent[i] < i for all i > 0\n        result = [1]*nodes\n        for i in reversed(xrange(1, nodes)):\n            value[parent[i]] += value[i]\n            result[parent[i]] += result[i] if value[i] else 0\n        return result[0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

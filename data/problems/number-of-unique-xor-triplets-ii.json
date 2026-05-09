@@ -1,0 +1,42 @@
+{
+  "id": "01e040b9-963d-4e3e-a7d9-2a7168890fff",
+  "slug": "number-of-unique-xor-triplets-ii",
+  "title": "Number of Unique XOR Triplets II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p data-end=\"261\" data-start=\"147\">You are given an integer array <code>nums</code>.</p>\n\n<p>A <strong>XOR triplet</strong> is defined as the XOR of three elements <code>nums[i] XOR nums[j] XOR nums[k]</code> where <code>i &lt;= j &lt;= k</code>.</p>\n\n<p>Return the number of <strong>unique</strong> XOR triplet values from all possible triplets <code>(i, j, k)</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,3]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p data-end=\"158\" data-start=\"101\">The possible XOR triplet values are:</p>\n\n<ul data-end=\"280\" data-start=\"159\">\n\t<li data-end=\"188\" data-start=\"159\"><code>(0, 0, 0) &rarr; 1 XOR 1 XOR 1 = 1</code></li>\n\t<li data-end=\"218\" data-start=\"189\"><code>(0, 0, 1) &rarr; 1 XOR 1 XOR 3 = 3</code></li>\n\t<li data-end=\"248\" data-start=\"219\"><code>(0, 1, 1) &rarr; 1 XOR 3 XOR 3 = 1</code></li>\n\t<li data-end=\"280\" data-start=\"249\"><code>(1, 1, 1) &rarr; 3 XOR 3 XOR 3 = 3</code></li>\n</ul>\n\n<p data-end=\"343\" data-start=\"282\">The unique XOR values are <code data-end=\"316\" data-start=\"308\">{1, 3}</code>. Thus, the output is 2.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [6,7,8,9]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The possible XOR triplet values are <code data-end=\"275\" data-start=\"267\">{6, 7, 8, 9}</code>. Thus, the output is 4.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 1500</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1500</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "bit-manipulation",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,3]\n[6,7,8,9]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// FWHT, fst\nclass Solution {\npublic:\n    int uniqueXorTriplets(vector<int>& nums) {\n        const auto& bit_length = [](int64_t x) {\n            return (x ? std::__lg(x) : -1) + 1;\n        };\n\n        vector<int64_t> a(1 << bit_length(ranges::max(nums)));\n        for (const auto& x: nums) {\n            ++a[x];\n        }\n        FST(a, false);\n        for (int i = 0; i < size(a); i++) {\n           a[i] = a[i] * a[i] * a[i];\n        }\n        FST(a, true);\n        int result = 0;\n        for (const auto& x: a) {\n            if (x) {\n                ++result;\n            }\n        }\n        return result;\n    }\n\nprivate:\n    // Template: https://github.com/kth-competitive-programming/kactl/blob/main/content/numerical/FastSubsetTransform.h\n    void FST(auto& a, bool inv) {\n        for (int n = size(a), step = 1; step < n; step <<= 1) {\n            for (int i = 0; i < n; i += step << 1) {\n                for (int j = i; j < i + step; ++j) {\n                    auto &u = a[j], &v = a[j + step];\n                    tie(u, v) = pair(u + v, u - v);  // XOR\n                }\n            }\n        }\n        if (inv) {\n            for (auto& x : a) {\n                x /= size(a);  // XOR only /// include-line\n            }\n        }\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n)\n// hash table\nclass Solution2 {\npublic:\n    int uniqueXorTriplets(vector<int>& nums) {\n        const auto& bit_length = [](int64_t x) {\n            return (x ? std::__lg(x) : -1) + 1;\n        };\n\n        unordered_set<int> cnt2 = {0};\n        unordered_set<int> cnt3;\n        const int max_cnt = 1 << bit_length(ranges::max(nums));\n        for (const auto& x : nums) {\n            for (const auto& y : cnt2) {\n                cnt3.emplace(x ^ y);\n            }\n            for (const auto& y : nums) {\n                cnt2.emplace(x ^ y);\n            }\n            if (size(cnt3) == max_cnt) {\n                break;\n            }\n        }\n        return size(cnt3);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\n# FWHT, fst\nclass Solution(object):\n    def uniqueXorTriplets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        # Template: https://github.com/kth-competitive-programming/kactl/blob/main/content/numerical/FastSubsetTransform.h\n        def fst(a, inverse):\n            n = len(a)\n            step = 1\n            while step < n:\n                for i in xrange(0, n, step<<1):\n                    for j in xrange(i, i+step):\n                        u, v = a[j], a[j+step]\n                        a[j], a[j+step] = u+v, u-v\n                step <<= 1\n            if inverse:\n                for i in xrange(n):\n                    a[i] //= n\n        \n        a = [0]*(1<<max(nums).bit_length())\n        for x in nums:\n            a[x] += 1\n        fst(a, False)\n        for i in xrange(len(a)):\n            a[i] = a[i]**3\n        fst(a, True)\n        return sum(x != 0 for x in a)\n\n\n# Time:  O(n^2)\n# Space: O(n)\n# hash table\nclass Solution2(object):\n    def uniqueXorTriplets(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        cnt2, cnt3 = set([0]), set(),  \n        max_cnt = 1<<max(nums).bit_length()\n        for x in nums:\n            for y in cnt2:\n                cnt3.add(x^y)\n            for y in nums:\n                cnt2.add(x^y)\n            if len(cnt3) == max_cnt:\n                break\n        return len(cnt3)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

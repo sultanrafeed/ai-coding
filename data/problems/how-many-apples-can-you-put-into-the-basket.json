@@ -1,0 +1,41 @@
+{
+  "id": "004111d1-c445-4e68-b5d4-27c7aedf8c6c",
+  "slug": "how-many-apples-can-you-put-into-the-basket",
+  "title": "How Many Apples Can You Put into the Basket",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[100,200,150,1000]\n[900,950,800,1000,700,800]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxNumberOfApples(vector<int>& arr) {\n        static int LIMIT = 5000;\n        sort(arr.begin(), arr.end());\n        int result = 0, total = 0;\n        for (const auto& x : arr) {\n            if (total + x > LIMIT) {\n                break;\n            }\n            total += x;\n            ++result;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass Solution(object):\n    def maxNumberOfApples(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        LIMIT = 5000\n        arr.sort()\n        result, total = 0, 0\n        for x in arr:\n            if total+x > LIMIT:\n                break\n            total += x\n            result += 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

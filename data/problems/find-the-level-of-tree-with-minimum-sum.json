@@ -1,0 +1,42 @@
+{
+  "id": "3194be51-b618-49fc-ae42-63a56d1de07a",
+  "slug": "find-the-level-of-tree-with-minimum-sum",
+  "title": "Find the Level of Tree with Minimum Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "tree",
+    "depth-first-search",
+    "breadth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[50,6,2,30,80,7]\n[36,17,10,null,null,24]\n[5,null,5,null,5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(w)\n\n// bfs\nclass Solution {\npublic:\n    int minimumLevel(TreeNode* root) {\n        static const int64_t INF = numeric_limits<int64_t>::max();\n\n        vector<TreeNode *> q = {root};\n        pair<int64_t, int64_t> result = {INF, INF};\n        for (int64_t d = 1; !empty(q); ++d) {\n            vector<TreeNode *> new_q;\n            int64_t total = 0ll;\n            for (const auto& u : q) {\n                if (u->left) {\n                    new_q.emplace_back(u->left);\n                }\n                if (u->right) {\n                    new_q.emplace_back(u->right);\n                }\n                total += u->val;\n            }\n            result = min(result, pair(total, d));\n            q = move(new_q);\n        }\n        return result.second;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(w)\n\n# Definition for a binary tree node.\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        pass\n\n\n# bfs\nclass Solution(object):\n    def minimumLevel(self, root):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :rtype: int\n        \"\"\"\n        q = [root]\n        d = 1\n        result = ((float(\"inf\"), float(\"inf\")))\n        while q:\n            new_q = []\n            total = 0\n            for u in q:\n                if u.left:\n                    new_q.append(u.left)\n                if u.right:\n                    new_q.append(u.right)\n                total += u.val\n            result = min(result, (total, d))\n            q = new_q\n            d += 1\n        return result[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

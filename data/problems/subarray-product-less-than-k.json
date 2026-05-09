@@ -1,0 +1,36 @@
+{
+  "id": "ced56b3e-df8d-4fb6-8120-2dd1a7c5799a",
+  "slug": "subarray-product-less-than-k",
+  "title": "Subarray Product Less Than K",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers <code>nums</code> and an integer <code>k</code>, return <em>the number of contiguous subarrays where the product of all the elements in the subarray is strictly less than </em><code>k</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [10,5,2,6], k = 100\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> The 8 subarrays that have product less than 100 are:\n[10], [5], [2], [6], [10, 5], [5, 2], [2, 6], [5, 2, 6]\nNote that [10, 5, 2] is not included as the product of 100 is not strictly less than k.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3], k = 0\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 3 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>\n\t<li><code>0 &lt;= k &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "sliding-window",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// Sliding window solution.\nclass Solution {\npublic:\n    int numSubarrayProductLessThanK(vector<int>& nums, int k) {\n        if (k <= 1) {\n            return 0;\n        }\n        int result = 0, start = 0, prod = 1;\n        for (int i = 0; i < nums.size(); ++i) {\n            prod *= nums[i];\n            while (prod >= k) {\n                prod /= nums[start];\n                ++start;\n            }\n            result += i - start + 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def numSubarrayProductLessThanK(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        if k <= 1: return 0\n        result, start, prod = 0, 0, 1\n        for i, num in enumerate(nums):\n            prod *= num\n            while prod >= k:\n                prod /= nums[start]\n                start += 1\n            result += i-start+1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

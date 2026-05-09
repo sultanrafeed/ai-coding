@@ -1,0 +1,41 @@
+{
+  "id": "19e86dd5-23b2-4af4-aa9d-4308384e99fb",
+  "slug": "count-pairs-of-equal-substrings-with-minimum-difference",
+  "title": "Count Pairs of Equal Substrings With Minimum Difference",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abcd\"\n\"bccda\"\n\"ab\"\n\"cd\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countQuadruples(string firstString, string secondString) {\n        vector<int> lookup1(26, -1);\n        for (int i = size(firstString) - 1; i >= 0; --i) {\n            lookup1[firstString[i] - 'a'] = i;\n        }\n        vector<int> lookup2(26, -1);\n        for (int i = 0; i < size(secondString); ++i) {\n            lookup2[secondString[i] - 'a'] = i;\n        }\n        int result = 0, diff = numeric_limits<int>::max();\n        for (int i = 0; i < 26; ++i) {\n            if (lookup1[i] == -1 || lookup2[i] == -1) {\n                continue;\n            }\n            if (lookup1[i] - lookup2[i] < diff) {\n                diff = lookup1[i] - lookup2[i];\n                result = 0;\n            }                \n            result += int(lookup1[i] - lookup2[i] == diff);                \n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def countQuadruples(self, firstString, secondString):\n        \"\"\"\n        :type firstString: str\n        :type secondString: str\n        :rtype: int\n        \"\"\"\n        lookup1 = [-1]*26\n        for i in reversed(xrange(len(firstString))):\n            lookup1[ord(firstString[i])-ord('a')] = i\n        lookup2 = [-1]*26\n        for i in xrange(len(secondString)):\n            lookup2[ord(secondString[i])-ord('a')] = i\n        result, diff = 0, float(\"inf\")\n        for i in xrange(26):\n            if lookup1[i] == -1 or lookup2[i] == -1:\n                continue\n            if lookup1[i]-lookup2[i] < diff:\n                diff = lookup1[i]-lookup2[i]\n                result = 0\n            result += int(lookup1[i]-lookup2[i] == diff)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

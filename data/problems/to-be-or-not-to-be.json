@@ -1,0 +1,31 @@
+{
+  "id": "ed626d8b-8b52-455b-a85a-611b2378eabd",
+  "slug": "to-be-or-not-to-be",
+  "title": "To Be Or Not To Be",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Write a function&nbsp;<code>expect</code> that helps developers test their code. It should take in any value&nbsp;<code>val</code>&nbsp;and return an object with the following two functions.</p>\n\n<ul>\n\t<li><code>toBe(val)</code>&nbsp;accepts another value and returns&nbsp;<code>true</code>&nbsp;if the two values&nbsp;<code>===</code>&nbsp;each other. If they are not equal, it should throw an error&nbsp;<code>&quot;Not Equal&quot;</code>.</li>\n\t<li><code>notToBe(val)</code>&nbsp;accepts another value and returns&nbsp;<code>true</code>&nbsp;if the two values&nbsp;<code>!==</code>&nbsp;each other. If they are equal, it should throw an error&nbsp;<code>&quot;Equal&quot;</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> func = () =&gt; expect(5).toBe(5)\n<strong>Output:</strong> {&quot;value&quot;: true}\n<strong>Explanation:</strong> 5 === 5 so this expression returns true.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> func = () =&gt; expect(5).toBe(null)\n<strong>Output:</strong> {&quot;error&quot;: &quot;Not Equal&quot;}\n<strong>Explanation:</strong> 5 !== null so this expression throw the error &quot;Not Equal&quot;.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> func = () =&gt; expect(5).notToBe(null)\n<strong>Output:</strong> {&quot;value&quot;: true}\n<strong>Explanation:</strong> 5 !== null so this expression returns true.\n</pre>\n",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "() => expect(5).toBe(5)\n() => expect(5).toBe(null)\n() => expect(5).notToBe(null)",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\ntype ToBeOrNotToBe = {\n    toBe: (val: any) => boolean;\n    notToBe: (val: any) => boolean;\n};\n\nfunction expect(val: any): ToBeOrNotToBe {\n    return {\n        toBe: (val2: any): boolean => {\n            if (val !== val2) {\n                throw new Error(\"Not Equal\");\n            }\n            return true;            \n        },\n        notToBe: (val2: any): boolean => {\n            if (val === val2) {\n                throw new Error(\"Equal\");\n            }\n            return true;            \n        }\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

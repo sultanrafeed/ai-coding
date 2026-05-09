@@ -1,0 +1,40 @@
+{
+  "id": "e2b72d5a-d208-4361-9827-c7a43248c136",
+  "slug": "library-late-fee-calculator",
+  "title": "Library Late Fee Calculator",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,1,7]\n[1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    int lateFee(vector<int>& daysLate) {\n        return accumulate(cbegin(daysLate), cend(daysLate), 0, [](const auto& total, const auto& x) {\n            return total + (x == 1 ? x : (x >= 6 ? 3 * x : 2 * x));\n        });\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def lateFee(self, daysLate):\n        \"\"\"\n        :type daysLate: List[int]\n        :rtype: int\n        \"\"\"\n        return sum(1 if i == 1 else 3*i if i >= 6 else 2*i for i in daysLate)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

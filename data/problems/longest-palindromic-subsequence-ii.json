@@ -1,0 +1,40 @@
+{
+  "id": "fd717cd2-9121-4af3-9bc4-a9d6f9649600",
+  "slug": "longest-palindromic-subsequence-ii",
+  "title": "Longest Palindromic Subsequence II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"bbabab\"\n\"dcbccacdb\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    static const int MAX_LEN = 250;\n    int dp[2][MAX_LEN][26];  // to speed up dp\n    int longestPalindromeSubseq(string s) {\n        // vector<vector<vector<int>>> dp(2, vector<vector<int>>(size(s), vector<int>(26)));\n        for (int i = size(s) - 1; i >= 0; --i) {\n            for (int j = i + 1; j < size(s); ++j) {\n                if (i == j - 1) {\n                    if (s[j] == s[i]) {\n                        dp[i % 2][j][s[j] - 'a'] = 2;\n                    }\n                } else {\n                    for (int k = 0; k < 26; ++k) {\n                        if(s[j] == s[i] && s[j] - 'a' != k) {\n                            dp[i % 2][j][s[j] - 'a'] = max(dp[i % 2][j][s[j] - 'a'],\n                                                           dp[(i + 1) % 2][j - 1][k] + 2);\n                        }\n                        dp[i % 2][j][k] = max(dp[i % 2][j][k], dp[i % 2][j - 1][k]);\n                        dp[i % 2][j][k] = max(dp[i % 2][j][k], dp[(i + 1) % 2][j][k]);\n                        dp[i % 2][j][k] = max(dp[i % 2][j][k], dp[(i + 1) % 2][j - 1][k]);\n                    }\n                }\n            }\n        }\n        return *max_element(cbegin(dp[0][size(s) - 1]), cend(dp[0][size(s) - 1]));        \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def longestPalindromeSubseq(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        dp = [[[0]*26 for _ in xrange(len(s))] for _ in xrange(2)]\n        for i in reversed(xrange(len(s))):\n            for j in xrange(i+1, len(s)):\n                if i == j-1:\n                    if s[j] == s[i]:\n                        dp[i%2][j][ord(s[i])-ord('a')] = 2\n                else:\n                    for k in xrange(26):\n                        if s[j] == s[i] and ord(s[j])-ord('a') != k:\n                            dp[i%2][j][ord(s[j])-ord('a')] = max(dp[i%2][j][ord(s[j])-ord('a')], dp[(i+1)%2][j-1][k]+2)\n                        dp[i%2][j][k] = max(dp[i%2][j][k], dp[i%2][j-1][k], dp[(i+1)%2][j][k], dp[(i+1)%2][j-1][k])\n        return max(dp[0][-1])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "526f9a8a-1584-497c-942c-a066a19e39cf",
+  "slug": "candy",
+  "title": "Candy",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>There are <code>n</code> children standing in a line. Each child is assigned a rating value given in the integer array <code>ratings</code>.</p>\n\n<p>You are giving candies to these children subjected to the following requirements:</p>\n\n<ul>\n\t<li>Each child must have at least one candy.</li>\n\t<li>Children with a higher rating get more candies than their neighbors.</li>\n</ul>\n\n<p>Return <em>the minimum number of candies you need to have to distribute the candies to the children</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> ratings = [1,0,2]\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> You can allocate to the first, second and third child with 2, 1, 2 candies respectively.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> ratings = [1,2,2]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> You can allocate to the first, second and third child with 1, 2, 1 candies respectively.\nThe third child gets 1 candy because it satisfies the above two conditions.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == ratings.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>0 &lt;= ratings[i] &lt;= 2 * 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int candy(vector<int>& ratings) {\n        vector<int> candies(ratings.size(), 1);\n        for (int i = 1; i < ratings.size(); ++i) {\n            if (ratings[i] > ratings[i - 1]) {\n                candies[i] = candies[i - 1] + 1;\n            }\n        }\n        for (int i = ratings.size() - 2; i >= 0; --i) {\n            if (ratings[i] > ratings[i + 1] && candies[i] <= candies[i + 1]) {\n                candies[i] = candies[i + 1] + 1;\n            }\n        }\n        return accumulate(candies.cbegin(), candies.cend(), 0);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    # @param ratings, a list of integer\n    # @return an integer\n    def candy(self, ratings):\n        candies = [1 for _ in xrange(len(ratings))]\n        for i in xrange(1, len(ratings)):\n            if ratings[i] > ratings[i - 1]:\n                candies[i] = candies[i - 1] + 1\n\n        for i in reversed(xrange(1, len(ratings))):\n            if ratings[i - 1] > ratings[i] and candies[i - 1] <= candies[i]:\n                candies[i - 1] = candies[i] + 1\n\n        return sum(candies)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

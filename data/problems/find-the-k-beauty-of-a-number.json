@@ -1,0 +1,35 @@
+{
+  "id": "66f67c26-3d17-43ab-a556-e7fbd3fa701d",
+  "slug": "find-the-k-beauty-of-a-number",
+  "title": "Find the K-Beauty of a Number",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>The <strong>k-beauty</strong> of an integer <code>num</code> is defined as the number of <strong>substrings</strong> of <code>num</code> when it is read as a string that meet the following conditions:</p>\n\n<ul>\n\t<li>It has a length of <code>k</code>.</li>\n\t<li>It is a divisor of <code>num</code>.</li>\n</ul>\n\n<p>Given integers <code>num</code> and <code>k</code>, return <em>the k-beauty of </em><code>num</code>.</p>\n\n<p>Note:</p>\n\n<ul>\n\t<li><strong>Leading zeros</strong> are allowed.</li>\n\t<li><code>0</code> is not a divisor of any value.</li>\n</ul>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters in a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 240, k = 2\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The following are the substrings of num of length k:\n- &quot;24&quot; from &quot;<strong><u>24</u></strong>0&quot;: 24 is a divisor of 240.\n- &quot;40&quot; from &quot;2<u><strong>40</strong></u>&quot;: 40 is a divisor of 240.\nTherefore, the k-beauty is 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> num = 430043, k = 2\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The following are the substrings of num of length k:\n- &quot;43&quot; from &quot;<u><strong>43</strong></u>0043&quot;: 43 is a divisor of 430043.\n- &quot;30&quot; from &quot;4<u><strong>30</strong></u>043&quot;: 30 is not a divisor of 430043.\n- &quot;00&quot; from &quot;43<u><strong>00</strong></u>43&quot;: 0 is not a divisor of 430043.\n- &quot;04&quot; from &quot;430<u><strong>04</strong></u>3&quot;: 4 is not a divisor of 430043.\n- &quot;43&quot; from &quot;4300<u><strong>43</strong></u>&quot;: 43 is a divisor of 430043.\nTherefore, the k-beauty is 2.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= num &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= num.length</code> (taking <code>num</code> as a string)</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "string",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(logn)\n\n// sliding window\nclass Solution {\npublic:\n    int divisorSubstrings(int num, int k) {\n        int result = 0;\n        const auto& s = to_string(num);\n        const int base = pow(10, k - 1);\n        for (int i = 0, curr = 0; i < size(s); ++i) {\n            if (i - k >= 0) {\n                curr -= (s[i - k] - '0') * base;\n            }\n            curr = curr * 10 + (s[i] - '0');\n            if (i + 1 >= k) {\n                result += static_cast<int>(curr && num % curr == 0);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(logn)\n\n# sliding window\nclass Solution(object):\n    def divisorSubstrings(self, num, k):\n        \"\"\"\n        :type num: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = curr = 0\n        s = map(int, str(num))\n        base = 10**(k-1)\n        for i, x in enumerate(s):\n            if i-k >= 0:\n                curr -= s[i-k]*base\n            curr = curr*10+x\n            if i+1 >= k:\n                result += int(curr and num%curr == 0)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

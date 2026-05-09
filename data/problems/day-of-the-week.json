@@ -1,0 +1,33 @@
+{
+  "id": "6d9441d0-cf7d-44de-8ba0-93fa309a9ae6",
+  "slug": "day-of-the-week",
+  "title": "Day of the Week",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a date, return the corresponding day of the week for that date.</p>\n\n<p>The input is given as three integers representing the <code>day</code>, <code>month</code> and <code>year</code> respectively.</p>\n\n<p>Return the answer as one of the following values&nbsp;<code>{&quot;Sunday&quot;, &quot;Monday&quot;, &quot;Tuesday&quot;, &quot;Wednesday&quot;, &quot;Thursday&quot;, &quot;Friday&quot;, &quot;Saturday&quot;}</code>.</p>\n\n<p><strong>Note:</strong> January 1, 1971 was a Friday.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> day = 31, month = 8, year = 2019\n<strong>Output:</strong> &quot;Saturday&quot;\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> day = 18, month = 7, year = 1999\n<strong>Output:</strong> &quot;Sunday&quot;\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> day = 15, month = 8, year = 1993\n<strong>Output:</strong> &quot;Sunday&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The given dates are valid dates between the years <code>1971</code> and <code>2100</code>.</li>\n</ul>\n",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string dayOfTheWeek(int day, int month, int year) {\n        static const vector<string> DAYS = {\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\",\n                                            \"Thursday\", \"Friday\", \"Saturday\"};\n\n        // Zeller Formula\n        if (month < 3) {\n            month += 12;\n            --year;\n        }\n        int c = year / 100, y = year % 100;\n        const auto& w = ((c / 4 - 2 * c + y + y / 4 + 13 * (month + 1) / 5 + day - 1) % 7 + 7) % 7;\n        return DAYS[w];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def dayOfTheWeek(self, day, month, year):\n        \"\"\"\n        :type day: int\n        :type month: int\n        :type year: int\n        :rtype: str\n        \"\"\"\n        DAYS = [\"Sunday\", \"Monday\", \"Tuesday\", \"Wednesday\", \\\n                \"Thursday\", \"Friday\", \"Saturday\"]\n\n        # Zeller Formula\n        if month < 3:\n            month += 12\n            year -= 1\n        c, y = divmod(year, 100)\n        w = (c//4 - 2*c + y + y//4 + 13*(month+1)//5 + day - 1) % 7\n        return DAYS[w]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

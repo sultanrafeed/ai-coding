@@ -1,0 +1,34 @@
+{
+  "id": "568f40fb-9a13-4be8-8a23-fa0aefc4c173",
+  "slug": "count-number-of-special-subsequences",
+  "title": "Count Number of Special Subsequences",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>A sequence is <strong>special</strong> if it consists of a <strong>positive</strong> number of <code>0</code>s, followed by a <strong>positive</strong> number of <code>1</code>s, then a <strong>positive</strong> number of <code>2</code>s.</p>\n\n<ul>\n\t<li>For example, <code>[0,1,2]</code> and <code>[0,0,1,1,1,2]</code> are special.</li>\n\t<li>In contrast, <code>[2,1,0]</code>, <code>[1]</code>, and <code>[0,1,2,0]</code> are not special.</li>\n</ul>\n\n<p>Given an array <code>nums</code> (consisting of <strong>only</strong> integers <code>0</code>, <code>1</code>, and <code>2</code>), return<em> the <strong>number of different subsequences</strong> that are special</em>. Since the answer may be very large, <strong>return it modulo </strong><code>10<sup>9</sup> + 7</code>.</p>\n\n<p>A <strong>subsequence</strong> of an array is a sequence that can be derived from the array by deleting some or no elements without changing the order of the remaining elements. Two subsequences are <strong>different</strong> if the <strong>set of indices</strong> chosen are different.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,1,2,2]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The special subsequences are bolded [<strong><u>0</u></strong>,<strong><u>1</u></strong>,<strong><u>2</u></strong>,2], [<strong><u>0</u></strong>,<strong><u>1</u></strong>,2,<strong><u>2</u></strong>], and [<strong><u>0</u></strong>,<strong><u>1</u></strong>,<strong><u>2</u></strong>,<strong><u>2</u></strong>].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,2,0,0]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> There are no special subsequences in [2,2,0,0].\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,1,2,0,1,2]\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> The special subsequences are bolded:\n- [<strong><u>0</u></strong>,<strong><u>1</u></strong>,<strong><u>2</u></strong>,0,1,2]\n- [<strong><u>0</u></strong>,<strong><u>1</u></strong>,2,0,1,<strong><u>2</u></strong>]\n- [<strong><u>0</u></strong>,<strong><u>1</u></strong>,<strong><u>2</u></strong>,0,1,<strong><u>2</u></strong>]\n- [<strong><u>0</u></strong>,<strong><u>1</u></strong>,2,0,<strong><u>1</u></strong>,<strong><u>2</u></strong>]\n- [<strong><u>0</u></strong>,1,2,<strong><u>0</u></strong>,<strong><u>1</u></strong>,<strong><u>2</u></strong>]\n- [<strong><u>0</u></strong>,1,2,0,<strong><u>1</u></strong>,<strong><u>2</u></strong>]\n- [0,1,2,<strong><u>0</u></strong>,<strong><u>1</u></strong>,<strong><u>2</u></strong>]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 2</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int countSpecialSubsequences(vector<int>& nums) {\n        static const int MOD = 1e9 + 7;\n\n        vector<int64_t> dp(3);\n        for (const auto& x : nums) {\n            dp[x] = ((dp[x] + dp[x]) % MOD + (x - 1 >= 0  ? dp[x - 1] : 1)) % MOD;\n        }\n        return dp.back();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def countSpecialSubsequences(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        dp = [0]*3\n        for x in nums:\n            dp[x] = ((dp[x]+dp[x])%MOD+(dp[x-1] if x-1 >= 0 else 1))%MOD\n        return dp[-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

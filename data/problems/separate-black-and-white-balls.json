@@ -1,0 +1,41 @@
+{
+  "id": "e81d1c73-25b7-46f9-b022-b3d822960926",
+  "slug": "separate-black-and-white-balls",
+  "title": "Separate Black and White Balls",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There are <code>n</code> balls on a table, each ball has a color black or white.</p>\n\n<p>You are given a <strong>0-indexed</strong> binary string <code>s</code> of length <code>n</code>, where <code>1</code> and <code>0</code> represent black and white balls, respectively.</p>\n\n<p>In each step, you can choose two adjacent balls and swap them.</p>\n\n<p>Return <em>the <strong>minimum</strong> number of steps to group all the black balls to the right and all the white balls to the left</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;101&quot;\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> We can group all the black balls to the right in the following way:\n- Swap s[0] and s[1], s = &quot;011&quot;.\nInitially, 1s are not grouped together, requiring at least 1 step to group them to the right.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;100&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> We can group all the black balls to the right in the following way:\n- Swap s[0] and s[1], s = &quot;010&quot;.\n- Swap s[1] and s[2], s = &quot;001&quot;.\nIt can be proven that the minimum number of steps needed is 2.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;0111&quot;\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> All the black balls are already grouped to the right.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n == s.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>s[i]</code> is either <code>&#39;0&#39;</code> or <code>&#39;1&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"101\"\n\"100\"\n\"0111\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// two pointers\nclass Solution {\npublic:\n    long long minimumSteps(string s) {\n        int64_t result = 0;\n        for (int right = 0, left = 0; right < size(s); ++right) {\n            if (s[right] != '0') {\n                continue;\n            }\n            result += right - left++;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// two pointers\nclass Solution2 {\npublic:\n    long long minimumSteps(string s) {\n        int64_t result = 0;\n        for (int left = 0, right = size(s) - 1; left < right;) {\n            if (left < size(s) && s[left] != '1') {\n                ++left;\n                continue;\n            }\n            if (right >= 0 && s[right] != '0') {\n                --right;\n                continue;\n            }\n            result += right - left;\n            ++left, --right;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# two pointers\nclass Solution(object):\n    def minimumSteps(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = left = 0\n        for right in xrange(len(s)):\n            if s[right] != '0':\n                continue\n            result += right-left\n            left += 1\n        return result\n\n\n# Time:  O(n)\n# Space: O(1)\n# two pointers\nclass Solution2(object):\n    def minimumSteps(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        result = 0\n        left, right = 0, len(s)-1\n        while left < right:\n            if left < len(s) and s[left] != '1':\n                left += 1\n                continue\n            if right >= 0 and s[right] != '0':\n                right -= 1\n                continue\n            result += right-left\n            left += 1\n            right -= 1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

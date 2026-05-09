@@ -1,0 +1,36 @@
+{
+  "id": "4095dba5-e2a6-44b2-9318-22daa6b5992f",
+  "slug": "identify-the-largest-outlier-in-an-array",
+  "title": "Identify the Largest Outlier in an Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>. This array contains <code>n</code> elements, where <strong>exactly</strong> <code>n - 2</code> elements are <strong>special</strong><strong> numbers</strong>. One of the remaining <strong>two</strong> elements is the <em>sum</em> of these <strong>special numbers</strong>, and the other is an <strong>outlier</strong>.</p>\n\n<p>An <strong>outlier</strong> is defined as a number that is <em>neither</em> one of the original special numbers <em>nor</em> the element representing the sum of those numbers.</p>\n\n<p><strong>Note</strong> that special numbers, the sum element, and the outlier must have <strong>distinct</strong> indices, but <em>may </em>share the <strong>same</strong> value.</p>\n\n<p>Return the <strong>largest</strong><strong> </strong>potential<strong> outlier</strong> in <code>nums</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,3,5,10]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">10</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The special numbers could be 2 and 3, thus making their sum 5 and the outlier 10.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [-2,-1,-3,-6,4]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">4</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The special numbers could be -2, -1, and -3, thus making their sum -6 and the outlier 4.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,1,1,1,1,5,5]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The special numbers could be 1, 1, 1, 1, and 1, thus making their sum 5 and the other 5 as the outlier.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-1000 &lt;= nums[i] &lt;= 1000</code></li>\n\t<li>The input is generated such that at least <strong>one</strong> potential outlier exists in <code>nums</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "counting",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table\nclass Solution {\npublic:\n    int getLargestOutlier(vector<int>& nums) {\n        int result = numeric_limits<int>::min();\n        const int total = accumulate(cbegin(nums), cend(nums), 0);\n        unordered_map<int, int> cnt;\n        for (const auto& x : nums) {\n            ++cnt[x];\n        }\n        for (const auto& x : nums) {\n            if ((total - x) % 2) {\n                continue;\n            }\n            const int target = (total - x) / 2;\n            if (cnt.count(target) && cnt[target] - (target == x ? 1 : 0) >= 1) {\n                result = max(result, x);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# freq table\nclass Solution(object):\n    def getLargestOutlier(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = float(\"-inf\")\n        total = sum(nums)\n        cnt = collections.defaultdict(int)\n        for x in nums:\n            cnt[x] += 1\n        for x in nums:\n            if (total-x)%2:\n                continue\n            target = (total-x)//2\n            if target in cnt and (cnt[target]-int(target == x) >= 1):\n                result = max(result, x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "ced66dd1-4334-4dc9-b686-55af29264b02",
+  "slug": "number-of-zigzag-arrays-iii",
+  "title": "Number of ZigZag Arrays III",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^3)\n// Space: O(n)\n\n// dp, prefix sum, lagrange interpolation\nclass Solution {\npublic:\n    int zigZagArrays(int n, int l, int r) {\n        static const uint32_t MOD = 1e9 + 7;\n\n        vector<int64_t> inv = {1, 1};\n        vector<int64_t> inv_fact = {1, 1};\n        const auto& inv_factorial = [&](int n) {\n            while (size(inv) <= n) {  // lazy initialization\n                inv.emplace_back((static_cast<int64_t>(inv[MOD % size(inv)]) * (MOD - MOD / size(inv))) % MOD);  // https://cp-algorithms.com/algebra/module-inverse.html\n                inv_fact.emplace_back((static_cast<int64_t>(inv_fact.back()) * inv.back()) % MOD);\n            }\n            return inv_fact[n];\n        };\n\n        const auto& f = [&](int x) {\n            vector<int64_t> dp(x);\n            iota(begin(dp), end(dp), 0);\n            for (int _ = 0; _ < n - 2; ++_) {\n                vector<int64_t> new_dp(x);\n                for (int i = 0; i + 1 < x; ++i) {\n                    new_dp[i + 1] = (new_dp[i] + dp[x - 1 - i]) % MOD;\n                }\n                dp = move(new_dp);\n            }\n            int64_t total = 0;\n            for (int i = 0; i < x; ++i) {\n                total = (total + dp[i]) % MOD;\n            }\n            return (total * 2) % MOD;\n        };\n\n        const auto& m = r - l + 1;\n        if (m <= n + 1) {\n            return f(m);\n        }\n        vector<int64_t> prefix((n + 1) + 1);\n        prefix[0] = 1;\n        for (int i = 0; i + 1 < size(prefix); ++i) {\n            prefix[i + 1] = prefix[i] * (((m - 1 - i) % MOD + MOD) % MOD) % MOD;\n        }\n        vector<int64_t> suffix((n + 1) + 1);\n        suffix.back() = 1;\n        for (int i = size(suffix) - 2; i >= 0; --i) {\n            suffix[i] = suffix[i + 1] * (((m - 1 - i) % MOD + MOD) % MOD) % MOD;\n        }\n        int result = 0;\n        for (int i = 0; i < n + 1; ++i) {\n            result = (result + (((((f(i + 1) * ((prefix[i] * suffix[i + 1]) % MOD)) % MOD) * ((inv_factorial(i) * inv_factorial(n - i)) % MOD)) % MOD) * ((n - i) % 2 ? (MOD - 1) : 1)) % MOD) % MOD;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^3)\n# Space: O(n)\n\n# dp, prefix sum, combinatorics, lagrange interpolation\nclass Solution(object):\n    def zigZagArrays(self, n, l, r):\n        \"\"\"\n        :type n: int\n        :type l: int\n        :type r: int\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        inv, inv_fact = [[1]*2 for _ in xrange(2)]\n        def inv_factorial(n):\n            while len(inv) <= n:  # lazy initialization\n                inv.append(inv[MOD%len(inv)]*(MOD-MOD//len(inv)) % MOD)  # https://cp-algorithms.com/algebra/module-inverse.html\n                inv_fact.append(inv_fact[-1]*inv[-1] % MOD)\n            return inv_fact[n]\n    \n        def f(x):\n            dp = range(x)\n            for _ in xrange(n-2):\n                new_up = [0]*x\n                for i in xrange(x-1):\n                    new_up[i+1] = (new_up[i]+dp[~i])%MOD\n                dp = new_up\n            return (reduce(lambda accu, x: (accu+x)%MOD, dp, 0)*2)%MOD\n\n        m = r-l+1\n        if m <= n+1:\n            return f(m)\n        prefix = [0]*((n+1)+1)\n        prefix[0] = 1\n        for i in xrange(len(prefix)-1):\n            prefix[i+1] = prefix[i]*(m-1-i)%MOD\n        suffix = [0]*((n+1)+1)\n        suffix[-1] = 1\n        for i in reversed(xrange(len(suffix)-1)):\n            suffix[i] = suffix[i+1]*(m-1-i)%MOD\n        return reduce(lambda accu, x: (accu+x)%MOD, (f(i+1)*(prefix[i]*suffix[i+1])*(inv_factorial(i)*inv_factorial(n-i)*(-1 if (n-i)%2 else 1)) for i in xrange(n+1)), 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

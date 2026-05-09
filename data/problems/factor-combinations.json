@@ -1,0 +1,39 @@
+{
+  "id": "375d9fe9-a40b-4d9a-bf9e-1ac26bec5f56",
+  "slug": "factor-combinations",
+  "title": "Factor Combinations",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "1\n12\n37",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn) = logn * n^(1/2) * n^(1/4) * ... * 1\n// Space: O(logn)\n\n// DFS solution.\nclass Solution {\n    public:\n        vector<vector<int>> getFactors(int n) {\n            vector<vector<int>> result;\n            vector<int> factors;\n            getResult(n, &result, &factors);\n            return result;\n        }\n\n        void getResult(const int n, vector<vector<int>> *result, vector<int> *factors) {\n            for (int i = factors->empty() ? 2 : factors->back(); i <= n / i; ++i) {\n                if (n % i == 0) {\n                    factors->emplace_back(i);\n                    factors->emplace_back(n / i);\n                    result->emplace_back(*factors);\n                    factors->pop_back();\n                    getResult(n / i, result, factors);\n                    factors->pop_back();\n                }\n            }\n        }\n    };",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(logn)\n\nclass Solution(object):\n    # @param {integer} n\n    # @return {integer[][]}\n    def getFactors(self, n):\n        result = []\n        factors = []\n        self.getResult(n, result, factors)\n        return result\n\n    def getResult(self, n, result, factors):\n        i = 2 if not factors else factors[-1]\n        while i <= n / i:\n            if n % i == 0:\n                factors.append(i)\n                factors.append(n / i)\n                result.append(list(factors))\n                factors.pop()\n                self.getResult(n / i, result, factors)\n                factors.pop()\n            i += 1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

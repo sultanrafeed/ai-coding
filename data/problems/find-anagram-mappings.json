@@ -1,0 +1,40 @@
+{
+  "id": "39a288fe-3312-495a-9c22-c121ff88fc42",
+  "slug": "find-anagram-mappings",
+  "title": "Find Anagram Mappings",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[12,28,46,32,50]\n[50,12,32,46,28]\n[84,46]\n[84,46]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> anagramMappings(vector<int>& A, vector<int>& B) {\n        unordered_map<int, queue<int>> lookup;\n        for (int i = 0; i < B.size(); ++i) {\n            lookup[B[i]].emplace(i);\n        }\n        vector<int> result;\n        for (const auto& n : A) {\n            result.emplace_back(lookup[n].back());\n            lookup[n].pop();\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def anagramMappings(self, A, B):\n        \"\"\"\n        :type A: List[int]\n        :type B: List[int]\n        :rtype: List[int]\n        \"\"\"\n        lookup = collections.defaultdict(collections.deque)\n        for i, n in enumerate(B):\n            lookup[n].append(i)\n        result = []\n        for n in A:\n            result.append(lookup[n].popleft())\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

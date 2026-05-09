@@ -1,0 +1,41 @@
+{
+  "id": "3983c96a-1d6b-4f8a-8a1a-6803ba68d4d6",
+  "slug": "number-of-ways-to-reach-destination-in-the-grid",
+  "title": "Number of Ways to Reach Destination in the Grid",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n2\n2\n[1,1]\n[2,2]\n3\n4\n3\n[1,2]\n[2,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// dp, matrix exponentiation\nclass Solution {\npublic:\n    int numberOfWays(int n, int m, int k, vector<int>& source, vector<int>& dest) {\n        static const int MOD = 1e9 + 7;\n    \n        vector<int> dp(4);  // dp[0] = both_same, dp[1] = row_same, dp[2] = col_same, dp[3] = no_same\n        if (source == dest) {\n            dp[0] = 1;\n        } else if (source[0] == dest[0]) {\n            dp[1] = 1;\n        } else if (source[1] == dest[1]) {\n            dp[2] = 1;\n        } else {\n            dp[3] = 1;\n        }\n        vector<vector<int>> T = {{0, m - 1, n - 1,                 0},\n                                 {1, m - 2,     0,             n - 1},\n                                 {1,   0,   n - 2,             m - 1},\n                                 {0,   1,       1, (n - 2) + (m - 2)}};\n        dp = matrixMult({dp}, matrixExpo(T, k))[0];\n        return dp[0];\n    }\n\nprivate:\n    vector<vector<int>> matrixExpo(const vector<vector<int>>& A, int64_t pow) {\n        vector<vector<int>> result(A.size(), vector<int>(A.size()));\n        vector<vector<int>> A_exp(A);\n        for (int i = 0; i < A.size(); ++i) {\n            result[i][i] = 1;\n        }\n        while (pow) {\n            if (pow % 2 == 1) {\n                result = matrixMult(result, A_exp);\n            }\n            A_exp = matrixMult(A_exp, A_exp);\n            pow /= 2;\n        }\n        return result;\n    }\n\n    vector<vector<int>> matrixMult(const vector<vector<int>>& A, const vector<vector<int>>& B) {\n        vector<vector<int>> result(A.size(), vector<int>(B[0].size()));\n        for (int i = 0; i < A.size(); ++i) {\n            for (int j = 0; j < B[0].size(); ++j) {\n                int64_t entry = 0;\n                for (int k = 0; k < B.size(); ++k) {\n                    entry = (static_cast<int64_t>(A[i][k]) * B[k][j] % MOD + entry) % MOD;\n                }\n                result[i][j] = static_cast<int>(entry);\n            }\n        }\n        return result;\n    }\n\n    static const int MOD = 1e9 + 7;\n};\n\n// Time:  O(n)\n// Space: O(1)\n// dp\nclass Solution2 {\npublic:\n    int numberOfWays(int n, int m, int k, vector<int>& source, vector<int>& dest) {\n        static const int MOD = 1e9 + 7;\n    \n        int both_same = 0, row_same = 0, col_same = 0, no_same = 0;\n        if (source == dest) {\n            both_same = 1;\n        } else if (source[0] == dest[0]) {\n            row_same = 1;\n        } else if (source[1] == dest[1]) {\n            col_same = 1;\n        } else {\n            no_same = 1;\n        }\n        for (int _ = 0; _ < k; ++_) {\n            tie(both_same, row_same, col_same, no_same) = tuple(\n                (row_same + col_same) % MOD,\n                (both_same * static_cast<int64_t>(m - 1) + row_same * static_cast<int64_t>(m - 2) + no_same) % MOD,\n                (both_same * static_cast<int64_t>(n - 1) + col_same * static_cast<int64_t>(n - 2) + no_same) % MOD,\n                (row_same * static_cast<int64_t>(n - 1) + col_same * static_cast<int64_t>(m - 1) + no_same * static_cast<int64_t>((n - 2) + (m - 2))) % MOD\n            );\n        }\n        return both_same;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# dp, matrix exponentiation\nclass Solution(object):\n    def numberOfWays(self, n, m, k, source, dest):\n        \"\"\"\n        :type n: int\n        :type m: int\n        :type k: int\n        :type source: List[int]\n        :type dest: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        def matrix_mult(A, B):\n            ZB = zip(*B)\n            return [[sum(a*b % MOD for a, b in itertools.izip(row, col)) % MOD for col in ZB] for row in A]\n \n        def matrix_expo(A, K):\n            result = [[int(i == j) for j in xrange(len(A))] for i in xrange(len(A))]\n            while K:\n                if K % 2:\n                    result = matrix_mult(result, A)\n                A = matrix_mult(A, A)\n                K /= 2\n            return result\n\n        T = [[0, m-1, n-1,           0],\n             [1, m-2,   0,         n-1],\n             [1,   0, n-2,         m-1],\n             [0,   1,   1, (n-2)+(m-2)]]\n        dp = [0]*4  # dp[0] = both_same, dp[1] = row_same, dp[2] = col_same, dp[3] = no_same\n        if source == dest:\n            dp[0] = 1\n        elif source[0] == dest[0]:\n            dp[1] = 1\n        elif source[1] == dest[1]:\n            dp[2] = 1\n        else:\n            dp[3] = 1\n        dp = matrix_mult([dp], matrix_expo(T, k))[0]  # [dp[0], dp[1], dp[2], dp[3]] * T^k\n        return dp[0]\n\n\n# Time:  O(n)\n# Space: O(1)\n# dp\nclass Solution2(object):\n    def numberOfWays(self, n, m, k, source, dest):\n        \"\"\"\n        :type n: int\n        :type m: int\n        :type k: int\n        :type source: List[int]\n        :type dest: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n        both_same = row_same = col_same = no_same = 0\n        if source == dest:\n            both_same = 1\n        elif source[0] == dest[0]:\n            row_same = 1\n        elif source[1] == dest[1]:\n            col_same = 1\n        else:\n            no_same = 1\n        for _ in xrange(k):\n            both_same, row_same, col_same, no_same = (row_same+col_same)%MOD, (both_same*(m-1)+row_same*(m-2)+no_same)%MOD, (both_same*(n-1)+col_same*(n-2)+no_same)%MOD, (row_same*(n-1)+col_same*(m-1)+no_same*((n-2)+(m-2)))%MOD\n        return both_same",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

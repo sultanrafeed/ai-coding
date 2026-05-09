@@ -1,0 +1,36 @@
+{
+  "id": "8066c319-2cf4-427f-9671-83e6b5df59fa",
+  "slug": "longest-palindrome-after-substring-concatenation-i",
+  "title": "Longest Palindrome After Substring Concatenation I",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two strings, <code>s</code> and <code>t</code>.</p>\n\n<p>You can create a new string by selecting a <span data-keyword=\"substring\">substring</span> from <code>s</code> (possibly empty) and a substring from <code>t</code> (possibly empty), then concatenating them <strong>in order</strong>.</p>\n\n<p>Return the length of the <strong>longest</strong> <span data-keyword=\"palindrome-string\">palindrome</span> that can be formed this way.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;a&quot;, t = &quot;a&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">2</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Concatenating <code>&quot;a&quot;</code> from <code>s</code> and <code>&quot;a&quot;</code> from <code>t</code> results in <code>&quot;aa&quot;</code>, which is a palindrome of length 2.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abc&quot;, t = &quot;def&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Since all characters are different, the longest palindrome is any single character, so the answer is 1.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;b&quot;, t = &quot;aaaa&quot;</span></p>\n\n<p><strong>Output:</strong> 4</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Selecting &quot;<code>aaaa</code>&quot; from <code>t</code> is the longest palindrome, so the answer is 4.</p>\n</div>\n\n<p><strong class=\"example\">Example 4:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;abcde&quot;, t = &quot;ecdba&quot;</span></p>\n\n<p><strong>Output:</strong> 5</p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Concatenating <code>&quot;abc&quot;</code> from <code>s</code> and <code>&quot;ba&quot;</code> from <code>t</code> results in <code>&quot;abcba&quot;</code>, which is a palindrome of length 5.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length, t.length &lt;= 30</code></li>\n\t<li><code>s</code> and <code>t</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string",
+    "dynamic-programming",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * m)\n// Space: O(n + m)\n\n// manacher's algorithm, dp\nclass Solution {\npublic:\n    int longestPalindrome(string s, string t) {\n        const auto& manacher = [](const string& s) {\n            const auto& preProcess = [](const string& s) {\n                if (empty(s)) {\n                    return string(\"^$\");\n                }\n                string ret = \"^\";\n                for (int i = 0; i < size(s); ++i) {\n                    ret += \"#\" + s.substr(i, 1);\n                }\n                ret += \"#$\";\n                return ret;\n            };\n\n            string T = preProcess(s);\n            const int n = size(T);\n            vector<int> P(n);\n            int C = 0, R = 0;\n            for (int i = 1; i < n - 1; ++i) {\n                int i_mirror = 2 * C - i;\n                P[i] = (R > i) ? min(R - i, P[i_mirror]) : 0;\n                while (T[i + 1 + P[i]] == T[i - 1 - P[i]]) {\n                    ++P[i];\n                }\n                if (i + P[i] > R) {\n                    C = i;\n                    R = i + P[i];\n                }\n            }\n            return P;\n        };\n\n        const auto& longest_palindrome = [&](const auto &s) {\n            vector<int> result(size(s) + 1);\n            const auto& P = manacher(s);\n            for (int i = 1; i + 1 < size(P); ++i) {\n                result[(i - P[i]) / 2] = P[i];\n            } \n            return result;\n        };\n\n        reverse(begin(t), end(t));\n        const auto& p1 = longest_palindrome(s);\n        const auto& p2 = longest_palindrome(t);\n        int result = 0;\n        vector<vector<int>> dp(size(s) + 1, vector<int>(size(t) + 1));\n        for (int i = 0; i < size(s); ++i) {\n            for (int j = 0; j < size(t); ++j) {\n                dp[i + 1][j + 1] = s[i] == t[j] ? dp[i][j] + 2 : 0;\n                result = max(result, dp[i + 1][j + 1] + max(p1[i + (s[i] == t[j] ? 1 : 0)] , p2[j + (s[i] == t[j] ? 1 : 0)]));\n            }\n        }\n        return result;                \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * m)\n# Space: O(n + m)\n\n# manacher's algorithm, dp\nclass Solution(object):\n    def longestPalindrome(self, s, t):\n        \"\"\"\n        :type s: str\n        :type t: str\n        :rtype: int\n        \"\"\"\n        def manacher(s):\n            s = '^#' + '#'.join(s) + '#$'\n            P = [0]*len(s)\n            C, R = 0, 0\n            for i in xrange(1, len(s)-1):\n                i_mirror = 2*C-i\n                if R > i:\n                    P[i] = min(R-i, P[i_mirror])\n                while s[i+1+P[i]] == s[i-1-P[i]]:\n                    P[i] += 1\n                if i+P[i] > R:\n                    C, R = i, i+P[i]\n            return P\n\n        def longest_palindrome(s):\n            result = [0]*(len(s)+1)\n            P = manacher(s)\n            for i in xrange(1, len(P)-1):\n                result[(i-P[i])//2] = P[i]\n            return result\n\n        t = t[::-1]\n        p1 = longest_palindrome(s)\n        p2 = longest_palindrome(t)\n        result = 0\n        dp = [[0]*(len(t)+1) for _ in xrange(len(s)+1)]\n        for i in xrange(len(s)):\n            for j in xrange(len(t)):\n                dp[i+1][j+1] = dp[i][j]+2 if s[i] == t[j] else 0\n                result = max(result, dp[i+1][j+1]+max(p1[i+int(s[i] == t[j])] , p2[j+int(s[i] == t[j])]))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

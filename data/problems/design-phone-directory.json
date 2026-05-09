@@ -1,0 +1,43 @@
+{
+  "id": "599218a1-fdee-4420-af33-19630634c989",
+  "slug": "design-phone-directory",
+  "title": "Design Phone Directory",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "linked-list",
+    "design",
+    "queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"PhoneDirectory\",\"get\",\"get\",\"check\",\"get\",\"check\",\"release\",\"check\"]\n[[3],[],[],[2],[],[2],[2],[2]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// init:     Time: O(n), Space: O(n)\n// get:      Time: O(1), Space: O(1)\n// check:    Time: O(1), Space: O(1)\n// release:  Time: O(1), Space: O(1)\n\nclass PhoneDirectory {\npublic:\n    /** Initialize your data structure here\n        @param maxNumbers - The maximum numbers that can be stored in the phone directory. */\n    PhoneDirectory(int maxNumbers) :\n        curr_{0}, numbers_(maxNumbers), used_(maxNumbers) {  // Time: O(n), Space: O(n)\n\n        iota(numbers_.begin(), numbers_.end(), 0);\n    }\n    \n    /** Provide a number which is not assigned to anyone.\n        @return - Return an available number. Return -1 if none is available. */\n    int get() {  // Time: O(1), Space: O(1)\n        if (curr_ == numbers_.size()) {\n            return -1;\n        }\n        const auto number = numbers_[curr_++];\n        used_[number] = true;\n        return number;\n    }\n    \n    /** Check if a number is available or not. */\n    bool check(int number) {  // Time: O(1), Space: O(1)\n        if (number < 0 || number >= numbers_.size()) {\n            return false;\n        }\n        return !used_[number];\n    }\n    \n    /** Recycle or release a number. */\n    void release(int number) {  // Time: O(1), Space: O(1)\n        if (number < 0 || number >= numbers_.size() || !used_[number]) {\n            return;\n        }\n        used_[number] = false;\n        numbers_[--curr_] = number ;\n    }\n\nprivate:\n    int curr_;\n    vector<int> numbers_;\n    vector<bool> used_;\n};\n\n/**\n * Your PhoneDirectory object will be instantiated and called as such:\n * PhoneDirectory obj = new PhoneDirectory(maxNumbers);\n * int param_1 = obj.get();\n * bool param_2 = obj.check(number);\n * obj.release(number);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# init:     Time: O(n), Space: O(n)\n# get:      Time: O(1), Space: O(1)\n# check:    Time: O(1), Space: O(1)\n# release:  Time: O(1), Space: O(1)\n\nclass PhoneDirectory(object):\n\n    def __init__(self, maxNumbers):\n        \"\"\"\n        Initialize your data structure here\n        @param maxNumbers - The maximum numbers that can be stored in the phone directory.\n        :type maxNumbers: int\n        \"\"\"\n        self.__curr = 0\n        self.__numbers = range(maxNumbers)\n        self.__used = [False] * maxNumbers\n\n\n    def get(self):\n        \"\"\"\n        Provide a number which is not assigned to anyone.\n        @return - Return an available number. Return -1 if none is available.\n        :rtype: int\n        \"\"\"\n        if self.__curr == len(self.__numbers):\n            return -1\n        number = self.__numbers[self.__curr]\n        self.__curr += 1\n        self.__used[number] = True\n        return number\n\n\n    def check(self, number):\n        \"\"\"\n        Check if a number is available or not.\n        :type number: int\n        :rtype: bool\n        \"\"\"\n        return 0 <= number < len(self.__numbers) and \\\n               not self.__used[number]\n\n\n    def release(self, number):\n        \"\"\"\n        Recycle or release a number.\n        :type number: int\n        :rtype: void\n        \"\"\"\n        if not 0 <= number < len(self.__numbers) or \\\n           not self.__used[number]:\n            return\n        self.__used[number] = False\n        self.__curr -= 1\n        self.__numbers[self.__curr] = number",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,25 @@
+{
+  "id": "65986750-236e-49d8-8702-ee8165f40749",
+  "slug": "maxPathSum",
+  "title": "Maxpathsum",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(logn)\n\n/**\n * Definition for binary tree\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        int maxPathSum(TreeNode *root) {\n            max_sum = INT_MIN;\n            dfs(root);\n            return max_sum;\n\n        }\n    private:\n        int max_sum;\n        int dfs(const TreeNode *root) {\n            if(!root) return 0;\n            int l = dfs(root->left);\n            int r = dfs(root->right);\n            int sum = root->val;\n            if(l > 0) sum += l;\n            if(r > 0) sum += r;\n            max_sum = max(max_sum, sum);\n            return max(r, l) > 0? max(r, l) + root->val : root->val;\n        }\n\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

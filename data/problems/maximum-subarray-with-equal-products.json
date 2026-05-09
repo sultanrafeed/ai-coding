@@ -1,0 +1,43 @@
+{
+  "id": "ac8c7221-cd4c-4e0e-89dc-0462256e4925",
+  "slug": "maximum-subarray-with-equal-products",
+  "title": "Maximum Subarray With Equal Products",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an array of <strong>positive</strong> integers <code>nums</code>.</p>\n\n<p>An array <code>arr</code> is called <strong>product equivalent</strong> if <code>prod(arr) == lcm(arr) * gcd(arr)</code>, where:</p>\n\n<ul>\n\t<li><code>prod(arr)</code> is the product of all elements of <code>arr</code>.</li>\n\t<li><code>gcd(arr)</code> is the <span data-keyword=\"gcd-function\">GCD</span> of all elements of <code>arr</code>.</li>\n\t<li><code>lcm(arr)</code> is the <span data-keyword=\"lcm-function\">LCM</span> of all elements of <code>arr</code>.</li>\n</ul>\n\n<p>Return the length of the <strong>longest</strong> <strong>product equivalent</strong> <span data-keyword=\"subarray-nonempty\">subarray</span> of <code>nums</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,1,2,1,1,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n\n<p><strong>Explanation:</strong>&nbsp;</p>\n\n<p>The longest product equivalent subarray is <code>[1, 2, 1, 1, 1]</code>, where&nbsp;<code>prod([1, 2, 1, 1, 1]) = 2</code>,&nbsp;<code>gcd([1, 2, 1, 1, 1]) = 1</code>, and&nbsp;<code>lcm([1, 2, 1, 1, 1]) = 2</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,3,4,5,6]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong>&nbsp;</p>\n\n<p>The longest product equivalent subarray is <code>[3, 4, 5].</code></p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3,1,4,5,1]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "sliding-window",
+    "enumeration",
+    "number-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,1,2,1,1,1]\n[2,3,4,5,6]\n[1,2,3,1,4,5,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  precompute: O(r * log(logr)), r = MAX_NUM\n//        runtime:    O(n * log(logr))\n// Space: O(r * log(logr))\n\n// number theory, hash table\nvector<vector<int>> prime_divisors(int n) {\n    const auto& linear_sieve_of_eratosthenes = [](int n) {  // Time: O(n), Space: O(n)\n        vector<int> spf(n + 1, -1);\n        vector<int> primes;\n        for (int i = 2; i <= n; ++i) {\n            if (spf[i] == -1) {\n                spf[i] = i;\n                primes.emplace_back(i);\n            }\n            for (const auto& p : primes) {\n                if (i * p > n || p > spf[i]) {\n                    break;\n                }\n                spf[i * p] = p;\n            }\n        }\n        return primes;\n    };\n\n    vector<vector<int>> result(n + 1);\n    for (const auto& p : linear_sieve_of_eratosthenes(n)) {  // Time: O(nlog(logn))\n        for (int i = p; i <= n; i += p) {\n            result[i].emplace_back(p);\n        }\n    }\n    return result;\n}\n\nconst int MAX_NUM = 10;\nconst auto& PRIME_DIVISORS = prime_divisors(MAX_NUM);\nclass Solution {\npublic:\n    int maxLength(vector<int>& nums) {\n        int result = 2;\n        unordered_map<int, int> lookup;\n        for (int right = 0, left = 0; right < size(nums); ++right) {\n            for (const auto& p : PRIME_DIVISORS[nums[right]]) {\n                left = max(left, lookup[p]);\n                lookup[p] = right + 1;\n            }\n            result = max(result, right - left + 1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  precompute: O(r * log(logr)), r = MAX_NUM\n#        runtime:    O(n * log(logr))\n# Space: O(r * log(logr))\n\nimport collections\n\n\n# number theory, hash table\ndef linear_sieve_of_eratosthenes(n):  # Time: O(n), Space: O(n)\n    primes = []\n    spf = [-1]*(n+1)  # the smallest prime factor\n    for i in xrange(2, n+1):\n        if spf[i] == -1:\n            spf[i] = i\n            primes.append(i)\n        for p in primes:\n            if i*p > n or p > spf[i]:\n                break\n            spf[i*p] = p\n    return primes  # len(primes) = O(n/(logn-1)), reference: https://math.stackexchange.com/questions/264544/how-to-find-number-of-prime-numbers-up-to-to-n\n\ndef prime_divisors(n):\n    result = [[] for _ in xrange(n+1)]\n    for p in linear_sieve_of_eratosthenes(n):  # Time: O(nlog(logn))\n        for i in range(p, n+1, p):\n            result[i].append(p)\n    return result\n\nMAX_NUM = 10\nPRIME_DIVISORS = prime_divisors(MAX_NUM)\nclass Solution(object):\n    def maxLength(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = 2\n        lookup = collections.defaultdict(int)\n        left = 0\n        for right, x in enumerate(nums):\n            for p in PRIME_DIVISORS[x]:\n                left = max(left, lookup[p])\n                lookup[p] = right+1\n            result = max(result, right-left+1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

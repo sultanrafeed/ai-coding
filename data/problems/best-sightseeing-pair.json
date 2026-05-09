@@ -1,0 +1,34 @@
+{
+  "id": "5a053f4a-b411-4358-9ba8-dc2f73fb6207",
+  "slug": "best-sightseeing-pair",
+  "title": "Best Sightseeing Pair",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>values</code> where values[i] represents the value of the <code>i<sup>th</sup></code> sightseeing spot. Two sightseeing spots <code>i</code> and <code>j</code> have a <strong>distance</strong> <code>j - i</code> between them.</p>\n\n<p>The score of a pair (<code>i &lt; j</code>) of sightseeing spots is <code>values[i] + values[j] + i - j</code>: the sum of the values of the sightseeing spots, minus the distance between them.</p>\n\n<p>Return <em>the maximum score of a pair of sightseeing spots</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> values = [8,1,5,2,6]\n<strong>Output:</strong> 11\n<strong>Explanation:</strong> i = 0, j = 2, values[i] + values[j] + i - j = 8 + 5 + 0 - 2 = 11\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> values = [1,2]\n<strong>Output:</strong> 2\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= values.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= values[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxScoreSightseeingPair(vector<int>& A) {\n        int result = 0, curr = 0;\n        for (const auto& x : A) {\n            result = max(result, curr + x);\n            curr = max(curr, x) - 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def maxScoreSightseeingPair(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        result, curr = 0, 0\n        for x in A:\n            result = max(result, curr+x)\n            curr = max(curr, x)-1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

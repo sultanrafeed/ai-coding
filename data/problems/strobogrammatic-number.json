@@ -1,0 +1,41 @@
+{
+  "id": "5d292bbd-d42a-4708-b148-2ae7e07435bc",
+  "slug": "strobogrammatic-number",
+  "title": "Strobogrammatic Number",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"69\"\n\"88\"\n\"962\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isStrobogrammatic(string num) {\n        const int n = num.size();\n        for (int i = 0; i <= n - 1 - i; ++i) {\n            const auto it = lookup.find(num[n - 1 - i]);\n            if (it == lookup.end() || num[i] != it->second) {\n                return false;\n            }\n        }\n        return true;\n    }\n\nprivate:\n    const unordered_map<char, char> lookup{{'0', '0'}, {'1', '1'},\n                                           {'6', '9'}, {'8', '8'}, \n                                           {'9', '6'}};\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    lookup = {'0':'0', '1':'1', '6':'9', '8':'8', '9':'6'}\n\n    # @param {string} num\n    # @return {boolean}\n    def isStrobogrammatic(self, num):\n        n = len(num)\n        for i in xrange((n+1) / 2):\n            if num[n-1-i] not in self.lookup or \\\n               num[i] != self.lookup[num[n-1-i]]:\n                return False\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

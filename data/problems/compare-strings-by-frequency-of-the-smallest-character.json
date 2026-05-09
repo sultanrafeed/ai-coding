@@ -1,0 +1,37 @@
+{
+  "id": "8cdd7484-33f7-44ed-8762-44f59c42ef81",
+  "slug": "compare-strings-by-frequency-of-the-smallest-character",
+  "title": "Compare Strings by Frequency of the Smallest Character",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Let the function <code>f(s)</code> be the <strong>frequency of the lexicographically smallest character</strong> in a non-empty string <code>s</code>. For example, if <code>s = &quot;dcce&quot;</code> then <code>f(s) = 2</code> because the lexicographically smallest character is <code>&#39;c&#39;</code>, which has a frequency of 2.</p>\n\n<p>You are given an array of strings <code>words</code> and another array of query strings <code>queries</code>. For each query <code>queries[i]</code>, count the <strong>number of words</strong> in <code>words</code> such that <code>f(queries[i])</code> &lt; <code>f(W)</code> for each <code>W</code> in <code>words</code>.</p>\n\n<p>Return <em>an integer array </em><code>answer</code><em>, where each </em><code>answer[i]</code><em> is the answer to the </em><code>i<sup>th</sup></code><em> query</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> queries = [&quot;cbd&quot;], words = [&quot;zaaaz&quot;]\n<strong>Output:</strong> [1]\n<strong>Explanation:</strong> On the first query we have f(&quot;cbd&quot;) = 1, f(&quot;zaaaz&quot;) = 3 so f(&quot;cbd&quot;) &lt; f(&quot;zaaaz&quot;).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> queries = [&quot;bbb&quot;,&quot;cc&quot;], words = [&quot;a&quot;,&quot;aa&quot;,&quot;aaa&quot;,&quot;aaaa&quot;]\n<strong>Output:</strong> [1,2]\n<strong>Explanation:</strong> On the first query only f(&quot;bbb&quot;) &lt; f(&quot;aaaa&quot;). On the second query both f(&quot;aaa&quot;) and f(&quot;aaaa&quot;) are both &gt; f(&quot;cc&quot;).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= queries.length &lt;= 2000</code></li>\n\t<li><code>1 &lt;= words.length &lt;= 2000</code></li>\n\t<li><code>1 &lt;= queries[i].length, words[i].length &lt;= 10</code></li>\n\t<li><code>queries[i][j]</code>, <code>words[i][j]</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "binary-search",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((m + n)logn), m is the number of queries, n is the number of words\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> numSmallerByFrequency(vector<string>& queries, vector<string>& words) {\n        vector<int> words_freq;\n        for (const auto& word : words) {\n            words_freq.emplace_back(f(word));\n        }\n        sort(words_freq.begin(), words_freq.end());\n        vector<int> result;\n        for (const auto& query : queries) {\n            const auto& it = upper_bound(words_freq.cbegin(), words_freq.cend(), f(query));\n            result.emplace_back(distance(it, words_freq.cend()));\n        }\n        return result;\n    }\n\nprivate:\n    int f(const string& word) {\n        const auto& smallest = *min_element(word.cbegin(), word.cend());\n        return count(word.cbegin(), word.cend(), smallest);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((m + n)logn), m is the number of queries, n is the number of words\n# Space: O(n)\n\nimport bisect\n\n\nclass Solution(object):\n    def numSmallerByFrequency(self, queries, words):\n        \"\"\"\n        :type queries: List[str]\n        :type words: List[str]\n        :rtype: List[int]\n        \"\"\"\n        words_freq = sorted(word.count(min(word)) for word in words)\n        return [len(words)-bisect.bisect_right(words_freq, query.count(min(query))) \\\n                for query in queries]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

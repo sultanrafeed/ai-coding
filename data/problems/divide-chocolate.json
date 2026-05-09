@@ -1,0 +1,40 @@
+{
+  "id": "c3b2f1aa-1991-442c-9dd5-6e8f67d381de",
+  "slug": "divide-chocolate",
+  "title": "Divide Chocolate",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5,6,7,8,9]\n5\n[5,6,7,8,9,1,2,3,4]\n8\n[1,2,2,1,2,2,1,2,2]\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maximizeSweetness(vector<int>& sweetness, int K) {\n        int left = *min_element(sweetness.cbegin(), sweetness.cend());\n        int right = accumulate(sweetness.cbegin(), sweetness.cend(), 0) / (K + 1);\n        while (left <= right) {\n            const auto& mid = left + (right - left) / 2;\n            if (!check(sweetness, K, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return right;\n    }\n\nprivate:\n    bool check(const vector<int>& sweetness, int K, int x) {\n        int curr = 0, cuts = 0;\n        for (const auto& s : sweetness) {\n            curr += s;\n            if (curr >= x) {\n                ++cuts;\n                curr = 0;\n            }\n        }\n        return cuts >= K + 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def maximizeSweetness(self, sweetness, K):\n        \"\"\"\n        :type sweetness: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        def check(sweetness, K, x):\n            curr, cuts = 0, 0\n            for s in sweetness:\n                curr += s\n                if curr >= x:\n                    cuts += 1\n                    curr = 0\n            return cuts >= K+1\n\n        left, right = min(sweetness), sum(sweetness)//(K+1)\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(sweetness, K, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return right",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

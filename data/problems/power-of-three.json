@@ -1,0 +1,40 @@
+{
+  "id": "2398ebfc-ccf0-4c61-8506-82eca52e8811",
+  "slug": "power-of-three",
+  "title": "Power of Three",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, return <em><code>true</code> if it is a power of three. Otherwise, return <code>false</code></em>.</p>\n\n<p>An integer <code>n</code> is a power of three, if there exists an integer <code>x</code> such that <code>n == 3<sup>x</sup></code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 27\n<strong>Output:</strong> true\n<strong>Explanation:</strong> 27 = 3<sup>3</sup>\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 0\n<strong>Output:</strong> false\n<strong>Explanation:</strong> There is no x where 3<sup>x</sup> = 0.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = -1\n<strong>Output:</strong> false\n<strong>Explanation:</strong> There is no x where 3<sup>x</sup> = (-1).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-2<sup>31</sup> &lt;= n &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Could you solve it without loops/recursion?",
+  "patterns": [
+    "math",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "27\n0\n-1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    static const int max_log3 = log(numeric_limits<int>::max()) / log(3);\n    static const int max_pow3 = pow(3, max_log3);\n\n    bool isPowerOfThree(int n) {\n        return n > 0 && max_pow3 % n == 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nimport math\n\n\nclass Solution(object):\n    def __init__(self):\n        self.__max_log3 = int(math.log(0x7fffffff) / math.log(3))\n        self.__max_pow3 = 3 ** self.__max_log3\n\n    def isPowerOfThree(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: bool\n        \"\"\"\n        return n > 0 and self.__max_pow3 % n == 0\n\n\nclass Solution2(object):\n    def isPowerOfThree(self, n):\n        return n > 0 and (math.log10(n)/math.log10(3)).is_integer()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

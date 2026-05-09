@@ -1,0 +1,41 @@
+{
+  "id": "545d6618-7fbe-4258-b77c-61902289adfb",
+  "slug": "number-of-paths-with-max-score",
+  "title": "Number of Paths with Max Score",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a square <code>board</code>&nbsp;of characters. You can move on the board starting at the bottom right square marked with the character&nbsp;<code>&#39;S&#39;</code>.</p>\r\n\r\n<p>You need&nbsp;to reach the top left square marked with the character <code>&#39;E&#39;</code>. The rest of the squares are labeled either with a numeric character&nbsp;<code>1, 2, ..., 9</code> or with an obstacle <code>&#39;X&#39;</code>. In one move you can go up, left or up-left (diagonally) only if there is no obstacle there.</p>\r\n\r\n<p>Return a list of two integers: the first integer is the maximum sum of numeric characters you can collect, and the second is the number of such paths that you can take to get that maximum sum, <strong>taken modulo <code>10^9 + 7</code></strong>.</p>\r\n\r\n<p>In case there is no path, return&nbsp;<code>[0, 0]</code>.</p>\r\n\r\n<p>&nbsp;</p>\r\n<p><strong class=\"example\">Example 1:</strong></p>\r\n<pre><strong>Input:</strong> board = [\"E23\",\"2X2\",\"12S\"]\r\n<strong>Output:</strong> [7,1]\r\n</pre><p><strong class=\"example\">Example 2:</strong></p>\r\n<pre><strong>Input:</strong> board = [\"E12\",\"1X1\",\"21S\"]\r\n<strong>Output:</strong> [4,2]\r\n</pre><p><strong class=\"example\">Example 3:</strong></p>\r\n<pre><strong>Input:</strong> board = [\"E11\",\"XXX\",\"11S\"]\r\n<strong>Output:</strong> [0,0]\r\n</pre>\r\n<p>&nbsp;</p>\r\n<p><strong>Constraints:</strong></p>\r\n\r\n<ul>\r\n\t<li><code>2 &lt;= board.length == board[i].length &lt;= 100</code></li>\r\n</ul>",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"E23\",\"2X2\",\"12S\"]\r\n[\"E12\",\"1X1\",\"21S\"]\r\n[\"E11\",\"XXX\",\"11S\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> pathsWithMaxScore(vector<string>& board) {\n        static const int MOD = 1e9 + 7;\n        static const vector<pair<int, int>> directions{{1, 0}, {0, 1}, {1, 1}};\n        \n        vector<vector<vector<int>>> dp(2, vector<vector<int>>(board[0].size() + 1, vector<int>(2)));\n        dp[(board.size() - 1) % 2][board[0].size() - 1] = {0, 1};\n        for (int r = board.size() - 1; r >= 0; --r) {\n            for (int c = board[0].size() - 1; c >= 0; --c) {\n                if (board[r][c] == 'S' || board[r][c] == 'X') {\n                    continue;\n                }\n                dp[r % 2][c] = {0, 0};\n                for (const auto& [dr, dc] : directions) {\n                    if (dp[r % 2][c][0] < dp[(r + dr) % 2][c + dc][0]) {\n                        dp[r % 2][c] = dp[(r + dr) % 2][c + dc];\n                    } else if (dp[r % 2][c][0] == dp[(r + dr) % 2][c + dc][0]) {\n                        dp[r % 2][c][1] = (dp[r % 2][c][1]+dp[(r + dr) % 2][c + dc][1]) % MOD;\n                    }\n                }\n                if (dp[r % 2][c][1] && board[r][c] != 'E') {\n                    dp[r % 2][c][0] += board[r][c] - '0';\n                }\n            }\n        }\n        return dp[0][0];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\nclass Solution(object):\n    def pathsWithMaxScore(self, board):\n        \"\"\"\n        :type board: List[str]\n        :rtype: List[int]\n        \"\"\"\n        MOD = 10**9+7\n        directions = [[1, 0], [0, 1], [1, 1]]\n        dp = [[[0, 0] for r in xrange(len(board[0])+1)]\n              for r in xrange(2)]\n        dp[(len(board)-1)%2][len(board[0])-1] = [0, 1]\n        for r in reversed(xrange(len(board))):\n            for c in reversed(xrange(len(board[0]))):\n                if board[r][c] in \"XS\":\n                    continue\n                dp[r%2][c] = [0, 0]\n                for dr, dc in directions:\n                    if dp[r%2][c][0] < dp[(r+dr)%2][c+dc][0]:\n                        dp[r%2][c] = dp[(r+dr)%2][c+dc][:]\n                    elif dp[r%2][c][0] == dp[(r+dr)%2][c+dc][0]:\n                        dp[r%2][c][1] = (dp[r%2][c][1]+dp[(r+dr)%2][c+dc][1]) % MOD\n                if dp[r%2][c][1] and board[r][c] != 'E':\n                    dp[r%2][c][0] += int(board[r][c])\n        return dp[0][0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

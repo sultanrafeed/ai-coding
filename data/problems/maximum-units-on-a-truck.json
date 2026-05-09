@@ -1,0 +1,41 @@
+{
+  "id": "1f0ca827-c63a-464c-933e-880f35743666",
+  "slug": "maximum-units-on-a-truck",
+  "title": "Maximum Units on a Truck",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are assigned to put some amount of boxes onto <strong>one truck</strong>. You are given a 2D array <code>boxTypes</code>, where <code>boxTypes[i] = [numberOfBoxes<sub>i</sub>, numberOfUnitsPerBox<sub>i</sub>]</code>:</p>\n\n<ul>\n\t<li><code>numberOfBoxes<sub>i</sub></code> is the number of boxes of type <code>i</code>.</li>\n\t<li><code>numberOfUnitsPerBox<sub>i</sub></code><sub> </sub>is the number of units in each box of the type <code>i</code>.</li>\n</ul>\n\n<p>You are also given an integer <code>truckSize</code>, which is the <strong>maximum</strong> number of <strong>boxes</strong> that can be put on the truck. You can choose any boxes to put on the truck as long as the number&nbsp;of boxes does not exceed <code>truckSize</code>.</p>\n\n<p>Return <em>the <strong>maximum</strong> total number of <strong>units</strong> that can be put on the truck.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> boxTypes = [[1,3],[2,2],[3,1]], truckSize = 4\n<strong>Output:</strong> 8\n<strong>Explanation:</strong> There are:\n- 1 box of the first type that contains 3 units.\n- 2 boxes of the second type that contain 2 units each.\n- 3 boxes of the third type that contain 1 unit each.\nYou can take all the boxes of the first and second types, and one box of the third type.\nThe total number of units will be = (1 * 3) + (2 * 2) + (1 * 1) = 8.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> boxTypes = [[5,10],[2,5],[4,7],[3,9]], truckSize = 10\n<strong>Output:</strong> 91\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= boxTypes.length &lt;= 1000</code></li>\n\t<li><code>1 &lt;= numberOfBoxes<sub>i</sub>, numberOfUnitsPerBox<sub>i</sub> &lt;= 1000</code></li>\n\t<li><code>1 &lt;= truckSize &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,3],[2,2],[3,1]]\n4\n[[5,10],[2,5],[4,7],[3,9]]\n10",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maximumUnits(vector<vector<int>>& boxTypes, int truckSize) {\n        sort(begin(boxTypes), end(boxTypes),\n             [](const auto& a, const auto& b) {\n                 return a[1] > b[1];\n             });\n        int result = 0;\n        for (const auto& boxType : boxTypes) {\n            if (truckSize > boxType[0]) {\n                truckSize -= boxType[0];\n                result += boxType[0] * boxType[1];\n            } else {\n                result += truckSize * boxType[1];\n                break;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def maximumUnits(self, boxTypes, truckSize):\n        \"\"\"\n        :type boxTypes: List[List[int]]\n        :type truckSize: int\n        :rtype: int\n        \"\"\"\n        boxTypes.sort(key=lambda x: x[1], reverse=True)\n        result = 0\n        for box, units in boxTypes:\n            if truckSize > box:\n                truckSize -= box\n                result += box*units\n            else:\n                result += truckSize*units\n                break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "f9442cab-c5ea-45ee-bd19-a102cd847cd4",
+  "slug": "minimum-flips-in-binary-tree-to-get-result",
+  "title": "Minimum Flips in Binary Tree to Get Result",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "dynamic-programming",
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,5,4,2,null,1,1,1,0]\ntrue\n[0]\nfalse",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(h)\n\n// tree dp with stack\nclass Solution {\npublic:\n    int minimumFlips(TreeNode* root, bool result) {\n        static const int INF = numeric_limits<int>::max();\n        static unordered_map<int, function<int(int, int)>> OP = {\n            {2, [](int x, int y) { return x | y; }},\n            {3, [](int x, int y) { return x & y; }},\n            {4, [](int x, int y) { return x ^ y; }},\n            {5, [](int x, int y) { return x != -1 ? !x : !y; }},\n        };\n\n        const auto& iter_dfs = [&]() {\n            using RET = unordered_map<int, int>;\n            RET ret;\n            vector<tuple<int, TreeNode *, shared_ptr<RET>, shared_ptr<RET>, RET *>> stk;\n            stk.emplace_back(1, root, nullptr, nullptr, &ret);\n            while (!empty(stk)) {\n                auto [step, node, ret1, ret2, ret] = stk.back(); stk.pop_back();\n                if (step == 1) {\n                    if (!node) {\n                        (*ret)[-1] = 0;  // null object pattern\n                        continue;\n                    }\n                    if (node->left == node->right) {\n                        (*ret)[true] = node->val ^ 1;\n                        (*ret)[false] = node->val ^ 0;\n                        continue;\n                    }\n                    auto ret1 = make_shared<RET>(), ret2 = make_shared<RET>();\n                    stk.emplace_back(2, node, ret1, ret2, ret);\n                    stk.emplace_back(1, node->right, nullptr, nullptr, ret2.get());\n                    stk.emplace_back(1, node->left, nullptr, nullptr, ret1.get());\n                } else if (step == 2) {\n                    for (const auto& [k1, v1] : *ret1) {\n                        for (const auto& [k2, v2] : *ret2) {\n                            const int nk = OP[node->val](k1, k2);\n                            (*ret)[nk] = min(ret->count(nk) ? (*ret)[nk] : INF, v1 + v2);\n                        }\n                    }\n                }\n            }\n            return ret[result];\n        };\n\n        return iter_dfs();\n    }\n};\n\n// Time:  O(n)\n// Space: O(h)\n// tree dp with recursion\nclass Solution2 {\npublic:\n    int minimumFlips(TreeNode* root, bool result) {\n        static const int INF = numeric_limits<int>::max();\n        static unordered_map<int, function<int(int, int)>> OP = {\n            {2, [](int x, int y) { return x | y; }},\n            {3, [](int x, int y) { return x & y; }},\n            {4, [](int x, int y) { return x ^ y; }},\n            {5, [](int x, int y) { return x != -1 ? !x : !y; }},\n        };\n\n        function<unordered_map<int, int> (TreeNode*)> dfs = [&](TreeNode *node) {\n            unordered_map<int, int> dp;\n            if (!node) {\n                dp[-1] = 0;  // null object pattern\n                return dp;\n            }\n            if (node->left == node->right) {\n                dp[true] = node->val ^ 1;\n                dp[false] = node->val ^ 0;\n                return dp;\n            }\n            const auto& left = dfs(node->left);\n            const auto& right = dfs(node->right);\n            for (const auto& [k1, v1] : left) {\n                for (const auto& [k2, v2] : right) {\n                    const int nk = OP[node->val](k1, k2);\n                    dp[nk] = min(dp.count(nk) ? dp[nk] : INF, v1 + v2);\n                }\n            }\n            return dp;\n        };\n\n        return dfs(root)[result];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(h)\n\nclass TreeNode(object):\n    def __init__(self, val=0, left=None, right=None):\n        pass\n\n\nimport collections\n\n\n# tree dp with stack\nclass Solution(object):\n    def minimumFlips(self, root, result):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :type result: bool\n        :rtype: int\n        \"\"\"\n        INF = float(\"inf\")\n        OP = {\n            2: lambda x, y: x or y,\n            3: lambda x, y: x and y,\n            4: lambda x, y: x^y ,\n            5: lambda x, y: not x if x is not None else not y\n        }\n        \n        def iter_dfs(root, result):\n            ret = collections.defaultdict(lambda: INF)\n            stk = [(1, (root, ret))]\n            while stk:\n                step, args = stk.pop()\n                if step == 1:\n                    node, ret = args\n                    if not node:\n                        ret[None] = 0 # null object pattern\n                        continue\n                    if node.left == node.right:\n                        ret[True] = node.val^1\n                        ret[False] = node.val^0\n                        continue\n                    ret1 = collections.defaultdict(lambda: INF)\n                    ret2 = collections.defaultdict(lambda: INF)\n                    stk.append((2, (node, ret1, ret2, ret)))\n                    stk.append((1, (node.right, ret2)))\n                    stk.append((1, (node.left, ret1)))\n                elif step == 2:\n                    node, ret1, ret2, ret = args\n                    for k1, v1 in ret1.iteritems():\n                        for k2, v2 in ret2.iteritems():\n                            ret[OP[node.val](k1, k2)] = min(ret[OP[node.val](k1, k2)], v1+v2)\n            return ret[result]\n\n        return iter_dfs(root, result)\n\n\nimport collections\n\n\n# tree dp with recursion\nclass Solution2(object):\n    def minimumFlips(self, root, result):\n        \"\"\"\n        :type root: Optional[TreeNode]\n        :type result: bool\n        :rtype: int\n        \"\"\"\n        INF = float(\"inf\")\n        OP = {\n            2: lambda x, y: x or y,\n            3: lambda x, y: x and y,\n            4: lambda x, y: x^y ,\n            5: lambda x, y: not x if x is not None else not y\n        }\n        \n        def dfs(node):\n            if not node:\n                return {None: 0}  # null object pattern\n            if node.left == node.right:\n                return {True: node.val^1, False: node.val^0}\n            left = dfs(node.left)\n            right = dfs(node.right)\n            dp = collections.defaultdict(lambda: INF)\n            for k1, v1 in left.iteritems():\n                for k2, v2 in right.iteritems():\n                    dp[OP[node.val](k1, k2)] = min(dp[OP[node.val](k1, k2)], v1+v2)\n            return dp\n\n        return dfs(root)[result]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

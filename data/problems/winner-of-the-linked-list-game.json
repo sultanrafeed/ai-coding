@@ -1,0 +1,39 @@
+{
+  "id": "ebc6514e-554e-443d-bda8-f82735f27d29",
+  "slug": "winner-of-the-linked-list-game",
+  "title": "Winner of the Linked List Game",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// linked list\nclass Solution {\npublic:\n    string gameResult(ListNode* head) {\n        int cnt = 0;\n        for (; head; head = head->next->next) {\n            cnt += head->val == head->next->val ? 0 : head->val < head->next->val ? -1 : 1;\n        }\n        return cnt == 0 ? \"Tie\" : cnt < 0 ? \"Odd\" : \"Even\";\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# linked list\nclass Solution(object):\n    def gameResult(self, head):\n        \"\"\"\n        :type head: Optional[ListNode]\n        :rtype: str\n        \"\"\"\n        cnt = 0\n        while head:\n            cnt += cmp(head.val, head.next.val)\n            head = head.next.next\n        return \"Tie\" if cnt == 0 else \"Odd\" if cnt < 0 else \"Even\"",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

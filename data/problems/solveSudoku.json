@@ -1,0 +1,25 @@
+{
+  "id": "2caf1a77-e12f-4b88-98a4-6f66c682aa1c",
+  "slug": "solveSudoku",
+  "title": "Solvesudoku",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O((n!)^n)\n// Space Complexiy: O(n^2)\n\n\nclass Solution {\n    public:\n        void solveSudoku(vector<vector<char> > &board) {\n            solver(board);\n        }\n    private:\n        bool solver(vector<vector<char> > &board) {\n            for(int i = 0; i < 9; ++i) {\n                for(int j = 0; j < 9; ++j) {\n                    if(board[i][j] == '.') {\n                        for(int k = 0; k < 9; ++k) {\n                            board[i][j] = '1' + k;\n                            if(isValid(board, i, j) && solver(board)) {\n                                return true;\n                            }\n                            board[i][j] = '.';\n                        }\n                        return false;\n                    }\n                }\n            }\n            return true;\n        }\n\n        bool isValid(vector<vector<char> > &board, int x, int y) {\n            // row\n            for(int i = 0; i < 9; ++i) {\n                if(i != x && board[i][y] == board[x][y])\n                    return false;\n            }\n\n            // column\n            for(int j = 0; j < 9; ++j) {\n                if(j != y && board[x][j] == board[x][y])\n                    return false;\n            }\n\n            // block\n            for(int i = 3 * (x / 3); i < 3 * (x / 3 + 1); ++i) {\n                for(int j = 3 * (y / 3); j < 3 * (y / 3 + 1); ++j) {\n                    if(!(i == x && j == y) && board[i][j] == board[x][y])\n                        return false;\n                }\n            }\n\n            return true;\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

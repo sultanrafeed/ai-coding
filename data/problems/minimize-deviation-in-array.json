@@ -1,0 +1,42 @@
+{
+  "id": "d3363a8e-0650-4874-ab18-aa5690bc2663",
+  "slug": "minimize-deviation-in-array",
+  "title": "Minimize Deviation in Array",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given an array <code>nums</code> of <code>n</code> positive integers.</p>\n\n<p>You can perform two types of operations on any element of the array any number of times:</p>\n\n<ul>\n\t<li>If the element is <strong>even</strong>, <strong>divide</strong> it by <code>2</code>.\n\n\t<ul>\n\t\t<li>For example, if the array is <code>[1,2,3,4]</code>, then you can do this operation on the last element, and the array will be <code>[1,2,3,<u>2</u>].</code></li>\n\t</ul>\n\t</li>\n\t<li>If the element is <strong>odd</strong>, <strong>multiply</strong> it by <code>2</code>.\n\t<ul>\n\t\t<li>For example, if the array is <code>[1,2,3,4]</code>, then you can do this operation on the first element, and the array will be <code>[<u>2</u>,2,3,4].</code></li>\n\t</ul>\n\t</li>\n</ul>\n\n<p>The <strong>deviation</strong> of the array is the <strong>maximum difference</strong> between any two elements in the array.</p>\n\n<p>Return <em>the <strong>minimum deviation</strong> the array can have after performing some number of operations.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> You can transform the array to [1,2,3,<u>2</u>], then to [<u>2</u>,2,3,2], then the deviation will be 3 - 2 = 1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [4,1,5,20,3]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> You can transform the array after two operations to [4,<u>2</u>,5,<u>5</u>,3], then the deviation will be 5 - 2 = 3.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,10,8]\n<strong>Output:</strong> 3\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums.length</code></li>\n\t<li><code>2 &lt;= n &lt;= 5 * 10<sup><span style=\"font-size: 10.8333px;\">4</span></sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "heap-priority-queue",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4]\n[4,1,5,20,3]\n[2,10,8]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((n * log(max_num)) * logn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int minimumDeviation(vector<int>& nums) {\n        vector<int> evens;\n        for (const auto& num : nums) {\n            evens.emplace_back(num % 2 ? 2 * num : num);\n        }\n        int min_elem = *min_element(cbegin(evens), cend(evens));\n        priority_queue<int> max_heap(less<int>(), move(evens));\n        int result = numeric_limits<int>::max();\n        while (size(max_heap) == size(nums)) {\n            const auto num = max_heap.top(); max_heap.pop();\n            result = min(result, num - min_elem);\n            if (num % 2 == 0) {\n                min_elem = min(min_elem, num / 2);\n                max_heap.emplace(num / 2);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((n * log(max_num)) * logn)\n# Space: O(n)\n\nimport heapq\n\n\nclass Solution(object):\n    def minimumDeviation(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        max_heap = [-num*2 if num%2 else -num for num in nums]\n        heapq.heapify(max_heap)\n        min_elem = -max(max_heap)\n        result = float(\"inf\")\n        while len(max_heap) == len(nums):\n            num = -heapq.heappop(max_heap)\n            result = min(result, num-min_elem)\n            if not num%2:\n                min_elem = min(min_elem, num//2)\n                heapq.heappush(max_heap, -num//2)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

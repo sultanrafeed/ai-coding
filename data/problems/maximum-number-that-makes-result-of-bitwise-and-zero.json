@@ -1,0 +1,35 @@
+{
+  "id": "2afd9894-d973-4b31-815b-720022a35c1b",
+  "slug": "maximum-number-that-makes-result-of-bitwise-and-zero",
+  "title": "Maximum Number That Makes Result of Bitwise AND Zero",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "string",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// bit manipulation\nclass Solution {\npublic:\n    long long maxNumber(long long n) {\n        const auto& bit_length = [](auto x) {\n            return (x ? std::__lg(x) : -1) + 1;\n        };\n\n        return (1ll << (bit_length(n) - 1)) - 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# bit manipulation\nclass Solution(object):\n    def maxNumber(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        return (1<<(n.bit_length()-1))-1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

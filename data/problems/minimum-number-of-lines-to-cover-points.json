@@ -1,0 +1,40 @@
+{
+  "id": "4ccb0f9b-c82c-4154-b515-33377826af8f",
+  "slug": "minimum-number-of-lines-to-cover-points",
+  "title": "Minimum Number of Lines to Cover Points",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "dynamic-programming",
+    "backtracking",
+    "bit-manipulation",
+    "geometry",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2 + n*2^n) = O(n*2^n)\n// Space: O(n^2)\n\n// math, hash table, bitmasks\nclass Solution {\nprivate:\n    struct TupleHash {\n        template <typename... T>\n        std::size_t operator()(const std::tuple<T...>& t) const {\n            return apply([](const auto&... args) {\n                std::size_t seed = 0;\n                ((seed ^= std::hash<std::decay_t<decltype(args)>>{}(args) + \n                        0x9e3779b9 + (seed << 6) + (seed >> 2)), ...);\n                return seed;\n            }, t);\n        }\n    };\n\npublic:\n    int minimumLines(vector<vector<int>>& points) {\n        auto ceil_divide = [](int a, int b) {\n            return (a + b - 1) / b;\n        };\n        unordered_map<tuple<int, int, int>, unordered_set<tuple<int, int>, TupleHash>, TupleHash> lookup;\n        for (int i = 0; i < size(points); ++i) {\n            const int x1 = points[i][0], y1 = points[i][1];\n            for (int j = i + 1; j < size(points); ++j) {\n                const int x2 = points[j][0], y2 = points[j][1];\n                // (x-x1)/(x2-x1) = (y-y1)/(y2-y1)\n                // => (y2-y1)x - (x2-x1)y = x1(y2-y1) - y1(x2-x1)\n                const int dx = x2 - x1, dy = y2 - y1;\n                const auto& g = gcd(dx, dy);\n                int a = dx / g, b = dy / g;\n                if (a < 0 || (a == 0 && b < 0)) {\n                    a = -a, b = -b;\n                }\n                const int c = b * x1 - a * y1;\n                lookup[{a, b, c}].emplace(x1, y1);\n                lookup[{a, b, c}].emplace(x2, y2);\n            }\n        }\n        vector<tuple<int, int, int>> lines;\n        for (const auto& [l, p] : lookup) {\n            if (size(p) > 2) {  // filter to improve complexity\n                lines.emplace_back(l);\n            }\n        }\n        assert(size(lines) <= size(points) / 2);  // 1 extra colinear point per 2 points\n        int result = numeric_limits<int>::max();\n        const int mask_upper_bound = 1 << size(lines);\n        for (int mask = 0; mask < mask_upper_bound; ++mask) {\n            unordered_set<tuple<int, int>, TupleHash> covered;\n            for (int i = 0, bit = 1; bit <= mask; bit <<= 1, ++i) {\n                if (mask & bit) {\n                    for (const auto& x : lookup[lines[i]]) {\n                        covered.emplace(x);\n                    }\n                }\n            }\n            result = min(result, __builtin_popcount(mask) + ceil_divide(size(points) - size(covered), 2));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2 + n*2^n) = O(n*2^n)\n# Space: O(n^2)\n\nimport collections\n\n\n# math, hash table, bitmasks\nclass Solution(object):\n    def minimumLines(self, points):\n        \"\"\"\n        :type points: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def gcd(a, b):  # Time: O(log(a + b))\n            while b:\n                a, b = b, a % b\n            return abs(a)\n\n        def popcount(x):\n            result = 0\n            while x:\n                x &= (x-1)\n                result += 1\n            return result\n\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n        \n        lookup = collections.defaultdict(set)               \n        for i, (x1, y1) in enumerate(points):\n            for j in xrange(i+1, len(points)):\n                x2, y2 = points[j]\n                # (x-x1)/(x2-x1) = (y-y1)/(y2-y1)\n                # => (y2-y1)x - (x2-x1)y = x1(y2-y1) - y1(x2-x1)\n                dx, dy = x2-x1, y2-y1\n                g = gcd(dx, dy)\n                a, b = dx//g, dy//g\n                if a < 0 or (a == 0 and b < 0):\n                    a, b = -a, -b\n                c = b*x1-a*y1\n                lookup[(a, b, c)].add((x1, y1))\n                lookup[(a, b, c)].add((x2, y2))\n        lines = [l for l, p in lookup.iteritems() if len(p) > 2]  # filter to improve complexity\n        assert(len(lines) <= (len(points))//2)  # 1 extra colinear point per 2 points\n        result = float(\"inf\")\n        for mask in xrange(1<<len(lines)):\n            covered = set()\n            bit, i = 1, 0\n            while bit <= mask:\n                if mask&bit:\n                    covered.update(lookup[lines[i]])\n                bit <<= 1                        \n                i += 1\n            result = min(result, popcount(mask) + ceil_divide(len(points)-len(covered), 2))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

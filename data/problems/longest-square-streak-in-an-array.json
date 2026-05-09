@@ -1,0 +1,37 @@
+{
+  "id": "a367f3c9-4ce6-4edd-b1c9-04e5dbe8e6e7",
+  "slug": "longest-square-streak-in-an-array",
+  "title": "Longest Square Streak in an Array",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>. A subsequence of <code>nums</code> is called a <strong>square streak</strong> if:</p>\n\n<ul>\n\t<li>The length of the subsequence is at least <code>2</code>, and</li>\n\t<li><strong>after</strong> sorting the subsequence, each element (except the first element) is the <strong>square</strong> of the previous number.</li>\n</ul>\n\n<p>Return<em> the length of the <strong>longest square streak</strong> in </em><code>nums</code><em>, or return </em><code>-1</code><em> if there is no <strong>square streak</strong>.</em></p>\n\n<p>A <strong>subsequence</strong> is an array that can be derived from another array by deleting some or no elements without changing the order of the remaining elements.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [4,3,6,16,8,2]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> Choose the subsequence [4,16,2]. After sorting it, it becomes [2,4,16].\n- 4 = 2 * 2.\n- 16 = 4 * 4.\nTherefore, [4,16,2] is a square streak.\nIt can be shown that every subsequence of length 4 is not a square streak.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,3,5,6,7]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> There is no square streak in nums so return -1.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>2 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "binary-search",
+    "dynamic-programming",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// hash table\nclass Solution {\npublic:\n    int longestSquareStreak(vector<int>& nums) {\n        set<int64_t> sorted_nums(cbegin(nums), cend(nums));\n        unordered_set<int64_t> squares;\n        for (const auto& x : sorted_nums) {\n            if (x % 4 < 2) {  // squared_num % 4 in [0, 1]\n                squares.emplace(x);\n            }\n        }\n        int result = 0;\n        for (const auto& x : sorted_nums) {\n            int cnt = 1;\n            for (int64_t square = x * x; squares.count(square); squares.erase(square), square *= square) {\n                ++cnt;\n            }\n            result = max(result, cnt);\n        }\n        return result != 1 ? result : -1;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(n)\n// dp\nclass Solution2 {\npublic:\n    int longestSquareStreak(vector<int>& nums) {\n        sort(begin(nums), end(nums));\n        unordered_map<int, int> dp;\n        int result = 0;\n        for (const auto& x : nums) {\n            const int sqrt_x = static_cast<int>(sqrt(x));\n            if (sqrt_x * sqrt_x == x) {\n                dp[x] = dp[sqrt_x] + 1;\n            } else {\n                dp[x] = 1;\n            }\n            result = max(result, dp[x]);\n        }\n        return result != 1 ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\n# hash table\nclass Solution(object):\n    def longestSquareStreak(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        sorted_nums = sorted(set(nums))\n        squares = {x for x in sorted_nums if x%2 < 2}  # squared_num % 4 in [0, 1] \n        result = 0\n        for x in sorted_nums:\n            square, cnt = x**2, 1\n            while square in squares:\n                squares.remove(square)\n                cnt += 1\n                square *= square\n            result = max(result, cnt)\n        return result if result != 1 else -1\n\n\n# Time:  O(nlogn)\n# Space: O(n)\n# dp\nclass Solution2(object):\n    def longestSquareStreak(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        dp = collections.defaultdict(int)\n        nums.sort()\n        result = -1\n        for x in nums:\n            sqrt_x = int(x**0.5)\n            if sqrt_x**2 == x:\n                dp[x] = dp[sqrt_x]+1\n            else:\n                dp[x] = 1\n            result = max(result, dp[x])\n        return result if result != 1 else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

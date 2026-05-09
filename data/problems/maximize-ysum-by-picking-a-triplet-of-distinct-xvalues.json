@@ -1,0 +1,43 @@
+{
+  "id": "2a05fe14-60f8-4954-a62f-9400d8ade070",
+  "slug": "maximize-ysum-by-picking-a-triplet-of-distinct-xvalues",
+  "title": "Maximize Y‑Sum by Picking a Triplet of Distinct X‑Values",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given two integer arrays <code>x</code> and <code>y</code>, each of length <code>n</code>. You must choose three <strong>distinct</strong> indices <code>i</code>, <code>j</code>, and <code>k</code> such that:</p>\n\n<ul>\n\t<li><code>x[i] != x[j]</code></li>\n\t<li><code>x[j] != x[k]</code></li>\n\t<li><code>x[k] != x[i]</code></li>\n</ul>\n\n<p>Your goal is to <strong>maximize</strong> the value of <code>y[i] + y[j] + y[k]</code> under these conditions. Return the <strong>maximum</strong> possible sum that can be obtained by choosing such a triplet of indices.</p>\n\n<p>If no such triplet exists, return -1.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">x = [1,2,1,3,2], y = [5,3,4,6,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">14</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Choose <code>i = 0</code> (<code>x[i] = 1</code>, <code>y[i] = 5</code>), <code>j = 1</code> (<code>x[j] = 2</code>, <code>y[j] = 3</code>), <code>k = 3</code> (<code>x[k] = 3</code>, <code>y[k] = 6</code>).</li>\n\t<li>All three values chosen from <code>x</code> are distinct. <code>5 + 3 + 6 = 14</code> is the maximum we can obtain. Hence, the output is 14.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">x = [1,2,1,2], y = [4,5,6,7]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>There are only two distinct values in <code>x</code>. Hence, the output is -1.</li>\n</ul>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == x.length == y.length</code></li>\n\t<li><code>3 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= x[i], y[i] &lt;= 10<sup>6</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "sorting",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,1,3,2]\n[5,3,4,6,2]\n[1,2,1,2]\n[4,5,6,7]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// hash table, quick select\nclass Solution {\npublic:\n    int maxSumDistinctTriplet(vector<int>& x, vector<int>& y) {\n        static const int K = 3;\n        unordered_map<int, int> lookup;\n        for (int i = 0; i < size(x); ++i) {\n            lookup[x[i]] = max(lookup[x[i]], y[i]);\n        }\n        if (size(lookup) < K) {\n            return -1;\n        }\n        vector<int> vals;\n        vals.reserve(size(lookup));\n        for (const auto& [_, v] : lookup) {\n            vals.emplace_back(v);\n        }\n        nth_element(begin(vals), begin(vals) + (K - 1), end(vals), greater<int>());\n        int result = 0;\n        for (int i = 0; i < K; ++i) {\n            result += vals[i];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\nimport itertools\nimport random\n\n\n# hash table, quick select\nclass Solution(object):\n    def maxSumDistinctTriplet(self, x, y):\n        \"\"\"\n        :type x: List[int]\n        :type y: List[int]\n        :rtype: int\n        \"\"\"\n        def nth_element(nums, n, left=0, compare=lambda a, b: a < b):\n            def tri_partition(nums, left, right, target, compare):\n                mid = left\n                while mid <= right:\n                    if nums[mid] == target:\n                        mid += 1\n                    elif compare(nums[mid], target):\n                        nums[left], nums[mid] = nums[mid], nums[left]\n                        left += 1\n                        mid += 1\n                    else:\n                        nums[mid], nums[right] = nums[right], nums[mid]\n                        right -= 1\n                return left, right\n            \n            right = len(nums)-1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)\n                if pivot_left <= n <= pivot_right:\n                    return\n                elif pivot_left > n:\n                    right = pivot_left-1\n                else:  # pivot_right < n.\n                    left = pivot_right+1\n\n        K = 3\n        lookup = collections.defaultdict(int)\n        for i, j in itertools.izip(x, y):\n            lookup[i] = max(lookup[i], j)\n        if len(lookup) < K:\n            return -1\n        vals = lookup.values()\n        nth_element(vals, K-1, compare=lambda x, y: x > y)\n        return sum(vals[i] for i in xrange(K))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

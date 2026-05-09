@@ -1,0 +1,42 @@
+{
+  "id": "8c8c90a9-e985-467d-8e8e-c0658a2a9884",
+  "slug": "pizza-with-3n-slices",
+  "title": "Pizza With 3n Slices",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>There is a pizza with <code>3n</code> slices of varying size, you and your friends will take slices of pizza as follows:</p>\n\n<ul>\n\t<li>You will pick <strong>any</strong> pizza slice.</li>\n\t<li>Your friend Alice will pick the next slice in the anti-clockwise direction of your pick.</li>\n\t<li>Your friend Bob will pick the next slice in the clockwise direction of your pick.</li>\n\t<li>Repeat until there are no more slices of pizzas.</li>\n</ul>\n\n<p>Given an integer array <code>slices</code> that represent the sizes of the pizza slices in a clockwise direction, return <em>the maximum possible sum of slice sizes that you can pick</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/02/18/sample_3_1723.png\" style=\"width: 500px; height: 266px;\" />\n<pre>\n<strong>Input:</strong> slices = [1,2,3,4,5,6]\n<strong>Output:</strong> 10\n<strong>Explanation:</strong> Pick pizza slice of size 4, Alice and Bob will pick slices with size 3 and 5 respectively. Then Pick slices with size 6, finally Alice and Bob will pick slice of size 2 and 1 respectively. Total = 4 + 6.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/02/18/sample_4_1723.png\" style=\"width: 500px; height: 299px;\" />\n<pre>\n<strong>Input:</strong> slices = [8,9,8,6,1,1]\n<strong>Output:</strong> 16\n<strong>Explanation:</strong> Pick pizza slice of size 8 in each turn. If you pick slice with size 9 your partners will pick slices of size 8.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 * n == slices.length</code></li>\n\t<li><code>1 &lt;= slices.length &lt;= 500</code></li>\n\t<li><code>1 &lt;= slices[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,4,5,6]\n[8,9,8,6,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\n// [observation]\n// 1. we can never take two adjacent slices\n// 2. if we want some set of N / 3 non-adjacent slices, there is always a way to take\n//\n// [proof]\n// - for N = 3, it is obviously true.\n// - for N' = N + 3,\n//   - because it's impossible to have only one unwanted slices between all wanted slices.\n//     if it's true, there will be 3N'/2 unwanted slices rather than 2N' unwanted ones, -><-\n//   - so we can always find a sequence of two unwanted slices with one wanted slice\n//     to take firstly, then we can find a way to take the remaining N ones by induction, QED\n\n// better optimized space\nclass Solution {\npublic:\n    int maxSizeSlices(vector<int>& slices) {\n        return max(maxSizeSlicesLinear(slices, 0, slices.size() - 1),\n                   maxSizeSlicesLinear(slices, 1, slices.size()));\n    }\n\nprivate:\n    int maxSizeSlicesLinear(const vector<int>& slices, int start, int end) {\n        vector<vector<int>> dp(2, vector<int>(slices.size() / 3 + 1));\n        for (int i = start; i < end; ++i) {\n            for (int j = min(((i - start + 1) - 1) / 2 + 1, int(slices.size()) / 3);\n                 j >= 1;\n                 --j) {\n                dp[i % 2][j] = max(dp[(i - 1 + 2) % 2][j],\n                                   dp[(i - 2 + 2) % 2][j - 1] + slices[i]);\n            }\n        }\n        return dp[(end - 1) % 2][slices.size() / 3];\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(n)\nclass Solution2 {\npublic:\n    int maxSizeSlices(vector<int>& slices) {\n        return max(maxSizeSlicesLinear(slices, 0, slices.size() - 1),\n                   maxSizeSlicesLinear(slices, 1, slices.size()));\n    }\n\nprivate:\n    int maxSizeSlicesLinear(const vector<int>& slices, int start, int end) {\n        vector<vector<int>> dp(3, vector<int>(slices.size() / 3 + 1));\n        for (int i = start; i < end; ++i) {\n            for (int j = 1;\n                 j <= min(((i - start + 1) - 1) / 2 + 1, int(slices.size()) / 3);\n                 ++j) {\n                dp[i % 3][j] = max(dp[(i - 1 + 3) % 3][j],\n                                   dp[(i - 2 + 3) % 3][j - 1] + slices[i]);\n            }\n        }\n        return dp[(end - 1) % 3][slices.size() / 3];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\n# [observation]\n# 1. we can never take two adjacent slices\n# 2. if we want some set of N / 3 non-adjacent slices, there is always a way to take\n#\n# [proof]\n# - for N = 3, it is obviously true.\n# - for N' = N + 3,\n#   - because it's impossible to have only one unwanted slices between all wanted slices.\n#     if it's true, there will be 3N'/2 unwanted slices rather than 2N' unwanted ones, -><-\n#   - so we can always find a sequence of two unwanted slices with one wanted slice\n#     to take firstly, then we can find a way to take the remaining N ones by induction, QED\n\n# better optimized space\nclass Solution(object):\n    def maxSizeSlices(self, slices):\n        \"\"\"\n        :type slices: List[int]\n        :rtype: int\n        \"\"\"\n        def maxSizeSlicesLinear(slices, start, end):\n            dp = [[0]*(len(slices)//3+1) for _ in xrange(2)]\n            for i in xrange(start, end):\n                for j in reversed(xrange(1, min(((i-start+1)-1)//2+1, len(slices)//3)+1)):\n                    dp[i%2][j] = max(dp[(i-1)%2][j], dp[(i-2)%2][j-1] + slices[i])\n            return dp[(end-1)%2][len(slices)//3]\n        \n        return max(maxSizeSlicesLinear(slices, 0, len(slices)-1),\n                   maxSizeSlicesLinear(slices, 1, len(slices)))\n\n\n# Time:  O(n^2)\n# Space: O(n)\nclass Solution2(object):\n    def maxSizeSlices(self, slices):\n        \"\"\"\n        :type slices: List[int]\n        :rtype: int\n        \"\"\"\n        def maxSizeSlicesLinear(slices, start, end):\n            dp = [[0]*(len(slices)//3+1) for _ in xrange(3)]\n            for i in xrange(start, end):\n                for j in xrange(1, min(((i-start+1)-1)//2+1, len(slices)//3)+1):\n                    dp[i%3][j] = max(dp[(i-1)%3][j], dp[(i-2)%3][j-1] + slices[i])\n            return dp[(end-1)%3][len(slices)//3]\n        \n        return max(maxSizeSlicesLinear(slices, 0, len(slices)-1),\n                   maxSizeSlicesLinear(slices, 1, len(slices)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "e889242b-1086-4905-a6bc-2dfb13746dcd",
+  "slug": "optimize-water-distribution-in-a-village",
+  "title": "Optimize Water Distribution in a Village",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "union-find",
+    "graph",
+    "heap-priority-queue",
+    "minimum-spanning-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int minCostToSupplyWater(int n, vector<int>& wells, vector<vector<int>>& pipes) {\n        vector<tuple<int, int, int>> nodes;\n        for (int i = 0; i < wells.size(); ++i) {\n            nodes.emplace_back(wells[i], 0, i + 1);\n        }\n        for (int i = 0; i < pipes.size(); ++i) {\n            nodes.emplace_back(pipes[i][2], pipes[i][0], pipes[i][1]);\n        }\n        sort(nodes.begin(), nodes.end());\n        int result = 0;\n        UnionFind union_find(n + 1);\n        for (const auto& [c, x, y] : nodes) {\n            if (!union_find.union_set(x, y)) {\n                continue;\n            }\n            result += c;\n            if (union_find.count() == 1) {\n                break;\n            }\n        }\n        return result;\n    }\n\nprivate:\n    class UnionFind {\n    public:\n        UnionFind(const int n) : set_(n), count_(n) {\n            iota(set_.begin(), set_.end(), 0);\n        }\n\n        int find_set(const int x) {\n           if (set_[x] != x) {\n               set_[x] = find_set(set_[x]);  // Path compression.\n           }\n           return set_[x];\n        }\n\n        bool union_set(const int x, const int y) {\n            int x_root = find_set(x), y_root = find_set(y);\n            if (x_root == y_root) {\n                return false;\n            }\n            set_[min(x_root, y_root)] = max(x_root, y_root);\n            --count_;\n            return true;\n        }\n        \n        int count() const {\n            return count_;\n        }\n\n    private:\n        vector<int> set_;\n        int count_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass UnionFind(object):\n    def __init__(self, n):\n        self.set = range(n)\n        self.count = n\n\n    def find_set(self, x):\n        if self.set[x] != x:\n            self.set[x] = self.find_set(self.set[x])  # path compression.\n        return self.set[x]\n\n    def union_set(self, x, y):\n        x_root, y_root = map(self.find_set, (x, y))\n        if x_root == y_root:\n            return False\n        self.set[max(x_root, y_root)] = min(x_root, y_root)\n        self.count -= 1\n        return True\n\n\nclass Solution(object):\n    def minCostToSupplyWater(self, n, wells, pipes):\n        \"\"\"\n        :type n: int\n        :type wells: List[int]\n        :type pipes: List[List[int]]\n        :rtype: int\n        \"\"\"\n        w = [[c, 0, i] for i, c in enumerate(wells, 1)]\n        p = [[c, i, j] for i, j, c in pipes]\n        result = 0\n        union_find = UnionFind(n+1)\n        for c, x, y in sorted(w+p):\n            if not union_find.union_set(x, y):\n                continue\n            result += c\n            if union_find.count == 1:\n                break\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

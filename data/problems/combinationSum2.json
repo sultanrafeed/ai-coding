@@ -1,0 +1,25 @@
+{
+  "id": "628d45cb-6bfa-4860-905f-fc37f9cace30",
+  "slug": "combinationSum2",
+  "title": "Combinationsum2",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n!)\n// Space Complexity: O(1)\n\nclass Solution {\n    public:\n        vector<vector<int> > combinationSum2(vector<int> &num, int target) {\n            sort(num.begin(), num.end());\n            vector<vector<int> > ans;\n            vector<int> v;\n            dfs(num, target, 0, v, ans);\n            return ans;\n        }\n\n    private:\n        void dfs(vector<int>& num, int gap, int begin, vector<int>& v,vector<vector<int> > &ans) {\n            if (gap == 0) {\n                ans.push_back(v);\n                return;\n            }\n\n            for (size_t i = begin; i < num.size(); i++) {\n                if (gap < num[i]) return; // pruning\n                if( i > begin && num[i] == num[i - 1]) // skip duplicates\n                    continue;\n                v.push_back(num[i]);\n                dfs(num, gap - num[i], i + 1, v, ans); // each element could be chosen only once\n                v.pop_back();\n            }\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

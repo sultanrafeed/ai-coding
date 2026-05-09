@@ -1,0 +1,40 @@
+{
+  "id": "397e40d5-1b69-4b30-bfc5-6219a8cfb231",
+  "slug": "once-twice",
+  "title": "Once Twice",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,2,3,2,5,5,5,7,7]\n[4,4,6,4,9,9,9,6,8]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// dp, bitmasks\nclass Solution {\npublic:\n    vector<int> onceTwice(vector<int>& nums) {\n        vector<int> dp(3), new_dp(3);\n        dp[0] = ~0;\n        for (const auto& x : nums) {\n            for (int i = 0; i < 3; ++i) {\n                new_dp[i] = (x & dp[i - 1 >= 0 ? i - 1 : 2]) | (~x & dp[i]);\n            }\n            swap(dp, new_dp);\n        }\n        vector<int> dp2(3), new_dp2(3);\n        dp2[0] = ~0;\n        for (const auto& x : nums) {\n            if ((~x & dp[1]) || (x & dp[2])) {\n                continue;\n            }\n            for (int i = 0; i < 3; ++i) {\n                new_dp2[i] = (x & dp2[i - 1 >= 0 ? i - 1 : 2]) | (~x & dp2[i]);\n            }\n            swap(dp2, new_dp2);\n        }\n        return {dp2[1], (dp2[1] ^ dp[1]) | dp[2]};\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# dp, bitmasks\nclass Solution(object):\n    def onceTwice(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        dp = [0]*3\n        dp[0] = ~0\n        for x in nums:\n            dp = [(x&dp[i-1])|(~x&dp[i]) for i in xrange(3)]\n        dp2 = [0]*3\n        dp2[0] = ~0\n        for x in nums:\n            if ~x&dp[1] or x&dp[2]:\n                continue\n            dp2 = [(x&dp2[i-1])|(~x&dp2[i]) for i in xrange(3)]\n        return [dp2[1], (dp2[1]^dp[1])|dp[2]]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

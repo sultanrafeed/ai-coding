@@ -1,0 +1,35 @@
+{
+  "id": "c905e0d1-b7fd-4178-9cb2-bdef4825db40",
+  "slug": "divide-an-array-into-subarrays-with-minimum-cost-i",
+  "title": "Divide an Array Into Subarrays With Minimum Cost I",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an array of integers <code>nums</code> of length <code>n</code>.</p>\n\n<p>The <strong>cost</strong> of an array is the value of its <strong>first</strong> element. For example, the cost of <code>[1,2,3]</code> is <code>1</code> while the cost of <code>[3,4,1]</code> is <code>3</code>.</p>\n\n<p>You need to divide <code>nums</code> into <code>3</code> <strong>disjoint contiguous </strong><span data-keyword=\"subarray-nonempty\">subarrays</span>.</p>\n\n<p>Return <em>the <strong>minimum</strong> possible <strong>sum</strong> of the cost of these subarrays</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,12]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> The best possible way to form 3 subarrays is: [1], [2], and [3,12] at a total cost of 1 + 2 + 3 = 6.\nThe other possible ways to form 3 subarrays are:\n- [1], [2,3], and [12] at a total cost of 1 + 2 + 12 = 15.\n- [1,2], [3], and [12] at a total cost of 1 + 3 + 12 = 16.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [5,4,3]\n<strong>Output:</strong> 12\n<strong>Explanation:</strong> The best possible way to form 3 subarrays is: [5], [4], and [3] at a total cost of 5 + 4 + 3 = 12.\nIt can be shown that 12 is the minimum cost achievable.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [10,3,1,1]\n<strong>Output:</strong> 12\n<strong>Explanation:</strong> The best possible way to form 3 subarrays is: [10,3], [1], and [1] at a total cost of 10 + 1 + 1 = 12.\nIt can be shown that 12 is the minimum cost achievable.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= n &lt;= 50</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 50</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "sorting",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// array, quick select\nclass Solution {\npublic:\n    int minimumCost(vector<int>& nums) {\n        nth_element(begin(nums) + 1, (begin(nums) + 1) + (2 - 1), end(nums));\n        return nums[0] + nums[1] + nums[2];\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// array\nclass Solution2 {\npublic:\n    int minimumCost(vector<int>& nums) {\n        vector<int> top2(2, numeric_limits<int>::max());\n        for (int i = 1; i < size(nums); ++i) {\n            for (auto& x : top2) {\n                if (nums[i] < x) {\n                    swap(x, nums[i]);\n                }\n            }\n        }\n        return nums[0] + top2[0] + top2[1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport random\n\n\n# array, quick select\nclass Solution(object):\n    def minimumCost(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def nth_element(nums, n, left=0, compare=lambda a, b: a < b):\n            def tri_partition(nums, left, right, target, compare):\n                mid = left\n                while mid <= right:\n                    if nums[mid] == target:\n                        mid += 1\n                    elif compare(nums[mid], target):\n                        nums[left], nums[mid] = nums[mid], nums[left]\n                        left += 1\n                        mid += 1\n                    else:\n                        nums[mid], nums[right] = nums[right], nums[mid]\n                        right -= 1\n                return left, right\n            \n            right = len(nums)-1\n            while left <= right:\n                pivot_idx = random.randint(left, right)\n                pivot_left, pivot_right = tri_partition(nums, left, right, nums[pivot_idx], compare)\n                if pivot_left <= n <= pivot_right:\n                    return\n                elif pivot_left > n:\n                    right = pivot_left-1\n                else:  # pivot_right < n.\n                    left = pivot_right+1\n\n        nth_element(nums, 1+(2-1), 1)\n        return nums[0]+nums[1]+nums[2]\n\n\n# Time:  O(n)\n# Space: O(1)\n# array\nclass Solution2(object):\n    def minimumCost(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def topk(a, k):\n            result = [float(\"inf\")]*k\n            for x in a:\n                for i in xrange(len(result)):\n                    if x < result[i]:\n                        result[i], x = x, result[i]\n            return result\n\n        return nums[0]+sum(topk((nums[i] for i in xrange(1, len(nums))), 2))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

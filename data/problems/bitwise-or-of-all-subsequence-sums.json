@@ -1,0 +1,43 @@
+{
+  "id": "7c9a9ab5-0cd6-434e-b7ab-15c900788639",
+  "slug": "bitwise-or-of-all-subsequence-sums",
+  "title": "Bitwise OR of All Subsequence Sums",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "bit-manipulation",
+    "brainteaser",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,1,0,3]\n[0,0,0]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// bit manipulation\nclass Solution {\npublic:\n    long long subsequenceSumOr(vector<int>& nums) {\n        uint64_t result = 0, prefix = 0;\n        for (const auto& x : nums) {\n            prefix += x;\n            result |= x | prefix;\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\n// bit manipulation\nclass Solution2 {\npublic:\n    long long subsequenceSumOr(vector<int>& nums) {\n        uint64_t result = 0, cnt = 0;\n        for (int i = 0; i < 64; ++i) {\n            cnt >>= 1;\n            for (const auto& x : nums) {\n                cnt += (static_cast<int64_t>(x) >> i) & 1;\n            }\n            if (cnt) {\n                result |= 1ull << i;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# bit manipulation\nclass Solution(object):\n    def subsequenceSumOr(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = prefix = 0\n        for x in nums:\n            prefix += x\n            result |= x|prefix\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(1)\n# bit manipulation\nclass Solution2(object):\n    def subsequenceSumOr(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        result = cnt = 0\n        for i in xrange(64):\n            cnt >>= 1\n            for x in nums:\n                cnt += (x>>i)&1\n            if cnt:\n                result |= 1<<i\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

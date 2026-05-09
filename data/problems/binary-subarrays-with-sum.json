@@ -1,0 +1,36 @@
+{
+  "id": "4ebaba6e-e595-4251-973d-7eaac8885dcd",
+  "slug": "binary-subarrays-with-sum",
+  "title": "Binary Subarrays With Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a binary array <code>nums</code> and an integer <code>goal</code>, return <em>the number of non-empty <strong>subarrays</strong> with a sum</em> <code>goal</code>.</p>\n\n<p>A <strong>subarray</strong> is a contiguous part of the array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,0,1,0,1], goal = 2\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The 4 subarrays are bolded and underlined below:\n[<u><strong>1,0,1</strong></u>,0,1]\n[<u><strong>1,0,1,0</strong></u>,1]\n[1,<u><strong>0,1,0,1</strong></u>]\n[1,0,<u><strong>1,0,1</strong></u>]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,0,0,0,0], goal = 0\n<strong>Output:</strong> 15\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 3 * 10<sup>4</sup></code></li>\n\t<li><code>nums[i]</code> is either <code>0</code> or <code>1</code>.</li>\n\t<li><code>0 &lt;= goal &lt;= nums.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sliding-window",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// Two pointers solution.\nclass Solution {\npublic:\n    int numSubarraysWithSum(vector<int>& A, int S) {\n        int result = 0;\n        int left = 0, right = 0, sum_left = 0, sum_right = 0;\n        for (int i = 0; i < A.size(); ++i) {\n            for (sum_left += A[i];\n                 left < i && sum_left > S;\n                 ++left) {\n                sum_left -= A[left];\n            }\n            for (sum_right += A[i];\n                 right < i && (sum_right > S || (sum_right == S && !A[right]));\n                 ++right) {\n                sum_right -= A[right];\n            }\n            if (sum_left == S) {\n                result += right - left + 1;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# Two pointers solution\nclass Solution(object):\n    def numSubarraysWithSum(self, A, S):\n        \"\"\"\n        :type A: List[int]\n        :type S: int\n        :rtype: int\n        \"\"\"\n        result = 0\n        left, right, sum_left, sum_right = 0, 0, 0, 0\n        for i, a in enumerate(A):\n            sum_left += a\n            while left < i and sum_left > S:\n                sum_left -= A[left]\n                left += 1\n            sum_right += a\n            while right < i and \\\n                  (sum_right > S or (sum_right == S and not A[right])):\n                sum_right -= A[right]\n                right += 1\n            if sum_left == S:\n                result += right-left+1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

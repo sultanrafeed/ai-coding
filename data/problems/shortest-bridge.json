@@ -1,0 +1,42 @@
+{
+  "id": "cc109a5d-59d9-4273-a416-48edc75b977c",
+  "slug": "shortest-bridge",
+  "title": "Shortest Bridge",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an <code>n x n</code> binary matrix <code>grid</code> where <code>1</code> represents land and <code>0</code> represents water.</p>\n\n<p>An <strong>island</strong> is a 4-directionally connected group of <code>1</code>&#39;s not connected to any other <code>1</code>&#39;s. There are <strong>exactly two islands</strong> in <code>grid</code>.</p>\n\n<p>You may change <code>0</code>&#39;s to <code>1</code>&#39;s to connect the two islands to form <strong>one island</strong>.</p>\n\n<p>Return <em>the smallest number of </em><code>0</code><em>&#39;s you must flip to connect the two islands</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[0,1],[1,0]]\n<strong>Output:</strong> 1\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[0,1,0],[0,0,0],[0,0,1]]\n<strong>Output:</strong> 2\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> grid = [[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]]\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == grid.length == grid[i].length</code></li>\n\t<li><code>2 &lt;= n &lt;= 100</code></li>\n\t<li><code>grid[i][j]</code> is either <code>0</code> or <code>1</code>.</li>\n\t<li>There are exactly two islands in <code>grid</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,1],[1,0]]\n[[0,1,0],[0,0,0],[0,0,1]]\n[[1,1,1,1,1],[1,0,0,0,1],[1,0,1,0,1],[1,0,0,0,1],[1,1,1,1,1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    template <typename T>\n    struct PairHash {\n        size_t operator()(const pair<T, T>& p) const {\n            size_t seed = 0;\n            seed ^= std::hash<T>{}(p.first)  + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            seed ^= std::hash<T>{}(p.second) + 0x9e3779b9 + (seed<<6) + (seed>>2);\n            return seed;\n        }\n    };\n    \n    int shortestBridge(vector<vector<int>>& A) {\n        static const vector<pair<int, int>> directions{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};\n        \n        unordered_set<pair<int, int>, PairHash<int>> lookup;\n        unordered_set<pair<int, int>, PairHash<int>> target;\n        auto islands = get_islands(A);\n        lookup = move(islands[0]);\n        target = move(islands[1]);\n        queue<pair<pair<int, int>, int>> q;\n        for (const auto& node : lookup) {\n            q.emplace(node, 0);\n        }\n        while (!q.empty()) {\n            pair<int, int> node;\n            int dis;\n            tie(node, dis) = q.front(); q.pop();\n            if (target.count(node)) {\n                return dis - 1;\n            }\n            for (const auto& d : directions) {\n                pair<int, int> nei = make_pair(node.first + d.first, node.second + d.second);\n                if (0 > nei.first || nei.first >= A.size() ||\n                    0 > nei.second || nei.second >= A[0].size() ||\n                    lookup.count(nei)) {\n                    continue;\n                }\n                q.emplace(nei, dis + 1);\n                lookup.emplace(nei);\n            }\n        }\n    }\n\nprivate:\n    vector<unordered_set<pair<int, int>, PairHash<int>>> get_islands(const vector<vector<int>>& A) {\n        static const vector<pair<int, int>> directions{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};\n        \n        vector<unordered_set<pair<int, int>, PairHash<int>>> islands;\n        unordered_set<pair<int, int>, PairHash<int>> done;\n        for (int r = 0; r < A.size(); ++r) {\n            for (int c = 0; c < A[0].size(); ++c) {\n                if (A[r][c] == 0 || done.count(make_pair(r, c))) {\n                    continue;\n                }\n                vector<pair<int, int>> s{{r, c}};\n                unordered_set<pair<int, int>, PairHash<int>> lookup(s.cbegin(), s.cend());\n                while (!s.empty()) {\n                    auto node = s.back(); s.pop_back();\n                    for (const auto& d : directions) {\n                        pair<int, int> nei = make_pair(node.first + d.first, node.second + d.second);\n                        if (0 > nei.first || nei.first >= A.size() ||\n                            0 > nei.second || nei.second >= A[0].size() ||\n                            lookup.count(nei) || A[nei.first][nei.second] == 0) {\n                            continue;\n                        }\n                        s.emplace_back(nei);\n                        lookup.emplace(nei);\n                    }\n                }\n                for (const auto& node : lookup) {\n                    done.emplace(node);\n                }\n                islands.emplace_back(move(lookup));\n                if (islands.size() == 2) {\n                    break;\n                }\n            }\n        }\n        return islands;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n^2)\n\nimport collections\n\n\nclass Solution(object):\n    def shortestBridge(self, A):\n        \"\"\"\n        :type A: List[List[int]]\n        :rtype: int\n        \"\"\"\n        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n\n        def get_islands(A):\n            islands = []\n            done = set()\n            for r, row in enumerate(A):\n                for c, val in enumerate(row):\n                    if val == 0 or (r, c) in done:\n                        continue\n                    s = [(r, c)]\n                    lookup = set(s)\n                    while s:\n                        node = s.pop()\n                        for d in directions:\n                            nei = node[0]+d[0], node[1]+d[1]\n                            if not (0 <= nei[0] < len(A) and 0 <= nei[1] < len(A[0])) or \\\n                               nei in lookup or A[nei[0]][nei[1]] == 0:\n                                continue\n                            s.append(nei)\n                            lookup.add(nei)\n                    done |= lookup\n                    islands.append(lookup)\n                    if len(islands) == 2:\n                        break\n            return islands\n\n        lookup, target = get_islands(A)\n        q = collections.deque([(node, 0) for node in lookup])\n        while q:\n            node, dis = q.popleft()\n            if node in target:\n                return dis-1\n            for d in directions:\n                nei = node[0]+d[0], node[1]+d[1]\n                if not (0 <= nei[0] < len(A) and 0 <= nei[1] < len(A[0])) or \\\n                   nei in lookup:\n                    continue\n                q.append((nei, dis+1))\n                lookup.add(nei)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

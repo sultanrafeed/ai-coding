@@ -1,0 +1,35 @@
+{
+  "id": "3b859bcf-3393-432f-9280-38bacdbae157",
+  "slug": "evaluate-reverse-polish-notation",
+  "title": "Evaluate Reverse Polish Notation",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an array of strings <code>tokens</code> that represents an arithmetic expression in a <a href=\"http://en.wikipedia.org/wiki/Reverse_Polish_notation\" target=\"_blank\">Reverse Polish Notation</a>.</p>\n\n<p>Evaluate the expression. Return <em>an integer that represents the value of the expression</em>.</p>\n\n<p><strong>Note</strong> that:</p>\n\n<ul>\n\t<li>The valid operators are <code>&#39;+&#39;</code>, <code>&#39;-&#39;</code>, <code>&#39;*&#39;</code>, and <code>&#39;/&#39;</code>.</li>\n\t<li>Each operand may be an integer or another expression.</li>\n\t<li>The division between two integers always <strong>truncates toward zero</strong>.</li>\n\t<li>There will not be any division by zero.</li>\n\t<li>The input represents a valid arithmetic expression in a reverse polish notation.</li>\n\t<li>The answer and all the intermediate calculations can be represented in a <strong>32-bit</strong> integer.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> tokens = [&quot;2&quot;,&quot;1&quot;,&quot;+&quot;,&quot;3&quot;,&quot;*&quot;]\n<strong>Output:</strong> 9\n<strong>Explanation:</strong> ((2 + 1) * 3) = 9\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> tokens = [&quot;4&quot;,&quot;13&quot;,&quot;5&quot;,&quot;/&quot;,&quot;+&quot;]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> (4 + (13 / 5)) = 6\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> tokens = [&quot;10&quot;,&quot;6&quot;,&quot;9&quot;,&quot;3&quot;,&quot;+&quot;,&quot;-11&quot;,&quot;*&quot;,&quot;/&quot;,&quot;*&quot;,&quot;17&quot;,&quot;+&quot;,&quot;5&quot;,&quot;+&quot;]\n<strong>Output:</strong> 22\n<strong>Explanation:</strong> ((10 * (6 / ((9 + 3) * -11))) + 17) + 5\n= ((10 * (6 / (12 * -11))) + 17) + 5\n= ((10 * (6 / -132)) + 17) + 5\n= ((10 * 0) + 17) + 5\n= (0 + 17) + 5\n= 17 + 5\n= 22\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= tokens.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>tokens[i]</code> is either an operator: <code>&quot;+&quot;</code>, <code>&quot;-&quot;</code>, <code>&quot;*&quot;</code>, or <code>&quot;/&quot;</code>, or an integer in the range <code>[-200, 200]</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int evalRPN(vector<string>& tokens) {\n        if (tokens.empty()) {\n            return 0;\n        }\n        stack<string> s;\n        for (const auto& tok : tokens) {\n            if (!is_operator(tok)) {\n                s.emplace(tok);\n            } else {\n                auto&& y = stoi(s.top());\n                s.pop();\n                auto&& x = stoi(s.top());\n                s.pop();\n                if (tok[0] == '+') {\n                    x += y;\n                } else if (tok[0] == '-') {\n                    x -= y;\n                } else if (tok[0] == '*') {\n                    x *= y;\n                } else {\n                    x /= y;\n                }\n                s.emplace(to_string(x));\n            }\n        }\n        return stoi(s.top());\n    }\n\nprivate:\n    bool is_operator(const string& op) {\n        return op.length() == 1 && string(\"+-*/\").find(op) != string::npos;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport operator\n\nclass Solution(object):\n    # @param tokens, a list of string\n    # @return an integer\n    def evalRPN(self, tokens):\n        numerals, operators = [], {\"+\": operator.add, \"-\": operator.sub, \"*\": operator.mul, \"/\": operator.div}\n        for token in tokens:\n            if token not in operators:\n                numerals.append(int(token))\n            else:\n                y, x = numerals.pop(), numerals.pop()\n                numerals.append(int(operators[token](x * 1.0, y)))\n        return numerals.pop()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

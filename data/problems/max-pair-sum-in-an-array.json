@@ -1,0 +1,34 @@
+{
+  "id": "1b082013-cca5-4328-bcb1-f3417fc94561",
+  "slug": "max-pair-sum-in-an-array",
+  "title": "Max Pair Sum in an Array",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>. You have to find the <strong>maximum</strong> sum of a pair of numbers from <code>nums</code> such that the <strong>largest digit </strong>in both numbers is equal.</p>\n\n<p>For example, 2373 is made up of three distinct digits: 2, 3, and 7, where 7 is the largest among them.</p>\n\n<p>Return the <strong>maximum</strong> sum or -1 if no such pair exists.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [112,131,411]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">-1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Each numbers largest digit in order is [2,3,4].</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2536,1613,3366,162]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">5902</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>All the numbers have 6 as their largest digit, so the answer is <span class=\"example-io\">2536 + 3366 = 5902.</span></p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [51,71,17,24,42]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">88</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>Each number&#39;s largest digit in order is [5,7,7,4,4].</p>\n\n<p>So we have only two possible pairs, 71 + 17 = 88 and 24 + 42 = 66.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr)\n// Space: O(1)\n\n// hash table\nclass Solution {\npublic:\n    int maxSum(vector<int>& nums) {\n        const auto& max_digit = [](int x) {\n            int result = 0;\n            for (; x; x /= 10) {\n                result = max(result, x % 10);\n            }\n            return result;\n        };\n\n        int result = -1;\n        vector<int> lookup(10, -1);\n        for (const auto& x : nums) {\n            const int mx = max_digit(x);\n            if (lookup[mx] == -1) {\n                lookup[mx] = x;\n                continue;\n            }\n            result = max(result, lookup[mx] + x);\n            lookup[mx] = max(lookup[mx], x);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr)\n# Space: O(1)\n\n# hash table\nclass Solution(object):\n    def maxSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def max_digit(x):\n            result = 0\n            while x:\n                x, r = divmod(x, 10)\n                result = max(result, r)\n            return result\n    \n        result = -1\n        lookup = {}\n        for x in nums:\n            mx = max_digit(x)\n            if mx not in lookup:\n                lookup[mx] = x\n                continue\n            result = max(result, lookup[mx]+x)\n            lookup[mx] = max(lookup[mx], x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

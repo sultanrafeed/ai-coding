@@ -1,0 +1,42 @@
+{
+  "id": "62746c8c-a763-4684-83c1-c99605fb9f54",
+  "slug": "subsequences-with-a-unique-middle-mode-ii",
+  "title": "Subsequences with a Unique Middle Mode II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "math",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,1,1,1,1,1]\n[1,2,2,3,3,4]\n[0,1,2,3,4,5,6,7,8]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table, prefix sum, combinatorics\nclass Solution {\npublic:\n    int subsequencesWithMiddleMode(vector<int>& nums) {\n        typedef __int128 int128_t;\n\n        const auto& nC2 = [](int128_t x) {\n            return x * (x - 1) / 2;\n        };\n\n        static const int MOD = 1e9 + 7;\n        int128_t result = 0;\n        unordered_map<int, int128_t> left, right;\n        for (const auto& x : nums) {\n            ++right[x];\n        }\n\n        int128_t left_x_sq = 0; // sum(left[x]^2 for x != v)\n        int128_t right_x_sq = 0; // sum(right[x]^2f or x != v)\n        int128_t left_x_right_x = 0;  // sum(left[x]*right[x] for x != v)\n        int128_t left_x_sq_right_x = 0;  // sum(left[x]^2*right[x] for x != v)\n        int128_t left_x_right_x_sq = 0;  //sum(left[x]*right[x]^2 for x != v)\n        for (const auto& [_, v] : right) {\n            right_x_sq += v * v;\n        }\n        for (int i = 0; i < size(nums); ++i) {\n            const int v = nums[i];\n            left_x_sq -= left[v] * left[v];\n            right_x_sq -= right[v]* right[v];\n            left_x_right_x -= left[v] * right[v];\n            left_x_sq_right_x -= left[v] * left[v] * right[v];\n            left_x_right_x_sq -= left[v] * right[v] * right[v];\n            --right[v];\n\n            const int l = i;\n            const int r = size(nums) - (i + 1);\n            // all possibles\n            result += nC2(l) * nC2(r);\n            // only mid is a\n            result -= nC2(l - left[v]) * nC2(r - right[v]);\n            // bb/a/ac\n            // sum((left[x]*(left[x]-1)//2)*right[v]*((r-right[v])-right[x]) for x != v)\n            result -= ((left_x_sq - (l - left[v])) * (r - right[v]) - (left_x_sq_right_x - left_x_right_x)) * right[v] / 2;\n            // ac/a/bb\n            // sum(left[v]*((l-left[v])-left[x])*(right[x]*(right[x]-1)//2) for x != v)\n            result -= ((right_x_sq - (r - right[v])) * (l - left[v]) - (left_x_right_x_sq - left_x_right_x) ) *left[v] / 2;\n            // ab/a/bc\n            // sum(left[v]*left[x]*right[x]*((r-right[v])-right[x]) for x != v)\n            result -= left[v] * left_x_right_x * (r - right[v]) - left[v] * left_x_right_x_sq;\n            // bc/a/ab\n            // sum(left[x]*((l-left[v])-left[x])*right[v]*right[x] for x != v)\n            result -= right[v] * left_x_right_x * (l - left[v]) - right[v] * left_x_sq_right_x;\n            // bb/a/ab\n            // sum((left[x]*(left[x]-1)//2)*right[v]*right[x] for x != v)\n            result -= right[v] * (left_x_sq_right_x - left_x_right_x) / 2;\n            // ab/a/bb\n            // sum((right[x]*(right[x]-1)//2)*left[v]*left[x] for x != v)\n            result -= left[v] * (left_x_right_x_sq - left_x_right_x) / 2;\n\n            ++left[v];\n            left_x_sq += left[v] * left[v];\n            right_x_sq += right[v] * right[v];\n            left_x_right_x += left[v] * right[v];\n            left_x_sq_right_x += left[v] * left[v] * right[v];\n            left_x_right_x_sq += left[v] * right[v] * right[v];\n        }\n\n        return result % MOD;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# freq table, prefix sum, combinatorics\nclass Solution(object):\n    def subsequencesWithMiddleMode(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def nC2(x):\n            return x*(x-1)//2\n\n        MOD = 10**9+7\n        result = 0\n        left = collections.defaultdict(int)\n        right = collections.defaultdict(int)\n        for x in nums:\n            right[x] += 1\n        left_x_sq = 0  # sum(left[x]^2 for x != v)\n        right_x_sq = sum(v**2 for v in right.itervalues())  # sum(right[x]^2 for x != v)\n        left_x_right_x = 0  # sum(left[x]*right[x] for x != v)\n        left_x_sq_right_x = 0  # sum(left[x]^2*right[x] for x != v)\n        left_x_right_x_sq = 0  # sum(left[x]*right[x]^2 for x != v)\n        for i, v in enumerate(nums):\n            left_x_sq -= left[v]**2\n            right_x_sq -= right[v]**2\n            left_x_right_x -= left[v]*right[v]\n            left_x_sq_right_x -= left[v]**2*right[v]\n            left_x_right_x_sq -= left[v]*right[v]**2\n            right[v] -= 1\n\n            l, r = i, len(nums)-(i+1)\n            # all possibles\n            result += nC2(l)*nC2(r)\n            # only mid is a\n            result -= nC2(l-left[v])*nC2(r-right[v])\n            # bb/a/ac\n            # sum((left[x]*(left[x]-1)//2)*right[v]*((r-right[v])-right[x]) for x != v)\n            result -= ((left_x_sq-(l-left[v]))*(r-right[v])-(left_x_sq_right_x-left_x_right_x))*right[v]//2\n            # ac/a/bb\n            # sum(left[v]*((l-left[v])-left[x])*(right[x]*(right[x]-1)//2) for x != v)\n            result -= ((right_x_sq-(r-right[v]))*(l-left[v])-(left_x_right_x_sq-left_x_right_x))*left[v]//2\n            # ab/a/bc\n            # sum(left[v]*left[x]*right[x]*((r-right[v])-right[x]) for x != v)\n            result -= left[v]*left_x_right_x*(r-right[v])-left[v]*left_x_right_x_sq\n            # bc/a/ab\n            # sum(left[x]*((l-left[v])-left[x])*right[v]*right[x] for x != v)\n            result -= right[v]*left_x_right_x*(l-left[v])-right[v]*left_x_sq_right_x\n            # bb/a/ab\n            # sum((left[x]*(left[x]-1)//2)*right[v]*right[x] for x != v)\n            result -= right[v]*(left_x_sq_right_x-left_x_right_x)//2\n            # ab/a/bb\n            # sum((right[x]*(right[x]-1)//2)*left[v]*left[x] for x != v)\n            result -= left[v]*(left_x_right_x_sq-left_x_right_x)//2\n\n            left[v] += 1\n            left_x_sq += left[v]**2\n            right_x_sq += right[v]**2\n            left_x_right_x += left[v]*right[v]\n            left_x_sq_right_x += left[v]**2*right[v]\n            left_x_right_x_sq += left[v]*right[v]**2\n        return result % MOD",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

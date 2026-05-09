@@ -1,0 +1,42 @@
+{
+  "id": "af5e6875-5a53-4cec-88cd-672b1d7fb111",
+  "slug": "brightest-position-on-street",
+  "title": "Brightest Position on Street",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "sorting",
+    "prefix-sum",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[-3,2],[1,2],[3,3]]\n[[1,0],[0,1]]\n[[1,2]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int brightestPosition(vector<vector<int>>& lights) {\n        unordered_map<int, int> count;\n        for (const auto& light : lights) {\n            ++count[light[0] - light[1]];\n            --count[light[0] + light[1] + 1];\n        }\n        vector<pair<int, int>> points;\n        for (const auto& [k, v] : count) {\n            points.emplace_back(k, v);\n        }\n        sort(begin(points), end(points));\n        int result = numeric_limits<int>::min(), max_cnt = 0, cnt = 0;\n        for (const auto& [i, c] : points) {\n            cnt += c;\n            if (cnt > max_cnt) {\n                max_cnt = cnt;\n                result = i;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def brightestPosition(self, lights):\n        \"\"\"\n        :type lights: List[List[int]]\n        :rtype: int\n        \"\"\"\n        count = collections.Counter()\n        for i, r in lights:\n            count[i-r] += 1\n            count[i+r+1] -= 1\n        result = None\n        max_cnt = cnt = 0\n        for i, c in sorted(count.iteritems()):\n            cnt += c\n            if cnt > max_cnt:\n                max_cnt, result = cnt, i\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

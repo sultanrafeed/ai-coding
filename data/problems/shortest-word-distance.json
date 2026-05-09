@@ -1,0 +1,40 @@
+{
+  "id": "8fa020cc-90a0-423b-a076-89586ca38fc6",
+  "slug": "shortest-word-distance",
+  "title": "Shortest Word Distance",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"practice\", \"makes\", \"perfect\", \"coding\", \"makes\"]\n\"coding\"\n\"practice\"\n[\"practice\", \"makes\", \"perfect\", \"coding\", \"makes\"]\n\"makes\"\n\"coding\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int shortestDistance(vector<string>& words, string word1, string word2) {\n        int dist = INT_MAX;\n        for (int i = 0, index1 = -1, index2 = -1; i < words.size(); ++i) {\n            if (words[i] == word1) {\n                index1 = i;\n            } else if (words[i] == word2) {\n                index2 = i;\n            }\n            if (index1 != -1 && index2 != -1) {\n                dist = min(dist, abs(index1 - index2));\n            }\n        }\n        return dist;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    # @param {string[]} words\n    # @param {string} word1\n    # @param {string} word2\n    # @return {integer}\n    def shortestDistance(self, words, word1, word2):\n        dist = float(\"inf\")\n        i, index1, index2 = 0, None, None\n        while i < len(words):\n            if words[i] == word1:\n                index1 = i\n            elif words[i] == word2:\n                index2 = i\n\n            if index1 is not None and index2 is not None:\n                dist = min(dist, abs(index1 - index2))\n            i += 1\n\n        return dist",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

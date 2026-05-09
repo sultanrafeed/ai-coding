@@ -1,0 +1,41 @@
+{
+  "id": "5a3bed37-82b7-41a8-8682-711d0c759e73",
+  "slug": "add-two-polynomials-represented-as-linked-lists",
+  "title": "Add Two Polynomials Represented as Linked Lists",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "linked-list",
+    "math",
+    "two-pointers"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,1]]\n[[1,0]]\n[[2,2],[4,1],[3,0]]\n[[3,2],[-4,1],[-1,0]]\n[[1,2]]\n[[-1,2]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m + n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    PolyNode* addPoly(PolyNode* poly1, PolyNode* poly2) {\n        PolyNode dummy;\n        auto curr = &dummy;\n        while (poly1 && poly2) {\n            if (poly1->power > poly2->power) {\n                curr->next = poly1;\n                curr = curr->next;\n                poly1 = poly1->next;\n            } else if (poly1->power < poly2->power) {\n                curr->next = poly2;\n                curr = curr->next;\n                poly2 = poly2->next;\n            } else {\n                auto coef = poly1->coefficient + poly2->coefficient;\n                if (coef) {\n                    curr->next = new PolyNode(coef, poly1->power);\n                    curr = curr->next;\n                }\n                poly1 = poly1->next;\n                poly2 = poly2->next;\n            }\n        }\n        curr->next = poly1 ? poly1 : poly2;\n        return dummy.next;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m + n)\n# Space: O(1)\n\nclass PolyNode:\n    def __init__(self, x=0, y=0, next=None):\n        pass\n\n\nclass Solution:\n    def addPoly(self, poly1, poly2):\n        \"\"\"\n        :type poly1: PolyNode\n        :type poly2: PolyNode\n        :rtype: PolyNode\n        \"\"\"\n        curr = dummy = PolyNode()\n        while poly1 and poly2:\n            if poly1.power > poly2.power:\n                curr.next = poly1\n                curr = curr.next\n                poly1 = poly1.next\n            elif poly1.power < poly2.power:\n                curr.next = poly2\n                curr = curr.next\n                poly2 = poly2.next\n            else:\n                coef = poly1.coefficient+poly2.coefficient\n                if coef:\n                    curr.next = PolyNode(coef, poly1.power)\n                    curr = curr.next\n                poly1, poly2 = poly1.next, poly2.next\n        curr.next = poly1 or poly2\n        return dummy.next",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

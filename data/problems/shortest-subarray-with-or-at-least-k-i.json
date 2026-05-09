@@ -1,0 +1,41 @@
+{
+  "id": "5872bcd5-0a04-4c55-9523-e947d969c8b9",
+  "slug": "shortest-subarray-with-or-at-least-k-i",
+  "title": "Shortest Subarray With OR at Least K I",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an array <code>nums</code> of <strong>non-negative</strong> integers and an integer <code>k</code>.</p>\n\n<p>An array is called <strong>special</strong> if the bitwise <code>OR</code> of all of its elements is <strong>at least</strong> <code>k</code>.</p>\n\n<p>Return <em>the length of the <strong>shortest</strong> <strong>special</strong> <strong>non-empty</strong> <span data-keyword=\"subarray-nonempty\">subarray</span> of</em> <code>nums</code>, <em>or return</em> <code>-1</code> <em>if no special subarray exists</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2,3], k = 2</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The subarray <code>[3]</code> has <code>OR</code> value of <code>3</code>. Hence, we return <code>1</code>.</p>\n\n<p>Note that <code>[2]</code> is also a special subarray.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,1,8], k = 10</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">3</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The subarray <code>[2,1,8]</code> has <code>OR</code> value of <code>11</code>. Hence, we return <code>3</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [1,2], k = 0</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The subarray <code>[1]</code> has <code>OR</code> value of <code>1</code>. Hence, we return <code>1</code>.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 50</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 50</code></li>\n\t<li><code>0 &lt;= k &lt; 64</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "bit-manipulation",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3]\n2\n[2,1,8]\n10\n[1,2]\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr) = O(n * 30)\n// Space: O(logr) = O(30)\n\n// freq table, two pointers\nclass Solution {\npublic:\n    int minimumSubarrayLength(vector<int>& nums, int k) {\n        const auto& bit_length = [](int x) {\n            return (x ? std::__lg(x) : -1) + 1;\n        };\n    \n        const int total = accumulate(cbegin(nums), cend(nums), 0, [](const auto& x, const auto& y) {\n            return x | y;\n        });\n        if (total < k) {\n            return -1;\n        }\n        vector<int> cnt(bit_length(total));\n        const auto& update = [&](int x, int d, int curr) {\n            for (int i = 0; (1 << i) <= x; ++i) {\n                if (!(x & (1 << i))) {\n                    continue;\n                }\n                if (cnt[i] == 0) {\n                    curr ^= 1 << i;\n                }\n                cnt[i] += d;\n                if (cnt[i] == 0) {\n                    curr ^= 1 << i;\n                }\n            }\n            return curr;\n        };\n\n        int result = size(nums);\n        for (int right = 0, left = 0, curr = 0; right < size(nums); ++right) {\n            curr = update(nums[right], +1, curr);\n            for (; left <= right && curr >= k; ++left) {\n                result = min(result, right - left + 1);\n                curr = update(nums[left], -1, curr);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(n^2)\n// Space: O(1)\n// brute force\nclass Solution2 {\npublic:\n    int minimumSubarrayLength(vector<int>& nums, int k) {\n        static const int INF = numeric_limits<int>::max();\n    \n        int result = INF;\n        for (int left = 0; left < size(nums); ++left) {\n            for (int right = left, curr = 0; right < size(nums); ++right) {\n                curr |= nums[right];\n                if (curr < k) {\n                    continue;\n                }\n                result = min(result, right - left + 1);\n                break;\n            }\n        }\n        return result != INF ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr) = O(n * 30)\n# Space: O(logr) = O(30)\n\n# freq table, two pointers\nclass Solution(object):\n    def minimumSubarrayLength(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def update(x, d, curr):\n            for i in xrange(len(cnt)):\n                if x < (1<<i):\n                    break\n                if not (x&(1<<i)):\n                    continue\n                if cnt[i] == 0:\n                    curr ^= 1<<i\n                cnt[i] += d\n                if cnt[i] == 0:\n                    curr ^= 1<<i\n            return curr\n\n        total = reduce(lambda x, y: x|y, nums)\n        if total < k:\n            return -1\n        cnt = [0]*total.bit_length()\n        result = len(nums)\n        left = curr = 0\n        for right in xrange(len(nums)):\n            curr = update(nums[right], +1, curr)\n            while left <= right and curr >= k:\n                result = min(result, right-left+1)\n                curr = update(nums[left], -1, curr)\n                left += 1\n        return result \n\n\n# Time:  O(n^2)\n# Space: O(1)\n# brute force\nclass Solution2(object):\n    def minimumSubarrayLength(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        result = float(\"inf\")\n        for left in xrange(len(nums)):\n            curr = 0\n            for right in xrange(left, len(nums)):\n                curr |= nums[right]\n                if curr < k:\n                    continue\n                result = min(result, right-left+1)\n                break\n        return result if result != float(\"inf\") else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

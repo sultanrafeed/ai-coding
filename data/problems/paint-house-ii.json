@@ -1,0 +1,40 @@
+{
+  "id": "695942a5-a4a3-4bd5-b30f-097cc702f1d0",
+  "slug": "paint-house-ii",
+  "title": "Paint House II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,5,3],[2,9,4]]\n[[1,3],[2,4]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k)\n// Space: O(k)\n\nclass Solution {\npublic:\n    int minCostII(vector<vector<int>>& costs) {\n        if (costs.empty()) {\n            return 0;\n        }\n        \n        vector<vector<int>> min_cost(2, costs[0]);\n\n        const int n = costs.size();\n        const int k = costs[0].size();\n        for (int i = 1; i < n; ++i) {\n            int smallest = numeric_limits<int>::max(), second_smallest = numeric_limits<int>::max();\n            for (int j = 0; j < k; ++j) {\n                if (min_cost[(i - 1) % 2][j] < smallest) {\n                    second_smallest = smallest;\n                    smallest = min_cost[(i - 1) % 2][j];\n                } else if (min_cost[(i - 1) % 2][j] < second_smallest) {\n                    second_smallest = min_cost[(i - 1) % 2][j];\n                }\n            }\n            for (int j = 0; j < k; ++j) {\n                const int min_j = (min_cost[(i - 1) % 2][j] != smallest) ? smallest : second_smallest;\n                min_cost[i % 2][j] = costs[i][j] + min_j;\n            }\n        }\n\n        return *min_element(min_cost[(n - 1) % 2].cbegin(), min_cost[(n - 1) % 2].cend());\n    }\n};\n\n// Time:  O(n * k)\n// Space: O(k)\nclass Solution2{\npublic:\n    int minCostII(vector<vector<int>>& costs) {\n        if (costs.empty()) {\n            return 0;\n        }\n        auto combine = [](const vector<int>& tmp, const vector<int>& house) {\n                            const int smallest = *min_element(tmp.cbegin(), tmp.cend());\n                            const int i = distance(tmp.begin(), find(tmp.cbegin(), tmp.cend(), smallest));\n                            vector<int> tmp2(tmp);\n                            tmp2.erase(tmp2.begin() + i);\n                            const int second_smallest = *min_element(tmp2.cbegin(), tmp2.cend());\n                            vector<int> min_cost(tmp.size(), smallest);\n                            min_cost[i] = second_smallest;\n                            transform(min_cost.cbegin(), min_cost.cend(), house.cbegin(),\n                                      min_cost.begin(), std::plus<int>());\n                            return min_cost;\n                        };\n        vector<int> min_cost = accumulate(costs.cbegin(), costs.cend(), vector<int>(costs[0].size(), 0), combine);\n        return *min_element(min_cost.cbegin(), min_cost.cend());\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k)\n# Space: O(k)\n\nclass Solution2(object):\n    def minCostII(self, costs):\n        \"\"\"\n        :type costs: List[List[int]]\n        :rtype: int\n        \"\"\"\n        return min(reduce(self.combine, costs)) if costs else 0\n\n    def combine(self, tmp, house):\n        smallest, k, i = min(tmp), len(tmp), tmp.index(min(tmp))\n        tmp, tmp[i] = [smallest] * k, min(tmp[:i] + tmp[i+1:])\n        return map(sum, zip(tmp, house))\n\n\nclass Solution2(object):\n    def minCostII(self, costs):\n        \"\"\"\n        :type costs: List[List[int]]\n        :rtype: int\n        \"\"\"\n        if not costs:\n            return 0\n\n        n = len(costs)\n        k = len(costs[0])\n        min_cost = [costs[0], [0] * k]\n        for i in xrange(1, n):\n            smallest, second_smallest = float(\"inf\"), float(\"inf\")\n            for j in xrange(k):\n                if min_cost[(i - 1) % 2][j] < smallest:\n                    smallest, second_smallest = min_cost[(i - 1) % 2][j], smallest\n                elif min_cost[(i - 1) % 2][j] < second_smallest:\n                    second_smallest = min_cost[(i - 1) % 2][j]\n            for j in xrange(k):\n                min_j = smallest if min_cost[(i - 1) % 2][j] != smallest else second_smallest\n                min_cost[i % 2][j] = costs[i][j] + min_j\n\n        return min(min_cost[(n - 1) % 2])",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

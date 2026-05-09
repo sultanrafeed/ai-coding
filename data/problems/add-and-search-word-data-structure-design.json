@@ -1,0 +1,31 @@
+{
+  "id": "f0136322-9621-435b-96d0-ce490d70717c",
+  "slug": "add-and-search-word-data-structure-design",
+  "title": "Add And Search Word Data Structure Design",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(min(n, h)), per operation\n// Space: O(min(n, h))\n\nclass WordDictionary {\npublic:\n    struct TrieNode {\n        bool isString = false;\n        unordered_map<char, TrieNode *> leaves;\n    };\n\n    WordDictionary() {\n        root_ = new TrieNode();\n        root_->isString = true;\n    }\n\n    // Adds a word into the data structure.\n    void addWord(string word) {\n            auto* p = root_;\n            for (const auto& c : word) {\n                if (p->leaves.find(c) == p->leaves.cend()) {\n                    p->leaves[c] = new TrieNode;\n                }\n                p = p->leaves[c];\n            }\n            p->isString = true;\n    }\n\n    // Returns if the word is in the data structure. A word could\n    // contain the dot character '.' to represent any one letter.\n    bool search(string word) {\n        return searchWord(word, root_, 0);\n    }\n\n    bool searchWord(string word, TrieNode *node, int s) {\n        if (s == word.length()) {\n            return node->isString;\n        }\n        // Match the char.\n        if (node->leaves.find(word[s]) != node->leaves.end()) {\n            return searchWord(word, node->leaves[word[s]], s + 1);\n        } else if (word[s] == '.') {  // Skip the char.\n            for (const auto& i : node->leaves) {\n                if (searchWord(word, i.second, s + 1)) {\n                    return true;\n                }\n            }\n        }\n        return false;\n    }\n\nprivate:\n    TrieNode *root_;\n};\n\n// Your WordDictionary object will be instantiated and called as such:\n// WordDictionary wordDictionary;\n// wordDictionary.addWord(\"word\");\n// wordDictionary.search(\"pattern\");",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(min(n, h)), per operation\n# Space: O(min(n, h))\n\nclass TrieNode(object):\n    # Initialize your data structure here.\n    def __init__(self):\n        self.is_string = False\n        self.leaves = {}\n\n\nclass WordDictionary(object):\n    def __init__(self):\n        self.root = TrieNode()\n\n    # @param {string} word\n    # @return {void}\n    # Adds a word into the data structure.\n    def addWord(self, word):\n        curr = self.root\n        for c in word:\n            if c not in curr.leaves:\n                curr.leaves[c] = TrieNode()\n            curr = curr.leaves[c]\n        curr.is_string = True\n\n    # @param {string} word\n    # @return {boolean}\n    # Returns if the word is in the data structure. A word could\n    # contain the dot character '.' to represent any one letter.\n    def search(self, word):\n        return self.searchHelper(word, 0, self.root)\n\n    def searchHelper(self, word, start, curr):\n        if start == len(word):\n            return curr.is_string\n        if word[start] in curr.leaves:\n            return self.searchHelper(word, start+1, curr.leaves[word[start]])\n        elif word[start] == '.':\n            for c in curr.leaves:\n                if self.searchHelper(word, start+1, curr.leaves[c]):\n                    return True\n\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

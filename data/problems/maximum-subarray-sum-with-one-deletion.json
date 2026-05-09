@@ -1,0 +1,34 @@
+{
+  "id": "55a0fa73-a106-4686-8cbf-56585dd15b18",
+  "slug": "maximum-subarray-sum-with-one-deletion",
+  "title": "Maximum Subarray Sum with One Deletion",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers, return the maximum sum for a <strong>non-empty</strong>&nbsp;subarray (contiguous elements) with at most one element deletion.&nbsp;In other words, you want to choose a subarray and optionally delete one element from it so that there is still at least one element left and the&nbsp;sum of the remaining elements is maximum possible.</p>\n\n<p>Note that the subarray needs to be <strong>non-empty</strong> after deleting one element.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,-2,0,3]\n<strong>Output:</strong> 4\n<strong>Explanation: </strong>Because we can choose [1, -2, 0, 3] and drop -2, thus the subarray [1, 0, 3] becomes the maximum value.</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [1,-2,-2,3]\n<strong>Output:</strong> 3\n<strong>Explanation: </strong>We just choose [3] and it&#39;s the maximum sum.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> arr = [-1,-1,-1,-1]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong>&nbsp;The final subarray needs to be non-empty. You can&#39;t choose [-1] and delete -1 from it, then get an empty subarray to make the sum equals to 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= arr.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-10<sup>4</sup> &lt;= arr[i] &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maximumSum(vector<int>& arr) {\n        int result = numeric_limits<int>::min();\n        int prev = numeric_limits<int>::min();\n        int curr = numeric_limits<int>::min();\n        for (const auto &x : arr) {\n            curr = max(prev, (curr == numeric_limits<int>::min()) ? x : max(curr + x, x));\n            result = max(result, curr);\n            prev = (prev == numeric_limits<int>::min()) ? x : max(prev + x, x);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "class Solution(object):\n    def maximumSum(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        result, prev, curr = float(\"-inf\"), float(\"-inf\"), float(\"-inf\")\n        for x in arr:\n            curr = max(prev, curr+x, x)\n            result = max(result, curr)\n            prev = max(prev+x, x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "9e1cec15-a64a-419b-8b41-24a5aeaacd49",
+  "slug": "make-array-non-decreasing-or-non-increasing",
+  "title": "Make Array Non-decreasing or Non-increasing",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,2,4,5,0]\n[2,2,3,4]\n[0]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// greedy, heap\nclass Solution {\npublic:\n    int convertArray(vector<int>& nums) {\n        const auto& f = [](const auto& begin, const auto& end) {\n            int result = 0;\n            priority_queue<int> max_heap;\n            for (auto it = begin; it != end; ++it) {\n                if (!empty(max_heap) && *it < max_heap.top()) {\n                    result += max_heap.top() - *it; max_heap.pop();\n                    max_heap.emplace(*it);\n                }\n                max_heap.emplace(*it);\n            }\n            return result;\n        };\n        \n        return min(f(cbegin(nums), cend(nums)), f(crbegin(nums), crend(nums)));\n    }    \n};\n\n// Time:  O(n^2)\n// Space: O(n)\n// dp\nclass Solution2 {\npublic:\n    int convertArray(vector<int>& nums) {\n        unordered_set<int> nums_set(cbegin(nums), cend(nums));\n        vector<int> vals(cbegin(nums_set), cend(nums_set));\n        sort(begin(vals), end(vals));\n        const auto& f = [&](const auto& begin, const auto& end) {\n            int result = 0;\n            unordered_map<int, int> dp;  // dp[i]: min(cnt(j) for j in vals if j <= i)\n            for (auto it = begin; it != end; ++it) {\n                int prev = -1;\n                for (const auto& i : vals) {\n                    dp[i] = (prev != -1) ? min(dp[i] + abs(i - *it), dp[prev]) : dp[i] + abs(i - *it);\n                    prev = i;\n                }\n            }\n            return dp[vals.back()];\n        };\n        \n        return min(f(cbegin(nums), cend(nums)), f(crbegin(nums), crend(nums)));\n    }    \n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport heapq\n\n\n# greedy, heap\nclass Solution(object):\n    def convertArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def f(nums):\n            result = 0\n            max_heap = []\n            for x in nums:\n                if max_heap and x < -max_heap[0]:\n                    result += -heapq.heappop(max_heap)-x\n                    heapq.heappush(max_heap, -x)\n                heapq.heappush(max_heap, -x)\n            return result\n        \n        return min(f(nums), f((x for x in reversed(nums))))\n\n\n# Time:  O(n^2)\n# Space: O(n)\nimport collections\n\n\n# dp\nclass Solution2(object):\n    def convertArray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        vals = sorted(set(nums))\n        def f(nums):\n            dp = collections.defaultdict(int)  # dp[i]: min(cnt(j) for j in vals if j <= i)\n            for x in nums:\n                prev = -1\n                for i in vals:\n                    dp[i] = min(dp[i]+abs(i-x), dp[prev]) if prev != -1 else dp[i]+abs(i-x)\n                    prev = i\n            return dp[vals[-1]]\n\n        return min(f(nums), f((x for x in reversed(nums))))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

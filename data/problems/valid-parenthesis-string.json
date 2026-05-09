@@ -1,0 +1,42 @@
+{
+  "id": "fc7ef234-548e-4b83-8fc0-9662582f3ef8",
+  "slug": "valid-parenthesis-string",
+  "title": "Valid Parenthesis String",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a string <code>s</code> containing only three types of characters: <code>&#39;(&#39;</code>, <code>&#39;)&#39;</code> and <code>&#39;*&#39;</code>, return <code>true</code> <em>if</em> <code>s</code> <em>is <strong>valid</strong></em>.</p>\n\n<p>The following rules define a <strong>valid</strong> string:</p>\n\n<ul>\n\t<li>Any left parenthesis <code>&#39;(&#39;</code> must have a corresponding right parenthesis <code>&#39;)&#39;</code>.</li>\n\t<li>Any right parenthesis <code>&#39;)&#39;</code> must have a corresponding left parenthesis <code>&#39;(&#39;</code>.</li>\n\t<li>Left parenthesis <code>&#39;(&#39;</code> must go before the corresponding right parenthesis <code>&#39;)&#39;</code>.</li>\n\t<li><code>&#39;*&#39;</code> could be treated as a single right parenthesis <code>&#39;)&#39;</code> or a single left parenthesis <code>&#39;(&#39;</code> or an empty string <code>&quot;&quot;</code>.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> s = \"()\"\n<strong>Output:</strong> true\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> s = \"(*)\"\n<strong>Output:</strong> true\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> s = \"(*))\"\n<strong>Output:</strong> true\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 100</code></li>\n\t<li><code>s[i]</code> is <code>&#39;(&#39;</code>, <code>&#39;)&#39;</code> or <code>&#39;*&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "dynamic-programming",
+    "stack",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"()\"\n\"(*)\"\n\"(*))\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool checkValidString(string s) {\n        int lower = 0, upper = 0;  // keep lower bound and upper bound of '(' counts\n        for (const auto& c : s) {\n            lower += (c == '(') ? 1 : -1;\n            upper -= (c == ')') ? 1 : -1;\n            if (upper < 0) break;\n            lower = max(lower, 0);\n        }\n        return lower == 0;  // range of '(' count is valid\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def checkValidString(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        lower, upper = 0, 0  # keep lower bound and upper bound of '(' counts\n        for c in s:\n            lower += 1 if c == '(' else -1\n            upper -= 1 if c == ')' else -1\n            if upper < 0: break\n            lower = max(lower, 0)\n        return lower == 0  # range of '(' count is valid",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

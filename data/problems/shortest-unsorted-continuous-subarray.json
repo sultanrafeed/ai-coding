@@ -1,0 +1,38 @@
+{
+  "id": "55ca31f7-cf3b-4bda-949e-3b9b5c2a4b11",
+  "slug": "shortest-unsorted-continuous-subarray",
+  "title": "Shortest Unsorted Continuous Subarray",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, you need to find one <b>continuous subarray</b> such that if you only sort this subarray in non-decreasing order, then the whole array will be sorted in non-decreasing order.</p>\n\n<p>Return <em>the shortest such subarray and output its length</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,6,4,8,10,9,15]\n<strong>Output:</strong> 5\n<strong>Explanation:</strong> You need to sort [6, 4, 8, 10, 9] in ascending order to make the whole array sorted in ascending order.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3,4]\n<strong>Output:</strong> 0\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1]\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>-10<sup>5</sup> &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Can you solve it in <code>O(n)</code> time complexity?",
+  "patterns": [
+    "array",
+    "two-pointers",
+    "stack",
+    "greedy",
+    "sorting",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findUnsortedSubarray(vector<int>& nums) {\n        const auto n = nums.size();\n        auto left = -1, right = -2;\n        auto max_from_left = nums[0], min_from_right = nums.back();\n        for (int i = 1; i < n; ++i) {\n            max_from_left = max(max_from_left, nums[i]);\n            min_from_right = min(min_from_right, nums[n - 1 - i]);\n            if (nums[i] < max_from_left) {\n                right = i;\n            }\n            if (nums[n - 1 - i] > min_from_right) {\n                left = n - 1 - i;\n            }\n        }\n        return right - left + 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def findUnsortedSubarray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        n = len(nums)\n        left, right = -1, -2\n        min_from_right, max_from_left = nums[-1], nums[0]\n        for i in xrange(1, n):\n            max_from_left = max(max_from_left, nums[i])\n            min_from_right = min(min_from_right, nums[n-1-i])\n            if nums[i] < max_from_left: right = i\n            if nums[n-1-i] > min_from_right: left = n-1-i\n\n\n# Time:  O(nlogn)\n# Space: O(n)\nclass Solution2(object):\n    def findUnsortedSubarray(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        a = sorted(nums) #sort the list\n        left, right = 0, len(nums) -1 #define left and right pointer\n        while (nums[left] == a[left] or nums[right] == a[right]):\n            if right - left <= 1:\n                return 0\n            if nums[left] == a[left]:\n                left += 1\n            if nums[right] == a[right]:\n                right -= 1\n        return right - left + 1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

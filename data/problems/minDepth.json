@@ -1,0 +1,25 @@
+{
+  "id": "842d9c5b-758a-42b6-b272-e1bd38d73c8f",
+  "slug": "minDepth",
+  "title": "Mindepth",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(n)\n\n/**\n * Definition for binary tree\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        int minDepth(TreeNode *root) {\n            if(!root)\n                return 0;\n\n            queue<TreeNode *> q;\n            int d = 1;\n            q.push(root);\n            int cnt = q.size();\n\n            // BFS\n            while(!q.empty()) {\n                TreeNode *n = q.front();\n                q.pop();\n\n                if(!n->left && !n->right)\n                    return d;\n                if(n->left)\n                    q.push(n->left);\n                if(n->right)\n                    q.push(n->right);\n\n                cnt--;\n                if(!cnt) {\n                    cnt = q.size();\n                    d++;\n                }\n            }\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

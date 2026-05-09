@@ -1,0 +1,36 @@
+{
+  "id": "b17e74d5-64f1-439e-9e50-6b1340803e04",
+  "slug": "minimum-number-of-refueling-stops",
+  "title": "Minimum Number of Refueling Stops",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>A car travels from a starting position to a destination which is <code>target</code> miles east of the starting position.</p>\n\n<p>There are gas stations along the way. The gas stations are represented as an array <code>stations</code> where <code>stations[i] = [position<sub>i</sub>, fuel<sub>i</sub>]</code> indicates that the <code>i<sup>th</sup></code> gas station is <code>position<sub>i</sub></code> miles east of the starting position and has <code>fuel<sub>i</sub></code> liters of gas.</p>\n\n<p>The car starts with an infinite tank of gas, which initially has <code>startFuel</code> liters of fuel in it. It uses one liter of gas per one mile that it drives. When the car reaches a gas station, it may stop and refuel, transferring all the gas from the station into the car.</p>\n\n<p>Return <em>the minimum number of refueling stops the car must make in order to reach its destination</em>. If it cannot reach the destination, return <code>-1</code>.</p>\n\n<p>Note that if the car reaches a gas station with <code>0</code> fuel left, the car can still refuel there. If the car reaches the destination with <code>0</code> fuel left, it is still considered to have arrived.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> target = 1, startFuel = 1, stations = []\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> We can reach the target without refueling.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> target = 100, startFuel = 1, stations = [[10,100]]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> We can not reach the target (or even the first gas station).\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> target = 100, startFuel = 10, stations = [[10,60],[20,30],[30,30],[60,40]]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> We start with 10 liters of fuel.\nWe drive to position 10, expending 10 liters of fuel.  We refuel from 0 liters to 60 liters of gas.\nThen, we drive from position 10 to position 60 (expending 50 liters of fuel),\nand refuel from 10 liters to 50 liters of gas.  We then drive to and reach the target.\nWe made 2 refueling stops along the way, so we return 2.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= target, startFuel &lt;= 10<sup>9</sup></code></li>\n\t<li><code>0 &lt;= stations.length &lt;= 500</code></li>\n\t<li><code>1 &lt;= position<sub>i</sub> &lt; position<sub>i+1</sub> &lt; target</code></li>\n\t<li><code>1 &lt;= fuel<sub>i</sub> &lt; 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int minRefuelStops(int target, int startFuel, vector<vector<int>>& stations) {\n        priority_queue<int> max_heap;\n        stations.push_back(vector<int>{target, numeric_limits<int>::min()});\n\n        int result = 0, prev = 0;\n        for (const auto& station : stations) {\n            startFuel -= station[0] - prev;\n            while (!max_heap.empty() && startFuel < 0) {\n                startFuel += max_heap.top(); max_heap.pop();\n                ++result;\n            }\n            if (startFuel < 0) {\n                return -1;\n            }\n            max_heap.emplace(station[1]);\n            prev = station[0];\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport heapq\n\n\nclass Solution(object):\n    def minRefuelStops(self, target, startFuel, stations):\n        \"\"\"\n        :type target: int\n        :type startFuel: int\n        :type stations: List[List[int]]\n        :rtype: int\n        \"\"\"\n        max_heap = []\n        stations.append((target, float(\"inf\")))\n\n        result = prev = 0\n        for location, capacity in stations:\n            startFuel -= location - prev\n            while max_heap and startFuel < 0:\n                startFuel += -heapq.heappop(max_heap)\n                result += 1\n            if startFuel < 0:\n                return -1\n            heapq.heappush(max_heap, -capacity)\n            prev = location\n\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

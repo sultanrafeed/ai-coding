@@ -1,0 +1,42 @@
+{
+  "id": "d8b2aa14-5079-4e07-9787-216c47df605d",
+  "slug": "subarrays-with-k-different-integers",
+  "title": "Subarrays with K Different Integers",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> and an integer <code>k</code>, return <em>the number of <strong>good subarrays</strong> of </em><code>nums</code>.</p>\n\n<p>A <strong>good array</strong> is an array where the number of different integers in that array is exactly <code>k</code>.</p>\n\n<ul>\n\t<li>For example, <code>[1,2,3,1,2]</code> has <code>3</code> different integers: <code>1</code>, <code>2</code>, and <code>3</code>.</li>\n</ul>\n\n<p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,1,2,3], k = 2\n<strong>Output:</strong> 7\n<strong>Explanation:</strong> Subarrays formed with exactly 2 different integers: [1,2], [2,1], [1,2], [2,3], [1,2,1], [2,1,2], [1,2,1,2]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,1,3,4], k = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> Subarrays formed with exactly 3 different integers: [1,2,1,3], [2,1,3], [1,3,4].\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= nums[i], k &lt;= nums.length</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sliding-window",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,1,2,3]\n2\n[1,2,1,3,4]\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(k)\n\nclass Solution {\npublic:\n    int subarraysWithKDistinct(vector<int>& A, int K) {\n        return atMostK(A, K) - atMostK(A, K - 1);\n    }\n\nprivate:\n    int atMostK(const vector<int>& A, int K) {\n        int result = 0, left = 0;\n        unordered_map<int, int> count;\n        for (int right = 0; right < A.size(); ++right) {\n            ++count[A[right]];\n            while (count.size() > K) {\n                if (!--count[A[left]]) {\n                    count.erase(A[left]);\n                }\n                ++left;\n            }\n            result += right - left + 1;\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(k)\nclass Solution2 {\npublic:\n    int subarraysWithKDistinct(vector<int>& A, int K) {\n        Window window1, window2;\n        int result = 0, left1 = 0, left2 = 0;\n        for (const auto& i : A) {\n            window1.add(i);\n            while (window1.size() > K) {\n                window1.remove(A[left1]);\n                ++left1;\n            }\n            window2.add(i);\n            while (window2.size() >= K) {\n                window2.remove(A[left2]);\n                ++left2;\n            }\n            result += left2 - left1;\n        }\n        return result;\n    }\n\nprivate:\n    class Window {\n    public:\n        void add(int x) {\n            ++count_[x];\n        }\n        \n        void remove(int x) {\n            --count_[x];\n            if (count_[x] == 0) {\n                count_.erase(x);\n            }\n        }\n        \n        size_t size() const {\n            return count_.size();\n        }\n    \n    private:\n        unordered_map<int, int> count_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(k)\n\nimport collections\n\n\nclass Solution(object):\n    def subarraysWithKDistinct(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        def atMostK(A, K):\n            count = collections.defaultdict(int)\n            result, left = 0, 0\n            for right in xrange(len(A)):\n                count[A[right]] += 1\n                while len(count) > K:\n                    count[A[left]] -= 1\n                    if count[A[left]] == 0:\n                        count.pop(A[left])\n                    left += 1\n                result += right-left+1\n            return result\n        \n        return atMostK(A, K) - atMostK(A, K-1)\n\n\n# Time:  O(n)\n# Space: O(k)\nclass Window(object):\n    def __init__(self):\n        self.__count = collections.defaultdict(int)\n\n    def add(self, x):\n        self.__count[x] += 1\n\n    def remove(self, x):\n        self.__count[x] -= 1\n        if self.__count[x] == 0:\n            self.__count.pop(x)\n            \n    def size(self):\n        return len(self.__count)\n\n\nclass Solution2(object):\n    def subarraysWithKDistinct(self, A, K):\n        \"\"\"\n        :type A: List[int]\n        :type K: int\n        :rtype: int\n        \"\"\"\n        window1, window2 = Window(), Window()\n        result, left1, left2 = 0, 0, 0\n        for i in A:\n            window1.add(i)\n            while window1.size() > K:\n                window1.remove(A[left1])\n                left1 += 1\n            window2.add(i)\n            while window2.size() >= K:\n                window2.remove(A[left2])\n                left2 += 1\n            result += left2-left1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

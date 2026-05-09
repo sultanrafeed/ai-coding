@@ -1,0 +1,40 @@
+{
+  "id": "30abdb21-f0e6-4813-bf91-3914a510881c",
+  "slug": "smallest-good-base",
+  "title": "Smallest Good Base",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer <code>n</code> represented as a string, return <em>the smallest <strong>good base</strong> of</em> <code>n</code>.</p>\n\n<p>We call <code>k &gt;= 2</code> a <strong>good base</strong> of <code>n</code>, if all digits of <code>n</code> base <code>k</code> are <code>1</code>&#39;s.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = &quot;13&quot;\n<strong>Output:</strong> &quot;3&quot;\n<strong>Explanation:</strong> 13 base 3 is 111.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = &quot;4681&quot;\n<strong>Output:</strong> &quot;8&quot;\n<strong>Explanation:</strong> 4681 base 8 is 11111.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = &quot;1000000000000000000&quot;\n<strong>Output:</strong> &quot;999999999999999999&quot;\n<strong>Explanation:</strong> 1000000000000000000 base 999999999999999999 is 11.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n</code> is an integer in the range <code>[3, 10<sup>18</sup>]</code>.</li>\n\t<li><code>n</code> does not contain any leading zeros.</li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"13\"\n\"4681\"\n\"1000000000000000000\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((logn)^2)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string smallestGoodBase(string n) {\n        unsigned long long num = stoll(n);\n        for (int l = log(num) / log(2); l >= 2; --l) {\n            unsigned long long b = pow(num, 1.0 / l), sum = 0, curr = 1;\n            for (int i = 0; i <= l; ++i, curr *= b) {\n                sum += curr;\n            }\n            if (sum == num) {\n                return to_string(b);\n            }\n        }  \n        return to_string(num - 1);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn * log(logn))\n# Space: O(1)\n\nimport math\n\n\nclass Solution(object):\n    def smallestGoodBase(self, n):\n        \"\"\"\n        :type n: str\n        :rtype: str\n        \"\"\"\n        num = int(n)\n        max_len = int(math.log(num,2))\n        for l in xrange(max_len, 1, -1):\n            b = int(num ** (l**-1))\n            if (b**(l+1)-1) // (b-1) == num:\n                return str(b)\n        return str(num-1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

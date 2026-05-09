@@ -1,0 +1,41 @@
+{
+  "id": "9fcd4e89-42e4-4662-8020-5475a401c380",
+  "slug": "verifying-an-alien-dictionary",
+  "title": "Verifying an Alien Dictionary",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>In an alien language, surprisingly, they also use English lowercase letters, but possibly in a different <code>order</code>. The <code>order</code> of the alphabet is some permutation of lowercase letters.</p>\n\n<p>Given a sequence of <code>words</code> written in the alien language, and the <code>order</code> of the alphabet, return <code>true</code> if and only if the given <code>words</code> are sorted lexicographically in this alien language.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;hello&quot;,&quot;leetcode&quot;], order = &quot;hlabcdefgijkmnopqrstuvwxyz&quot;\n<strong>Output:</strong> true\n<strong>Explanation: </strong>As &#39;h&#39; comes before &#39;l&#39; in this language, then the sequence is sorted.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;word&quot;,&quot;world&quot;,&quot;row&quot;], order = &quot;worldabcefghijkmnpqstuvxyz&quot;\n<strong>Output:</strong> false\n<strong>Explanation: </strong>As &#39;d&#39; comes after &#39;l&#39; in this language, then words[0] &gt; words[1], hence the sequence is unsorted.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;apple&quot;,&quot;app&quot;], order = &quot;abcdefghijklmnopqrstuvwxyz&quot;\n<strong>Output:</strong> false\n<strong>Explanation: </strong>The first three characters &quot;app&quot; match, and the second string is shorter (in size.) According to lexicographical rules &quot;apple&quot; &gt; &quot;app&quot;, because &#39;l&#39; &gt; &#39;&empty;&#39;, where &#39;&empty;&#39; is defined as the blank character which is less than any other character (<a href=\"https://en.wikipedia.org/wiki/Lexicographical_order\" target=\"_blank\">More info</a>).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= words.length &lt;= 100</code></li>\n\t<li><code>1 &lt;= words[i].length &lt;= 20</code></li>\n\t<li><code>order.length == 26</code></li>\n\t<li>All characters in <code>words[i]</code> and <code>order</code> are English lowercase letters.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"hello\",\"leetcode\"]\n\"hlabcdefgijkmnopqrstuvwxyz\"\n[\"word\",\"world\",\"row\"]\n\"worldabcefghijkmnpqstuvxyz\"\n[\"apple\",\"app\"]\n\"abcdefghijklmnopqrstuvwxyz\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * l), l is the average length of words\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool isAlienSorted(vector<string>& words, string order) {\n        vector<int> lookup(order.size());\n        for (int i = 0; i < order.size(); ++i) {\n            lookup[order[i] - 'a'] = i;\n        }\n        for (int i = 0; i < words.size() - 1; ++i) {\n            const auto& word1 = words[i];\n            const auto& word2 = words[i + 1];\n            int j = 0;\n            for (; j < min(word1.length(), word2.length()); ++j) {\n                if (word1[j] != word2[j]) {\n                    if (lookup[word1[j] - 'a'] > lookup[word2[j] - 'a']) {\n                        return false;\n                    }\n                    break;\n                }\n            }\n            if (j == min(word1.length(), word2.length()) &&\n                word1.length() > word2.length()) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * l), l is the average length of words\n# Space: O(1)\n\nclass Solution(object):\n    def isAlienSorted(self, words, order):\n        \"\"\"\n        :type words: List[str]\n        :type order: str\n        :rtype: bool\n        \"\"\"\n        lookup = {c: i for i, c in enumerate(order)}\n        for i in xrange(len(words)-1):\n            word1 = words[i]\n            word2 = words[i+1]\n            for k in xrange(min(len(word1), len(word2))):\n                if word1[k] != word2[k]:\n                    if lookup[word1[k]] > lookup[word2[k]]:\n                        return False\n                    break\n            else:\n                if len(word1) > len(word2):\n                    return False\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

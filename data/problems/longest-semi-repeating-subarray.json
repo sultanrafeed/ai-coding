@@ -1,0 +1,41 @@
+{
+  "id": "e73d454d-0f51-4ecd-b701-562999a656e2",
+  "slug": "longest-semi-repeating-subarray",
+  "title": "Longest Semi-Repeating Subarray",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,3,1,2,3,4]\n2\n[1,1,1,1,1]\n4\n[1,1,1,1,1]\n0",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// freq table, two pointers\nclass Solution {\npublic:\n    int longestSubarray(vector<int>& nums, int k) {\n        unordered_map<int, int> cnt;\n        int left = 0;\n        for (int right = 0, repeat = 0; right < size(nums); ++right) {\n            if (++cnt[nums[right]] == 2) {\n                ++repeat;\n            }\n            if (repeat > k) {\n                if (cnt[nums[left]]-- == 2) {\n                    --repeat;\n                }\n                if (!cnt[nums[left]]) {\n                    cnt.erase(nums[left]);\n                }\n                ++left;\n            }\n        }\n        return size(nums) - left;\n    }\n};\n\n// Time:  O(n)\n// Space: O(n)\n// freq table, two pointers\nclass Solution2 {\npublic:\n    int longestSubarray(vector<int>& nums, int k) {\n        unordered_map<int, int> cnt;\n        int result = 0;\n        for (int right = 0, left = 0, repeat = 0; right < size(nums); ++right) {\n            if (++cnt[nums[right]] == 2) {\n                ++repeat;\n            }\n            for (; repeat > k; ++left) {\n                if (cnt[nums[left]]-- == 2) {\n                    --repeat;\n                }\n                if (!cnt[nums[left]]) {\n                    cnt.erase(nums[left]);\n                }\n            }\n            result = max(result, right - left + 1);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\n# freq table, two pointers\nclass Solution(object):\n    def longestSubarray(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        cnt = collections.defaultdict(int)\n        result = left = repeat = 0\n        for right in xrange(len(nums)):\n            cnt[nums[right]] += 1\n            if cnt[nums[right]] == 2:\n                repeat += 1\n            if repeat > k:\n                if cnt[nums[left]] == 2:\n                    repeat -= 1\n                cnt[nums[left]] -= 1\n                if not cnt[nums[left]]:\n                    del cnt[nums[left]]\n                left += 1\n        return len(nums)-left\n\n\n# Time:  O(n)\n# Space: O(n)\nimport collections\n\n\n# freq table, two pointers\nclass Solution2(object):\n    def longestSubarray(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        cnt = collections.defaultdict(int)\n        result = left = repeat = 0\n        for right in xrange(len(nums)):\n            cnt[nums[right]] += 1\n            if cnt[nums[right]] == 2:\n                repeat += 1\n            while repeat > k:\n                if cnt[nums[left]] == 2:\n                    repeat -= 1\n                cnt[nums[left]] -= 1\n                if not cnt[nums[left]]:\n                    del cnt[nums[left]]\n                left += 1\n            result = max(result, right-left+1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

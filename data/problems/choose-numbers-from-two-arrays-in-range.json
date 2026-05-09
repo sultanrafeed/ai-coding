@@ -1,0 +1,40 @@
+{
+  "id": "17d11db0-44e8-4270-85a3-32f43389e4de",
+  "slug": "choose-numbers-from-two-arrays-in-range",
+  "title": "Choose Numbers From Two Arrays in Range",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1,2,5]\n[2,6,3]\n[0,1]\n[1,0]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2 * v), v is max(max(nums1), max(nums2))\n// Space: O(n * v)\n\n// dp\nclass Solution {\npublic:\n    int countSubranges(vector<int>& nums1, vector<int>& nums2) {\n        static const int MOD = 1e9 + 7;\n        \n        int result = 0;\n        unordered_map<int, int> dp;\n        for (int i = 0; i < size(nums1); ++i) {\n            unordered_map<int, int> new_dp;\n            ++new_dp[nums1[i]];\n            ++new_dp[-nums2[i]];\n            for (const auto& [v, c] : dp) {\n                new_dp[v + nums1[i]] = (new_dp[v + nums1[i]] + c) % MOD;\n                new_dp[v - nums2[i]] = (new_dp[v - nums2[i]] + c) % MOD;\n            }\n            dp = move(new_dp);\n            if (dp.count(0)) {\n                result = (result + dp[0]) % MOD;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2 * v), v is max(max(nums1), max(nums2))\n# Space: O(n * v)\n\nimport collections\nimport itertools\n\n\n# dp\nclass Solution(object):\n    def countSubranges(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        MOD = 10**9+7\n\n        result = 0\n        dp = collections.Counter()\n        for x, y in itertools.izip(nums1, nums2):\n            new_dp = collections.Counter()\n            new_dp[x] += 1\n            new_dp[-y] += 1\n            for v, c in dp.iteritems():\n                new_dp[v+x] = (new_dp[v+x]+c)%MOD\n                new_dp[v-y] = (new_dp[v-y]+c)%MOD\n            dp = new_dp\n            result = (result+dp[0])%MOD\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

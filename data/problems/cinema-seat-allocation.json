@@ -1,0 +1,36 @@
+{
+  "id": "1d93c7d9-2ffe-430a-9f25-000b0e8c8fdf",
+  "slug": "cinema-seat-allocation",
+  "title": "Cinema Seat Allocation",
+  "difficulty": "medium",
+  "descriptionHtml": "<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/02/14/cinema_seats_1.png\" style=\"width: 400px; height: 149px;\" /></p>\n\n<p>A cinema&nbsp;has <code>n</code>&nbsp;rows of seats, numbered from 1 to <code>n</code>&nbsp;and there are ten&nbsp;seats in each row, labelled from 1&nbsp;to 10&nbsp;as shown in the figure above.</p>\n\n<p>Given the array <code>reservedSeats</code> containing the numbers of seats already reserved, for example, <code>reservedSeats[i] = [3,8]</code>&nbsp;means the seat located in row <strong>3</strong> and labelled with <b>8</b>&nbsp;is already reserved.</p>\n\n<p><em>Return the maximum number of four-person groups&nbsp;you can assign on the cinema&nbsp;seats.</em> A four-person group&nbsp;occupies four&nbsp;adjacent seats <strong>in one single row</strong>. Seats across an aisle (such as [3,3]&nbsp;and [3,4]) are not considered to be adjacent, but there is an exceptional case&nbsp;on which an aisle split&nbsp;a four-person group, in that case, the aisle split&nbsp;a four-person group in the middle,&nbsp;which means to have two people on each side.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<p><img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/02/14/cinema_seats_3.png\" style=\"width: 400px; height: 96px;\" /></p>\n\n<pre>\n<strong>Input:</strong> n = 3, reservedSeats = [[1,2],[1,3],[1,8],[2,6],[3,1],[3,10]]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The figure above shows the optimal allocation for four groups, where seats mark with blue are already reserved and contiguous seats mark with orange are for one group.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 2, reservedSeats = [[2,1],[1,8],[2,6]]\n<strong>Output:</strong> 2\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 4, reservedSeats = [[4,3],[1,4],[4,6],[1,7]]\n<strong>Output:</strong> 4\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10^9</code></li>\n\t<li><code>1 &lt;=&nbsp;reservedSeats.length &lt;= min(10*n, 10^4)</code></li>\n\t<li><code>reservedSeats[i].length == 2</code></li>\n\t<li><code>1&nbsp;&lt;=&nbsp;reservedSeats[i][0] &lt;= n</code></li>\n\t<li><code>1 &lt;=&nbsp;reservedSeats[i][1] &lt;= 10</code></li>\n\t<li>All <code>reservedSeats[i]</code> are distinct.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int maxNumberOfFamilies(int n, vector<vector<int>>& reservedSeats) {\n        unordered_map<int, unordered_map<int, bool>> lookup;\n        for (const auto& seat : reservedSeats) {\n            if (2 <= seat[1] && seat[1] <= 5) {\n                lookup[seat[0]][0] = true;\n            }\n            if (4 <= seat[1] && seat[1] <= 7) {\n                lookup[seat[0]][1] = true;\n            }\n            if (6 <= seat[1] && seat[1] <= 9) {\n                lookup[seat[0]][2] = true;\n            }\n        }\n        int result = 2 * n;\n        for (auto& [_, reserved] : lookup) {\n            if (!reserved[0] && !reserved[2]) {\n                continue;\n            }\n            if (!reserved[0] || !reserved[1] || !reserved[2]) {\n                --result;\n                continue;\n            }\n            result -= 2;\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int maxNumberOfFamilies(int n, vector<vector<int>>& reservedSeats) {\n        sort(begin(reservedSeats), end(reservedSeats));\n        int result = 2 * n;\n        for (int i = 0; i < reservedSeats.size();) {\n            unordered_map<int, bool> reserved;\n            int curr = reservedSeats[i][0];\n            while (i < reservedSeats.size() && reservedSeats[i][0] == curr) {\n                if (2 <= reservedSeats[i][1] && reservedSeats[i][1] <= 5) {\n                    reserved[0] = true;\n                }\n                if (4 <= reservedSeats[i][1] && reservedSeats[i][1] <= 7) {\n                    reserved[1] = true;\n                }\n                if (6 <= reservedSeats[i][1] && reservedSeats[i][1] <= 9) {\n                    reserved[2] = true;\n                }\n                ++i;\n            }\n            if (!reserved[0] && !reserved[2]) {\n                continue;\n            }\n            if (!reserved[0] || !reserved[1] || !reserved[2]) {\n                --result;\n                continue;\n            }\n            result -= 2;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def maxNumberOfFamilies(self, n, reservedSeats):\n        \"\"\"\n        :type n: int\n        :type reservedSeats: List[List[int]]\n        :rtype: int\n        \"\"\"\n        lookup = collections.defaultdict(lambda: [False]*3)\n        for r, c in reservedSeats:\n            if 2 <= c <= 5:\n                lookup[r][0] = True\n            if 4 <= c <= 7:\n                lookup[r][1] = True\n            if 6 <= c <= 9:\n                lookup[r][2] = True\n        result = 2*n\n        for a, b, c in lookup.itervalues():\n            if not a and not c:\n                continue\n            if not a or not b or not c:\n                result -= 1\n                continue\n            result -= 2\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(1)\nclass Solution2(object):\n    def maxNumberOfFamilies(self, n, reservedSeats):\n        \"\"\"\n        :type n: int\n        :type reservedSeats: List[List[int]]\n        :rtype: int\n        \"\"\"\n        reservedSeats.sort()\n        result, i = 2*n, 0\n        while i < len(reservedSeats):\n            reserved = [False]*3\n            curr = reservedSeats[i][0]\n            while i < len(reservedSeats) and reservedSeats[i][0] == curr:\n                _, c  = reservedSeats[i]\n                if 2 <= c <= 5:\n                    reserved[0] = True\n                if 4 <= c <= 7:\n                    reserved[1] = True\n                if 6 <= c <= 9:\n                    reserved[2] = True\n                i += 1\n            if not reserved[0] and not reserved[2]:\n                continue\n            if not all(reserved):\n                result -= 1\n                continue\n            result -= 2\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

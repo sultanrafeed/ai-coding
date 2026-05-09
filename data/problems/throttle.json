@@ -1,0 +1,31 @@
+{
+  "id": "5eb7c3d6-1f4e-4860-b338-53cc503db880",
+  "slug": "throttle",
+  "title": "Throttle",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "100\n[{\"t\":20,\"inputs\":[1]}]\n50\n[{\"t\":50,\"inputs\":[1]},{\"t\":75,\"inputs\":[2]}]\n70\n[{\"t\":50,\"inputs\":[1]},{\"t\":75,\"inputs\":[2]},{\"t\":90,\"inputs\":[8]},{\"t\": 140, \"inputs\":[5,7]},{\"t\": 300, \"inputs\": [9,4]}]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\ntype F = (...args: any[]) => void\n\nfunction throttle(fn: F, t: number): F {\n    let pending = false;\n    let nxtArgs;\n    const wrapper = (...args) => {\n        nxtArgs = args;\n        if (pending) {\n            return;\n        }\n        pending = true;\n        nxtArgs = undefined;\n        fn(...args);\n        setTimeout(() => {\n            pending = false;\n            if (nxtArgs) {\n                wrapper(...nxtArgs);\n            }\n        }, t);\n    }\n    return wrapper;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

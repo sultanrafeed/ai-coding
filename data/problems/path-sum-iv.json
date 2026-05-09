@@ -1,0 +1,37 @@
+{
+  "id": "91c8e794-9f18-49f5-a167-1fea83010403",
+  "slug": "path-sum-iv",
+  "title": "Path Sum IV",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "tree",
+    "depth-first-search",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(p), p is the number of paths\n\nclass Solution {\npublic:\n    int pathSum(vector<int>& nums) {\n        if (nums.empty()) {\n            return 0;\n        }\n        int result = 0;\n        queue<node> q;\n        node dummy(10);\n        auto parent_ptr = &dummy;\n        for (const auto& num : nums) {\n            node child(num);\n            while (!parent_ptr->isParent(child)) {\n                result += parent_ptr->leaf ? parent_ptr->val : 0;\n                parent_ptr = &q.front();\n                q.pop();\n            }\n            parent_ptr->leaf = false;\n            child.val += parent_ptr->val;\n            q.emplace(move(child));\n        }\n        while (!q.empty()) {\n            result += q.front().val;\n            q.pop();\n        }\n        return result;\n    }\n\nprivate:\n    struct node {\n        int level, i, val;\n        bool leaf;\n        node(int n) : level(n / 100 - 1), i((n % 100) / 10 - 1), val(n % 10), leaf(true) {};\n        inline bool isParent(const node& other) {\n            return level == other.level - 1 && i == other.i / 2;\n        };\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(p), p is the number of paths\n\nimport collections\n\n\nclass Solution(object):\n    def pathSum(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        class Node(object):\n            def __init__(self, num):\n                self.level = num/100 - 1\n                self.i = (num%100)/10 - 1\n                self.val = num%10\n                self.leaf = True\n\n            def isParent(self, other):\n                return self.level == other.level-1 and \\\n                       self.i == other.i/2\n\n        if not nums:\n            return 0\n        result = 0\n        q = collections.deque()\n        dummy = Node(10)\n        parent = dummy\n        for num in nums:\n            child = Node(num)\n            while not parent.isParent(child):\n                result += parent.val if parent.leaf else 0\n                parent = q.popleft()\n            parent.leaf = False\n            child.val += parent.val\n            q.append(child)\n        while q:\n            result += q.pop().val\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

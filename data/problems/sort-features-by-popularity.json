@@ -1,0 +1,36 @@
+{
+  "id": "002a879b-709b-4f24-8443-dac1f83422aa",
+  "slug": "sort-features-by-popularity",
+  "title": "Sort Features by Popularity",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<string> sortFeatures(vector<string>& features, vector<string>& responses) {\n        unordered_set<string> features_set(cbegin(features), cend(features));\n        unordered_map<string, int> order;\n        for (int i = 0; i < size(features); ++i) {\n            order[features[i]] = i;\n        }\n        unordered_map<string, int> freq;\n        for (const auto&r : responses) {\n            const auto& words = split(r, ' ');\n            unordered_set<string> words_set(cbegin(words), cend(words));\n            for (const auto& word : words_set) {\n                if (features_set.count(word)) {\n                    ++freq[word];\n                }\n            }\n        }\n        sort(begin(features), end(features),\n             [&freq, &order](const auto& a, const auto& b) {\n                 return pair(-freq[a], order[a]) < pair(-freq[b], order[b]);\n             });\n        return features;\n    }\n\nprivate:\n    vector<string> split(const string& s, const char delim) {\n        vector<string> tokens;\n        stringstream ss(s);\n        string token;\n        while (getline(ss, token, delim)) {\n            if (!empty(token)) {\n                tokens.emplace_back(token);\n            }\n        }\n        return tokens;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def sortFeatures(self, features, responses):\n        \"\"\"\n        :type features: List[str]\n        :type responses: List[str]\n        :rtype: List[str]\n        \"\"\"\n        features_set = set(features)\n        order = {word: i for i, word in enumerate(features)}\n        freq = collections.defaultdict(int)\n        for r in responses:\n            for word in set(r.split(' ')):\n                if word in features_set:\n                    freq[word] += 1\n        features.sort(key=lambda x: (-freq[x], order[x]))\n        return features",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

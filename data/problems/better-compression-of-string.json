@@ -1,0 +1,42 @@
+{
+  "id": "a9551abd-b257-489b-83e3-d186a46bc0bf",
+  "slug": "better-compression-of-string",
+  "title": "Better Compression of String",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sorting",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"a3c9b2c1\"\n\"c2b3a1\"\n\"a2b4c1\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + 26)\n// Space: O(26)\n\n// freq table, counting sort\nclass Solution {\npublic:\n    string betterCompression(string compressed) {\n        vector<int> cnt(26);\n        for (int i = 0, x = -1, curr = 0; i < size(compressed); ++i) {\n            if (!isdigit(compressed[i])) {\n                x = compressed[i] - 'a';\n                continue;\n            }\n            curr = curr * 10 + (compressed[i] - '0');\n            if (i + 1 == size(compressed) || !isdigit(compressed[i + 1])) {\n                cnt[x] += curr;\n                curr = 0;\n            }\n        }\n        string result;\n        for (int i = 0; i < size(cnt); ++i) {\n            if (!cnt[i]) {\n                continue;\n            }\n            result.push_back('a' + i);\n            result.append(to_string(cnt[i]));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + 26)\n# Space: O(26)\n\n# freq table, counting sort\nclass Solution(object):\n    def betterCompression(self, compressed):\n        \"\"\"\n        :type compressed: str\n        :rtype: str\n        \"\"\"\n        cnt = [0]*26\n        x, curr = -1, 0\n        for i in xrange(len(compressed)):\n            if not compressed[i].isdigit():\n                x = ord(compressed[i])-ord('a')\n                continue\n            curr = curr*10+int(compressed[i])\n            if i+1 == len(compressed) or not compressed[i+1].isdigit():\n                cnt[x] += curr\n                curr = 0\n        return \"\".join(\"%s%s\" % (chr(ord('a')+i), x) for i, x in enumerate(cnt) if x)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

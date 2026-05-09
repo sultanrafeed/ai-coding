@@ -1,0 +1,36 @@
+{
+  "id": "69060d06-6aa2-48fb-9489-51ee36f8fc21",
+  "slug": "minimum-operations-to-make-all-grid-elements-equal",
+  "title": "Minimum Operations to Make All Grid Elements Equal",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "matrix",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(k * n)\n\n// sliding window, difference array, greedy\nclass Solution {\npublic:\n    long long minOperations(vector<vector<int>>& grid, int k) {\n        int64_t c = 0, target = 0, mn = numeric_limits<int64_t>::min();\n        bool found = false;\n        vector<vector<int64_t>> lookup(k, vector<int64_t>(size(grid[0])));\n        vector<int64_t> cnt(size(grid[0]));\n        for (int i = 0; i < size(grid); ++i) {\n            int64_t total = 0;\n            for (int j = 0; j < size(grid[0]); ++j) {\n                total += cnt[j];\n                const auto& diff = -(grid[i][j] + total);  // grid[i][j]+total+diff = target\n                if (i + k - 1 < size(grid) && j + k - 1 < size(grid[0])) {\n                    lookup[i % k][j] = diff;\n                    cnt[j] += diff;\n                    total += diff;\n                    c += diff;\n                    if (i % k == 0 && j % k == 0) {  // target+diff >= 0, target >= -diff\n                        mn = max(mn, -diff);\n                    } else if (diff < 0) {  // diff >= 0\n                        return -1;\n                    }\n                } else {\n                    if ((i / k + 1) * k <= size(grid) && (j / k + 1) * k <= size(grid[0])) {\n                        if (diff) {\n                            return -1;\n                        }\n                    } else {\n                        if (!found) {\n                            found = true;\n                            target = -diff;\n                        } else if (target != -diff) {\n                            return -1;\n                        }\n                    }\n                }\n                if (j - k + 1 >= 0) {\n                    total -= cnt[j - k + 1];\n                }\n            }\n            if (i - k + 1 >= 0) {\n                for (int j = 0; j < size(grid[0]); ++j) {\n                    cnt[j] -= lookup[(i - k + 1) % k][j];\n                    lookup[(i - k + 1) % k][j] = 0;\n                }\n            }\n        }\n        if (!found) {\n            target = mn;\n        } else if (target < mn) {\n            return -1;\n        }\n        return c + target * ((size(grid) / k) * (size(grid[0]) / k));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(k * n)\n\n# sliding window, greedy, difference array\nclass Solution(object):\n    def minOperations(self, grid, k):\n        \"\"\"\n        :type grid: List[List[int]]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        c, target, mn = 0, 0, float(\"-inf\")\n        found = False\n        lookup = [[0]*len(grid[0]) for _ in xrange(k)]\n        cnt = [0]*len(grid[0])\n        for i in xrange(len(grid)):\n            total = 0\n            for j in xrange(len(grid[0])):\n                total += cnt[j]\n                diff = -(grid[i][j]+total)  # grid[i][j]+total+diff = target\n                if i+k-1 < len(grid) and j+k-1 < len(grid[0]):\n                    lookup[i%k][j] = diff\n                    cnt[j] += diff\n                    total += diff\n                    c += diff\n                    if i%k == 0 and j%k == 0:  # target+diff >= 0, target >= -diff\n                        mn = max(mn, -diff)\n                    elif not diff >= 0:  # diff >= 0\n                        return -1\n                else:\n                    if (i//k+1)*k <= len(grid) and (j//k+1)*k <= len(grid[0]):\n                        if diff:\n                            return -1\n                    else:\n                        if not found:\n                            found = True\n                            target = -diff\n                        elif target != -diff:\n                            return -1\n                if j-k+1 >= 0:\n                    total -= cnt[j-k+1]\n            if i-k+1 >= 0:\n                for j in xrange(len(grid[0])):\n                    cnt[j] -= lookup[(i-k+1)%k][j]\n                    lookup[(i-k+1)%k][j] = 0\n        if not found:\n            target = mn\n        elif target < mn:\n            return -1\n        return c+target*((len(grid)//k)*(len(grid[0])//k))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

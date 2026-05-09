@@ -1,0 +1,43 @@
+{
+  "id": "8b9fcedb-7b03-42b2-9025-40ed7bd2a1f9",
+  "slug": "minimum-one-bit-operations-to-make-integers-zero",
+  "title": "Minimum One Bit Operations to Make Integers Zero",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, you must transform it into <code>0</code> using the following operations any number of times:</p>\n\n<ul>\n\t<li>Change the rightmost (<code>0<sup>th</sup></code>) bit in the binary representation of <code>n</code>.</li>\n\t<li>Change the <code>i<sup>th</sup></code> bit in the binary representation of <code>n</code> if the <code>(i-1)<sup>th</sup></code> bit is set to <code>1</code> and the <code>(i-2)<sup>th</sup></code> through <code>0<sup>th</sup></code> bits are set to <code>0</code>.</li>\n</ul>\n\n<p>Return <em>the minimum number of operations to transform </em><code>n</code><em> into </em><code>0</code><em>.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 3\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> The binary representation of 3 is &quot;11&quot;.\n&quot;<u>1</u>1&quot; -&gt; &quot;<u>0</u>1&quot; with the 2<sup>nd</sup> operation since the 0<sup>th</sup> bit is 1.\n&quot;0<u>1</u>&quot; -&gt; &quot;0<u>0</u>&quot; with the 1<sup>st</sup> operation.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 6\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The binary representation of 6 is &quot;110&quot;.\n&quot;<u>1</u>10&quot; -&gt; &quot;<u>0</u>10&quot; with the 2<sup>nd</sup> operation since the 1<sup>st</sup> bit is 1 and 0<sup>th</sup> through 0<sup>th</sup> bits are 0.\n&quot;01<u>0</u>&quot; -&gt; &quot;01<u>1</u>&quot; with the 1<sup>st</sup> operation.\n&quot;0<u>1</u>1&quot; -&gt; &quot;0<u>0</u>1&quot; with the 2<sup>nd</sup> operation since the 0<sup>th</sup> bit is 1.\n&quot;00<u>1</u>&quot; -&gt; &quot;00<u>0</u>&quot; with the 1<sup>st</sup> operation.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>0 &lt;= n &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "bit-manipulation",
+    "recursion",
+    "memoization"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n6",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\n// reference: https://en.wikipedia.org/wiki/Gray_code\nclass Solution {\npublic:\n    int minimumOneBitOperations(int n) {\n        // [observation]\n        // n    f(n)\n        // 000    0\n        // 001    1\n        // 011    2\n        // 010    3\n        // 110    4\n        // 111    5\n        // 101    6\n        // 100    7\n        // f(0XX...X) + f(1XX...X) = f(100...0) implies n is a gray code\n        // => f(n) is actually the inverse of gray code\n        return gray_to_binary(n);\n    }\n\nprivate:\n    int gray_to_binary(int n) {\n        int result = 0;\n        for (; n > 0; n >>= 1) {\n            result ^= n;\n        }\n        return result;\n    }\n};\n\n// Time:  O(logn)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int minimumOneBitOperations(int n) {\n        // [observation1]:\n        // f(1) = 1\n        // f(10) = 2 * f(1) + 1 = 3\n        // f(100) = 2 * f(10) + 1 = 7\n        // by mathematical induction\n        // => f(2^k) = 2^(k+1)-1\n        //\n        // [observation2]:\n        // n    f(n)\n        // 000    0\n        // 001    1\n        // 011    2\n        // 010    3\n        // 110    4\n        // 111    5\n        // 101    6\n        // 100    7\n        // let pos be an array of positions where the bit is 1 in ascending order:\n        // f(0XX...X) + f(1XX...X) = f(100...0)\n        // f(1XX...X) = f(100...0) - f(0XX...X)\n        //            = (2^(pos[k-1]+1)-1) - f(0XX...X)\n        // by mathematical induction\n        // => f(n) = (2^(pos[k-1]+1)-1) - (2^(pos[k-2])+1) + ... + (-1)^(k-1) * (2^(pos[0]+1)-1)\n        int result = 0;\n        for (; n > 0; n &= n - 1) {\n            result = -(result + (n ^ (n - 1)));\n        }\n        return abs(result);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\n# reference: https://en.wikipedia.org/wiki/Gray_code\nclass Solution(object):\n    def minimumOneBitOperations(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        def gray_to_binary(n):\n            result = 0\n            while n:\n                result ^= n\n                n >>= 1\n            return result\n        \n        # [observation]\n        # n    f(n)\n        # 000    0\n        # 001    1\n        # 011    2\n        # 010    3\n        # 110    4\n        # 111    5\n        # 101    6\n        # 100    7\n\t# f(0XX...X) + f(1XX...X) = f(100...0) implies n is a gray code\n        # => f(n) is actually the inverse of gray code\n        return gray_to_binary(n)\n\n\n# Time:  O(logn)\n# Space: O(1)\nclass Solution2(object):\n    def minimumOneBitOperations(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        # [observation1]:\n        # f(1) = 1\n        # f(10) = 2 * f(1) + 1 = 3\n        # f(100) = 2 * f(10) + 1 = 7\n        # by mathematical induction\n        # => f(2^k) = 2^(k+1)-1\n        #\n        # [observation2]\n        # n    f(n)\n        # 000    0\n        # 001    1\n        # 011    2\n        # 010    3\n        # 110    4\n        # 111    5\n        # 101    6\n        # 100    7\n        # let pos be an array of positions where the bit is 1 in ascending order:\n\t# f(0XX...X) + f(1XX...X) = f(100...0)\n        # f(1XX...X) = f(100...0) - f(0XX...X)\n        #            = (2^(pos[k-1]+1)-1) - f(0XX...X)\n        # by mathematical induction\n        # => f(n) = (2^(pos[k-1]+1)-1) - (2^(pos[k-2])+1) + ... + (-1)^(k-1) * (2^(pos[0]+1)-1)\n        result = 0\n        while n:\n            result = -result - (n^(n-1))  # 2^(pos[i]+1)-1\n            n &= n-1\n        return abs(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,35 @@
+{
+  "id": "e6172fd9-424b-4fd0-87b3-980b79d82fa1",
+  "slug": "find-the-number-of-possible-ways-for-an-event",
+  "title": "Find the Number of Possible Ways for an Event",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given three integers <code>n</code>, <code>x</code>, and <code>y</code>.</p>\n\n<p>An event is being held for <code>n</code> performers. When a performer arrives, they are <strong>assigned</strong> to one of the <code>x</code> stages. All performers assigned to the <strong>same</strong> stage will perform together as a band, though some stages <em>might</em> remain <strong>empty</strong>.</p>\n\n<p>After all performances are completed, the jury will <strong>award</strong> each band a score in the range <code>[1, y]</code>.</p>\n\n<p>Return the <strong>total</strong> number of possible ways the event can take place.</p>\n\n<p>Since the answer may be very large, return it <strong>modulo</strong> <code>10<sup>9</sup> + 7</code>.</p>\n\n<p><strong>Note</strong> that two events are considered to have been held <strong>differently</strong> if <strong>either</strong> of the following conditions is satisfied:</p>\n\n<ul>\n\t<li><strong>Any</strong> performer is <em>assigned</em> a different stage.</li>\n\t<li><strong>Any</strong> band is <em>awarded</em> a different score.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 1, x = 2, y = 3</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">6</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>There are 2 ways to assign a stage to the performer.</li>\n\t<li>The jury can award a score of either 1, 2, or 3 to the only band.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 5, x = 2, y = 1</span></p>\n\n<p><strong>Output:</strong> 32</p>\n\n<p><strong>Explanation:</strong></p>\n\n<ul>\n\t<li>Each performer will be assigned either stage 1 or stage 2.</li>\n\t<li>All bands will be awarded a score of 1.</li>\n</ul>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 3, x = 3, y = 4</span></p>\n\n<p><strong>Output:</strong> 684</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n, x, y &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "combinatorics"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  precompute: O(max_n^2 + max_y * min(max_n, max_x))\n//        runtime:    O(min(n, x))\n// Space: O(max_n^2 + max_y * min(max_n, max_x))\n\nconst int MOD = 1e9 + 7;\nconst int MAX_N = 1000, MAX_X = 1000, MAX_Y = 1000;\nconst int R = min(MAX_N, MAX_X);\nvector<vector<int>> NCR(MAX_N + 1, vector<int>(MAX_N + 1));\nvector<vector<int>> DP(MAX_N + 1, vector<int>(MAX_N + 1));\nvector<vector<int>> POW(MAX_Y + 1, vector<int>(R + 1, 1));\n\nvoid init() {\n    if (NCR[0][0]) {\n        return;\n    }\n    NCR[0][0] = DP[0][0] = 1;\n    for (int i = 1; i <= MAX_N; ++i) {\n        NCR[i][0] = 1;\n        for (int64_t j = 1; j <= i; ++j) {\n            NCR[i][j] = (NCR[i - 1][j] + NCR[i - 1][j - 1]) % MOD;\n            DP[i][j] = (DP[i - 1][j] * j + DP[i - 1][j - 1] * j) % MOD;\n        }\n    }\n    for (int64_t i = 1; i <= MAX_Y; ++i) {\n        for (int j = 1; j <= R; ++j) {\n            POW[i][j] = (POW[i][j - 1] * i) % MOD;\n        }\n    }\n}\n\n// dp, combinatorics\nclass Solution {\npublic:\n    int numberOfWays(int n, int x, int y) {\n        init();\n        int result = 0;\n        for (int i = 1; i <= min(n, x); ++i) {\n            result = (result + (((static_cast<int64_t>(NCR[x][i]) * DP[n][i]) % MOD) * POW[y][i]) % MOD) % MOD;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  precompute: O(max_n^2 + max_y * min(max_n, max_x))\n#        runtime:    O(min(n, x))\n# Space: O(max_n^2 + max_y * min(max_n, max_x))\n\nMOD = 10**9+7\nMAX_N = MAX_X = MAX_Y = 1000\nR = min(MAX_N, MAX_X)\nNCR = [[0]*(MAX_N+1) for _ in xrange(MAX_N+1)]\nDP = [[0]*(MAX_N+1) for _ in xrange(MAX_N+1)]\nNCR[0][0] = DP[0][0] = 1\nfor i in xrange(1, MAX_N+1):\n    NCR[i][0] = 1\n    for j in xrange(1, i+1):\n        NCR[i][j] = (NCR[i-1][j]+NCR[i-1][j-1])%MOD\n        DP[i][j] = (DP[i-1][j]*j+DP[i-1][j-1]*j)%MOD\nPOW = [[1]*(R+1) for _ in xrange(MAX_Y+1)]\nfor i in xrange(1, MAX_Y+1):\n    for j in xrange(1, R+1):\n        POW[i][j] = (POW[i][j-1]*i)%MOD\n\n# dp, combinatorics\nclass Solution(object):\n    def numberOfWays(self, n, x, y):\n        \"\"\"\n        :type n: int\n        :type x: int\n        :type y: int\n        :rtype: int\n        \"\"\"\n        return reduce(lambda accu, x: (accu+x)%MOD, (NCR[x][i]*DP[n][i]*POW[y][i] for i in xrange(1, min(n, x)+1)), 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

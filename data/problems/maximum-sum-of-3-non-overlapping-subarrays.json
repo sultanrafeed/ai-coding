@@ -1,0 +1,36 @@
+{
+  "id": "484c8191-66c9-412b-b646-c6045d6e4565",
+  "slug": "maximum-sum-of-3-non-overlapping-subarrays",
+  "title": "Maximum Sum of 3 Non-Overlapping Subarrays",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> and an integer <code>k</code>, find three non-overlapping subarrays of length <code>k</code> with maximum sum and return them.</p>\n\n<p>Return the result as a list of indices representing the starting position of each interval (<strong>0-indexed</strong>). If there are multiple answers, return the lexicographically smallest one.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,1,2,6,7,5,1], k = 2\n<strong>Output:</strong> [0,3,5]\n<strong>Explanation:</strong> Subarrays [1, 2], [2, 6], [7, 5] correspond to the starting indices [0, 3, 5].\nWe could have also taken [2, 1], but an answer of [1, 3, 5] would be lexicographically larger.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,1,2,1,2,1,2,1], k = 2\n<strong>Output:</strong> [0,2,4]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;&nbsp;2<sup>16</sup></code></li>\n\t<li><code>1 &lt;= k &lt;= floor(nums.length / 3)</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "sliding-window",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    vector<int> maxSumOfThreeSubarrays(vector<int>& nums, int k) {\n        const auto n = nums.size();\n        vector<int> accu = {0};\n        for (const auto& num : nums) {\n            accu.emplace_back(accu.back() + num);\n        }\n       \n        vector<int> left_pos(n);\n        for (int i = k, total = accu[k] - accu[0]; i < n; ++i) {\n            if (accu[i + 1] - accu[i + 1 - k] > total) {\n                left_pos[i] = i + 1 - k;\n                total = accu[i + 1] - accu[i + 1 - k];\n            } else { \n                left_pos[i] = left_pos[i - 1];\n            }\n        }\n        \n        vector<int> right_pos(n, n - k);\n        for (int i = n - k - 1, total = accu[n] - accu[n - k]; i >= 0; --i) {\n            if (accu[i + k] - accu[i] > total) {\n                right_pos[i] = i;\n                total = accu[i + k] - accu[i];\n            } else {\n                right_pos[i] = right_pos[i + 1];\n            }\n        }\n        \n        vector<int> result(3);\n        for (int i = k, max_sum = 0; i <= n - 2 * k; ++i) {\n            auto left = left_pos[i - 1], right = right_pos[i + k];\n            auto total = (accu[i + k] - accu[i]) +\n                         (accu[left + k] - accu[left]) +\n                         (accu[right + k] - accu[right]);\n            if (total > max_sum) {\n                max_sum = total;\n                result = {left, i, right};\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def maxSumOfThreeSubarrays(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: List[int]\n        \"\"\"\n        n = len(nums)\n        accu = [0]\n        for num in nums:\n            accu.append(accu[-1]+num)\n\n        left_pos = [0] * n\n        total = accu[k]-accu[0]\n        for i in xrange(k, n):\n            if accu[i+1]-accu[i+1-k] > total:\n                left_pos[i] = i+1-k\n                total = accu[i+1]-accu[i+1-k]\n            else:\n                left_pos[i] = left_pos[i-1]\n\n        right_pos = [n-k] * n\n        total = accu[n]-accu[n-k]\n        for i in reversed(xrange(n-k)):\n            if accu[i+k]-accu[i] > total:\n                right_pos[i] = i\n                total = accu[i+k]-accu[i]\n            else:\n                right_pos[i] = right_pos[i+1]\n\n        result, max_sum = [], 0\n        for i in xrange(k, n-2*k+1):\n            left, right = left_pos[i-1], right_pos[i+k]\n            total = (accu[i+k]-accu[i]) + \\\n                    (accu[left+k]-accu[left]) + \\\n                    (accu[right+k]-accu[right])\n            if total > max_sum:\n                max_sum = total\n                result = [left, i, right]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

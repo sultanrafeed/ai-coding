@@ -1,0 +1,41 @@
+{
+  "id": "1fdee346-f713-4101-8107-30171601a2c2",
+  "slug": "push-dominoes",
+  "title": "Push Dominoes",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>There are <code>n</code> dominoes in a line, and we place each domino vertically upright. In the beginning, we simultaneously push some of the dominoes either to the left or to the right.</p>\n\n<p>After each second, each domino that is falling to the left pushes the adjacent domino on the left. Similarly, the dominoes falling to the right push their adjacent dominoes standing on the right.</p>\n\n<p>When a vertical domino has dominoes falling on it from both sides, it stays still due to the balance of the forces.</p>\n\n<p>For the purposes of this question, we will consider that a falling domino expends no additional force to a falling or already fallen domino.</p>\n\n<p>You are given a string <code>dominoes</code> representing the initial state where:</p>\n\n<ul>\n\t<li><code>dominoes[i] = &#39;L&#39;</code>, if the <code>i<sup>th</sup></code> domino has been pushed to the left,</li>\n\t<li><code>dominoes[i] = &#39;R&#39;</code>, if the <code>i<sup>th</sup></code> domino has been pushed to the right, and</li>\n\t<li><code>dominoes[i] = &#39;.&#39;</code>, if the <code>i<sup>th</sup></code> domino has not been pushed.</li>\n</ul>\n\n<p>Return <em>a string representing the final state</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> dominoes = &quot;RR.L&quot;\n<strong>Output:</strong> &quot;RR.L&quot;\n<strong>Explanation:</strong> The first domino expends no additional force on the second domino.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://s3-lc-upload.s3.amazonaws.com/uploads/2018/05/18/domino.png\" style=\"height: 196px; width: 512px;\" />\n<pre>\n<strong>Input:</strong> dominoes = &quot;.L.R...LR..L..&quot;\n<strong>Output:</strong> &quot;LL.RR.LLRRLL..&quot;\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == dominoes.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>dominoes[i]</code> is either <code>&#39;L&#39;</code>, <code>&#39;R&#39;</code>, or <code>&#39;.&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"RR.L\"\n\".L.R...LR..L..\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    string pushDominoes(string dominoes) {\n        vector<int> force(dominoes.length());\n\n        int f = 0;\n        for (int i = 0; i < dominoes.length(); ++i) {\n            if (dominoes[i] == 'R') {\n                f = dominoes.length();\n            } else if (dominoes[i] == 'L') {\n                f = 0;\n            } else {\n                f = max(f - 1, 0);\n            }\n            force[i] += f;\n        }\n\n        f = 0;\n        for (int i = dominoes.length() - 1; i >= 0; --i) {\n            if (dominoes[i] == 'L') {\n                f = dominoes.length();\n            } else if (dominoes[i] == 'R') {\n                f = 0;\n            } else {\n                f = max(f - 1, 0);\n            }\n            force[i] -= f;\n        }\n        string result;\n        for (const auto& f : force) {\n            result.push_back((f == 0) ? '.' : ((f > 0) ? 'R' : 'L'));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n\nclass Solution(object):\n    def pushDominoes(self, dominoes):\n        \"\"\"\n        :type dominoes: str\n        :rtype: str\n        \"\"\"\n        force = [0]*len(dominoes)\n\n        f = 0\n        for i in xrange(len(dominoes)):\n            if dominoes[i] == 'R':\n                f = len(dominoes)\n            elif dominoes[i] == 'L':\n                f = 0\n            else:\n                f = max(f-1, 0)\n            force[i] += f\n\n        f = 0\n        for i in reversed(xrange(len(dominoes))):\n            if dominoes[i] == 'L':\n                f = len(dominoes)\n            elif dominoes[i] == 'R':\n                f = 0\n            else:\n                f = max(f-1, 0)\n            force[i] -= f\n\n        return \"\".join('.' if f == 0 else 'R' if f > 0 else 'L'\n                       for f in force)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

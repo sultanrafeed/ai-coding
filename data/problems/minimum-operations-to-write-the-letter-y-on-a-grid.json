@@ -1,0 +1,42 @@
+{
+  "id": "3290d09d-b263-4c01-b771-3e781e3ada0f",
+  "slug": "minimum-operations-to-write-the-letter-y-on-a-grid",
+  "title": "Minimum Operations to Write the Letter Y on a Grid",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> <code>n x n</code> grid where <code>n</code> is odd, and <code>grid[r][c]</code> is <code>0</code>, <code>1</code>, or <code>2</code>.</p>\n\n<p>We say that a cell belongs to the Letter <strong>Y</strong> if it belongs to one of the following:</p>\n\n<ul>\n\t<li>The diagonal starting at the top-left cell and ending at the center cell of the grid.</li>\n\t<li>The diagonal starting at the top-right cell and ending at the center cell of the grid.</li>\n\t<li>The vertical line starting at the center cell and ending at the bottom border of the grid.</li>\n</ul>\n\n<p>The Letter <strong>Y</strong> is written on the grid if and only if:</p>\n\n<ul>\n\t<li>All values at cells belonging to the Y are equal.</li>\n\t<li>All values at cells not belonging to the Y are equal.</li>\n\t<li>The values at cells belonging to the Y are different from the values at cells not belonging to the Y.</li>\n</ul>\n\n<p>Return <em>the <strong>minimum</strong> number of operations needed to write the letter Y on the grid given that in one operation you can change the value at any cell to</em> <code>0</code><em>,</em> <code>1</code><em>,</em> <em>or</em> <code>2</code><em>.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/01/22/y2.png\" style=\"width: 461px; height: 121px;\" />\n<pre>\n<strong>Input:</strong> grid = [[1,2,2],[1,1,0],[0,1,0]]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We can write Y on the grid by applying the changes highlighted in blue in the image above. After the operations, all cells that belong to Y, denoted in bold, have the same value of 1 while those that do not belong to Y are equal to 0.\nIt can be shown that 3 is the minimum number of operations needed to write Y on the grid.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2024/01/22/y3.png\" style=\"width: 701px; height: 201px;\" />\n<pre>\n<strong>Input:</strong> grid = [[0,1,0,1,0],[2,1,0,1,2],[2,2,2,0,1],[2,2,2,2,2],[2,1,2,2,2]]\n<strong>Output:</strong> 12\n<strong>Explanation:</strong> We can write Y on the grid by applying the changes highlighted in blue in the image above. After the operations, all cells that belong to Y, denoted in bold, have the same value of 0 while those that do not belong to Y are equal to 2. \nIt can be shown that 12 is the minimum number of operations needed to write Y on the grid.</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>3 &lt;= n &lt;= 49 </code></li>\n\t<li><code>n == grid.length == grid[i].length</code></li>\n\t<li><code>0 &lt;= grid[i][j] &lt;= 2</code></li>\n\t<li><code>n</code> is odd.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "matrix",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,2,2],[1,1,0],[0,1,0]]\n[[0,1,0,1,0],[2,1,0,1,2],[2,2,2,0,1],[2,2,2,2,2],[2,1,2,2,2]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(1)\n\n// array\nclass Solution {\npublic:\n    int minimumOperationsToWriteY(vector<vector<int>>& grid) {\n        vector<vector<int>> cnt(2, vector<int>(3));\n        for (int i = 0; i < size(grid); ++i) {\n            for (int j = 0; j < size(grid[0]); ++j) {\n                ++cnt[(i <= (size(grid[0]) - 1) / 2 && (i - j == 0 || i + j == size(grid[0]) - 1)) || (i > (size(grid[0]) - 1) / 2 && j == (size(grid[0]) - 1) / 2)][grid[i][j]];\n            }\n        }\n        int mx = 0;\n        for (int i = 0; i < 3; ++i) {\n            for (int j = 0; j < 3; ++j) {\n                if (j == i) {\n                    continue;\n                }\n                mx = max(mx, cnt[0][i] + cnt[1][j]);\n            }\n        }\n        return size(grid) * size(grid[0]) - mx;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(1)\n\n# array\nclass Solution(object):\n    def minimumOperationsToWriteY(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        cnt = [[0]*3 for _ in xrange(2)]\n        for i in xrange(len(grid)):\n            for j in xrange(len(grid[0])):\n                cnt[(i <= (len(grid[0])-1)//2 and (i-j == 0 or i+j == len(grid[0])-1)) or (i > (len(grid[0])-1)//2 == j)][grid[i][j]] += 1\n        return len(grid)*len(grid[0])-max(cnt[0][i]+cnt[1][j] for i in xrange(3) for j in xrange(3) if i != j)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

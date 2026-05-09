@@ -1,0 +1,42 @@
+{
+  "id": "089a32dd-4415-4d69-a778-a5136956b498",
+  "slug": "index-pairs-of-a-string",
+  "title": "Index Pairs of a String",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "trie",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"thestoryofleetcodeandme\"\n[\"story\",\"fleet\",\"leetcode\"]\n\"ababa\"\n[\"aba\",\"ab\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + m + z), n is the total size of patterns\n//                    , m is the total size of query string\n//                    , z is the number of all matched strings\n// Space: O(t), t is the total size of ac automata trie\n\nstruct AhoNode {\n    vector<AhoNode *> children;\n    vector<int> indices;\n    AhoNode *suffix;\n    AhoNode *output;\n    AhoNode() :\n        children(26, nullptr),\n        suffix(nullptr),\n        output(nullptr) {}\n};\n\nclass AhoTrie {\npublic:\n    AhoTrie(const vector<string>& patterns) : root_(createACTrie(patterns)) {\n        node_ = createACSuffixAndOutputLinks(root_);\n    }\n\n    vector<int> step(char letter) {\n        while (node_ && !node_->children[letter - 'a']) {\n            node_ = node_->suffix;\n        }\n        node_ = node_ ? node_->children[letter - 'a'] : root_;\n        return getACNodeOutputs(node_);\n    }\n\nprivate:\n    AhoNode *createACTrie(const vector<string>& patterns) {  // Time:  O(n), Space: O(t)\n        auto root = new AhoNode();\n        for (int i = 0; i < patterns.size(); ++i) {\n            auto node = root;\n            for (const auto& c : patterns[i]) {\n                if (!node->children[c - 'a']) {\n                    node->children[c - 'a'] = new AhoNode();\n                }\n                node = node->children[c - 'a'];\n            }\n            node->indices.emplace_back(i);\n        }\n        return root;\n    }\n    \n    AhoNode *createACSuffixAndOutputLinks(AhoNode *root) {  // Time:  O(n), Space: O(t)\n        queue<AhoNode *> q;\n        for (auto node : root->children) {\n            if (!node) {\n                continue;\n            }\n            q.emplace(node);\n            node->suffix = root;\n        }\n                \n        while (!q.empty()) {\n            auto node = q.front(); q.pop();\n            for (int c = 0; c < node->children.size(); ++c) {\n                if (!node->children[c]) {\n                    continue;\n                }\n                auto child = node->children[c];\n                q.emplace(child);\n                auto suffix = node->suffix;\n                while (suffix && !suffix->children[c]) {\n                    suffix = suffix->suffix;\n                }\n                child->suffix = suffix ? suffix->children[c] : root;\n                child->output = !child->suffix->indices.empty() ?\n                    child->suffix : child->suffix->output;\n            }\n        }\n        \n        return root;\n    }\n    \n    vector<int> getACNodeOutputs(AhoNode *node) {  // Time:  O(z)\n        vector<int> result;\n        for (const auto& i : node_->indices) {\n            result.emplace_back(i);\n            // return result;\n        }\n        auto output = node_->output;\n        while (output) {\n            for (const auto& i : output->indices) {\n                result.emplace_back(i);\n                // return result;\n            }\n            output = output->output;\n        }\n        return result;\n    }\n    \n    AhoNode * const root_;\n    AhoNode *node_;\n};\n\nclass Solution {\npublic:\n    vector<vector<int>> indexPairs(string text, vector<string>& words) {\n        for (auto& word : words) {\n            reverse(word.begin(), word.end());\n        }\n        AhoTrie trie(words);\n        vector<vector<int>> result;\n        for (int i = text.length() - 1; i >= 0; --i) {\n            for (const auto& j : trie.step(text[i])) {\n                result.push_back({i, i + words[j].length() - 1});\n            }\n        }\n        reverse(result.begin(), result.end());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + m + z), n is the total size of patterns\n#                    , m is the total size of query string\n#                    , z is the number of all matched strings\n# Space: O(t), t is the total size of ac automata trie\n\nimport collections\n\n\nclass AhoNode(object):\n    def __init__(self):\n        self.children = collections.defaultdict(AhoNode)\n        self.indices = []\n        self.suffix = None\n        self.output = None\n\n\nclass AhoTrie(object):\n\n    def step(self, letter):\n        while self.__node and letter not in self.__node.children:\n            self.__node = self.__node.suffix\n        self.__node = self.__node.children[letter] if self.__node else self.__root\n        return self.__get_ac_node_outputs(self.__node)\n    \n    def __init__(self, patterns):\n        self.__root = self.__create_ac_trie(patterns)\n        self.__node = self.__create_ac_suffix_and_output_links(self.__root)\n    \n    def __create_ac_trie(self, patterns):  # Time:  O(n), Space: O(t)\n        root = AhoNode()\n        for i, pattern in enumerate(patterns):\n            node = root\n            for c in pattern:\n                node = node.children[c]\n            node.indices.append(i)\n        return root\n\n    def __create_ac_suffix_and_output_links(self, root):  # Time:  O(n), Space: O(t)\n        queue = collections.deque()\n        for node in root.children.itervalues():\n            queue.append(node)\n            node.suffix = root\n\n        while queue:\n            node = queue.popleft()\n            for c, child in node.children.iteritems():\n                queue.append(child)\n                suffix = node.suffix\n                while suffix and c not in suffix.children:\n                    suffix = suffix.suffix\n                child.suffix = suffix.children[c] if suffix else root\n                child.output = child.suffix if child.suffix.indices else child.suffix.output\n                \n        return root\n\n    def __get_ac_node_outputs(self, node):  # Time:  O(z)\n        result = []\n        for i in node.indices:\n            result.append(i)\n        output = node.output\n        while output:\n            for i in output.indices:\n                result.append(i)\n            output = output.output\n        return result\n    \n\nclass Solution(object):\n    def indexPairs(self, text, words):\n        \"\"\"\n        :type text: str\n        :type words: List[str]\n        :rtype: List[List[int]]\n        \"\"\"\n        result = []\n        reversed_words = [w[::-1] for w in words]\n        trie = AhoTrie(reversed_words)\n        for i in reversed(xrange(len(text))):\n            for j in trie.step(text[i]):\n                result.append([i, i+len(reversed_words[j])-1])\n        result.reverse()\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

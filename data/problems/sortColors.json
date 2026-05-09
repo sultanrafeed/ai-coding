@@ -1,0 +1,25 @@
+{
+  "id": "3e78bb62-e364-4831-8b56-1b0ac1d32d66",
+  "slug": "sortColors",
+  "title": "Sortcolors",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(1)\n// One-Pass Algorithm\nclass Solution {\n    public:\n        void sortColors(int A[], int n) {\n            int red = 0;\n            int blue = n-1;\n            for(int i = 0; i < blue + 1;) {\n                if(A[i] == 0) {\n                    swap(A[i++], A[red++]);\n                }\n                else if(A[i] == 2) {\n                    swap(A[i], A[blue--]);\n                }\n                else {\n                    i++;\n                }\n            }\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

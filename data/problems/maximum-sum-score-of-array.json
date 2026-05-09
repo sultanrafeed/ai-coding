@@ -1,0 +1,40 @@
+{
+  "id": "862fc956-1101-4e79-9c74-39ce8960d0b5",
+  "slug": "maximum-sum-score-of-array",
+  "title": "Maximum Sum Score of Array",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[4,3,-2,5]\n[-3,-5]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// prefix sum, math\nclass Solution {\npublic:\n    long long maximumSumScore(vector<int>& nums) {\n        int64_t result = numeric_limits<int>::min();\n        int64_t prefix = 0, suffix = 0;\n        for (int left = 0, right = size(nums) - 1; left < size(nums); ++left, --right) {\n            prefix += nums[left];\n            suffix += nums[right];\n            result = max({result, prefix, suffix});\n        }\n        return result;\n    }\n};\n\n// Time:  O(n)\n// Space: O(1)\n// prefix sum\nclass Solution2 {\npublic:\n    long long maximumSumScore(vector<int>& nums) {\n        const int64_t total = accumulate(cbegin(nums), cend(nums), 0ll);\n        int64_t result = numeric_limits<int>::min();\n        int64_t prefix = 0;\n        for (const auto& x : nums) {\n            prefix += x;\n            result = max({result, prefix, total - prefix + x});\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# prefix sum, math\nclass Solution(object):\n    def maximumSumScore(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        prefix = suffix = 0\n        result = float(\"-inf\")\n        right = len(nums)-1\n        for left in xrange(len(nums)):\n            prefix += nums[left]\n            suffix += nums[right]\n            right -= 1\n            result = max(result, prefix, suffix)\n        return result\n\n    \n# Time:  O(n)\n# Space: O(1)\n# prefix sum\nclass Solution2(object):\n    def maximumSumScore(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        total = sum(nums)\n        prefix = 0\n        result = float(\"-inf\")\n        for x in nums:\n            prefix += x\n            result = max(result, prefix, total-prefix+x)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

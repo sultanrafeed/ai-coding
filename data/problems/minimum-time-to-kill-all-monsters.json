@@ -1,0 +1,42 @@
+{
+  "id": "b8b6442b-983b-46d5-b1f9-671a0308153c",
+  "slug": "minimum-time-to-kill-all-monsters",
+  "title": "Minimum Time to Kill All Monsters",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "bit-manipulation",
+    "bitmask"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,1,4]\n[1,1,4]\n[1,2,4,9]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^n)\n// Space: O(2^n)\n\n// bitmasks, dp\nclass Solution {\npublic:\n    long long minimumTime(vector<int>& power) {\n        const auto& ceil_divide = [](const auto& a, const auto& b) {\n            return (a + b - 1) / b;\n        };\n\n        unordered_map<int, int64_t> dp = {{0, 0}};\n        for (int gain = 1; gain <= size(power); ++gain) {\n            unordered_map<int, int64_t> new_dp;\n            for (const auto& [mask, _] : dp) {\n                for (int i = 0; i < size(power); ++i) {\n                    if (mask & (1 << i)) {\n                        continue;\n                    }\n                    const auto& x = dp[mask] + ceil_divide(power[i], gain);\n                    if (!new_dp.count(mask | (1 << i)) || new_dp[mask | (1 << i)] > x) {\n                        new_dp[mask | (1 << i)] = x;\n                    }\n                }\n            }\n            dp = move(new_dp);\n        }\n        return dp[(1 << size(power)) - 1];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^n)\n# Space: O(2^n)\n\n# bitmasks, dp\nclass Solution(object):\n    def minimumTime(self, power):\n        \"\"\"\n        :type power: List[int]\n        :rtype: int\n        \"\"\"\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n\n        INF = float(\"inf\")\n        dp = {0:0}\n        for gain in xrange(1, len(power)+1):\n            new_dp = collections.defaultdict(lambda:INF)\n            for mask in dp.iterkeys():\n                for i in xrange(len(power)):\n                    if mask&(1<<i) == 0:\n                        new_dp[mask|(1<<i)] = min(new_dp[mask|(1<<i)], dp[mask]+ceil_divide(power[i], gain))\n            dp = new_dp\n        return dp[(1<<len(power))-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

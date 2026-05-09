@@ -1,0 +1,37 @@
+{
+  "id": "0be4dfa5-57a8-40fc-8f65-76d04686901d",
+  "slug": "surrounded-regions",
+  "title": "Surrounded Regions",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an <code>m x n</code> matrix <code>board</code> containing <strong>letters</strong> <code>&#39;X&#39;</code> and <code>&#39;O&#39;</code>, <strong>capture regions</strong> that are <strong>surrounded</strong>:</p>\n\n<ul>\n\t<li><strong>Connect</strong>: A cell is connected to adjacent cells horizontally or vertically.</li>\n\t<li><strong>Region</strong>: To form a region <strong>connect every</strong> <code>&#39;O&#39;</code> cell.</li>\n\t<li><strong>Surround</strong>: A region is surrounded if none of the <code>&#39;O&#39;</code> cells in that region are on the edge of the board. Such regions are <strong>completely enclosed </strong>by <code>&#39;X&#39;</code> cells.</li>\n</ul>\n\n<p>To capture a <strong>surrounded region</strong>, replace all <code>&#39;O&#39;</code>s with <code>&#39;X&#39;</code>s <strong>in-place</strong> within the original board. You do not need to return anything.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">board = [[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;O&quot;,&quot;O&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;X&quot;,&quot;O&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;O&quot;,&quot;X&quot;,&quot;X&quot;]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;X&quot;,&quot;X&quot;,&quot;X&quot;],[&quot;X&quot;,&quot;O&quot;,&quot;X&quot;,&quot;X&quot;]]</span></p>\n\n<p><strong>Explanation:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/02/19/xogrid.jpg\" style=\"width: 367px; height: 158px;\" />\n<p>In the above diagram, the bottom region is not captured because it is on the edge of the board and cannot be surrounded.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">board = [[&quot;X&quot;]]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">[[&quot;X&quot;]]</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m == board.length</code></li>\n\t<li><code>n == board[i].length</code></li>\n\t<li><code>1 &lt;= m, n &lt;= 200</code></li>\n\t<li><code>board[i][j]</code> is <code>&#39;X&#39;</code> or <code>&#39;O&#39;</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "depth-first-search",
+    "breadth-first-search",
+    "union-find",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m + n)\n\nclass Solution {\npublic:\n    void solve(vector<vector<char>>& board) {\n        if (board.empty()) {\n            return;\n        }\n\n        queue<pair<int, int>> q;\n        for (int i = 0; i < board.size(); ++i) {\n            if (board[i][0] == 'O') {\n                board[i][0] = 'V';\n                q.emplace(i, 0);\n            }\n            if (board[i][board[0].size() - 1] == 'O') {\n                board[i][board[0].size() - 1] = 'V';\n                q.emplace(i, board[0].size() - 1);\n            }\n        }\n\n        for (int j = 1; j < board[0].size() - 1; ++j) {\n            if (board[0][j] == 'O') {\n                board[0][j] = 'V';\n                q.emplace(0, j);\n            }\n            if (board[board.size() - 1][j] == 'O') {\n                board[board.size() - 1][j] = 'V';\n                q.emplace(board.size() - 1, j);\n            }\n        }\n        while (!q.empty()) {\n            int i, j;\n            tie(i, j) = q.front();\n            q.pop();\n            static const vector<pair<int, int>> directions{{0, -1}, {0, 1},\n                                                           {-1, 0}, {1, 0}};\n            for (const auto& d : directions) {\n                const int x = i + d.first, y = j + d.second;\n                if (0 <= x && x < board.size() &&\n                    0 <= y && y < board[0].size() &&\n                    board[x][y] == 'O') {\n                    board[x][y] = 'V';\n                    q.emplace(x, y);\n                }\n            }\n        }\n        for (int i = 0; i < board.size(); ++i) {\n            for (int j = 0; j < board[0].size(); ++j) {\n                if (board[i][j] != 'V') {\n                    board[i][j] = 'X';\n                } else {\n                    board[i][j] = 'O';\n                }\n            }\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m + n)\n\nimport collections\n\n\nclass Solution(object):\n    def solve(self, board):\n        \"\"\"\n        :type board: List[List[str]]\n        :rtype: void Do not return anything, modify board in-place instead.\n        \"\"\"\n        if not board:\n            return\n\n        q = collections.deque()\n\n        for i in xrange(len(board)):\n            if board[i][0] == 'O':\n                board[i][0] = 'V'\n                q.append((i, 0))\n            if board[i][len(board[0])-1] == 'O':\n                board[i][len(board[0])-1] = 'V'\n                q.append((i, len(board[0])-1))\n\n        for j in xrange(1, len(board[0])-1):\n            if board[0][j] == 'O':\n                board[0][j] = 'V'\n                q.append((0, j))\n            if board[len(board)-1][j] == 'O':\n                board[len(board)-1][j] = 'V'\n                q.append((len(board)-1, j))\n\n        while q:\n            i, j = q.popleft()\n            for x, y in [(i+1, j), (i-1, j), (i, j+1), (i, j-1)]:\n                if 0 <= x < len(board) and 0 <= y < len(board[0]) and \\\n                   board[x][y] == 'O':\n                    board[x][y] = 'V'\n                    q.append((x, y))\n\n        for i in xrange(len(board)):\n            for j in xrange(len(board[0])):\n                if board[i][j] != 'V':\n                    board[i][j] = 'X'\n                else:\n                    board[i][j] = 'O'",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

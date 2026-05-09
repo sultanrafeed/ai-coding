@@ -1,0 +1,42 @@
+{
+  "id": "55825e27-c8b9-4eb1-8b6b-0dd1f37853da",
+  "slug": "binary-searchable-numbers-in-an-unsorted-array",
+  "title": "Binary Searchable Numbers in an Unsorted Array",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "stack",
+    "monotonic-stack"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[7]\n[-1,5,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int binarySearchableNumbers(vector<int>& nums) {\n        vector<int> right(size(nums) + 1, numeric_limits<int>::max());\n        for (int i = size(nums); i >= 1; --i) {\n            right[i - 1] = min(right[i], nums[i - 1]);\n        }\n        unordered_set<int> result;\n        int left = numeric_limits<int>::min();\n        for (int i = 0; i < size(nums); ++i) {\n            if (left <= nums[i] && nums[i] <= right[i + 1]) {\n                result.emplace(nums[i]);\n            }\n            left = max(left, nums[i]);\n        }\n        return size(result);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def binarySearchableNumbers(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        right = [float(\"inf\")]*(len(nums)+1)\n        for i in reversed(xrange(1, len(nums)+1)):\n            right[i-1] = min(right[i], nums[i-1])\n        result, left = set(), float(\"-inf\")\n        for i in xrange(len(nums)):\n            if left <= nums[i] <= right[i+1]:\n                result.add(nums[i])\n            left = max(left, nums[i])\n        return len(result)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

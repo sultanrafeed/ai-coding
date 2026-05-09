@@ -1,0 +1,35 @@
+{
+  "id": "bb01b5a2-97b2-4697-8580-dbd145ccb49f",
+  "slug": "matrix-block-sum",
+  "title": "Matrix Block Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given a <code>m x n</code> matrix <code>mat</code> and an integer <code>k</code>, return <em>a matrix</em> <code>answer</code> <em>where each</em> <code>answer[i][j]</code> <em>is the sum of all elements</em> <code>mat[r][c]</code> <em>for</em>:</p>\n\n<ul>\n\t<li><code>i - k &lt;= r &lt;= i + k,</code></li>\n\t<li><code>j - k &lt;= c &lt;= j + k</code>, and</li>\n\t<li><code>(r, c)</code> is a valid position in the matrix.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[1,2,3],[4,5,6],[7,8,9]], k = 1\n<strong>Output:</strong> [[12,21,16],[27,45,33],[24,39,28]]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> mat = [[1,2,3],[4,5,6],[7,8,9]], k = 2\n<strong>Output:</strong> [[45,45,45],[45,45,45],[45,45,45]]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>m ==&nbsp;mat.length</code></li>\n\t<li><code>n ==&nbsp;mat[i].length</code></li>\n\t<li><code>1 &lt;= m, n, k &lt;= 100</code></li>\n\t<li><code>1 &lt;= mat[i][j] &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "matrix",
+    "prefix-sum"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m * n)\n\nclass Solution {\npublic:\n    vector<vector<int>> matrixBlockSum(vector<vector<int>>& mat, int K) {\n        int m = mat.size(), n = mat[0].size();\n        vector<vector<int>> accu(m + 1, vector<int>(n + 1));\n        for (int i = 0; i < m; ++i) {\n            for (int j = 0; j < n; ++j) {\n                accu[i + 1][j + 1] = accu[i + 1][j] + accu[i][j + 1] - accu[i][j] + mat[i][j];\n            }\n        }\n        vector<vector<int>> result(m, vector<int>(n));    \n        for (int i = 0; i < m; ++i) {\n            for (int j = 0; j < n; ++j) {\n                int r1 = max(i - K, 0), c1 = max(j - K, 0);\n                int r2 = min(i + K + 1, m), c2 = min(j + K + 1, n);\n                result[i][j] = accu[r2][c2] - accu[r1][c2] - accu[r2][c1] + accu[r1][c1];\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m * n)\n\nclass Solution(object):\n    def matrixBlockSum(self, mat, K):\n        \"\"\"\n        :type mat: List[List[int]]\n        :type K: int\n        :rtype: List[List[int]]\n        \"\"\"\n        m, n = len(mat), len(mat[0])\n        accu = [[0 for _ in xrange(n+1)] for _ in xrange(m+1)]\n        for i in xrange(m):\n            for j in xrange(n):\n                accu[i+1][j+1] = accu[i+1][j]+accu[i][j+1]-accu[i][j]+mat[i][j]\n        result = [[0 for _ in xrange(n)] for _ in xrange(m)]        \n        for i in xrange(m):\n            for j in xrange(n):\n                r1, c1, r2, c2 = max(i-K, 0), max(j-K, 0), min(i+K+1, m), min(j+K+1, n)\n                result[i][j] = accu[r2][c2]-accu[r1][c2]-accu[r2][c1]+accu[r1][c1]\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

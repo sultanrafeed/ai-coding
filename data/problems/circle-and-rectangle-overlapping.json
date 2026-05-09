@@ -1,0 +1,34 @@
+{
+  "id": "241d1c7c-5bcf-4c10-a6fb-c50975a56b00",
+  "slug": "circle-and-rectangle-overlapping",
+  "title": "Circle and Rectangle Overlapping",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a circle represented as <code>(radius, xCenter, yCenter)</code> and an axis-aligned rectangle represented as <code>(x1, y1, x2, y2)</code>, where <code>(x1, y1)</code> are the coordinates of the bottom-left corner, and <code>(x2, y2)</code> are the coordinates of the top-right corner of the rectangle.</p>\n\n<p>Return <code>true</code><em> if the circle and rectangle are overlapped otherwise return </em><code>false</code>. In other words, check if there is <strong>any</strong> point <code>(x<sub>i</sub>, y<sub>i</sub>)</code> that belongs to the circle and the rectangle at the same time.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/02/20/sample_4_1728.png\" style=\"width: 258px; height: 167px;\" />\n<pre>\n<strong>Input:</strong> radius = 1, xCenter = 0, yCenter = 0, x1 = 1, y1 = -1, x2 = 3, y2 = 1\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Circle and rectangle share the point (1,0).\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> radius = 1, xCenter = 1, yCenter = 1, x1 = 1, y1 = -3, x2 = 2, y2 = -1\n<strong>Output:</strong> false\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/02/20/sample_2_1728.png\" style=\"width: 150px; height: 135px;\" />\n<pre>\n<strong>Input:</strong> radius = 1, xCenter = 0, yCenter = 0, x1 = -1, y1 = 0, x2 = 0, y2 = 1\n<strong>Output:</strong> true\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= radius &lt;= 2000</code></li>\n\t<li><code>-10<sup>4</sup> &lt;= xCenter, yCenter &lt;= 10<sup>4</sup></code></li>\n\t<li><code>-10<sup>4</sup> &lt;= x1 &lt; x2 &lt;= 10<sup>4</sup></code></li>\n\t<li><code>-10<sup>4</sup> &lt;= y1 &lt; y2 &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "geometry"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool checkOverlap(int radius, int x_center, int y_center, int x1, int y1, int x2, int y2) {\n        x1 -= x_center;\n        y1 -= y_center;\n        x2 -= x_center;\n        y2 -= y_center;\n        const auto& x = (x1 > 0) ? x1 : (x2 < 0) ? x2 : 0;\n        const auto& y = (y1 > 0) ? y1 : (y2 < 0) ? y2 : 0;\n        return x * x + y * y <= radius * radius;\n    }\n};\n\n// Time:  O(1)\n// Space: O(1)\nclass Solution2 {\npublic:\n    bool checkOverlap(int radius, int x_center, int y_center, int x1, int y1, int x2, int y2) {\n        x1 -= x_center;\n        y1 -= y_center;\n        x2 -= x_center;\n        y2 -= y_center;\n        const auto& x = (x1 * x2 > 0) ? min(abs(x1), abs(x2)) : 0;\n        const auto& y = (y1 * y2 > 0) ? min(abs(y1), abs(y2)) : 0;\n        return x * x + y * y <= radius * radius;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def checkOverlap(self, radius, x_center, y_center, x1, y1, x2, y2):\n        \"\"\"\n        :type radius: int\n        :type x_center: int\n        :type y_center: int\n        :type x1: int\n        :type y1: int\n        :type x2: int\n        :type y2: int\n        :rtype: bool\n        \"\"\"\n        x1 -= x_center\n        y1 -= y_center\n        x2 -= x_center\n        y2 -= y_center\n        x = x1 if x1 > 0 else x2 if x2 < 0 else 0\n        y = y1 if y1 > 0 else y2 if y2 < 0 else 0\n        return x**2 + y**2 <= radius**2\n\n\n# Time:  O(1)\n# Space: O(1)\nclass Solution2(object):\n    def checkOverlap(self, radius, x_center, y_center, x1, y1, x2, y2):\n        \"\"\"\n        :type radius: int\n        :type x_center: int\n        :type y_center: int\n        :type x1: int\n        :type y1: int\n        :type x2: int\n        :type y2: int\n        :rtype: bool\n        \"\"\"\n        x1 -= x_center\n        y1 -= y_center\n        x2 -= x_center\n        y2 -= y_center        \n        x = min(abs(x1), abs(x2)) if x1*x2 > 0 else 0\n        y = min(abs(y1), abs(y2)) if y1*y2 > 0 else 0\n        return x**2 + y**2 <= radius**2",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

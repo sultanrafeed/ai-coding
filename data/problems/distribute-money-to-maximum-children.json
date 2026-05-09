@@ -1,0 +1,34 @@
+{
+  "id": "5f9a4ccb-7639-438f-aca9-05b425e11604",
+  "slug": "distribute-money-to-maximum-children",
+  "title": "Distribute Money to Maximum Children",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given an integer <code>money</code> denoting the amount of money (in dollars) that you have and another integer <code>children</code> denoting the number of children that you must distribute the money to.</p>\n\n<p>You have to distribute the money according to the following rules:</p>\n\n<ul>\n\t<li>All money must be distributed.</li>\n\t<li>Everyone must receive at least <code>1</code> dollar.</li>\n\t<li>Nobody receives <code>4</code> dollars.</li>\n</ul>\n\n<p>Return <em>the <strong>maximum</strong> number of children who may receive <strong>exactly</strong> </em><code>8</code> <em>dollars if you distribute the money according to the aforementioned rules</em>. If there is no way to distribute the money, return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> money = 20, children = 3\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> \nThe maximum number of children with 8 dollars will be 1. One of the ways to distribute the money is:\n- 8 dollars to the first child.\n- 9 dollars to the second child. \n- 3 dollars to the third child.\nIt can be proven that no distribution exists such that number of children getting 8 dollars is greater than 1.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> money = 16, children = 2\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> Each child can be given 8 dollars.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= money &lt;= 200</code></li>\n\t<li><code>2 &lt;= children &lt;= 30</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "greedy"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    int distMoney(int money, int children) {\n        if (money < children * 1) {\n            return -1;\n        }\n        money -= children * 1;\n        const int q = money / 7, r = money % 7;\n        return min(q, children) - static_cast<int>(q > children || (q == children && r != 0) || (q == children - 1 && r == 3));\n    }\n};\n\n// Time:  O(1)\n// Space: O(1)\n// greedy\nclass Solution2 {\npublic:\n    int distMoney(int money, int children) {\n        if (money < children * 1) {\n            return -1;\n        }\n        money -= children * 1;\n        const int q = money / 7, r = money % 7;\n        if (q > children) {\n            return children - 1;\n        }\n        if (q == children) {\n            return q - static_cast<int>(r != 0);\n        }\n        if (q == children - 1) {\n            return q - static_cast<int>(r == 3);\n        }\n        return q;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def distMoney(self, money, children):\n        \"\"\"\n        :type money: int\n        :type children: int\n        :rtype: int\n        \"\"\"\n        if money < children*1:\n            return -1\n        money -= children*1\n        q, r = divmod(money, 7)\n        return min(q, children) - int(q > children or (q == children and r != 0) or (q == children-1 and r == 3))\n\n\n# Time:  O(1)\n# Space: O(1)\n# greedy\nclass Solution2(object):\n    def distMoney(self, money, children):\n        \"\"\"\n        :type money: int\n        :type children: int\n        :rtype: int\n        \"\"\"\n        if money < children*1:\n            return -1\n        money -= children*1\n        q, r = divmod(money, 7)\n        if q > children:\n            return children-1\n        if q == children:\n            return q-int(r != 0)\n        if q == children-1:\n            return q-int(r == 3)\n        return q",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,34 @@
+{
+  "id": "ee9bfade-ce1e-46a0-b2d3-24d4d431b0a2",
+  "slug": "divide-two-integers",
+  "title": "Divide Two Integers",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two integers <code>dividend</code> and <code>divisor</code>, divide two integers <strong>without</strong> using multiplication, division, and mod operator.</p>\n\n<p>The integer division should truncate toward zero, which means losing its fractional part. For example, <code>8.345</code> would be truncated to <code>8</code>, and <code>-2.7335</code> would be truncated to <code>-2</code>.</p>\n\n<p>Return <em>the <strong>quotient</strong> after dividing </em><code>dividend</code><em> by </em><code>divisor</code>.</p>\n\n<p><strong>Note: </strong>Assume we are dealing with an environment that could only store integers within the <strong>32-bit</strong> signed integer range: <code>[&minus;2<sup>31</sup>, 2<sup>31</sup> &minus; 1]</code>. For this problem, if the quotient is <strong>strictly greater than</strong> <code>2<sup>31</sup> - 1</code>, then return <code>2<sup>31</sup> - 1</code>, and if the quotient is <strong>strictly less than</strong> <code>-2<sup>31</sup></code>, then return <code>-2<sup>31</sup></code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> dividend = 10, divisor = 3\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> 10/3 = 3.33333.. which is truncated to 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> dividend = 7, divisor = -3\n<strong>Output:</strong> -2\n<strong>Explanation:</strong> 7/-3 = -2.33333.. which is truncated to -2.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>-2<sup>31</sup> &lt;= dividend, divisor &lt;= 2<sup>31</sup> - 1</code></li>\n\t<li><code>divisor != 0</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn) = O(1)\n// Space: O(1)\n\n// Only using integer type.\nclass Solution {\npublic:\n    int divide(int dividend, int divisor) {\n        // Handle corner case.\n        if (dividend == numeric_limits<int>::min() && divisor == -1) {\n            return numeric_limits<int>::max();\n        }\n\n        int a = dividend > 0 ? -dividend : dividend;\n        int b = divisor > 0 ? -divisor : divisor;\n\n        int shift = 0;\n        while (b << shift < 0 && shift < 32) {\n            ++shift;\n        }\n        shift -= 1;\n\n        int result = 0;\n        while (shift >= 0) {\n            if (a <= b << shift) {\n                a -= b << shift;\n                result += 1 << shift;\n            }\n            --shift;\n        }\n\n        result =  (dividend ^ divisor) >> 31 ? -result : result;\n        return result;\n    }\n};\n\n// Time:  O(logn) = O(1)\n// Space: O(1)\n// Using long long type.\nclass Solution2 {\npublic:\n    int divide(int dividend, int divisor) {\n        long long result = 0;\n        long long a = llabs(dividend);\n        long long b = llabs(divisor);\n\n        int shift = 31;\n        while (shift >= 0) {\n            if (a >= b << shift) {\n                a -= b << shift;\n                result += 1LL << shift;\n            }\n            --shift;\n        }\n\n        result = ((dividend ^ divisor) >> 31) ? -result : result;\n        return min(result, static_cast<long long>(numeric_limits<int>::max()));\n    }\n};\n\n// Time:  O(logn) = O(1)\n// Space: O(1)\n// a / b = exp^(ln(a) - ln(b))\nclass Solution3 {\npublic:\n    int divide(int dividend, int divisor) {\n        if (dividend == 0) { \n            return 0;\n        }\n        if (divisor == 0) {\n            return numeric_limits<int>::max();\n        }\n\n        long long result = exp(log(fabs(dividend)) - log(fabs(divisor)));\n\n        result = ((dividend ^ divisor) >> 31) ? -result : result;\n        return min(result, static_cast<long long>(numeric_limits<int>::max()));\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn) = O(1)\n# Space: O(1)\n\nclass Solution(object):\n    def divide(self, dividend, divisor):\n        \"\"\"\n        :type dividend: int\n        :type divisor: int\n        :rtype: int\n        \"\"\"\n        result, dvd, dvs = 0, abs(dividend), abs(divisor)\n        while dvd >= dvs:\n            inc = dvs\n            i = 0\n            while dvd >= inc:\n                dvd -= inc\n                result += 1 << i\n                inc <<= 1\n                i += 1\n        if dividend > 0 and divisor < 0 or dividend < 0 and divisor > 0:\n            return -result\n        else:\n            return result\n\n    def divide2(self, dividend, divisor):\n        \"\"\"\n        :type dividend: int\n        :type divisor: int\n        :rtype: int\n        \"\"\"\n        positive = (dividend < 0) is (divisor < 0)\n        dividend, divisor = abs(dividend), abs(divisor)\n        res = 0\n        while dividend >= divisor:\n            temp, i = divisor, 1\n            while dividend >= temp:\n                dividend -= temp\n                res += i\n                i <<= 1\n                temp <<= 1\n        if not positive:\n            res = -res\n        return min(max(-2147483648, res), 2147483647)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

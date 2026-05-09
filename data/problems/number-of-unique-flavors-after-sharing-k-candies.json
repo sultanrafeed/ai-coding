@@ -1,0 +1,35 @@
+{
+  "id": "d5d095e5-e8cf-4283-b82d-2dfcf7e8d76e",
+  "slug": "number-of-unique-flavors-after-sharing-k-candies",
+  "title": "Number of Unique Flavors After Sharing K Candies",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int shareCandies(vector<int>& candies, int k) {\n        unordered_map<int, int> cnt;\n        int result = 0;\n        for (int i = k; i < size(candies); ++i) {\n            ++cnt[candies[i]];\n        }\n        int curr = result = size(cnt);\n        for (int i = k; i < size(candies); ++i) {\n            curr += (cnt[candies[i - k]]++ == 0) - (--cnt[candies[i]] == 0);\n            result = max(result, curr);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def shareCandies(self, candies, k):\n        \"\"\"\n        :type candies: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        cnt = collections.Counter(candies[i] for i in xrange(k, len(candies)))\n        result = curr = len(cnt)\n        for i in xrange(k, len(candies)):\n            cnt[candies[i]] -= 1\n            curr += (cnt[candies[i-k]] == 0) - (cnt[candies[i]] == 0)\n            cnt[candies[i-k]] += 1\n            result = max(result, curr)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

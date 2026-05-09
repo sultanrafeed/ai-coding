@@ -1,0 +1,43 @@
+{
+  "id": "8040aad3-98e2-41bb-972a-00b0636f671b",
+  "slug": "design-snake-game",
+  "title": "Design Snake Game",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "design",
+    "queue",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"SnakeGame\",\"move\",\"move\",\"move\",\"move\",\"move\",\"move\"]\n[[3,2,[[1,2],[0,1]]],[\"R\"],[\"D\"],[\"R\"],[\"U\"],[\"L\"],[\"U\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1) per move\n// Space: O(s), s is the current length of the snake.\n\nclass SnakeGame {\npublic:\n    /** Initialize your data structure here.\n        @param width - screen width\n        @param height - screen height \n        @param food - A list of food positions\n        E.g food = [[1,1], [1,0]] means the first food is positioned at [1,1], the second is at [1,0]. */\n    SnakeGame(int width, int height, vector<vector<int>>& food)\n     : food_(food)\n     , f_{0}\n     , width_{width}\n     , height_{height}\n     , score_{0}\n     , snake_{{0, 0}}\n     , lookup_{{0}} {\n    }\n    \n    /** Moves the snake.\n        @param direction - 'U' = Up, 'L' = Left, 'R' = Right, 'D' = Down \n        @return The game's score after the move. Return -1 if game over. \n        Game over when snake crosses the screen boundary or bites its body. */\n    int move(string direction) {\n        const auto x = snake_.back()[0] + direction_[direction].first;\n        const auto y = snake_.back()[1] + direction_[direction].second;\n        const auto tail = snake_.front();\n        lookup_.erase(hash(tail[0], tail[1]));\n        snake_.pop_front();\n        if (!valid(x, y)) {\n            return -1;\n        } else if (f_ != size(food_) && food_[f_][0] == x && food_[f_][1] == y) {\n            ++score_;\n            ++f_;\n            snake_.push_front(tail);\n            lookup_.emplace(hash(tail[0], tail[1]));\n        }\n        snake_.push_back({x, y});\n        lookup_.emplace(hash(x, y));\n        return score_;\n    }\n\nprivate:\n    bool valid(int x, int y) {\n        if (x < 0 || x >= height_ || y < 0 || y >= width_) {\n            return false;\n        }\n        return !lookup_.count(hash(x, y));\n    }\n\n    int hash(int x, int y) {\n        return x * width_ + y;\n    }\n\n    const vector<vector<int>>& food_;\n    int f_, width_, height_, score_;\n    deque<vector<int>> snake_;\n    unordered_set<int> lookup_;\n    unordered_map<string, pair<int, int>> direction_ = {{\"U\", {-1, 0}}, {\"L\", {0, -1}},\n                                                        {\"R\", {0, 1}}, {\"D\", {1, 0}}};\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1) per move\n# Space: O(s), s is the current length of the snake.\n\nfrom collections import deque\n\nclass SnakeGame(object):\n\n    def __init__(self, width,height,food):\n        \"\"\"\n        Initialize your data structure here.\n        @param width - screen width\n        @param height - screen height\n        @param food - A list of food positions\n        E.g food = [[1,1], [1,0]] means the first food is positioned at [1,1], the second is at [1,0].\n        :type width: int\n        :type height: int\n        :type food: List[List[int]]\n        \"\"\"\n        self.__width = width\n        self.__height = height\n        self.__score = 0\n        self.__f = 0\n        self.__food = food\n        self.__snake = deque([(0, 0)])\n        self.__direction = {\"U\": (-1, 0), \"L\": (0, -1), \"R\": (0, 1), \"D\": (1, 0)}\n        self.__lookup = {(0, 0)}\n\n    def move(self, direction):\n        \"\"\"\n        Moves the snake.\n        @param direction - 'U' = Up, 'L' = Left, 'R' = Right, 'D' = Down\n        @return The game's score after the move. Return -1 if game over.\n        Game over when snake crosses the screen boundary or bites its body.\n        :type direction: str\n        :rtype: int\n        \"\"\"\n        def valid(x, y):\n            return 0 <= x < self.__height and \\\n                   0 <= y < self.__width and \\\n                   (x, y) not in self.__lookup\n        d = self.__direction[direction]\n        x, y = self.__snake[-1][0] + d[0], self.__snake[-1][1] + d[1]\n        self.__lookup.remove(self.__snake[0])\n        tail = self.__snake.popleft()\n        if not valid(x, y):\n            return -1\n        elif self.__f != len(self.__food) and (self.__food[self.__f][0], self.__food[self.__f][1]) == (x, y):\n            self.__score += 1\n            self.__f += 1\n            self.__snake.appendleft(tail)\n            self.__lookup.add(tail)\n        self.__snake.append((x, y))\n        self.__lookup.add((x, y))\n        return self.__score",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

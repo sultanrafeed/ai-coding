@@ -1,0 +1,40 @@
+{
+  "id": "981ce87d-fedb-48d5-be5a-f3f12e0a9bd3",
+  "slug": "squirrel-simulation",
+  "title": "Squirrel Simulation",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "5\n7\n[2,2]\n[4,4]\n[[3,0], [2,5]]\n1\n3\n[0,1]\n[0,0]\n[[0,2]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minDistance(int height, int width, vector<int>& tree, vector<int>& squirrel, vector<vector<int>>& nuts) {\n        int result = 0;\n        int d = numeric_limits<int>::max();\n        for (const auto& nut : nuts) {\n            result += (distance(nut, tree) * 2);\n            d = min(d, distance(nut, squirrel) - distance(nut, tree));\n        }\n        return result + d;\n    }\n\nprivate:\n    int distance(const vector<int>& a, const vector<int>& b) {\n        return abs(a[0] - b[0]) + abs(a[1] - b[1]);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def minDistance(self, height, width, tree, squirrel, nuts):\n        \"\"\"\n        :type height: int\n        :type width: int\n        :type tree: List[int]\n        :type squirrel: List[int]\n        :type nuts: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def distance(a, b):\n            return abs(a[0] - b[0]) + abs(a[1] - b[1])\n\n        result = 0\n        d = float(\"inf\")\n        for nut in nuts:\n            result += (distance(nut, tree) * 2)\n            d = min(d, distance(nut, squirrel) - distance(nut, tree))\n        return result + d",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

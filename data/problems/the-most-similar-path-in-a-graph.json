@@ -1,0 +1,34 @@
+{
+  "id": "2f24d7b0-d686-4bd5-a37c-366ca5df673d",
+  "slug": "the-most-similar-path-in-a-graph",
+  "title": "The Most Similar Path in a Graph",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "dynamic-programming",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2 * m), m is the length of targetPath\n// Space: O(n * m)\n\nclass Solution {\npublic:\n    vector<int> mostSimilar(int n, vector<vector<int>>& roads, vector<string>& names, vector<string>& targetPath) {\n        vector<vector<int>> adj(n);\n        for (const auto& road : roads) {\n            adj[road[0]].emplace_back(road[1]);\n            adj[road[1]].emplace_back(road[0]);\n        }\n\n        vector<vector<int>> dp(targetPath.size() + 1, vector<int>(n));\n        for (int i = 1; i <= targetPath.size(); ++i) {\n            for (int v = 0; v < n; ++v) {\n                dp[i][v] = targetPath.size();\n                for (const auto& u : adj[v]) {\n                    dp[i][v] = min(dp[i][v], dp[i - 1][u]);\n                }\n                dp[i][v] += int(names[v] != targetPath[i - 1]);\n            }\n        }\n\n        vector<int> path = {static_cast<int>(distance(cbegin(dp.back()), \n                                                      min_element(cbegin(dp.back()), cend(dp.back()))))};\n        for (int i = targetPath.size(); i >= 2; --i) {\n            for (const auto& u : adj[path.back()]) {\n                if (dp[i - 1][u] + int(names[path.back()] != targetPath[i - 1]) == dp[i][path.back()]) {\n                    path.emplace_back(u);\n                    break;\n                }\n            }\n        }\n        reverse(begin(path), end(path));\n        return path;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2 * m), m is the length of targetPath\n# Space: O(n * m)\n\nclass Solution(object):\n    def mostSimilar(self, n, roads, names, targetPath):\n        \"\"\"\n        :type n: int\n        :type roads: List[List[int]]\n        :type names: List[str]\n        :type targetPath: List[str]\n        :rtype: List[int]\n        \"\"\"\n        adj = [[] for _ in xrange(n)]\n        for u, v in roads:\n            adj[u].append(v)\n            adj[v].append(u)\n\n        dp = [[0]*n for _ in xrange(len(targetPath)+1)]\n        for i in xrange(1, len(targetPath)+1):\n            for v in xrange(n):\n                dp[i][v] = (names[v] != targetPath[i-1]) + min(dp[i-1][u] for u in adj[v]) \n\n        path = [dp[-1].index(min(dp[-1]))]\n        for i in reversed(xrange(2, len(targetPath)+1)):\n            for u in adj[path[-1]]:\n                if dp[i-1][u]+(names[path[-1]] != targetPath[i-1]) == dp[i][path[-1]]:\n                    path.append(u)\n                    break\n        return path[::-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

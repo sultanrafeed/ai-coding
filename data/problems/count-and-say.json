@@ -1,0 +1,33 @@
+{
+  "id": "32549660-1de6-4676-9bef-f00af28cf914",
+  "slug": "count-and-say",
+  "title": "Count and Say",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>The <strong>count-and-say</strong> sequence is a sequence of digit strings defined by the recursive formula:</p>\n\n<ul>\n\t<li><code>countAndSay(1) = &quot;1&quot;</code></li>\n\t<li><code>countAndSay(n)</code> is the run-length encoding of <code>countAndSay(n - 1)</code>.</li>\n</ul>\n\n<p><a href=\"http://en.wikipedia.org/wiki/Run-length_encoding\" target=\"_blank\">Run-length encoding</a> (RLE) is a string compression method that works by replacing consecutive identical characters (repeated 2 or more times) with the concatenation of the character and the number marking the count of the characters (length of the run). For example, to compress the string <code>&quot;3322251&quot;</code> we replace <code>&quot;33&quot;</code> with <code>&quot;23&quot;</code>, replace <code>&quot;222&quot;</code> with <code>&quot;32&quot;</code>, replace <code>&quot;5&quot;</code> with <code>&quot;15&quot;</code> and replace <code>&quot;1&quot;</code> with <code>&quot;11&quot;</code>. Thus the compressed string becomes <code>&quot;23321511&quot;</code>.</p>\n\n<p>Given a positive integer <code>n</code>, return <em>the </em><code>n<sup>th</sup></code><em> element of the <strong>count-and-say</strong> sequence</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 4</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;1211&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<pre>\ncountAndSay(1) = &quot;1&quot;\ncountAndSay(2) = RLE of &quot;1&quot; = &quot;11&quot;\ncountAndSay(3) = RLE of &quot;11&quot; = &quot;21&quot;\ncountAndSay(4) = RLE of &quot;21&quot; = &quot;1211&quot;\n</pre>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">n = 1</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;1&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>This is the base case.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 30</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<strong>Follow up:</strong> Could you solve it iteratively?",
+  "patterns": [
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 2^n)\n// Space: O(2^n)\n\nclass Solution {\npublic:\n    string countAndSay(int n) {\n        string seq{\"1\"};\n        for (int i = 0; i < n - 1; ++i) {\n            seq = getNext(seq);\n        }\n        return seq;\n    }\n\nprivate:\n    string getNext(const string& seq) {\n        string next_seq;\n        for(auto i = seq.cbegin(); i != seq.cend();) {\n            auto j = find_if(i, seq.cend(), bind1st(not_equal_to<char>(), *i));\n            next_seq.append(to_string(distance(i, j)));\n            next_seq.push_back(*i);\n            i = j;\n        }\n        return next_seq;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * 2^n)\n# Space: O(2^n)\n\nclass Solution(object):\n    # @return a string\n    def countAndSay(self, n):\n        seq = \"1\"\n        for i in xrange(n - 1):\n            seq = self.getNext(seq)\n        return seq\n\n    def getNext(self, seq):\n        i, next_seq = 0, \"\"\n        while i < len(seq):\n            cnt = 1\n            while i < len(seq) - 1 and seq[i] == seq[i + 1]:\n                cnt += 1\n                i += 1\n            next_seq += str(cnt) + seq[i]\n            i += 1\n        return next_seq",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

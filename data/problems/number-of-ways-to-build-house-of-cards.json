@@ -1,0 +1,34 @@
+{
+  "id": "afc06a93-dd15-4b6f-8d08-02cc898417f3",
+  "slug": "number-of-ways-to-build-house-of-cards",
+  "title": "Number of Ways to Build House of Cards",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2)\n// Space: O(n)\n\n// dp\nclass Solution {\npublic:\n    int houseOfCards(int n) {\n        vector<int> dp(n + 1);  // dp[i]: number of ways with i cards and at most t triangles in the first row\n        dp[0] = 1;\n        for (int t = 1; t <= (n + 1) / 3; ++t) {\n            for (int i = n; i >= 3 * t - 1; --i) {\n                dp[i] += dp[i - (3 * t - 1)];\n            }\n        }\n        return dp[n];\n    }\n};\n\n// Time:  O(n^3)\n// Space: O(n^2)\n// dp\nclass Solution_TLE {\npublic:\n    int houseOfCards(int n) {\n        vector<vector<int>> dp((n + 1) / 3 + 1, vector<int>(n + 1));  // dp[t][i]: number of ways with i cards and t triangles in the lowest row\n        dp[0][0] = 1;\n        for (int t = 1; t <= (n + 1) / 3; ++t) {\n            for (int i = 3 * t - 1; i <= n; ++i) {\n                for (int j = 0; j < t; ++j) {\n                    dp[t][i] += dp[j][i - (3 * t - 1)];\n                }\n            }\n        }\n        return accumulate(cbegin(dp), cend(dp), 0,\n                          [](const auto& total, const auto& x) {\n                              return total + x.back();\n                          });\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(n)\n\n# dp\nclass Solution(object):\n    def houseOfCards(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        dp = [0]*(n+1)  # dp[i]: number of ways with i cards and at most t triangles in the first row\n        dp[0] = 1\n        for t in xrange(1, (n+1)//3+1):\n            for i in reversed(xrange(3*t-1, n+1)):\n                dp[i] += dp[i-(3*t-1)]\n        return dp[n]\n\n\n# Time:  O(n^3)\n# Space: O(n^2)\n# dp\nclass Solution_TLE(object):\n    def houseOfCards(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        dp = [[0]*(n+1) for _ in xrange((n+1)//3+1)]  # dp[t][i]: number of ways with i cards and t triangles in the first row\n        dp[0][0] = 1\n        for t in xrange(1, (n+1)//3+1):\n            for i in xrange(3*t-1, n+1):\n                dp[t][i] = sum(dp[j][i-(3*t-1)] for j in xrange(t))\n        return sum(dp[t][n] for t in xrange((n+1)//3+1))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

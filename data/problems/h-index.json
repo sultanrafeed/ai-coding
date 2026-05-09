@@ -1,0 +1,35 @@
+{
+  "id": "c25d84cb-e339-4cde-8c96-4681ff02e65b",
+  "slug": "h-index",
+  "title": "H-Index",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of integers <code>citations</code> where <code>citations[i]</code> is the number of citations a researcher received for their <code>i<sup>th</sup></code> paper, return <em>the researcher&#39;s h-index</em>.</p>\n\n<p>According to the <a href=\"https://en.wikipedia.org/wiki/H-index\" target=\"_blank\">definition of h-index on Wikipedia</a>: The h-index is defined as the maximum value of <code>h</code> such that the given researcher has published at least <code>h</code> papers that have each been cited at least <code>h</code> times.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> citations = [3,0,6,1,5]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> [3,0,6,1,5] means the researcher has 5 papers in total and each of them had received 3, 0, 6, 1, 5 citations respectively.\nSince the researcher has 3 papers with at least 3 citations each and the remaining two with no more than 3 citations each, their h-index is 3.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> citations = [1,3,1]\n<strong>Output:</strong> 1\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == citations.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 5000</code></li>\n\t<li><code>0 &lt;= citations[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "sorting",
+    "counting-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// Counting sort.\nclass Solution {\npublic:\n    int hIndex(vector<int>& citations) {\n        const auto n = citations.size();\n        vector<int> count(n + 1, 0);\n        for (const auto& x : citations) {\n            // Put all x >= n in the same bucket.\n            if (x >= n) {\n                ++count[n];\n            } else {\n                ++count[x];\n            }\n        }\n\n        int h = 0;\n        for (int i = n; i >= 0; --i) {\n            h += count[i];\n            if (h >= i) {\n                return i;\n            }\n        }\n        return h;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int hIndex(vector<int>& citations) {\n        sort(citations.begin(), citations.end(), greater<int>());\n        int h = 0;\n        for (const auto& x : citations) {\n            if (x >= h + 1) {\n                ++h;\n            } else {\n                break;\n            }\n        }\n        return h;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def hIndex(self, citations):\n        \"\"\"\n        :type citations: List[int]\n        :rtype: int\n        \"\"\"\n        n = len(citations)\n        count = [0] * (n + 1)\n        for x in citations:\n            # Put all x >= n in the same bucket.\n            if x >= n:\n                count[n] += 1\n            else:\n                count[x] += 1\n\n        h = 0\n        for i in reversed(xrange(0, n + 1)):\n            h += count[i]\n            if h >= i:\n                return i\n        return h\n\n# Time:  O(nlogn)\n# Space: O(1)\nclass Solution2(object):\n    def hIndex(self, citations):\n        \"\"\"\n        :type citations: List[int]\n        :rtype: int\n        \"\"\"\n        citations.sort(reverse=True)\n        h = 0\n        for x in citations:\n            if x >= h + 1:\n                h += 1\n            else:\n                break\n        return h\n\n# Time:  O(nlogn)\n# Space: O(n)\nclass Solution3(object):\n    def hIndex(self, citations):\n        \"\"\"\n        :type citations: List[int]\n        :rtype: int\n        \"\"\"\n        return sum(x >= i + 1 for i, x in enumerate(sorted(citations, reverse=True)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

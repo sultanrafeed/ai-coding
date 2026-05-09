@@ -1,0 +1,31 @@
+{
+  "id": "d54259d4-bd64-4539-920b-5881bfd3f065",
+  "slug": "select-data",
+  "title": "Select Data",
+  "difficulty": "easy",
+  "descriptionHtml": "<pre>\nDataFrame students\n+-------------+--------+\n| Column Name | Type   |\n+-------------+--------+\n| student_id  | int    |\n| name        | object |\n| age         | int    |\n+-------------+--------+\n\n</pre>\n\n<p>Write a solution to select the name and age of the student with <code>student_id = 101</code>.</p>\n\n<p>The result format is in the following example.</p>\n\n<p>&nbsp;</p>\n<pre>\n<strong>Example 1:\nInput:</strong>\n+------------+---------+-----+\n| student_id | name    | age |\n+------------+---------+-----+\n| 101        | Ulysses | 13  |\n| 53         | William | 10  |\n| 128        | Henry   | 6   |\n| 3          | Henry   | 11  |\n+------------+---------+-----+\n<strong>Output:</strong>\n+---------+-----+\n| name    | age | \n+---------+-----+\n| Ulysses | 13  |\n+---------+-----+\n<strong>Explanation:\n</strong>Student Ulysses has student_id = 101, we select the name and age.</pre>\n",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"headers\":{\"students\":[\"student_id\",\"name\",\"age\"]},\"rows\":{\"students\":[[101,\"Ulysses\",13],[53,\"William\",10],[128,\"Henry\",6],[3,\"Henry\",11]]}}",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport pandas as pd\n\n\n# pandas\ndef selectData(students: pd.DataFrame) -> pd.DataFrame:\n    return students[students[\"student_id\"] == 101][[\"name\", \"age\"]]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

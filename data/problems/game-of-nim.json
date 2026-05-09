@@ -1,0 +1,44 @@
+{
+  "id": "436aa2e6-7477-4f83-b464-1dd61b0ba134",
+  "slug": "game-of-nim",
+  "title": "Game of Nim",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "dynamic-programming",
+    "bit-manipulation",
+    "brainteaser",
+    "game-theory"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[1]\n[1,1]\n[1,2,3]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool nimGame(vector<int>& piles) {\n        return accumulate(cbegin(piles), cend(piles), 0, bit_xor<int>());\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nimport operator\n\n\nclass Solution(object):\n    def nimGame(self, piles):\n        \"\"\"\n        :type piles: List[int]\n        :rtype: bool\n        \"\"\"\n        return reduce(operator.xor, piles, 0)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

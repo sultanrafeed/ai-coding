@@ -1,0 +1,35 @@
+{
+  "id": "e2893d3f-fce2-4f33-9997-acf5e084f83f",
+  "slug": "minimum-cost-to-connect-sticks",
+  "title": "Minimum Cost to Connect Sticks",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int connectSticks(vector<int>& sticks) {\n        priority_queue<int, vector<int>, greater<int>> min_heap(sticks.cbegin(), sticks.cend());\n        int result = 0;\n        while (min_heap.size() > 1) {\n            const auto x = min_heap.top(); min_heap.pop();\n            const auto y = min_heap.top(); min_heap.pop();\n            result += x + y;\n            min_heap.emplace(x + y);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport heapq\n\n\nclass Solution(object):\n    def connectSticks(self, sticks):\n        \"\"\"\n        :type sticks: List[int]\n        :rtype: int\n        \"\"\"\n        heapq.heapify(sticks)\n        result = 0\n        while len(sticks) > 1:\n            x, y = heapq.heappop(sticks), heapq.heappop(sticks)\n            result += x+y\n            heapq.heappush(sticks, x+y)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "a06fcc68-1520-42f5-a7b0-1af203482572",
+  "slug": "design-a-number-container-system",
+  "title": "Design a Number Container System",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Design a number container system that can do the following:</p>\n\n<ul>\n\t<li><strong>Insert </strong>or <strong>Replace</strong> a number at the given index in the system.</li>\n\t<li><strong>Return </strong>the smallest index for the given number in the system.</li>\n</ul>\n\n<p>Implement the <code>NumberContainers</code> class:</p>\n\n<ul>\n\t<li><code>NumberContainers()</code> Initializes the number container system.</li>\n\t<li><code>void change(int index, int number)</code> Fills the container at <code>index</code> with the <code>number</code>. If there is already a number at that <code>index</code>, replace it.</li>\n\t<li><code>int find(int number)</code> Returns the smallest index for the given <code>number</code>, or <code>-1</code> if there is no index that is filled by <code>number</code> in the system.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;NumberContainers&quot;, &quot;find&quot;, &quot;change&quot;, &quot;change&quot;, &quot;change&quot;, &quot;change&quot;, &quot;find&quot;, &quot;change&quot;, &quot;find&quot;]\n[[], [10], [2, 10], [1, 10], [3, 10], [5, 10], [10], [1, 20], [10]]\n<strong>Output</strong>\n[null, -1, null, null, null, null, 1, null, 2]\n\n<strong>Explanation</strong>\nNumberContainers nc = new NumberContainers();\nnc.find(10); // There is no index that is filled with number 10. Therefore, we return -1.\nnc.change(2, 10); // Your container at index 2 will be filled with number 10.\nnc.change(1, 10); // Your container at index 1 will be filled with number 10.\nnc.change(3, 10); // Your container at index 3 will be filled with number 10.\nnc.change(5, 10); // Your container at index 5 will be filled with number 10.\nnc.find(10); // Number 10 is at the indices 1, 2, 3, and 5. Since the smallest index that is filled with 10 is 1, we return 1.\nnc.change(1, 20); // Your container at index 1 will be filled with number 20. Note that index 1 was filled with 10 and then replaced with 20. \nnc.find(10); // Number 10 is at the indices 2, 3, and 5. The smallest index that is filled with 10 is 2. Therefore, we return 2.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= index, number &lt;= 10<sup>9</sup></code></li>\n\t<li>At most <code>10<sup>5</sup></code> calls will be made <strong>in total</strong> to <code>change</code> and <code>find</code>.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "design",
+    "heap-priority-queue",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:   O(1)\n//        change: O(logn)\n//        find:   O(1)\n// Space: O(n)\n\n// bst\nclass NumberContainers {\npublic:\n    NumberContainers() {\n        \n    }\n    \n    void change(int index, int number) {\n        if (idx_to_num_.count(index)) {\n            num_to_idxs_[idx_to_num_[index]].erase(index);\n            if (empty(num_to_idxs_[idx_to_num_[index]])) {\n                num_to_idxs_.erase(idx_to_num_[index]);\n            }\n        }\n        idx_to_num_[index] = number;\n        num_to_idxs_[number].emplace(index);\n    }\n    \n    int find(int number) {\n        if (num_to_idxs_.count(number)) {\n            return *cbegin(num_to_idxs_[number]);\n        }\n        return -1;\n    }\n\nprivate:\n    unordered_map<int, int> idx_to_num_;\n    unordered_map<int, set<int>> num_to_idxs_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:   O(1)\n#        change: O(logn)\n#        find:   O(1)\n# Space: O(n)\n\nfrom sortedcontainers import SortedList\n\n\n# sorted list\nclass NumberContainers(object):\n\n    def __init__(self):\n        self.__idx_to_num = {}\n        self.__num_to_idxs = collections.defaultdict(SortedList)\n\n    def change(self, index, number):\n        \"\"\"\n        :type index: int\n        :type number: int\n        :rtype: None\n        \"\"\"\n        if index in self.__idx_to_num:\n            self.__num_to_idxs[self.__idx_to_num[index]].remove(index)\n            if not self.__num_to_idxs[self.__idx_to_num[index]]:\n                del self.__num_to_idxs[self.__idx_to_num[index]]\n        self.__idx_to_num[index] = number\n        self.__num_to_idxs[number].add(index)\n\n    def find(self, number):\n        \"\"\"\n        :type number: int\n        :rtype: int\n        \"\"\"\n        return self.__num_to_idxs[number][0] if number in self.__num_to_idxs else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

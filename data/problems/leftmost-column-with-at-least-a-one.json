@@ -1,0 +1,42 @@
+{
+  "id": "74fb24a7-8668-4737-9107-909f589c3520",
+  "slug": "leftmost-column-with-at-least-a-one",
+  "title": "Leftmost Column with at Least a One",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "matrix",
+    "interactive"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,0],[1,1]]\n[[0,0],[0,1]]\n[[0,0],[0,0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m + n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int leftMostColumnWithOne(BinaryMatrix &binaryMatrix) {\n        const auto& dim = binaryMatrix.dimensions();\n        const auto& m = dim[0], &n = dim[1];\n        int r = 0, c = n - 1;\n        while (r < m && c >= 0) {\n            if (!binaryMatrix.get(r, c)) {\n                ++r;\n            } else {\n                --c;\n            }\n        }\n        return (c + 1 != n) ? c + 1 : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m + n)\n# Space: O(1)\n\nclass BinaryMatrix(object):\n    def get(self, row, col):\n        pass\n\n    def dimensions(self):\n        pass\n\n\nclass Solution(object):\n    def leftMostColumnWithOne(self, binaryMatrix):\n        \"\"\"\n        :type binaryMatrix: BinaryMatrix\n        :rtype: int\n        \"\"\"\n        m, n = binaryMatrix.dimensions()\n        r, c = 0, n-1\n        while r < m and c >= 0:\n            if not binaryMatrix.get(r, c):\n                r += 1\n            else:\n                c -= 1        \n        return c+1 if c+1 != n else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

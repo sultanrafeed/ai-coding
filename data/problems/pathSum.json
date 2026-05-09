@@ -1,0 +1,25 @@
+{
+  "id": "61d8085b-740b-433e-84f8-fb5c24ef966b",
+  "slug": "pathSum",
+  "title": "Pathsum",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(logn)\n\n/**\n * Definition for binary tree\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        vector<vector<int> > pathSum(TreeNode *root, int sum) {\n            pathSumImpl(root, sum);\n            return ans;\n        }\n    private:\n        vector<int> v;\n        vector<vector<int> > ans;\n\n        void pathSumImpl(TreeNode *root, int sum) {\n            if(!root) {\n                return;\n            }\n\n            v.push_back(root->val);\n\n            if(!root->left && !root->right && root->val == sum) {\n                ans.push_back(v);\n            }\n\n            pathSumImpl(root->left, sum - root->val);\n            pathSumImpl(root->right, sum - root->val);\n\n            v.pop_back(); // restore\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

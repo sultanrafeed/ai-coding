@@ -1,0 +1,43 @@
+{
+  "id": "e372ceb6-1fc6-421e-9ffa-085ffd39851d",
+  "slug": "stock-price-fluctuation",
+  "title": "Stock Price Fluctuation ",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a stream of <strong>records</strong> about a particular stock. Each record contains a <strong>timestamp</strong> and the corresponding <strong>price</strong> of the stock at that timestamp.</p>\n\n<p>Unfortunately due to the volatile nature of the stock market, the records do not come in order. Even worse, some records may be incorrect. Another record with the same timestamp may appear later in the stream <strong>correcting</strong> the price of the previous wrong record.</p>\n\n<p>Design an algorithm that:</p>\n\n<ul>\n\t<li><strong>Updates</strong> the price of the stock at a particular timestamp, <strong>correcting</strong> the price from any previous records at the timestamp.</li>\n\t<li>Finds the <strong>latest price</strong> of the stock based on the current records. The <strong>latest price</strong> is the price at the latest timestamp recorded.</li>\n\t<li>Finds the <strong>maximum price</strong> the stock has been based on the current records.</li>\n\t<li>Finds the <strong>minimum price</strong> the stock has been based on the current records.</li>\n</ul>\n\n<p>Implement the <code>StockPrice</code> class:</p>\n\n<ul>\n\t<li><code>StockPrice()</code> Initializes the object with no price records.</li>\n\t<li><code>void update(int timestamp, int price)</code> Updates the <code>price</code> of the stock at the given <code>timestamp</code>.</li>\n\t<li><code>int current()</code> Returns the <strong>latest price</strong> of the stock.</li>\n\t<li><code>int maximum()</code> Returns the <strong>maximum price</strong> of the stock.</li>\n\t<li><code>int minimum()</code> Returns the <strong>minimum price</strong> of the stock.</li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;StockPrice&quot;, &quot;update&quot;, &quot;update&quot;, &quot;current&quot;, &quot;maximum&quot;, &quot;update&quot;, &quot;maximum&quot;, &quot;update&quot;, &quot;minimum&quot;]\n[[], [1, 10], [2, 5], [], [], [1, 3], [], [4, 2], []]\n<strong>Output</strong>\n[null, null, null, 5, 10, null, 5, null, 2]\n\n<strong>Explanation</strong>\nStockPrice stockPrice = new StockPrice();\nstockPrice.update(1, 10); // Timestamps are [1] with corresponding prices [10].\nstockPrice.update(2, 5);  // Timestamps are [1,2] with corresponding prices [10,5].\nstockPrice.current();     // return 5, the latest timestamp is 2 with the price being 5.\nstockPrice.maximum();     // return 10, the maximum price is 10 at timestamp 1.\nstockPrice.update(1, 3);  // The previous timestamp 1 had the wrong price, so it is updated to 3.\n                          // Timestamps are [1,2] with corresponding prices [3,5].\nstockPrice.maximum();     // return 5, the maximum price is 5 after the correction.\nstockPrice.update(4, 2);  // Timestamps are [1,2,4] with corresponding prices [3,5,2].\nstockPrice.minimum();     // return 2, the minimum price is 2 at timestamp 4.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= timestamp, price &lt;= 10<sup>9</sup></code></li>\n\t<li>At most <code>10<sup>5</sup></code> calls will be made <strong>in total</strong> to <code>update</code>, <code>current</code>, <code>maximum</code>, and <code>minimum</code>.</li>\n\t<li><code>current</code>, <code>maximum</code>, and <code>minimum</code> will be called <strong>only after</strong> <code>update</code> has been called <strong>at least once</strong>.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "design",
+    "heap-priority-queue",
+    "data-stream",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"StockPrice\",\"update\",\"update\",\"current\",\"maximum\",\"update\",\"maximum\",\"update\",\"minimum\"]\n[[],[1,10],[2,5],[],[],[1,3],[],[4,2],[]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor:    O(1)\n//        update:  O(logn)\n//        current: O(1)\n//        max:     O(1)\n//        min:     O(1)\n// Space: O(n)\n\nclass StockPrice {\npublic:\n    StockPrice() {\n        \n    }\n    \n    void update(int timestamp, int price) {\n        if (timestamp > curr_) {\n            curr_ = timestamp;\n        }\n        if (lookup_.count(timestamp)) {\n            min_bst_.erase(min_bst_.find(lookup_[timestamp]));\n        }\n        lookup_[timestamp] = price;\n        min_bst_.emplace(price);\n    }\n    \n    int current() {\n        return lookup_[curr_];\n    }\n    \n    int maximum() {\n        return *prev(cend(min_bst_));\n    }\n    \n    int minimum() {\n        return *cbegin(min_bst_);\n    }\n\nprivate:\n    int curr_ = 0;\n    unordered_map<int, int> lookup_;\n    multiset<int> min_bst_;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  ctor:    O(1)\n#        update:  O(logn)\n#        current: O(1)\n#        max:     O(1)\n#        min:     O(1)\n# Space: O(n)\n\nfrom sortedcontainers import SortedList\n\n\nclass StockPrice(object):\n\n    def __init__(self):\n        self.__curr = 0\n        self.__lookup = {}\n        self.__sl_by_price = SortedList()\n\n    def update(self, timestamp, price):\n        \"\"\"\n        :type timestamp: int\n        :type price: int\n        :rtype: None\n        \"\"\"\n        if timestamp > self.__curr:\n            self.__curr = timestamp\n        if timestamp in self.__lookup:\n            self.__sl_by_price.remove(self.__lookup[timestamp])\n        self.__lookup[timestamp] = price\n        self.__sl_by_price.add(price)\n\n    def current(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__lookup[self.__curr]\n\n    def maximum(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return next(reversed(self.__sl_by_price))\n\n    def minimum(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return next(iter(self.__sl_by_price))\n\n\n# Time:  ctor:    O(1)\n#        update:  O(logn)\n#        current: O(1)\n#        max:     O(logn) on average\n#        min:     O(logn) on average\n# Space: O(n)\nimport heapq\n\n\nclass StockPrice2(object):\n\n    def __init__(self):\n        self.__curr = 0\n        self.__lookup = {}\n        self.__min_heap = []\n        self.__max_heap = []\n\n    def update(self, timestamp, price):\n        \"\"\"\n        :type timestamp: int\n        :type price: int\n        :rtype: None\n        \"\"\"\n        def full_delete(heap, sign):  # Time: O(n), Space: O(n)\n            heap[:] = [x for x in set(heap) if sign*x[0] == self.__lookup[x[1]]]\n            heapq.heapify(heap)\n\n        if timestamp > self.__curr:\n            self.__curr = timestamp\n        self.__lookup[timestamp] = price\n        heapq.heappush(self.__min_heap, (price, timestamp))\n        heapq.heappush(self.__max_heap, (-price, timestamp))\n        if len(self.__min_heap) > 2*len(self.__lookup):  # avoid too much expired or duplicated data\n            full_delete(self.__min_heap, 1)\n            full_delete(self.__max_heap, -1)\n\n    def current(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        return self.__lookup[self.__curr]\n\n    def maximum(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        while self.__max_heap and self.__lookup[self.__max_heap[0][1]] != -self.__max_heap[0][0]:  # lazy delete\n            heapq.heappop(self.__max_heap)\n        return -self.__max_heap[0][0]\n\n    def minimum(self):\n        \"\"\"\n        :rtype: int\n        \"\"\"\n        while self.__min_heap and self.__lookup[self.__min_heap[0][1]] != self.__min_heap[0][0]:  # lazy delete\n            heapq.heappop(self.__min_heap)\n        return self.__min_heap[0][0]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

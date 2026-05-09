@@ -1,0 +1,42 @@
+{
+  "id": "cabcf321-dd80-4f4e-960b-64756826a14d",
+  "slug": "word-squares",
+  "title": "Word Squares",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "string",
+    "backtracking",
+    "trie"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"area\",\"lead\",\"wall\",\"lady\",\"ball\"]\n[\"abat\",\"baba\",\"atan\",\"atal\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^2 * n!)\n// Space: O(n^2)\n\nclass Solution {\nprivate:\n    struct TrieNode {\n        vector<int> indices;\n        vector<TrieNode *> children;\n        TrieNode() : children(26, nullptr) {}\n    };\n\n    TrieNode *buildTrie(const vector<string>& words) {\n        TrieNode *root = new TrieNode();\n        for (int i = 0; i < size(words); ++i) {\n            TrieNode* t = root;\n            for (int j = 0; j < size(words[i]); ++j) {\n                if (!t->children[words[i][j] - 'a']) {\n                    t->children[words[i][j] - 'a'] = new TrieNode();\n                }\n                t = t->children[words[i][j] - 'a'];\n                t->indices.emplace_back(i);\n            }\n        }\n        return root;\n    }\n\npublic:\n    vector<vector<string>> wordSquares(vector<string>& words) {\n        vector<vector<string>> result;\n\n        TrieNode *trie = buildTrie(words);\n        vector<string> curr;\n        for (const auto& s : words) {\n            curr.emplace_back(s);\n            wordSquaresHelper(words, trie, &curr, &result);\n            curr.pop_back();\n        }\n\n        return result;\n    }\n\nprivate:\n    void wordSquaresHelper(const vector<string>& words, TrieNode *trie, vector<string> *curr,\n                           vector<vector<string>> *result) {\n        if (size(*curr) == size(words[0])) {\n            result->emplace_back(*curr);\n            return;\n        }\n        \n        TrieNode *node = trie;     \n        for (int i = 0; i < size(*curr); ++i) {\n            if (!(node = node->children[(*curr)[i][curr->size()] - 'a'])) {\n                return;\n            }\n        }\n\n        for (const auto& i : node->indices) {\n            curr->emplace_back(words[i]);\n            wordSquaresHelper(words, trie, curr, result);\n            curr->pop_back();\n        }\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2 * n!)\n# Space: O(n^2)\n\nclass TrieNode(object):\n    def __init__(self):\n        self.indices = []\n        self.children = [None] * 26\n\n    def insert(self, words, i):\n        cur = self\n        for c in words[i]:\n            if not cur.children[ord(c)-ord('a')]:\n                cur.children[ord(c)-ord('a')] = TrieNode()\n            cur = cur.children[ord(c)-ord('a')]\n            cur.indices.append(i)\n\n\nclass Solution(object):\n    def wordSquares(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: List[List[str]]\n        \"\"\"\n        result = []\n\n        trie = TrieNode()\n        for i in xrange(len(words)):\n            trie.insert(words, i)\n\n        curr = []\n        for s in words:\n            curr.append(s)\n            self.wordSquaresHelper(words, trie, curr, result)\n            curr.pop()\n\n        return result\n\n    def wordSquaresHelper(self, words, trie, curr, result):\n        if len(curr) >= len(words[0]):\n            return result.append(list(curr))\n\n        node = trie\n        for s in curr:\n            node = node.children[ord(s[len(curr)]) - ord('a')]\n            if not node:\n                return\n\n        for i in node.indices:\n            curr.append(words[i])\n            self.wordSquaresHelper(words, trie, curr, result)\n            curr.pop()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

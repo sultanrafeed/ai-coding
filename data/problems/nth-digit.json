@@ -1,0 +1,40 @@
+{
+  "id": "974ba617-0f8b-4827-81ac-0d9ad2b3c77f",
+  "slug": "nth-digit",
+  "title": "Nth Digit",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, return the <code>n<sup>th</sup></code> digit of the infinite integer sequence <code>[1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ...]</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 3\n<strong>Output:</strong> 3\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 11\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The 11<sup>th</sup> digit of the sequence 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, ... is a 0, which is part of the number 10.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 2<sup>31</sup> - 1</code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "3\n11",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int findNthDigit(int n) {\n        int digit_len = 1;\n        while (n > digit_len * 9 * pow(10, digit_len - 1)) {\n            n -= digit_len * 9 * pow(10, digit_len - 1);\n            ++digit_len;\n        }\n\n        const int num = pow(10, digit_len - 1) + (n - 1) / digit_len;\n\n        int nth_digit = num / pow(10, (digit_len - 1) - (n - 1) % digit_len);\n        nth_digit %= 10;\n\n        return nth_digit;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def findNthDigit(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        digit_len = 1\n        while n > digit_len * 9 * (10 ** (digit_len-1)):\n            n -= digit_len  * 9 * (10 ** (digit_len-1))\n            digit_len += 1\n\n        num = 10 ** (digit_len-1) + (n-1)/digit_len\n\n        nth_digit = num / (10 ** ((digit_len-1) - ((n-1)%digit_len)))\n        nth_digit %= 10\n\n        return nth_digit",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

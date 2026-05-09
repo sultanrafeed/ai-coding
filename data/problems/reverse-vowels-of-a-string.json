@@ -1,0 +1,34 @@
+{
+  "id": "aff2ee00-2a26-4798-86dc-e05e349cccd9",
+  "slug": "reverse-vowels-of-a-string",
+  "title": "Reverse Vowels of a String",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given a string <code>s</code>, reverse only all the vowels in the string and return it.</p>\n\n<p>The vowels are <code>&#39;a&#39;</code>, <code>&#39;e&#39;</code>, <code>&#39;i&#39;</code>, <code>&#39;o&#39;</code>, and <code>&#39;u&#39;</code>, and they can appear in both lower and upper cases, more than once.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;IceCreAm&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;AceCreIm&quot;</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>The vowels in <code>s</code> are <code>[&#39;I&#39;, &#39;e&#39;, &#39;e&#39;, &#39;A&#39;]</code>. On reversing the vowels, s becomes <code>&quot;AceCreIm&quot;</code>.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">s = &quot;leetcode&quot;</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">&quot;leotcede&quot;</span></p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 3 * 10<sup>5</sup></code></li>\n\t<li><code>s</code> consist of <strong>printable ASCII</strong> characters.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string reverseVowels(string s) {\n        for (int i = 0, j = s.length() - 1; i < j;) {\n            if (!is_vowel(tolower(s[i]))) {\n                ++i;\n            } else if (!is_vowel(tolower(s[j]))) {\n                --j;\n            } else {\n                swap(s[i++], s[j--]);\n            }\n        }\n        return s;\n    }\n\nprivate:\n    const string vowels_ = \"aeiou\";\n    bool is_vowel(char a){\n        return vowels_.find(a) != string::npos;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def reverseVowels(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: str\n        \"\"\"\n        vowels = \"aeiou\"\n        string = list(s)\n        i, j = 0, len(s) - 1\n        while i < j:\n            if string[i].lower() not in vowels:\n                i += 1\n            elif string[j].lower() not in vowels:\n                j -= 1\n            else:\n                string[i], string[j] = string[j], string[i]\n                i += 1\n                j -= 1\n        return \"\".join(string)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

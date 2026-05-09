@@ -1,0 +1,34 @@
+{
+  "id": "a2782cbf-888f-469e-99a2-8878e1035524",
+  "slug": "maximum-product-subarray",
+  "title": "Maximum Product Subarray",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code>, find a <span data-keyword=\"subarray-nonempty\">subarray</span> that has the largest product, and return <em>the product</em>.</p>\n\n<p>The test cases are generated so that the answer will fit in a <strong>32-bit</strong> integer.</p>\n\n<p><strong>Note</strong> that the product of an array with a single element is the value of that element.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,3,-2,4]\n<strong>Output:</strong> 6\n<strong>Explanation:</strong> [2,3] has the largest product 6.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [-2,0,-1]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> The result cannot be 2, because [-2,-1] is not a subarray.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 2 * 10<sup>4</sup></code></li>\n\t<li><code>-10 &lt;= nums[i] &lt;= 10</code></li>\n\t<li>The product of any subarray of <code>nums</code> is <strong>guaranteed</strong> to fit in a <strong>32-bit</strong> integer.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxProduct(vector<int>& nums) {\n        int result = numeric_limits<int>::min();\n        int curr_min = 1, curr_max = 1;\n        for (const auto& num : nums) {\n            tie(curr_min, curr_max) = pair(min({num, curr_min * num, curr_max * num}),\n                                           max({num, curr_min * num, curr_max * num}));\n            result = max(result, curr_max);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    # @param A, a list of integers\n    # @return an integer\n    def maxProduct(self, A):\n        global_max, local_max, local_min = float(\"-inf\"), 1, 1\n        for x in A:\n            local_max, local_min = max(x, local_max * x, local_min * x), min(x, local_max * x, local_min * x)\n            global_max = max(global_max, local_max)\n        return global_max\n\nclass Solution2(object):\n    # @param A, a list of integers\n    # @return an integer\n    def maxProduct(self, A):\n        global_max, local_max, local_min = float(\"-inf\"), 1, 1\n        for x in A:\n            local_max = max(1, local_max)\n            if x > 0:\n                local_max, local_min = local_max * x, local_min * x\n            else:\n                local_max, local_min = local_min * x, local_max * x\n            global_max = max(global_max, local_max)\n        return global_max",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

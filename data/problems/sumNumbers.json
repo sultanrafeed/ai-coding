@@ -1,0 +1,25 @@
+{
+  "id": "0be3008b-9def-4001-beed-49acd562f365",
+  "slug": "sumNumbers",
+  "title": "Sumnumbers",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(n)\n// Space Complexity: O(logn)\n\n/**\n * Definition for binary tree\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        int dfs(TreeNode *root, int num) {\n            if(!root)\n                return 0;\n\n            num = num * 10 + root->val;\n\n            if(!root->left && !root->right) // leaf \n                return num;\n\n            return dfs(root->left, num) + dfs(root->right, num);\n        }\n\n        int sumNumbers(TreeNode *root) {\n            int num = 0;\n            return dfs(root, 0);\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

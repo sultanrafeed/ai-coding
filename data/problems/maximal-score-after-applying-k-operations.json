@@ -1,0 +1,41 @@
+{
+  "id": "c5bc7cc0-38f5-43f0-a394-799d415d9a2f",
+  "slug": "maximal-score-after-applying-k-operations",
+  "title": "Maximal Score After Applying K Operations",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> integer array <code>nums</code> and an integer <code>k</code>. You have a <strong>starting score</strong> of <code>0</code>.</p>\n\n<p>In one <strong>operation</strong>:</p>\n\n<ol>\n\t<li>choose an index <code>i</code> such that <code>0 &lt;= i &lt; nums.length</code>,</li>\n\t<li>increase your <strong>score</strong> by <code>nums[i]</code>, and</li>\n\t<li>replace <code>nums[i]</code> with <code>ceil(nums[i] / 3)</code>.</li>\n</ol>\n\n<p>Return <em>the maximum possible <strong>score</strong> you can attain after applying <strong>exactly</strong></em> <code>k</code> <em>operations</em>.</p>\n\n<p>The ceiling function <code>ceil(val)</code> is the least integer greater than or equal to <code>val</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong>Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [10,10,10,10,10], k = 5\n<strong>Output:</strong> 50\n<strong>Explanation:</strong> Apply the operation to each array element exactly once. The final score is 10 + 10 + 10 + 10 + 10 = 50.\n</pre>\n\n<p><strong>Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,10,3,3,3], k = 3\n<strong>Output:</strong> 17\n<strong>Explanation: </strong>You can do the following operations:\nOperation 1: Select i = 1, so nums becomes [1,<strong><u>4</u></strong>,3,3,3]. Your score increases by 10.\nOperation 2: Select i = 1, so nums becomes [1,<strong><u>2</u></strong>,3,3,3]. Your score increases by 4.\nOperation 3: Select i = 2, so nums becomes [1,2,<u><strong>1</strong></u>,3,3]. Your score increases by 3.\nThe final score is 10 + 4 + 3 = 17.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length, k &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "greedy",
+    "heap-priority-queue"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[10,10,10,10,10]\n5\n[1,10,3,3,3]\n3",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + klogn)\n// Space: O(1)\n\n// heap\nclass Solution {\npublic:\n    long long maxKelements(vector<int>& nums, int k) {\n        const auto& ceil_divide = [](const auto& a, const auto& b) {\n            return (a + b - 1) / b;\n        };\n\n        int64_t result = 0;\n        make_heap(begin(nums), end(nums));\n        while (k-- && !empty(nums)) {\n            int x = nums.front();\n            result += x;\n            pop_heap(begin(nums), end(nums)); nums.pop_back();\n            const auto nx = ceil_divide(x, 3);\n            if (!nx) {\n                continue;\n            }\n            nums.emplace_back(nx);\n            push_heap(begin(nums), end(nums));\n        }\n        return result;\n    }\n};\n\n// Time:  O(n + klogn)\n// Space: O(1)\n// heap\nclass Solution2 {\npublic:\n    long long maxKelements(vector<int>& nums, int k) {\n        const auto& ceil_divide = [](const auto& a, const auto& b) {\n            return (a + b - 1) / b;\n        };\n\n        int64_t result = 0;\n        make_heap(begin(nums), end(nums));\n        while (--k >= 0) {\n            int x = nums.front();\n            result += x;\n            pop_heap(begin(nums), end(nums)); nums.pop_back();\n            nums.emplace_back(ceil_divide(x, 3));\n            push_heap(begin(nums), end(nums));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + klogn)\n# Space: O(1)\n\nimport heapq\n\n\n# heap\nclass Solution(object):\n    def maxKelements(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n    \n        result = 0\n        for i, x in enumerate(nums):\n            nums[i] = -x\n        heapq.heapify(nums)\n        for _ in xrange(k):\n            if not nums:\n                break\n            x = -heapq.heappop(nums)\n            result += x\n            nx = ceil_divide(x, 3)\n            if not nx:\n                continue\n            heapq.heappush(nums, -nx)\n        return result\n  \n\n# Time:  O(n + klogn)\n# Space: O(1)\nimport heapq\n\n\n# heap\nclass Solution2(object):\n    def maxKelements(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n    \n        result = 0\n        for i, x in enumerate(nums):\n            nums[i] = -x\n        heapq.heapify(nums)\n        for _ in xrange(k):\n            x = -heapq.heappop(nums)\n            result += x\n            heapq.heappush(nums, -ceil_divide(x, 3))\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

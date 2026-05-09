@@ -1,0 +1,25 @@
+{
+  "id": "d47116cc-8773-4256-8ea6-0cd65aec1ca3",
+  "slug": "palindromePartition2",
+  "title": "Palindromepartition2",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time Complexity: O(2^n)\n// Space Complexity: O(n^2)\n\nclass Solution {\n    public:      \n        vector<vector<string> > partition(string s) {\n            const int n = s.size();\n            vector<vector<bool> > p(n, vector<bool>(n, false));\n            vector<string> path;\n            vector<vector<string> > ans;\n            buildPalindromeMap(s, p);\n            dfs(s, p, 0, path, ans);\n            return ans;\n        }\n    private:\n        void buildPalindromeMap(const string &s, vector<vector<bool> > &p) {\n            for (int i = s.size() - 1; i >= 0; --i)\n                for (int j = i; j < s.size(); ++j)\n                    p[i][j] = s[i] == s[j] && ((j - i < 2) || p[i + 1][j - 1]);   \n        }\n        void dfs(const string &s, const vector<vector<bool> > &p, int start,\n                vector<string> &path, vector<vector<string> > &ans) {\n            if(start == s.size()) {\n                ans.push_back(path);\n                return;        \n            }\n            for(size_t i = start; i < s.size(); ++i) {\n                if(p[start][i]) {\n                    path.push_back(s.substr(start, i - start + 1));\n                    dfs(s, p, i + 1, path, ans);\n                    path.pop_back();\n                }\n            }\n        }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

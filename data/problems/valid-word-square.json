@@ -1,0 +1,40 @@
+{
+  "id": "50df26bc-66f4-4412-81f1-33e804c9bf12",
+  "slug": "valid-word-square",
+  "title": "Valid Word Square",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"abcd\",\"bnrt\",\"crmy\",\"dtye\"]\n[\"abcd\",\"bnrt\",\"crm\",\"dt\"]\n[\"ball\",\"area\",\"read\",\"lady\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool validWordSquare(vector<string>& words) {\n        for (int i = 0; i < words.size(); ++i) {\n            for (int j = 0; j < words[i].size(); ++j) {\n                if (j >= words.size() || i >= words[j].size() ||\n                   words[j][i] != words[i][j]) {\n                   return false;\n                }\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    def validWordSquare(self, words):\n        \"\"\"\n        :type words: List[str]\n        :rtype: bool\n        \"\"\"\n        for i in xrange(len(words)):\n            for j in xrange(len(words[i])):\n                if j >= len(words) or i >= len(words[j]) or \\\n                   words[j][i] != words[i][j]:\n                   return False\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

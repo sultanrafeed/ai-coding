@@ -1,0 +1,36 @@
+{
+  "id": "2d129782-620c-41fc-8567-e992dbaa87bd",
+  "slug": "non-overlapping-intervals",
+  "title": "Non-overlapping Intervals",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of intervals <code>intervals</code> where <code>intervals[i] = [start<sub>i</sub>, end<sub>i</sub>]</code>, return <em>the minimum number of intervals you need to remove to make the rest of the intervals non-overlapping</em>.</p>\n\n<p><strong>Note</strong> that intervals which only touch at a point are <strong>non-overlapping</strong>. For example, <code>[1, 2]</code> and <code>[2, 3]</code> are non-overlapping.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> intervals = [[1,2],[2,3],[3,4],[1,3]]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> [1,3] can be removed and the rest of the intervals are non-overlapping.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> intervals = [[1,2],[1,2],[1,2]]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> You need to remove two [1,2] to make the rest of the intervals non-overlapping.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> intervals = [[1,2],[2,3]]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> You don&#39;t need to remove any of the intervals since they&#39;re already non-overlapping.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= intervals.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>intervals[i].length == 2</code></li>\n\t<li><code>-5 * 10<sup>4</sup> &lt;= start<sub>i</sub> &lt; end<sub>i</sub> &lt;= 5 * 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int eraseOverlapIntervals(vector<vector<int>>& intervals) {\n        sort(intervals.begin(), intervals.end(), [](const auto& a, const auto& b) { return a[1] < b[1]; });\n        int result = 0, right = numeric_limits<int>::min();\n        for (const auto& x : intervals) {\n            if (x[0] < right) {\n                ++result;\n            } else {\n                right = x[1];\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\nclass Solution2 {\npublic:\n    int eraseOverlapIntervals(vector<vector<int>>& intervals) {\n        sort(intervals.begin(), intervals.end(), [](const auto& a, const auto& b) { return a[0] < b[0]; });\n        int result = 0, prev = 0;\n        for (int i = 1; i < intervals.size(); ++i) {\n            if (intervals[i][0] < intervals[prev][1]) {\n                if (intervals[i][1] < intervals[prev][1]) {\n                    prev = i;\n                }\n                ++result;\n            } else {\n                prev = i;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(1)\n\nclass Solution(object):\n    def eraseOverlapIntervals(self, intervals):\n        \"\"\"\n        :type intervals: List[List[int]]\n        :rtype: int\n        \"\"\"\n        intervals.sort(key=lambda interval: interval[1])\n        result, right = 0, float(\"-inf\")\n        for l, r in intervals:\n            if l < right:\n                result += 1\n            else:\n                right = r\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(1)\nclass Solution2(object):\n    def eraseOverlapIntervals(self, intervals):\n        \"\"\"\n        :type intervals: List[List[int]]\n        :rtype: int\n        \"\"\"\n        intervals.sort(key=lambda interval: interval[0])\n        result, prev = 0, 0\n        for i in xrange(1, len(intervals)):\n            if intervals[i][0] < intervals[prev][1]:\n                if intervals[i][1] < intervals[prev][1]:\n                    prev = i\n                result += 1\n            else:\n                prev = i\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

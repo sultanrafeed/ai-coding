@@ -1,0 +1,39 @@
+{
+  "id": "2a7870ed-1ee9-495d-8873-e8524a761c67",
+  "slug": "count-good-triplets-in-an-array",
+  "title": "Count Good Triplets in an Array",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two <strong>0-indexed</strong> arrays <code>nums1</code> and <code>nums2</code> of length <code>n</code>, both of which are <strong>permutations</strong> of <code>[0, 1, ..., n - 1]</code>.</p>\n\n<p>A <strong>good triplet</strong> is a set of <code>3</code> <strong>distinct</strong> values which are present in <strong>increasing order</strong> by position both in <code>nums1</code> and <code>nums2</code>. In other words, if we consider <code>pos1<sub>v</sub></code> as the index of the value <code>v</code> in <code>nums1</code> and <code>pos2<sub>v</sub></code> as the index of the value <code>v</code> in <code>nums2</code>, then a good triplet will be a set <code>(x, y, z)</code> where <code>0 &lt;= x, y, z &lt;= n - 1</code>, such that <code>pos1<sub>x</sub> &lt; pos1<sub>y</sub> &lt; pos1<sub>z</sub></code> and <code>pos2<sub>x</sub> &lt; pos2<sub>y</sub> &lt; pos2<sub>z</sub></code>.</p>\n\n<p>Return <em>the <strong>total number</strong> of good triplets</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [2,0,1,3], nums2 = [0,1,2,3]\n<strong>Output:</strong> 1\n<strong>Explanation:</strong> \nThere are 4 triplets (x,y,z) such that pos1<sub>x</sub> &lt; pos1<sub>y</sub> &lt; pos1<sub>z</sub>. They are (2,0,1), (2,0,3), (2,1,3), and (0,1,3). \nOut of those triplets, only the triplet (0,1,3) satisfies pos2<sub>x</sub> &lt; pos2<sub>y</sub> &lt; pos2<sub>z</sub>. Hence, there is only 1 good triplet.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [4,0,1,3,2], nums2 = [4,1,0,2,3]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> The 4 good triplets are (4,0,3), (4,0,2), (4,1,3), and (4,1,2).\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums1.length == nums2.length</code></li>\n\t<li><code>3 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>0 &lt;= nums1[i], nums2[i] &lt;= n - 1</code></li>\n\t<li><code>nums1</code> and <code>nums2</code> are permutations of <code>[0, 1, ..., n - 1]</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "divide-and-conquer",
+    "binary-indexed-tree",
+    "segment-tree",
+    "merge-sort",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// bit, fenwick tree, combinatorics\nclass Solution {\npublic:\n    long long goodTriplets(vector<int>& nums1, vector<int>& nums2) {\n        unordered_map<int, int> lookup;\n        for (int i = 0; i < size(nums1); ++i) {\n            lookup[nums1[i]] = i;\n        }\n        int64_t result = 0;\n        BIT bit(size(nums1));\n        for (int i = 0; i < size(nums2); ++i) {\n            const int64_t smaller = bit.query(lookup[nums2[i]] - 1);\n            const int64_t larger = (size(nums1) - (lookup[nums2[i]] + 1)) - (i - smaller);\n            result += smaller * larger;\n            bit.add(lookup[nums2[i]], 1);\n        }\n        return result;\n    }\n\nprivate:\n    class BIT {\n    public:\n        BIT(int n) : bit_(n + 1) {  // 0-indexed\n        }\n        \n        void add(int i, int val) {\n            ++i;\n            for (; i < size(bit_); i += lower_bit(i)) {\n                bit_[i] += val;\n            }\n        }\n\n        int query(int i) const {\n            ++i;\n            int total = 0;\n            for (; i > 0; i -= lower_bit(i)) {\n                total += bit_[i];\n            }\n            return total;\n        }\n    \n    private:\n        int lower_bit(int i) const {\n            return i & -i;\n        }\n        \n        vector<int> bit_;\n    };\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass BIT(object):  # 0-indexed.\n    def __init__(self, n):\n        self.__bit = [0]*(n+1)  # Extra one for dummy node.\n\n    def add(self, i, val):\n        i += 1  # Extra one for dummy node.\n        while i < len(self.__bit):\n            self.__bit[i] += val\n            i += (i & -i)\n\n    def query(self, i):\n        i += 1  # Extra one for dummy node.\n        ret = 0\n        while i > 0:\n            ret += self.__bit[i]\n            i -= (i & -i)\n        return ret\n\n\n# bit, fenwick tree, combinatorics\nclass Solution(object):\n    def goodTriplets(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        lookup = [0]*len(nums1)\n        for i, x in enumerate(nums1):\n            lookup[x] = i\n        result = 0\n        bit = BIT(len(nums1))\n        for i, x in enumerate(nums2):\n            smaller = bit.query(lookup[x]-1)\n            larger = (len(nums1)-(lookup[x]+1))-(i-smaller)\n            result += smaller*larger\n            bit.add(lookup[x], 1)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

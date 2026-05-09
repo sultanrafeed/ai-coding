@@ -1,0 +1,35 @@
+{
+  "id": "4183062f-a74b-438a-b574-1d495cdce65e",
+  "slug": "minimum-cost-to-repair-edges-to-traverse-a-graph",
+  "title": "Minimum Cost to Repair Edges to Traverse a Graph",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "binary-search",
+    "breadth-first-search",
+    "graph"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((n + m) * logr)\n// Space: O(n + m)\n\n// binary search, bfs\nclass Solution {\npublic:\n    int minCost(int n, vector<vector<int>>& edges, int k) {\n        const auto& binary_search = [](int left, int right, const auto& check) {\n            while (left <= right) {\n                const auto& mid = left + (right - left) / 2;\n                if (check(mid)) {\n                    right = mid - 1;\n                } else {\n                    left = mid + 1;\n                }\n            }\n            return left;\n        };\n\n        vector<vector<pair<int, int>>> adj(n);\n        const auto& bfs = [&](int x) {\n            vector<bool> lookup(n);\n            lookup[0] = true;\n            vector<int> q = {0};\n            for (int d = 0; !empty(q); ++d) {\n                if (d == k + 1) {\n                    break;\n                }\n                vector<int> new_q;\n                for (const auto& u : q) {\n                    if (u == n - 1) {\n                        return true;\n                    }\n                    for (const auto& [v, w] : adj[u]) {\n                        if (w > x || lookup[v]) {\n                            continue;\n                        }\n                        lookup[v] = true;\n                        new_q.emplace_back(v);\n                    }\n                }\n                q = move(new_q);\n            }\n            return false;\n        };\n\n        for (const auto& e : edges) {\n            adj[e[0]].emplace_back(e[1], e[2]);\n            adj[e[1]].emplace_back(e[0], e[2]);\n        }\n        const auto& left = (*min_element(cbegin(edges), cend(edges), [](const auto& a, const auto& b) {\n            return a[2] < b[2];\n        }))[2];\n        const auto& right = (*max_element(cbegin(edges), cend(edges), [](const auto& a, const auto& b) {\n            return a[2] < b[2];\n        }))[2];\n        const auto& result = binary_search(left, right, bfs);\n        return result != right + 1 ? result : -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((n + m) * logr)\n# Space: O(n + m)\n\n# binary search, bfs\nclass Solution(object):\n    def minCost(self, n, edges, k):\n        \"\"\"\n        :type n: int\n        :type edges: List[List[int]]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def binary_search(left, right, check):\n            while left <= right:\n                mid = left+(right-left)//2\n                if check(mid):\n                    right = mid-1\n                else:\n                    left = mid+1\n            return left\n        \n        def bfs(x):\n            lookup = [False]*len(adj)\n            lookup[0] = True\n            q = [0]\n            d = 0\n            while q:\n                if d == k+1:\n                    break\n                new_q = []\n                for u in q:\n                    if u == n-1:\n                        return True\n                    for v, w in adj[u]:\n                        if w > x or lookup[v]:\n                            continue\n                        lookup[v] = True\n                        new_q.append(v)\n                q = new_q\n                d += 1\n            return False\n            \n        adj = [[] for _ in xrange(n)]\n        for u, v, w in edges:\n            adj[u].append((v, w))\n            adj[v].append((u, w))\n        left = min(w for _, _, w in edges)\n        right = max(w for _, _, w in edges)\n        result = binary_search(left, right, bfs)\n        return result if result != right+1 else -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

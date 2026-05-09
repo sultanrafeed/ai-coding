@@ -1,0 +1,43 @@
+{
+  "id": "7466fac4-aee3-48e8-972e-fe1dc967f917",
+  "slug": "shortest-word-distance-ii",
+  "title": "Shortest Word Distance II",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "two-pointers",
+    "string",
+    "design"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"WordDistance\",\"shortest\",\"shortest\"]\n[[[\"practice\",\"makes\",\"perfect\",\"coding\",\"makes\"]],[\"coding\",\"practice\"],[\"makes\",\"coding\"]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  ctor: O(n), shortest: O(a + b), a, b is occurences of word1, word2\n// Space: O(n)\n\nclass WordDistance {\npublic:\n    WordDistance(vector<string> words) {\n        for (int i = 0; i < words.size(); ++i) {\n            wordIndex[words[i]].emplace_back(i);\n        }\n    }\n\n    int shortest(string word1, string word2) {\n        const vector<int>& indexes1 = wordIndex[word1];\n        const vector<int>& indexes2 = wordIndex[word2];\n\n        int i = 0, j = 0, dist = INT_MAX;\n        while (i < indexes1.size() && j < indexes2.size()) {\n            dist = min(dist, abs(indexes1[i] - indexes2[j]));\n            indexes1[i] < indexes2[j] ? ++i : ++j;\n        }\n        return dist;\n    }\n\nprivate:\n    unordered_map<string, vector<int>> wordIndex;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  init: O(n), lookup: O(a + b), a, b is occurences of word1, word2\n# Space: O(n)\n\nimport collections\n\n\nclass WordDistance(object):\n    # initialize your data structure here.\n    # @param {string[]} words\n    def __init__(self, words):\n        self.wordIndex = collections.defaultdict(list)\n        for i in xrange(len(words)):\n            self.wordIndex[words[i]].append(i)\n\n    # @param {string} word1\n    # @param {string} word2\n    # @return {integer}\n    # Adds a word into the data structure.\n    def shortest(self, word1, word2):\n        indexes1 = self.wordIndex[word1]\n        indexes2 = self.wordIndex[word2]\n\n        i, j, dist = 0, 0, float(\"inf\")\n        while i < len(indexes1) and j < len(indexes2):\n            dist = min(dist, abs(indexes1[i] - indexes2[j]))\n            if indexes1[i] < indexes2[j]:\n                i += 1\n            else:\n                j += 1\n\n        return dist",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

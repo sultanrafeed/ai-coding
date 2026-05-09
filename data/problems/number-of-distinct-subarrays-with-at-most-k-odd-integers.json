@@ -1,0 +1,25 @@
+{
+  "id": "2c5e4de2-767c-43fa-bbae-2420de00b7f4",
+  "slug": "number-of-distinct-subarrays-with-at-most-k-odd-integers",
+  "title": "Number Of Distinct Subarrays With At Most K Odd Integers",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "python",
+      "code": "# Time:  O(n^2)\n# Space: O(t), t is the size of trie\n\nimport collections\n\n\n# sliding window + trie solution\nclass Solution(object):\n    def distinctSubarraysWithAtMostKOddIntegers(self, A, K):\n        def countDistinct(A, left, right, trie):  # Time: O(n), Space: O(t)\n            result = 0\n            for i in reversed(xrange(left, right+1)):\n                if A[i] not in trie:\n                    result += 1\n                trie = trie[A[i]]\n            return result\n\n        _trie = lambda: collections.defaultdict(_trie)\n        trie = _trie()\n        result, left, count = 0, 0, 0\n        for right in xrange(len(A)):\n            count += A[right]%2\n            while count > K:\n                count -= A[left]%2\n                left += 1\n            result += countDistinct(A, left, right, trie)\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(t), t is the size of trie\n# suffix tree solution\nclass Solution2(object):\n    def distinctSubarraysWithAtMostKOddIntegers(self, A, K):\n        def countDistinct(A, left, right, trie):  # Time: O(n), Space: O(t)\n            result = 0\n            for i in xrange(left, right+1):\n                if A[i] not in trie:\n                    result += 1\n                trie = trie[A[i]]\n            return result\n\n        _trie = lambda: collections.defaultdict(_trie)\n        trie = _trie()\n        result = 0\n        for left in xrange(len(A)):\n            count = 0\n            for right in xrange(left, len(A)):\n                count += A[right]%2\n                if count > K:\n                    right -= 1\n                    break\n            result += countDistinct(A, left, right, trie)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "e8ebe418-4b47-40c7-aaa2-8cb9be59f149",
+  "slug": "moving-average-from-data-stream",
+  "title": "Moving Average from Data Stream",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "design",
+    "queue",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1)\n// Space: O(w)\n\nclass MovingAverage {\npublic:\n    /** Initialize your data structure here. */\n    MovingAverage(int size) : size_(size), sum_(0) {\n    }\n    \n    double next(int val) {\n        if (q_.size() == size_) {\n            sum_ -= q_.front();\n            q_.pop();\n        }\n        q_.emplace(val);\n        sum_ += val;\n        return 1.0 * sum_ / q_.size();\n    }\n\nprivate:\n    int size_;\n    int sum_;\n    queue<int> q_;\n};\n\n/**\n * Your MovingAverage object will be instantiated and called as such:\n * MovingAverage obj = new MovingAverage(size);\n * double param_1 = obj.next(val);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1)\n# Space: O(w)\n\nfrom collections import deque\n\nclass MovingAverage(object):\n\n    def __init__(self, size):\n        \"\"\"\n        Initialize your data structure here.\n        :type size: int\n        \"\"\"\n        self.__size = size\n        self.__sum = 0\n        self.__q = deque()\n\n    def next(self, val):\n        \"\"\"\n        :type val: int\n        :rtype: float\n        \"\"\"\n        if len(self.__q) == self.__size:\n            self.__sum -= self.__q.popleft()\n        self.__sum += val\n        self.__q.append(val)\n        return 1.0 * self.__sum / len(self.__q)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

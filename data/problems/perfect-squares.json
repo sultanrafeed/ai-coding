@@ -1,0 +1,41 @@
+{
+  "id": "a84a3645-f2f5-4b88-99d3-3728e2ae4f8d",
+  "slug": "perfect-squares",
+  "title": "Perfect Squares",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, return <em>the least number of perfect square numbers that sum to</em> <code>n</code>.</p>\n\n<p>A <strong>perfect square</strong> is an integer that is the square of an integer; in other words, it is the product of some integer with itself. For example, <code>1</code>, <code>4</code>, <code>9</code>, and <code>16</code> are perfect squares while <code>3</code> and <code>11</code> are not.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 12\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> 12 = 4 + 4 + 4.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 13\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> 13 = 4 + 9.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 10<sup>4</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "math",
+    "dynamic-programming",
+    "breadth-first-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "12\n13",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * sqrt(n))\n// Space: O(n)\n\nclass Solution {\npublic:\n    int numSquares(int n) {\n        static vector<int> num{0};\n        while (num.size() <= n) {\n            int squares = numeric_limits<int>::max();\n            for (int i = 1; i * i <= num.size(); ++i) {\n                squares = min(squares, num[num.size() - i * i] + 1);\n            }\n            num.emplace_back(squares);\n        }\n        return num[n];\n    }\n};\n\n// Time:  O(n * sqrt(n))\n// Space: O(n)\nclass Solution2 {\npublic:\n    int numSquares(int n) {\n        vector<int> num(n + 1, numeric_limits<int>::max());\n        num[0] = 0;\n        for (int i = 0; i <= n; ++i) {\n            for (int j = i - 1, k = 1; j >= 0; ++k, j = i - k * k) {\n                num[i] = min(num[i], num[j] + 1);\n            }\n        }\n        return num[n];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * sqrt(n))\n# Space: O(n)\n\nclass Solution(object):\n    _num = [0]\n    def numSquares(self, n):\n        \"\"\"\n        :type n: int\n        :rtype: int\n        \"\"\"\n        num = self._num\n        while len(num) <= n:\n            num += min(num[-i*i] for i in xrange(1, int(len(num)**0.5+1))) + 1,\n        return num[n]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

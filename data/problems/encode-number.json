@@ -1,0 +1,41 @@
+{
+  "id": "82c74157-6c58-4d2f-959d-37b0583fb209",
+  "slug": "encode-number",
+  "title": "Encode Number",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "math",
+    "string",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "23\n107",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(1)\n\nclass Solution {\npublic:\n    string encode(int num) {\n        string result;\n        while (num) {\n            result.push_back((num % 2) ? '0' : '1');\n            num = (num - 1) / 2;\n        }\n        reverse(result.begin(), result.end());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(1)\n\nclass Solution(object):\n    def encode(self, num):\n        \"\"\"\n        :type num: int\n        :rtype: str\n        \"\"\"\n        result = []\n        while num:\n            result.append('0' if num%2 else '1')\n            num = (num-1)//2\n        return \"\".join(reversed(result))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

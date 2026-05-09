@@ -1,0 +1,42 @@
+{
+  "id": "b9ef731a-45af-4c0e-a0d0-746474c24fb4",
+  "slug": "before-and-after-puzzle",
+  "title": "Before and After Puzzle",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "string",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"writing code\",\"code rocks\"]\n[\"mission statement\",\"a quick bite to eat\",\"a chip off the old block\",\"chocolate bar\",\"mission impossible\",\"a man on a mission\",\"block party\",\"eat my words\",\"bar of soap\"]\n[\"a\",\"b\",\"a\"]\n[\"ab ba\",\"ba ab\",\"ab ba\"]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(l * rlogr)  , l is the max length of phrases\n//                      , r is the number of result, could be up to O(n^2)\n// Space: O(l * (n + r)), n is the number of phrases\n\nclass Solution {\npublic:\n    vector<string> beforeAndAfterPuzzles(vector<string>& phrases) {\n        unordered_map<string, vector<size_t>> lookup;\n        for (int i = 0; i < phrases.size(); ++i) {\n            const auto& phrase = phrases[i];\n            const auto& right = phrase.rfind(' ');\n            const auto& word = (right == string::npos) ? phrase : phrase.substr(right + 1);\n            lookup[word].emplace_back(i);\n        }\n        unordered_set<string> result_set;\n        for (int i = 0; i < phrases.size(); ++i) {\n            const auto& phrase = phrases[i];\n            const auto& left = phrase.find(' ');\n            const auto& word = (left == string::npos) ? phrase : phrase.substr(0, left);\n            if (!lookup.count(word)) {\n                continue;\n            }\n            for (const auto& j : lookup[word]) {\n                if (j == i) {\n                    continue;\n                }\n                result_set.emplace(phrases[j] + phrase.substr(word.length()));\n            }\n        }\n        vector<string> result(result_set.cbegin(), result_set.cend());\n        sort(result.begin(), result.end());\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(l * rlogr)  , l is the max length of phrases\n#                      , r is the number of result, could be up to O(n^2)\n# Space: O(l * (n + r)), n is the number of phrases\n\nimport collections\n\n\nclass Solution(object):\n    def beforeAndAfterPuzzles(self, phrases):\n        \"\"\"\n        :type phrases: List[str]\n        :rtype: List[str]\n        \"\"\"\n        lookup = collections.defaultdict(list)\n        for i, phrase in enumerate(phrases):\n            right = phrase.rfind(' ')\n            word = phrase if right == -1 else phrase[right+1:]\n            lookup[word].append(i)\n\n        result_set = set()\n        for i, phrase in enumerate(phrases):\n            left = phrase.find(' ')\n            word = phrase if left == -1 else phrase[:left]\n            if word not in lookup:\n                continue\n            for j in lookup[word]:\n                if j == i:\n                    continue\n                result_set.add(phrases[j] + phrase[len(word):])\n        return sorted(result_set)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

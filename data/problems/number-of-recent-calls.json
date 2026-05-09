@@ -1,0 +1,41 @@
+{
+  "id": "e897e557-24ee-4564-827b-107ff7a2b666",
+  "slug": "number-of-recent-calls",
+  "title": "Number of Recent Calls",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You have a <code>RecentCounter</code> class which counts the number of recent requests within a certain time frame.</p>\n\n<p>Implement the <code>RecentCounter</code> class:</p>\n\n<ul>\n\t<li><code>RecentCounter()</code> Initializes the counter with zero recent requests.</li>\n\t<li><code>int ping(int t)</code> Adds a new request at time <code>t</code>, where <code>t</code> represents some time in milliseconds, and returns the number of requests that has happened in the past <code>3000</code> milliseconds (including the new request). Specifically, return the number of requests that have happened in the inclusive range <code>[t - 3000, t]</code>.</li>\n</ul>\n\n<p>It is <strong>guaranteed</strong> that every call to <code>ping</code> uses a strictly larger value of <code>t</code> than the previous call.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input</strong>\n[&quot;RecentCounter&quot;, &quot;ping&quot;, &quot;ping&quot;, &quot;ping&quot;, &quot;ping&quot;]\n[[], [1], [100], [3001], [3002]]\n<strong>Output</strong>\n[null, 1, 2, 3, 3]\n\n<strong>Explanation</strong>\nRecentCounter recentCounter = new RecentCounter();\nrecentCounter.ping(1);     // requests = [<u>1</u>], range is [-2999,1], return 1\nrecentCounter.ping(100);   // requests = [<u>1</u>, <u>100</u>], range is [-2900,100], return 2\nrecentCounter.ping(3001);  // requests = [<u>1</u>, <u>100</u>, <u>3001</u>], range is [1,3001], return 3\nrecentCounter.ping(3002);  // requests = [1, <u>100</u>, <u>3001</u>, <u>3002</u>], range is [2,3002], return 3\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= t &lt;= 10<sup>9</sup></code></li>\n\t<li>Each test case will call <code>ping</code> with <strong>strictly increasing</strong> values of <code>t</code>.</li>\n\t<li>At most <code>10<sup>4</sup></code> calls will be made to <code>ping</code>.</li>\n</ul>\n",
+  "patterns": [
+    "design",
+    "queue",
+    "data-stream"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"RecentCounter\",\"ping\",\"ping\",\"ping\",\"ping\"]\n[[],[1],[100],[3001],[3002]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(1) on average\n// Space: O(w), w means the size of the last milliseconds\n\nclass RecentCounter {\npublic:\n    RecentCounter() {\n\n    }\n    \n    int ping(int t) {\n        q_.emplace(t);\n        while (q_.front() < t - 3000) {\n            q_.pop();\n        }\n        return q_.size();\n    }\n\nprivate:\n    queue<int> q_;\n};\n\n/**\n * Your RecentCounter object will be instantiated and called as such:\n * RecentCounter* obj = new RecentCounter();\n * int param_1 = obj->ping(t);\n */",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(1) on average\n# Space: O(w), w means the size of the last milliseconds.\n\nimport collections\n\n\nclass RecentCounter(object):\n\n    def __init__(self):\n        self.__q = collections.deque()\n\n    def ping(self, t):\n        \"\"\"\n        :type t: int\n        :rtype: int\n        \"\"\"\n        self.__q.append(t)\n        while self.__q[0] < t-3000:\n            self.__q.popleft()\n        return len(self.__q)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

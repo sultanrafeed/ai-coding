@@ -1,0 +1,40 @@
+{
+  "id": "5be3cd87-c534-458d-aff3-2d2ba67765a4",
+  "slug": "repeated-string-match",
+  "title": "Repeated String Match",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given two strings <code>a</code> and <code>b</code>, return <em>the minimum number of times you should repeat string </em><code>a</code><em> so that string</em> <code>b</code> <em>is a substring of it</em>. If it is impossible for <code>b</code>​​​​​​ to be a substring of <code>a</code> after repeating it, return <code>-1</code>.</p>\n\n<p><strong>Notice:</strong> string <code>&quot;abc&quot;</code> repeated 0 times is <code>&quot;&quot;</code>, repeated 1 time is <code>&quot;abc&quot;</code> and repeated 2 times is <code>&quot;abcabc&quot;</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> a = &quot;abcd&quot;, b = &quot;cdabcdab&quot;\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> We return 3 because by repeating a three times &quot;ab<strong>cdabcdab</strong>cd&quot;, b is a substring of it.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> a = &quot;a&quot;, b = &quot;aa&quot;\n<strong>Output:</strong> 2\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= a.length, b.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>a</code> and <code>b</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "string",
+    "string-matching"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abcd\"\n\"cdabcdab\"\n\"a\"\n\"aa\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + m)\n// Space: O(1)\n\n// Rabin-Karp Algorithm (rolling hash)\nclass Solution {\npublic:\n    int repeatedStringMatch(string A, string B) {\n        static const uint64_t M = 1000000007;\n        static const uint64_t p = 113; \n        static const uint64_t p_inv = pow(p, M - 2, M);\n\n        const auto q = (B.length() + A.length() - 1) / A.length();\n    \n        uint64_t b_hash = 0, power = 1;\n        for (int i = 0; i < B.length(); ++i) {\n            b_hash += power * B[i];\n            b_hash %= M;\n            power = (power * p) % M;\n        }\n\n        uint64_t a_hash = 0; power = 1;\n        for (int i = 0; i < B.length(); ++i) {\n            a_hash += power * A[i % A.length()];\n            a_hash %= M;\n            power = (power * p) % M;\n        }\n        if (a_hash == b_hash && check(0, A, B)) {\n            return q;\n        }\n        \n        power = (power * p_inv) % M;\n        for (int i = B.length(); i < (q + 1) * A.length(); ++i) {\n            a_hash -= A[(i - B.length()) % A.length()];\n            a_hash *= p_inv;\n            a_hash += power * A[i % A.length()];\n            a_hash %= M;\n            if (a_hash == b_hash && check(i - B.length() + 1, A, B)) {\n                return i < q * A.length() ? q : q + 1;\n            }\n        }\n        return -1;\n    }\n\nprivate:\n    bool check(int index, const string& A, const string& B) {\n        for (int i = 0; i < B.length(); ++i) {\n            if (A[(i + index) % A.length()] != B[i]) {\n                return false;\n            }\n        }\n        return true;\n    }\n\n    uint64_t pow(uint64_t a,uint64_t b, uint64_t m) {\n        a %= m;\n        uint64_t result = 1;\n        while (b) {\n            if (b & 1) {\n                result = (result * a) % m;\n            }\n            a = (a * a) % m;\n            b >>= 1;\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + m)\n# Space: O(1)\n\nclass Solution(object):\n    def repeatedStringMatch(self, A, B):\n        \"\"\"\n        :type A: str\n        :type B: str\n        :rtype: int\n        \"\"\"\n        def check(index):\n            return all(A[(i+index) % len(A)] == c\n                       for i, c in enumerate(B))\n\n        M, p = 10**9+7, 113\n        p_inv = pow(p, M-2, M)\n        q = (len(B)+len(A)-1) // len(A)\n\n        b_hash, power = 0, 1\n        for c in B:\n            b_hash += power * ord(c)\n            b_hash %= M\n            power = (power*p) % M\n\n        a_hash, power = 0, 1\n        for i in xrange(len(B)):\n            a_hash += power * ord(A[i%len(A)])\n            a_hash %= M\n            power = (power*p) % M\n\n        if a_hash == b_hash and check(0): return q\n\n        power = (power*p_inv) % M\n        for i in xrange(len(B), (q+1)*len(A)):\n            a_hash = (a_hash-ord(A[(i-len(B))%len(A)])) * p_inv\n            a_hash += power * ord(A[i%len(A)])\n            a_hash %= M\n            if a_hash == b_hash and check(i-len(B)+1):\n                return q if i < q*len(A) else q+1\n\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

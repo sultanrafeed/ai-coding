@@ -1,0 +1,34 @@
+{
+  "id": "9482b2fc-97d6-4dc1-a0e3-5f8790865782",
+  "slug": "minimum-number-of-operations-to-have-distinct-elements",
+  "title": "Minimum Number of Operations to Have Distinct Elements",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given an integer array <code>nums</code>.</p>\n\n<p>In one operation, you remove the <strong>first three elements</strong> of the current array. If there are fewer than three elements remaining, <strong>all</strong> remaining elements are removed.</p>\n\n<p>Repeat this operation until the array is empty or contains no duplicate values.</p>\n\n<p>Return an integer denoting the number of operations required.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [3,8,3,6,5,8]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>In the first operation, we remove the first three elements. The remaining elements <code>[6, 5, 8]</code> are all distinct, so we stop. Only one operation is needed.</p>\n</div>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [2,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">1</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>After one operation, the array becomes empty, which meets the stopping condition.</p>\n</div>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<div class=\"example-block\">\n<p><strong>Input:</strong> <span class=\"example-io\">nums = [4,3,5,1,2]</span></p>\n\n<p><strong>Output:</strong> <span class=\"example-io\">0</span></p>\n\n<p><strong>Explanation:</strong></p>\n\n<p>All elements in the array are distinct, therefore no operations are needed.</p>\n</div>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 10<sup>5</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// hash table\nclass Solution {\npublic:\n    int minOperations(vector<int>& nums) {\n        static const int L = 3;\n        const auto ceil_divide = [](int a, int b) {\n            return (a + b - 1) / b;\n        };\n\n        unordered_set<int> lookup;\n        while (!empty(nums)) {\n            if (lookup.count(nums.back())) {\n                break;\n            }\n            lookup.emplace(nums.back());\n            nums.pop_back();\n        }\n        return ceil_divide(size(nums), L);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# hash table\nclass Solution(object):\n    def minOperations(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        L = 3\n        def ceil_divide(a, b):\n            return (a+b-1)//b\n\n        lookup = set()\n        while nums:\n            if nums[-1] in lookup:\n                break\n            lookup.add(nums.pop())\n        return ceil_divide(len(nums), L)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

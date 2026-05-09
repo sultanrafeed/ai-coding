@@ -1,0 +1,35 @@
+{
+  "id": "9543e62e-e663-4dc0-82e9-8706db0a4a5e",
+  "slug": "maximum-sum-of-two-non-overlapping-subarrays",
+  "title": "Maximum Sum of Two Non-Overlapping Subarrays",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer array <code>nums</code> and two integers <code>firstLen</code> and <code>secondLen</code>, return <em>the maximum sum of elements in two non-overlapping <strong>subarrays</strong> with lengths </em><code>firstLen</code><em> and </em><code>secondLen</code>.</p>\n\n<p>The array with length <code>firstLen</code> could occur before or after the array with length <code>secondLen</code>, but they have to be non-overlapping.</p>\n\n<p>A <strong>subarray</strong> is a <strong>contiguous</strong> part of an array.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0,6,5,2,2,5,1,9,4], firstLen = 1, secondLen = 2\n<strong>Output:</strong> 20\n<strong>Explanation:</strong> One choice of subarrays is [9] with length 1, and [6,5] with length 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [3,8,1,3,2,1,8,9,0], firstLen = 3, secondLen = 2\n<strong>Output:</strong> 29\n<strong>Explanation:</strong> One choice of subarrays is [3,8,1] with length 3, and [8,9] with length 2.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [2,1,5,6,0,9,5,0,3,8], firstLen = 4, secondLen = 3\n<strong>Output:</strong> 31\n<strong>Explanation:</strong> One choice of subarrays is [5,6,0,9] with length 4, and [0,3,8] with length 3.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= firstLen, secondLen &lt;= 1000</code></li>\n\t<li><code>2 &lt;= firstLen + secondLen &lt;= 1000</code></li>\n\t<li><code>firstLen + secondLen &lt;= nums.length &lt;= 1000</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int maxSumTwoNoOverlap(vector<int>& A, int L, int M) {\n        for (int i = 1; i < A.size(); ++i) {\n            A[i] += A[i - 1];\n        }\n        int result = A[L + M - 1], L_max = A[L - 1], M_max = A[M - 1];\n        for (int i = L + M; i < A.size(); ++i) {\n            L_max = max(L_max, A[i - M] - A[i - L - M]);\n            M_max = max(M_max, A[i - L] - A[i - L - M]);\n            result = max(result,\n                         max(L_max + A[i] - A[i - M],\n                             M_max + A[i] - A[i - L]));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def maxSumTwoNoOverlap(self, A, L, M):\n        \"\"\"\n        :type A: List[int]\n        :type L: int\n        :type M: int\n        :rtype: int\n        \"\"\"\n        for i in xrange(1, len(A)):\n            A[i] += A[i-1]\n        result, L_max, M_max = A[L+M-1], A[L-1], A[M-1]\n        for i in xrange(L+M, len(A)):\n            L_max = max(L_max, A[i-M] - A[i-L-M])\n            M_max = max(M_max, A[i-L] - A[i-L-M])\n            result = max(result,\n                         L_max + A[i] - A[i-M],\n                         M_max + A[i] - A[i-L])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

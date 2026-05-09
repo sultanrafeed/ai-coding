@@ -1,0 +1,42 @@
+{
+  "id": "a71ae123-b693-41d1-87fd-570666052c43",
+  "slug": "best-meeting-point",
+  "title": "Best Meeting Point",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "sorting",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,0,0,0,1],[0,0,0,0,0],[0,0,1,0,0]]\n[[1,1]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m + n)\n\nclass Solution {\npublic:\n    int minTotalDistance(vector<vector<int>>& grid) {\n        vector<int> x, y;\n        for (int i = 0; i < grid.size(); ++i) {\n            for (int j = 0; j < grid[0].size(); ++j) {\n                if (grid[i][j]) {\n                    x.emplace_back(i);\n                    y.emplace_back(j);\n                }\n            }\n        }\n        nth_element(x.begin(), x.begin() + x.size() / 2, x.end());\n        nth_element(y.begin(), y.begin() + y.size() / 2, y.end());\n        const int mid_x = x[x.size() / 2];\n        const int mid_y = y[y.size() / 2];\n        int sum = 0;\n        for (int i = 0; i < grid.size(); ++i) {\n            for (int j = 0; j < grid[0].size(); ++j) {\n                if (grid[i][j]) {\n                    sum += abs(mid_x - i) + abs(mid_y - j);\n                }\n            }\n        }\n        return sum;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m + n)\n\nfrom random import randint\n\n\nclass Solution(object):\n    def minTotalDistance(self, grid):\n        \"\"\"\n        :type grid: List[List[int]]\n        :rtype: int\n        \"\"\"\n        x = [i for i, row in enumerate(grid) for v in row if v == 1]\n        y = [j for row in grid for j, v in enumerate(row) if v == 1]\n        mid_x = self.findKthLargest(x, len(x) / 2 + 1)\n        mid_y = self.findKthLargest(y, len(y) / 2 + 1)\n\n        return sum([abs(mid_x-i) + abs(mid_y-j)\n                   for i, row in enumerate(grid)\n                   for j, v in enumerate(row) if v == 1])\n\n    def findKthLargest(self, nums, k):\n        left, right = 0, len(nums) - 1\n        while left <= right:\n            pivot_idx = randint(left, right)\n            new_pivot_idx = self.PartitionAroundPivot(left, right,\n                                                      pivot_idx, nums)\n            if new_pivot_idx == k - 1:\n                return nums[new_pivot_idx]\n            elif new_pivot_idx > k - 1:\n                right = new_pivot_idx - 1\n            else:  # new_pivot_idx < k - 1.\n                left = new_pivot_idx + 1\n\n    def PartitionAroundPivot(self, left, right, pivot_idx, nums):\n        pivot_value = nums[pivot_idx]\n        new_pivot_idx = left\n        nums[pivot_idx], nums[right] = nums[right], nums[pivot_idx]\n        for i in xrange(left, right):\n            if nums[i] > pivot_value:\n                nums[i], nums[new_pivot_idx] = nums[new_pivot_idx], nums[i]\n                new_pivot_idx += 1\n\n        nums[right], nums[new_pivot_idx] = nums[new_pivot_idx], nums[right]\n        return new_pivot_idx",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

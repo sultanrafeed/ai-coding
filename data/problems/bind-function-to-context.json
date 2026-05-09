@@ -1,0 +1,31 @@
+{
+  "id": "ffb35aa2-35da-4cdb-bab9-ef5b300f19c5",
+  "slug": "bind-function-to-context",
+  "title": "Bind Function to Context",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "function f(multiplier) { return this.x * multiplier; }\n{\"x\":10}\n[5]\nfunction speak() { return \"My name is \" + this.name; }\n{\"name\":\"Kathy\"}\n[]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(1)\n// Space: O(1)\n\n// symbol\ntype Fn = (...args) => any\n\ndeclare global {\n    interface Function {\n      bindPolyfill(obj: Record<any, any>): Fn;\n    }\n}\n\nFunction.prototype.bindPolyfill = function(obj : any) {\n    const symbol = Symbol();\n    obj[symbol] = this;\n    return (...args) => {\n        const result = obj[symbol](...args);\n        delete obj[symbol];\n        return result;\n    }\n}",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

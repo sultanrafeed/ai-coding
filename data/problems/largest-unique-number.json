@@ -1,0 +1,41 @@
+{
+  "id": "3c0815e7-92d7-4348-85b0-b5f894affac7",
+  "slug": "largest-unique-number",
+  "title": "Largest Unique Number",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "hash-table",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[5,7,3,9,4,9,8,3,1]\n[9,9,8,8]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\nclass Solution {\npublic:\n    int largestUniqueNumber(vector<int>& A) {\n        unordered_map<int, int> lookup;\n        for (const auto& x : A) {\n            ++lookup[x];\n        }\n        int result = -1;\n        for (const auto& [k, v] : lookup) {\n            if (v == 1) {\n                result = max(result, k);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\n\n\nclass Solution(object):\n    def largestUniqueNumber(self, A):\n        \"\"\"\n        :type A: List[int]\n        :rtype: int\n        \"\"\"\n        A.append(-1)\n        return max(k for k,v in collections.Counter(A).items() if v == 1)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

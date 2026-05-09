@@ -1,0 +1,31 @@
+{
+  "id": "cd776a18-c6a6-41c5-bd29-34f082455d29",
+  "slug": "minimum-number-of-buckets-required-to-collect-rainwater-from-houses",
+  "title": "Minimum Number Of Buckets Required To Collect Rainwater From Houses",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int minimumBuckets(string street) {\n        int result = 0;\n        for (int i = 0; i < size(street); ++i) {\n            if (street[i] != 'H' || (i && street[i - 1] == 'B')) {\n                continue;\n            }\n            if (i + 1 < size(street) && street[i + 1] == '.') {\n                street[i + 1] = 'B';\n                ++result;\n            } else if (i && street[i - 1] == '.') {\n                street[i - 1] = 'B';\n                ++result;\n            } else {\n                return -1;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nclass Solution(object):\n    def minimumBuckets(self, street):\n        \"\"\"\n        :type street: str\n        :rtype: int\n        \"\"\"\n        result = 0\n        street = list(street)\n        for i, c in enumerate(street):\n            if c != 'H' or (i and street[i-1] == 'B'):\n                continue\n            if i+1 < len(street) and street[i+1] == '.':\n                street[i+1] = 'B'\n                result += 1\n            elif i and street[i-1] == '.':\n                street[i-1] = 'B'\n                result += 1\n            else:\n                return -1\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

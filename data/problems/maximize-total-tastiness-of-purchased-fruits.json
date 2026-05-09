@@ -1,0 +1,40 @@
+{
+  "id": "64e5110a-629d-4ce9-aa92-8a0b89429f6f",
+  "slug": "maximize-total-tastiness-of-purchased-fruits",
+  "title": "Maximize Total Tastiness of Purchased Fruits",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[10,20,20]\n[5,8,8]\n20\n1\n[10,15,7]\n[5,8,20]\n10\n2",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * a * c), n = len(price), a = maxAmount, c = maxCoupons\n// Space: O(a * c)\n\n// dp\nclass Solution {\npublic:\n    int maxTastiness(vector<int>& price, vector<int>& tastiness, int maxAmount, int maxCoupons) {\n        vector<vector<int>> dp(maxAmount + 1, vector<int>(maxCoupons + 1));\n        for (int k = 0; k < size(price); ++k) {\n            for (int i = maxAmount; i - price[k] / 2 >= 0; --i) {\n                for (int j = maxCoupons; j >= 0; --j) {\n                    if (i - price[k] >= 0) {\n                        dp[i][j] = max(dp[i][j], tastiness[k] + dp[i - price[k]][j]);\n                    }\n                    if (j - 1 >= 0) {\n                        dp[i][j] = max(dp[i][j], tastiness[k] + dp[i - price[k] / 2][j - 1]);\n                    }\n                }\n            }\n        }\n        return dp[maxAmount][maxCoupons];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * a * c), n = len(price), a = maxAmount, c = maxCoupons\n# Space: O(a * c)\n\nimport itertools\n\n\n# dp\nclass Solution(object):\n    def maxTastiness(self, price, tastiness, maxAmount, maxCoupons):\n        \"\"\"\n        :type price: List[int]\n        :type tastiness: List[int]\n        :type maxAmount: int\n        :type maxCoupons: int\n        :rtype: int\n        \"\"\"\n        dp = [[0]*(maxCoupons+1) for _ in xrange(maxAmount+1)]\n        for p, t in itertools.izip(price, tastiness):\n            for i in reversed(xrange(p//2, maxAmount+1)):\n                for j in reversed(xrange(maxCoupons+1)):\n                    if i-p >= 0:\n                        dp[i][j] = max(dp[i][j], t+dp[i-p][j])\n                    if j-1 >= 0:\n                        dp[i][j] = max(dp[i][j], t+dp[i-p//2][j-1])\n        return dp[maxAmount][maxCoupons]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,41 @@
+{
+  "id": "4587e5ed-6784-4611-ac40-1b235aa810db",
+  "slug": "kth-smallest-subarray-sum",
+  "title": "Kth Smallest Subarray Sum",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search",
+    "sliding-window"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[2,1,3]\n4\n[3,3,5,5]\n7",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogr)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int kthSmallestSubarraySum(vector<int>& nums, int k) {\n        int left = *min_element(cbegin(nums), cend(nums));\n        int right = accumulate(cbegin(nums), cend(nums), 0);\n        while (left <= right) {\n            const auto& mid = left + (right - left) / 2;\n            if (check(nums, k, mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return left;\n    }\n\nprivate:\n    bool check(const vector<int>& nums, int k, int x) {\n        int cnt = 0, curr = 0, left = 0;\n        for (int right = 0; right < size(nums); ++right) {\n            curr += nums[right];\n            while (curr > x) {\n                curr -= nums[left++];\n            }\n            cnt += right - left + 1;\n        }\n        return cnt >= k;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogr)\n# Space: O(1)\n\nclass Solution(object):\n    def kthSmallestSubarraySum(self, nums, k):\n        \"\"\"\n        :type nums: List[int]\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def check(nums, k, x):\n            cnt = curr = left = 0\n            for right in xrange(len(nums)):\n                curr += nums[right]\n                while curr > x:\n                    curr -= nums[left]\n                    left += 1\n                cnt += right-left+1\n            return cnt >= k\n\n        left, right = min(nums), sum(nums)\n        while left <= right:\n            mid = left + (right-left)//2\n            if check(nums, k, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return left",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

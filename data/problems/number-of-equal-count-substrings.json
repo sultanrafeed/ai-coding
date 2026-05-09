@@ -1,0 +1,42 @@
+{
+  "id": "277d02ee-e447-43ec-9f9a-3521b729a65c",
+  "slug": "number-of-equal-count-substrings",
+  "title": "Number of Equal Count Substrings",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "hash-table",
+    "string",
+    "sliding-window",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"aaabcbbcc\"\n3\n\"abcd\"\n2\n\"a\"\n5",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(26 * n) = O(n)\n// Space: O(26) = O(1)\n\nclass Solution {\npublic:\n    int equalCountSubstrings(string s, int count) {\n        int result = 0;\n        const int max_l = min(size(unordered_set<char>(cbegin(s), cend(s))), size(s) / count);\n        for (int l = 1; l <= max_l; ++l) {\n            unordered_map<char, int> cnt;\n            for (int i = 0, equal_cnt = 0; i < size(s); ++i) {\n                equal_cnt += static_cast<int>(++cnt[s[i]] == count);\n                if (i >= count * l) {\n                    equal_cnt -= static_cast<int>(cnt[s[i - count * l]]-- == count);\n                }\n                result += static_cast<int>(equal_cnt == l);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(26 * n) = O(n)\n# Space: O(26) = O(1)\n\nclass Solution(object):\n    def equalCountSubstrings(self, s, count):\n        \"\"\"\n        :type s: str\n        :type count: int\n        :rtype: int\n        \"\"\"\n        result = 0\n        for l in xrange(1, min(len(set(s)), len(s)//count)+1):\n            cnt, equal_cnt = collections.Counter(), 0\n            for i, c in enumerate(s):\n                cnt[c] += 1\n                equal_cnt += (cnt[c] == count)\n                if i >= count*l:\n                    equal_cnt -= (cnt[s[i-count*l]] == count)\n                    cnt[s[i-count*l]] -= 1\n                result += (equal_cnt == l)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

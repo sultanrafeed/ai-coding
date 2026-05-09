@@ -1,0 +1,35 @@
+{
+  "id": "f4568ab8-43df-40c7-b726-0c4c572505e0",
+  "slug": "ransom-note",
+  "title": "Ransom Note",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given two strings <code>ransomNote</code> and <code>magazine</code>, return <code>true</code><em> if </em><code>ransomNote</code><em> can be constructed by using the letters from </em><code>magazine</code><em> and </em><code>false</code><em> otherwise</em>.</p>\n\n<p>Each letter in <code>magazine</code> can only be used once in <code>ransomNote</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<pre><strong>Input:</strong> ransomNote = \"a\", magazine = \"b\"\n<strong>Output:</strong> false\n</pre><p><strong class=\"example\">Example 2:</strong></p>\n<pre><strong>Input:</strong> ransomNote = \"aa\", magazine = \"ab\"\n<strong>Output:</strong> false\n</pre><p><strong class=\"example\">Example 3:</strong></p>\n<pre><strong>Input:</strong> ransomNote = \"aa\", magazine = \"aab\"\n<strong>Output:</strong> true\n</pre>\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= ransomNote.length, magazine.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>ransomNote</code> and <code>magazine</code> consist of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    bool canConstruct(string ransomNote, string magazine) {\n        vector<int> counts(26);\n        int letters = 0;\n        for (const auto& c : ransomNote) {\n            if (counts[c - 'a']++ == 0) {\n                ++letters;\n            }\n        }\n        for (const auto& c : magazine) {\n            if (--counts[c - 'a'] == 0 && --letters == 0) {\n                // Break as soon as possible if letters have been enough.\n                break;\n            }\n        }\n        return letters == 0;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass Solution(object):\n    def canConstruct(self, ransomNote, magazine):\n        \"\"\"\n        :type ransomNote: str\n        :type magazine: str\n        :rtype: bool\n        \"\"\"\n        counts = [0] * 26\n        letters = 0\n\n        for c in ransomNote:\n            if counts[ord(c) - ord('a')] == 0:\n                letters += 1\n            counts[ord(c) - ord('a')] += 1\n\n        for c in magazine:\n            counts[ord(c) - ord('a')] -= 1\n            if counts[ord(c) - ord('a')] == 0:\n                letters -= 1\n                if letters == 0:\n                    break\n\n        return letters == 0\n\n# Time:  O(n)\n# Space: O(1)\nimport collections\n\nclass Solution2(object):\n    def canConstruct(self, ransomNote, magazine):\n        \"\"\"\n        :type ransomNote: str\n        :type magazine: str\n        :rtype: bool\n        \"\"\"\n        return not collections.Counter(ransomNote) - collections.Counter(magazine)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

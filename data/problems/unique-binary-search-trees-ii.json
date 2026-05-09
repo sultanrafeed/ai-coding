@@ -1,0 +1,37 @@
+{
+  "id": "eaf48bed-7d77-43d0-ac9e-c8ecee7edba3",
+  "slug": "unique-binary-search-trees-ii",
+  "title": "Unique Binary Search Trees II",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an integer <code>n</code>, return <em>all the structurally unique <strong>BST&#39;</strong>s (binary search trees), which has exactly </em><code>n</code><em> nodes of unique values from</em> <code>1</code> <em>to</em> <code>n</code>. Return the answer in <strong>any order</strong>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/01/18/uniquebstn3.jpg\" style=\"width: 600px; height: 148px;\" />\n<pre>\n<strong>Input:</strong> n = 3\n<strong>Output:</strong> [[1,null,2,null,3],[1,null,3,2],[2,1,3],[3,1,null,null,2],[3,2,null,1]]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 1\n<strong>Output:</strong> [[1]]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 8</code></li>\n</ul>\n",
+  "patterns": [
+    "dynamic-programming",
+    "backtracking",
+    "tree",
+    "binary-search-tree",
+    "binary-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * 4^n / n^(3/2)) ~= Catalan numbers\n// Space: O(n)\n\n/**\n * Definition for a binary tree node.\n * struct TreeNode {\n *     int val;\n *     TreeNode *left;\n *     TreeNode *right;\n *     TreeNode(int x) : val(x), left(NULL), right(NULL) {}\n * };\n */\nclass Solution {\npublic:\n    vector<TreeNode*> generateTrees(int n) {\n        if (n == 0) {\n            return {};\n        }\n        return generateTreesHelper(1, n);\n    }\n\nprivate:\n    vector<TreeNode *> generateTreesHelper(int start, int end) {\n        vector<TreeNode *> result;\n        if (start > end) {\n            result.emplace_back(nullptr);\n            return result;\n        }\n\n        for (int i = start; i <= end; ++i) {\n            vector<TreeNode *> leftSubTrees = generateTreesHelper(start, i - 1);\n            vector<TreeNode *> rightSubTrees = generateTreesHelper(i + 1, end);\n            for (const auto& left : leftSubTrees) {\n                for (const auto& right : rightSubTrees) {\n                    TreeNode *root = new TreeNode(i);\n                    root->left = clone(left);\n                    root->right = clone(right);\n                    result.emplace_back(root);\n                }\n            }\n\n        }\n        return result;\n    }\n\n    TreeNode *clone(TreeNode *root) {\n        TreeNode *newRoot = nullptr;\n\n        if (root) {\n            newRoot = new TreeNode(root->val);\n            newRoot->left = clone(root->left);\n            newRoot->right = clone(root->right);\n        }\n\n        return newRoot;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(4^n / n^(3/2)) ~= Catalan numbers\n# Space: O(4^n / n^(3/2)) ~= Catalan numbers\n\nclass TreeNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.left = None\n        self.right = None\n\n    def __repr__(self):\n        if self:\n            serial = []\n            queue = [self]\n\n            while queue:\n                cur = queue[0]\n\n                if cur:\n                    serial.append(cur.val)\n                    queue.append(cur.left)\n                    queue.append(cur.right)\n                else:\n                    serial.append(\"#\")\n\n                queue = queue[1:]\n\n            while serial[-1] == \"#\":\n                serial.pop()\n\n            return repr(serial)\n\n        else:\n            return None\n\nclass Solution(object):\n    # @return a list of tree node\n    def generateTrees(self, n):\n        return self.generateTreesRecu(1, n)\n\n    def generateTreesRecu(self, low, high):\n        result = []\n        if low > high:\n            result.append(None)\n        for i in xrange(low, high + 1):\n            left = self.generateTreesRecu(low, i - 1)\n            right = self.generateTreesRecu(i + 1, high)\n            for j in left:\n                for k in right:\n                    cur = TreeNode(i)\n                    cur.left = j\n                    cur.right = k\n                    result.append(cur)\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

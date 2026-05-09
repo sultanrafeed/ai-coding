@@ -1,0 +1,36 @@
+{
+  "id": "4e4ef104-effc-4a71-8837-15f5cd60116f",
+  "slug": "minimum-total-cost-to-make-arrays-unequal",
+  "title": "Minimum Total Cost to Make Arrays Unequal",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given two <strong>0-indexed</strong> integer arrays <code>nums1</code> and <code>nums2</code>, of equal length <code>n</code>.</p>\n\n<p>In one operation, you can swap the values of any two indices of <code>nums1</code>. The <strong>cost</strong> of this operation is the <strong>sum</strong> of the indices.</p>\n\n<p>Find the <strong>minimum</strong> total cost of performing the given operation <strong>any</strong> number of times such that <code>nums1[i] != nums2[i]</code> for all <code>0 &lt;= i &lt;= n - 1</code> after performing all the operations.</p>\n\n<p>Return <em>the <strong>minimum total cost</strong> such that </em><code>nums1</code> and <code>nums2</code><em> satisfy the above condition</em>. In case it is not possible, return <code>-1</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,2,3,4,5], nums2 = [1,2,3,4,5]\n<strong>Output:</strong> 10\n<strong>Explanation:</strong> \nOne of the ways we can perform the operations is:\n- Swap values at indices 0 and 3, incurring cost = 0 + 3 = 3. Now, nums1 = [4,2,3,1,5]\n- Swap values at indices 1 and 2, incurring cost = 1 + 2 = 3. Now, nums1 = [4,3,2,1,5].\n- Swap values at indices 0 and 4, incurring cost = 0 + 4 = 4. Now, nums1 =[5,3,2,1,4].\nWe can see that for each index i, nums1[i] != nums2[i]. The cost required here is 10.\nNote that there are other ways to swap values, but it can be proven that it is not possible to obtain a cost less than 10.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [2,2,2,1,3], nums2 = [1,2,2,3,3]\n<strong>Output:</strong> 10\n<strong>Explanation:</strong> \nOne of the ways we can perform the operations is:\n- Swap values at indices 2 and 3, incurring cost = 2 + 3 = 5. Now, nums1 = [2,2,1,2,3].\n- Swap values at indices 1 and 4, incurring cost = 1 + 4 = 5. Now, nums1 = [2,3,1,2,2].\nThe total cost needed here is 10, which is the minimum possible.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums1 = [1,2,2], nums2 = [1,2,2]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> \nIt can be shown that it is not possible to satisfy the given conditions irrespective of the number of operations we perform.\nHence, we return -1.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == nums1.length == nums2.length</code></li>\n\t<li><code>1 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= nums1[i], nums2[i] &lt;= n</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "counting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// greedy\nclass Solution {\npublic:\n    long long minimumTotalCost(vector<int>& nums1, vector<int>& nums2) {\n        unordered_map<int, int> cnt;\n        int64_t result = 0;\n        for (int i = 0; i < size(nums1); ++i) {\n            if (nums1[i] != nums2[i]) {\n                continue;\n            }\n            ++cnt[nums1[i]];\n            result += i;\n        }\n        if (empty(cnt)) {\n            return 0;\n        }\n        const int majority = max_element(cbegin(cnt), cend(cnt),\n                                         [](const auto& a, const auto& b) {\n                                                return a.second < b.second;\n                                         })->first;\n        int remain = cnt[majority] - (accumulate(cbegin(cnt), cend(cnt), 0,\n                                                 [](const auto& total, const auto& x) {\n                                                     return total + x.second;\n                                                 }) - cnt[majority]);\n        if (remain <= 0) {\n            return result;\n        }\n        for (int i = 0; i < size(nums1); ++i) {\n            if (nums1[i] == nums2[i] || nums1[i] == majority || nums2[i] == majority) {\n                continue;\n            }\n            result += i;\n            if (--remain == 0) {\n                return result;\n            }\n        }\n        return -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\nimport collections\nimport itertools\n\n\n# greedy\nclass Solution(object):\n    def minimumTotalCost(self, nums1, nums2):\n        \"\"\"\n        :type nums1: List[int]\n        :type nums2: List[int]\n        :rtype: int\n        \"\"\"\n        cnt = collections.Counter()\n        result = 0\n        for i, (x, y) in enumerate(itertools.izip(nums1, nums2)):\n            if x != y:\n                continue\n            cnt[x] += 1\n            result += i\n        if not cnt:\n            return 0\n        majority = max(cnt.iterkeys(), key=lambda x: cnt[x])\n        remain = cnt[majority]-(sum(cnt.itervalues())-cnt[majority])\n        if remain <= 0:\n            return result\n        for i, (x, y) in enumerate(itertools.izip(nums1, nums2)):\n            if x == y or majority in (x, y):\n                continue\n            result += i\n            remain -= 1\n            if not remain:\n                return result\n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

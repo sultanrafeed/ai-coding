@@ -1,0 +1,40 @@
+{
+  "id": "775b9af0-0a37-4f4a-8396-9ac9b77c7f4c",
+  "slug": "valid-palindrome-iv",
+  "title": "Valid Palindrome IV",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"abcdba\"\n\"aa\"\n\"abcdef\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// string, two pointers\nclass Solution {\npublic:\n    bool makePalindrome(string s) {\n        for (int left = 0, right = size(s) - 1, cnt = 0; left < right; ++left, --right) {\n            if (s[left] != s[right] && ++cnt > 2) {\n                return false;\n            }\n        }\n        return true;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# string, two pointers\nclass Solution(object):\n    def makePalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        return sum(s[i] != s[~i] for i in xrange(len(s)//2)) <= 2\n\n\n# Time:  O(n)\n# Space: O(1)\n# string, two pointers\nclass Solution2(object):\n    def makePalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: bool\n        \"\"\"\n        cnt = 0\n        left, right = 0, len(s)-1\n        while left < right:\n            if s[left] != s[right]:\n                cnt += 1\n                if cnt > 2:\n                    return False\n            left += 1\n            right -= 1\n        return True",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,42 @@
+{
+  "id": "ed675f9b-ddda-44be-96b5-f28254241605",
+  "slug": "sort-array-by-absolute-value",
+  "title": "Sort Array By Absolute Value",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "math",
+    "two-pointers",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[3,-1,-4,1,5]\n[-100,100]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n + r)\n// Space: O(n + r)\n\n// sort\nclass Solution {\npublic:\n    vector<int> sortByAbsoluteValue(vector<int>& nums) {\n        int mx = 0;\n        for (const auto& x : nums) {\n            mx = max(mx, abs(x));\n        }\n        vector<vector<int>> lookup(mx + 1);\n        for (const auto& x : nums) {\n            lookup[abs(x)].emplace_back(x);\n        }\n        vector<int> result;\n        result.reserve(size(nums));\n        for (const auto& xs : lookup) {\n            for (const auto& x : xs) {\n                result.emplace_back(x);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn)\n// Space: O(1)\n// sort\nclass Solution2 {\npublic:\n    vector<int> sortByAbsoluteValue(vector<int>& nums) {\n        ranges::sort(nums, [](const auto& a, const auto& b) {\n            return abs(a) < abs(b);\n        });\n        return nums;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n + r)\n# Space: O(n + r)\n\n# sort\nclass Solution(object):\n    def sortByAbsoluteValue(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        mx = max(abs(x) for x in nums)\n        lookup = [[] for _ in xrange(mx+1)]\n        for x in nums:\n            lookup[abs(x)].append(x)\n        result = []\n        for x in lookup:\n            result.extend(x)\n        return result\n\n\n# Time:  O(nlogn)\n# Space: O(1)\n# sort\nclass Solution2(object):\n    def sortByAbsoluteValue(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: List[int]\n        \"\"\"\n        nums.sort(key=lambda x: abs(x))\n        return nums",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

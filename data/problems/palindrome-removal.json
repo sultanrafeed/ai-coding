@@ -1,0 +1,34 @@
+{
+  "id": "a1f35a6f-4781-48f0-96dd-8a92db6633d7",
+  "slug": "palindrome-removal",
+  "title": "Palindrome Removal",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n^3)\n// Space: O(n^2)\n\nclass Solution {\npublic:\n    int minimumMoves(vector<int>& arr) {\n        vector<vector<int>> dp(arr.size() + 1, vector<int>(arr.size()));\n        for (int l = 1; l <= arr.size(); ++l) {\n            for (int i = 0; i + l - 1 < arr.size(); ++i) {\n                int j = i + l - 1;\n                if (l == 1) {\n                    dp[i][j] = 1;\n                } else {\n                    dp[i][j] = 1 + dp[i + 1][j];\n                    if (arr[i] == arr[i + 1]) {\n                        dp[i][j] = min(dp[i][j], 1 + dp[i + 2][j]);\n                    }\n                    for (int k = i + 2; k <= j; ++k) {\n                        if (arr[i] == arr[k]) {\n                            dp[i][j] = min(dp[i][j], dp[i + 1][k - 1] + dp[k + 1][j]);\n                        }\n                    }\n                }\n            }\n        }\n        return dp[0][arr.size() - 1]; \n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n^3)\n# Space: O(n^2)\n\nclass Solution(object):\n    def minimumMoves(self, arr):\n        \"\"\"\n        :type arr: List[int]\n        :rtype: int\n        \"\"\"\n        dp = [[0 for _ in xrange(len(arr)+1)] for _ in xrange(len(arr)+1)]\n        for l in xrange(1, len(arr)+1):\n            for i in xrange(len(arr)-l+1):\n                j = i+l-1\n                if l == 1:\n                    dp[i][j] = 1\n                else:\n                    dp[i][j] = 1+dp[i+1][j]\n                    if arr[i] == arr[i+1]:\n                        dp[i][j] = min(dp[i][j], 1+dp[i+2][j])\n                    for k in xrange(i+2, j+1):\n                        if arr[i] == arr[k]:\n                            dp[i][j] = min(dp[i][j], dp[i+1][k-1] + dp[k+1][j])\n        return dp[0][len(arr)-1]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "4c0c2565-e952-43ca-9d52-b03a2fa60222",
+  "slug": "minimum-number-of-moves-to-make-palindrome",
+  "title": "Minimum Number of Moves to Make Palindrome",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a string <code>s</code> consisting only of lowercase English letters.</p>\n\n<p>In one <strong>move</strong>, you can select any two <strong>adjacent</strong> characters of <code>s</code> and swap them.</p>\n\n<p>Return <em>the <strong>minimum number of moves</strong> needed to make</em> <code>s</code> <em>a palindrome</em>.</p>\n\n<p><strong>Note</strong> that the input will be generated such that <code>s</code> can always be converted to a palindrome.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aabb&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong>\nWe can obtain two palindromes from s, &quot;abba&quot; and &quot;baab&quot;. \n- We can obtain &quot;abba&quot; from s in 2 moves: &quot;a<u><strong>ab</strong></u>b&quot; -&gt; &quot;ab<u><strong>ab</strong></u>&quot; -&gt; &quot;abba&quot;.\n- We can obtain &quot;baab&quot; from s in 2 moves: &quot;a<u><strong>ab</strong></u>b&quot; -&gt; &quot;<u><strong>ab</strong></u>ab&quot; -&gt; &quot;baab&quot;.\nThus, the minimum number of moves needed to make s a palindrome is 2.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;letelt&quot;\n<strong>Output:</strong> 2\n<strong>Explanation:</strong>\nOne of the palindromes we can obtain from s in 2 moves is &quot;lettel&quot;.\nOne of the ways we can obtain it is &quot;lete<u><strong>lt</strong></u>&quot; -&gt; &quot;let<u><strong>et</strong></u>l&quot; -&gt; &quot;lettel&quot;.\nOther palindromes such as &quot;tleelt&quot; can also be obtained in 2 moves.\nIt can be shown that it is not possible to obtain a palindrome in less than 2 moves.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 2000</code></li>\n\t<li><code>s</code> consists only of lowercase English letters.</li>\n\t<li><code>s</code> can be converted to a palindrome using a finite number of moves.</li>\n</ul>\n",
+  "patterns": [
+    "two-pointers",
+    "string",
+    "greedy",
+    "binary-indexed-tree"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// greedy, bit, fenwick tree\nclass Solution {\npublic:\n    int minMovesToMakePalindrome(string s) {\n        vector<vector<int>> idxs(26);\n        for (int i = 0; i < size(s); ++i) {\n            idxs[s[i] - 'a'].emplace_back(i);\n        }\n        vector<pair<int, int>> pairs;\n        vector<int> targets(size(s));\n        for (const auto& idx : idxs) {\n            for (int i = 0; i < size(idx) / 2; ++i) {\n                pairs.emplace_back(idx[i], idx[(size(idx) - 1) - i]);\n            }\n            if (size(idx) % 2) {\n                targets[idx[size(idx) / 2]] = size(s) / 2;\n            }\n        }\n        sort(begin(pairs), end(pairs));\n        for (int i = 0; i < size(pairs); ++i) {\n            targets[pairs[i].first] = i;\n            targets[pairs[i].second] = (size(s) - 1) - i;\n        }\n        BIT bit(size(s));\n        int result = 0;\n        for (const auto& i : targets) {\n            result += i - bit.query(i - 1);  // move from bit.query(i-1) to i\n            bit.add(i, 1);\n        }\n        return result;\n    }\n\nprivate:\n    class BIT {\n    public:\n        BIT(int n) : bit_(n + 1) {  // 0-indexed\n        }\n        \n        void add(int i, int val) {\n            ++i;\n            for (; i < size(bit_); i += lower_bit(i)) {\n                bit_[i] += val;\n            }\n        }\n\n        int query(int i) const {\n            ++i;\n            int total = 0;\n            for (; i > 0; i -= lower_bit(i)) {\n                total += bit_[i];\n            }\n            return total;\n        }\n    \n    private:\n        int lower_bit(int i) const {\n            return i & -i;\n        }\n        \n        vector<int> bit_;\n    };\n};\n\n// Time:  O(n^2)\n// Space: O(n)\n// greedy\nclass Solution2 {\npublic:\n    int minMovesToMakePalindrome(string s) {\n        int result = 0;\n        while (!empty(s)) {\n            const int i = s.find(s.back());\n            if (i == size(s) - 1) {\n                result += i / 2;\n            } else {\n                result += i;\n                s.erase(i, 1);\n            }\n            s.pop_back();\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nclass BIT(object):  # 0-indexed\n    def __init__(self, n):\n        self.__bit = [0]*(n+1)\n\n    def add(self, i, val):\n        i += 1\n        while i < len(self.__bit):\n            self.__bit[i] += val\n            i += (i & -i)\n\n    def query(self, i):\n        i += 1\n        ret = 0\n        while i > 0:\n            ret += self.__bit[i]\n            i -= (i & -i)\n        return ret\n\n\n# greedy, bit, fenwick tree\nclass Solution(object):\n    def minMovesToMakePalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        idxs = [[] for _ in xrange(26)]\n        for i, c in enumerate(s):\n            idxs[ord(c)-ord('a')].append(i)\n        targets, pairs = [0]*len(s), []\n        for c, idx in enumerate(idxs):\n            for i in xrange(len(idx)//2):\n                pairs.append((idx[i], idx[~i]))\n            if len(idx)%2:\n                targets[idx[len(idx)//2]] = len(s)//2\n        pairs.sort()\n        for i, (l, r) in enumerate(pairs):\n            targets[l], targets[r] = i, (len(s)-1)-i\n        bit = BIT(len(s))\n        result = 0\n        for i in targets:\n            result += i-bit.query(i-1)  # move from bit.query(i-1) to i\n            bit.add(i, 1)\n        return result\n\n\n# Time:  O(n^2)\n# Space: O(n)\n# greedy\nclass Solution2(object):\n    def minMovesToMakePalindrome(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        s = list(s)\n        result = 0\n        while s:\n            i = s.index(s[-1])\n            if i == len(s)-1:\n                result += i//2\n            else:\n                result += i\n                s.pop(i)\n            s.pop()\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,31 @@
+{
+  "id": "16852be2-7abc-494c-aa31-4759926a36a7",
+  "slug": "deep-merge-of-two-objects",
+  "title": "Deep Merge of Two Objects",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "{\"a\": 1, \"c\": 3}\n{\"a\": 2, \"b\": 2}\n[{}, 2, 3]\n[[], 5]\n{\"a\": 1, \"b\": {\"c\": [1,[2,7],5], \"d\": 2}}\n{\"a\": 1, \"b\": {\"c\": [6,[6],[9]], \"e\": 3}}\ntrue\nnull",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "typescript",
+      "code": "// Time:  O(n + m)\n// Space: O(h)\n\n// dfs\nfunction deepMerge(obj1: any, obj2: any): any {\n    if (obj1 === null ||\n        obj2 === null ||\n        typeof obj1 !== 'object' ||\n        typeof obj1 !== typeof obj2 ||\n        Array.isArray(obj1) !== Array.isArray(obj2)) {\n        return obj2;\n    }\n\n    let result = Array.isArray(obj1) ? [] : {};\n    Object.keys(obj1).forEach(key => {\n        if (obj2[key] === undefined) {\n            result[key] = obj1[key]; \n        } else {\n            result[key] = deepMerge(obj1[key], obj2[key]);\n        }\n    });\n    Object.keys(obj2).forEach(key => obj1[key] === undefined ? result[key] = obj2[key] : null);\n    return result;\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

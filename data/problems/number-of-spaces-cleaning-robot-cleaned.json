@@ -1,0 +1,41 @@
+{
+  "id": "1bac9ea2-0081-4fba-a4cb-4fe2f3faa39f",
+  "slug": "number-of-spaces-cleaning-robot-cleaned",
+  "title": "Number of Spaces Cleaning Robot Cleaned",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "matrix",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[0,0,0],[1,1,0],[0,0,0]]\n[[0,1,0],[1,0,0],[0,0,0]]\n[[0,0,0],[0,0,0],[0,0,0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(1)\n\nclass Solution {\npublic:\n    int numberOfCleanRooms(vector<vector<int>>& room) {\n        static const vector<pair<int, int>> directions = {{0, 1}, {1, 0}, {0, -1}, {-1, 0}};\n        int result = 0, r = 0, c = 0, d = 0;\n        while (!(room[r][c] & (1 << (d + 1)))) {\n            result += (room[r][c] >> 1) == 0;\n            room[r][c] |= (1 << (d + 1));\n            const auto& [dr, dc] = directions[d];\n            const int nr = r + dr, nc = c + dc;\n            if ((0 <= nr && nr < size(room)) && (0 <= nc && nc < size(room[0])) && !(room[nr][nc] & 1)) {\n                r = nr, c = nc;\n            } else {\n                d = (d + 1) % 4;\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(1)\n\nclass Solution(object):\n    def numberOfCleanRooms(self, room):\n        \"\"\"\n        :type room: List[List[int]]\n        :rtype: int\n        \"\"\"\n        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n        result = r = c = d = 0\n        while not room[r][c]&(1<<(d+1)):\n            result += (room[r][c]>>1) == 0\n            room[r][c] |= (1<<(d+1))\n            dr, dc = directions[d]\n            nr, nc = r+dr, c+dc\n            if 0 <= nr < len(room) and 0 <= nc < len(room[0]) and not (room[nr][nc]&1):\n                r, c = nr, nc\n            else:\n                d = (d+1)%4\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,36 @@
+{
+  "id": "9e05c539-1048-4a6d-b1de-f433c02109d6",
+  "slug": "reorder-list",
+  "title": "Reorder List",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>You are given the head of a singly linked-list. The list can be represented as:</p>\n\n<pre>\nL<sub>0</sub> &rarr; L<sub>1</sub> &rarr; &hellip; &rarr; L<sub>n - 1</sub> &rarr; L<sub>n</sub>\n</pre>\n\n<p><em>Reorder the list to be on the following form:</em></p>\n\n<pre>\nL<sub>0</sub> &rarr; L<sub>n</sub> &rarr; L<sub>1</sub> &rarr; L<sub>n - 1</sub> &rarr; L<sub>2</sub> &rarr; L<sub>n - 2</sub> &rarr; &hellip;\n</pre>\n\n<p>You may not modify the values in the list&#39;s nodes. Only nodes themselves may be changed.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/04/reorder1linked-list.jpg\" style=\"width: 422px; height: 222px;\" />\n<pre>\n<strong>Input:</strong> head = [1,2,3,4]\n<strong>Output:</strong> [1,4,2,3]\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2021/03/09/reorder2-linked-list.jpg\" style=\"width: 542px; height: 222px;\" />\n<pre>\n<strong>Input:</strong> head = [1,2,3,4,5]\n<strong>Output:</strong> [1,5,2,4,3]\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li>The number of nodes in the list is in the range <code>[1, 5 * 10<sup>4</sup>]</code>.</li>\n\t<li><code>1 &lt;= Node.val &lt;= 1000</code></li>\n</ul>\n",
+  "patterns": [
+    "linked-list",
+    "two-pointers",
+    "stack",
+    "recursion"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n/**\n * Definition for singly-linked list.\n * struct ListNode {\n *     int val;\n *     ListNode *next;\n *     ListNode(int x) : val(x), next(NULL) {}\n * };\n */\nclass Solution {\n    public:\n        void reorderList(ListNode *head) {\n        if (!head) {\n            return;\n        }\n\n        auto slow = head, fast = head;\n\n        while (fast->next && fast->next->next) {\n            slow = slow->next;\n            fast = fast->next->next;\n        }\n\n        // Split into two lists.\n        auto tmp = slow->next;\n        slow->next = nullptr;\n        slow = tmp;\n\n        merge(head, reverse(slow));\n    }\n\nprivate:\n    ListNode *reverse(ListNode *head) {\n        ListNode dummy{0};\n\n        while (head) {\n            auto tmp = head->next;\n            head->next = dummy.next;\n            dummy.next = head;\n            head = tmp;\n        }\n\n        return dummy.next;\n    }\n\n    ListNode *merge(ListNode *list1, ListNode *list2) {\n        ListNode dummy{0};\n        auto ptr = &dummy;\n\n        while (list1 && list2) {\n            auto tmp = list1->next;\n\n            ptr->next = list1;\n            ptr = ptr->next;\n            ptr->next = list2;\n            ptr = ptr->next;\n\n            list1 = tmp;\n            list2 = list2->next;\n        }\n\n        if (list1) {\n            ptr->next = list1;\n        }\n\n        return dummy.next;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\nclass ListNode(object):\n    def __init__(self, x):\n        self.val = x\n        self.next = None\n\n    def __repr__(self):\n        if self:\n            return \"{} -> {}\".format(self.val, repr(self.next))\n\nclass Solution(object):\n    # @param head, a ListNode\n    # @return nothing\n    def reorderList(self, head):\n        if head == None or head.next == None:\n            return head\n\n        fast, slow, prev = head, head, None\n        while fast != None and fast.next != None:\n            fast, slow, prev = fast.next.next, slow.next, slow\n        current, prev.next, prev = slow, None, None\n\n        while current != None:\n            current.next, prev, current = prev, current, current.next\n\n        l1, l2 = head, prev\n        dummy = ListNode(0)\n        current = dummy\n\n        while l1 != None and l2 != None:\n            current.next, current, l1 = l1, l1, l1.next\n            current.next, current, l2 = l2, l2, l2.next\n\n        return dummy.next",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

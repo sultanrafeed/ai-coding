@@ -1,0 +1,42 @@
+{
+  "id": "0e9c355f-0d0d-4383-b7a5-e6e9f394a748",
+  "slug": "maximum-number-of-achievable-transfer-requests",
+  "title": "Maximum Number of Achievable Transfer Requests",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>We have <code>n</code> buildings numbered from <code>0</code> to <code>n - 1</code>. Each building has a number of employees. It&#39;s transfer season, and some employees want to change the building they reside in.</p>\n\n<p>You are given an array <code>requests</code> where <code>requests[i] = [from<sub>i</sub>, to<sub>i</sub>]</code> represents an employee&#39;s request to transfer from building <code>from<sub>i</sub></code> to building <code>to<sub>i</sub></code>.</p>\n\n<p><strong>All buildings are full</strong>, so a list of requests is achievable only if for each building, the <strong>net change in employee transfers is zero</strong>. This means the number of employees <strong>leaving</strong> is <strong>equal</strong> to the number of employees <strong>moving in</strong>. For example if <code>n = 3</code> and two employees are leaving building <code>0</code>, one is leaving building <code>1</code>, and one is leaving building <code>2</code>, there should be two employees moving to building <code>0</code>, one employee moving to building <code>1</code>, and one employee moving to building <code>2</code>.</p>\n\n<p>Return <em>the maximum number of achievable requests</em>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/10/move1.jpg\" style=\"width: 600px; height: 406px;\" />\n<pre>\n<strong>Input:</strong> n = 5, requests = [[0,1],[1,0],[0,1],[1,2],[2,0],[3,4]]\n<strong>Output:</strong> 5\n<strong>Explantion:</strong> Let&#39;s see the requests:\nFrom building 0 we have employees x and y and both want to move to building 1.\nFrom building 1 we have employees a and b and they want to move to buildings 2 and 0 respectively.\nFrom building 2 we have employee z and they want to move to building 0.\nFrom building 3 we have employee c and they want to move to building 4.\nFrom building 4 we don&#39;t have any requests.\nWe can achieve the requests of users x and b by swapping their places.\nWe can achieve the requests of users y, a and z by swapping the places in the 3 buildings.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2020/09/10/move2.jpg\" style=\"width: 450px; height: 327px;\" />\n<pre>\n<strong>Input:</strong> n = 3, requests = [[0,0],[1,2],[2,1]]\n<strong>Output:</strong> 3\n<strong>Explantion:</strong> Let&#39;s see the requests:\nFrom building 0 we have employee x and they want to stay in the same building 0.\nFrom building 1 we have employee y and they want to move to building 2.\nFrom building 2 we have employee z and they want to move to building 1.\nWe can achieve all the requests. </pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> n = 4, requests = [[0,3],[3,1],[1,2],[2,0]]\n<strong>Output:</strong> 4\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= 20</code></li>\n\t<li><code>1 &lt;= requests.length &lt;= 16</code></li>\n\t<li><code>requests[i].length == 2</code></li>\n\t<li><code>0 &lt;= from<sub>i</sub>, to<sub>i</sub> &lt; n</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "backtracking",
+    "bit-manipulation",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "5\n[[0,1],[1,0],[0,1],[1,2],[2,0],[3,4]]\n3\n[[0,0],[1,2],[2,1]]\n4\n[[0,3],[3,1],[1,2],[2,0]]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O((n + r) * 2^r)\n// Space: O(n + r)\n\n// early return solution\nclass Solution {\npublic:\n    int maximumRequests(int n, vector<vector<int>>& requests) {\n        const auto& check =\n            [&n, &requests](const auto& idx) {\n                 vector<int> change(n);\n                 for (const auto& i : idx) {\n                     --change[requests[i][0]];\n                     ++change[requests[i][1]];\n                 }\n                 return all_of(cbegin(change), cend(change),\n                               [](const auto& x) {\n                                   return x == 0;\n                               });\n             };\n    \n        for (int k = size(requests); k > 0; --k) {\n            if (combinations(size(requests), k, check)) {\n                return k;  // early return\n            }\n        }\n        return 0;\n    }\n\nprivate:\n    bool combinations(int n, int k, const function<bool (const vector<int>&)>& callback) {\n        static const auto& next_pos =\n            [](const auto& n, const auto& k, const auto& idxs) {\n                int i = k - 1;\n                for (; i >= 0; --i) {\n                    if (idxs[i] != i + n - k) {\n                        break;\n                    }\n                }\n                return i;\n            };\n    \n        vector<int> idxs(k);\n        iota(begin(idxs), end(idxs), 0);\n        if (callback(idxs)) {\n            return true;\n        }\n        for (int i; (i = next_pos(n, k, idxs)) >= 0;) {\n            ++idxs[i];\n            for (int j = i + 1; j < k; ++j) {\n                idxs[j] = idxs[j - 1] + 1;\n            }\n            if (callback(idxs)) {\n                return true;\n            }\n        }\n        return false;\n    }\n};\n\n// Time:  O((n + r) * 2^r)\n// Space: O(n + r)\n// full search solution (much slower)\nclass Solution2 {\npublic:\n    int maximumRequests(int n, vector<vector<int>>& requests) {\n        const auto& evaluate =\n            [&n, &requests](const auto& mask) {\n                 vector<int> change(n);\n                 int count = 0;\n                 for (int i = 0, base = 1; i < size(requests); ++i, base <<= 1) {\n                     if (base & mask) {\n                         --change[requests[i][0]];\n                         ++change[requests[i][1]];\n                         ++count;\n                     }\n                 }\n                 return all_of(cbegin(change), cend(change),\n                               [](const auto& x) {\n                                   return x == 0;\n                               }) ? count : 0;\n             };\n    \n        const auto& total = 1 << size(requests);\n        int result = 0;\n        for (int mask = 0; mask < total; ++mask) {\n            result = max(result, evaluate(mask));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O((n + r) * 2^r)\n# Space: O(n + r)\n\nimport itertools\n\n\n# early return solution\nclass Solution(object):\n    def maximumRequests(self, n, requests):\n        \"\"\"\n        :type n: int\n        :type requests: List[List[int]]\n        :rtype: int\n        \"\"\"\n        for k in reversed(xrange(1, len(requests)+1)):\n            for c in itertools.combinations(xrange(len(requests)), k):\n                change = [0]*n\n                for i in c:\n                    change[requests[i][0]] -= 1\n                    change[requests[i][1]] += 1\n                if all(c == 0 for c in change):\n                    return k  # early return\n        return 0\n    \n\n# Time:  O((n + r) * 2^r)\n# Space: O(n + r)\n# full search solution (much slower)\nclass Solution2(object):\n    def maximumRequests(self, n, requests):\n        \"\"\"\n        :type n: int\n        :type requests: List[List[int]]\n        :rtype: int\n        \"\"\"\n        def evaluate(n, requests, mask):\n            change = [0]*n\n            base, count = 1, 0\n            for i in xrange(len(requests)):\n                if base & mask:\n                    change[requests[i][0]] -= 1\n                    change[requests[i][1]] += 1\n                    count += 1\n                base <<= 1\n            return count if all(c == 0 for c in change) else 0\n\n        return max(evaluate(n, requests, i) for i in xrange(1 << len(requests)))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

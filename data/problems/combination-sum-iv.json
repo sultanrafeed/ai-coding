@@ -1,0 +1,34 @@
+{
+  "id": "355c61cf-1996-48e7-942e-125688b3cdf3",
+  "slug": "combination-sum-iv",
+  "title": "Combination Sum IV",
+  "difficulty": "medium",
+  "descriptionHtml": "<p>Given an array of <strong>distinct</strong> integers <code>nums</code> and a target integer <code>target</code>, return <em>the number of possible combinations that add up to</em>&nbsp;<code>target</code>.</p>\n\n<p>The test cases are generated so that the answer can fit in a <strong>32-bit</strong> integer.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,2,3], target = 4\n<strong>Output:</strong> 7\n<strong>Explanation:</strong>\nThe possible combination ways are:\n(1, 1, 1, 1)\n(1, 1, 2)\n(1, 2, 1)\n(1, 3)\n(2, 1, 1)\n(2, 2)\n(3, 1)\nNote that different sequences are counted as different combinations.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [9], target = 3\n<strong>Output:</strong> 0\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 200</code></li>\n\t<li><code>1 &lt;= nums[i] &lt;= 1000</code></li>\n\t<li>All the elements of <code>nums</code> are <strong>unique</strong>.</li>\n\t<li><code>1 &lt;= target &lt;= 1000</code></li>\n</ul>\n\n<p>&nbsp;</p>\n<p><strong>Follow up:</strong> What if negative numbers are allowed in the given array? How does it change the problem? What limitation we need to add to the question to allow negative numbers?</p>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn + n * t), t is the value of target.\n// Space: O(t)\n\nclass Solution {\npublic:\n    int combinationSum4(vector<int>& nums, int target) {\n        vector<uint32_t> dp(target + 1, 0);\n        dp[0] = 1;\n        sort(nums.begin(), nums.end());\n\n        for (int i = 1; i <= target; ++i) {\n            for (int j = 0; j < nums.size() && nums[j] <= i; ++j) {\n                dp[i] += dp[i - nums[j]];\n            }\n        }\n\n        return dp[target];\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlon + n * t), t is the value of target.\n# Space: O(t)\n\nclass Solution(object):\n    def combinationSum4(self, nums, target):\n        \"\"\"\n        :type nums: List[int]\n        :type target: int\n        :rtype: int\n        \"\"\"\n        dp = [0] * (target+1)\n        dp[0] = 1\n        nums.sort()\n\n        for i in xrange(1, target+1):\n            for j in xrange(len(nums)):\n                if nums[j] <= i:\n                    dp[i] += dp[i - nums[j]]\n                else:\n                    break\n\n        return dp[target]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

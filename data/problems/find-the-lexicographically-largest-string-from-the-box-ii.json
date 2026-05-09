@@ -1,0 +1,40 @@
+{
+  "id": "390a03cb-fa25-4f44-8788-e0ce848d8259",
+  "slug": "find-the-lexicographically-largest-string-from-the-box-ii",
+  "title": "Find the Lexicographically Largest String From the Box II",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "two-pointers",
+    "string"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"dbca\"\n2\n\"gggg\"\n4",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    string answerString(string word, int numFriends) {\n        if (numFriends == 1) {\n            return word;\n        }\n        int idx = 0;\n        for (int i = 1, l = 0; i < size(word); ++i) {\n            if (word[i] == word[idx + l]) {\n                ++l;\n            } else if (word[i] < word[idx + l]) {\n                l = 0;\n            } else if (word[i] > word[idx + l]) {\n                if (word[i - l] >= word[i]) {\n                    idx = i - l;\n                } else {\n                    idx = i;\n                }\n                l = 0;\n            }\n        }\n        return word.substr(idx, (size(word) - max((numFriends - 1) - idx, 0)) - idx);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(1)\n\n# greedy\nclass Solution(object):\n    def answerString(self, word, numFriends):\n        \"\"\"\n        :type word: str\n        :type numFriends: int\n        :rtype: str\n        \"\"\"\n        if numFriends == 1:\n            return word\n        idx = l = 0\n        for i in xrange(1, len(word)):\n            if word[i] == word[idx+l]:\n                l += 1\n            elif word[i] < word[idx+l]:\n                l = 0\n            elif word[i] > word[idx+l]:\n                if word[i-l] >= word[i]:\n                    idx = i-l\n                else:\n                    idx = i\n                l = 0\n        return word[idx:len(word)-max((numFriends-1)-idx, 0)]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

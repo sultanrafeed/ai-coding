@@ -1,0 +1,38 @@
+{
+  "id": "d0b96b30-6c2c-482f-8ee9-e1677eec2440",
+  "slug": "make-array-zero-by-subtracting-equal-amounts",
+  "title": "Make Array Zero by Subtracting Equal Amounts",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>You are given a non-negative integer array <code>nums</code>. In one operation, you must:</p>\n\n<ul>\n\t<li>Choose a positive integer <code>x</code> such that <code>x</code> is less than or equal to the <strong>smallest non-zero</strong> element in <code>nums</code>.</li>\n\t<li>Subtract <code>x</code> from every <strong>positive</strong> element in <code>nums</code>.</li>\n</ul>\n\n<p>Return <em>the <strong>minimum</strong> number of operations to make every element in </em><code>nums</code><em> equal to </em><code>0</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [1,5,0,3,5]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong>\nIn the first operation, choose x = 1. Now, nums = [0,4,0,2,4].\nIn the second operation, choose x = 2. Now, nums = [0,2,0,0,2].\nIn the third operation, choose x = 2. Now, nums = [0,0,0,0,0].\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> nums = [0]\n<strong>Output:</strong> 0\n<strong>Explanation:</strong> Each element in nums is already 0 so no operations are needed.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= nums.length &lt;= 100</code></li>\n\t<li><code>0 &lt;= nums[i] &lt;= 100</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "greedy",
+    "sorting",
+    "heap-priority-queue",
+    "simulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// hash table\nclass Solution {\npublic:\n    int minimumOperations(vector<int>& nums) {\n        unordered_set<int> lookup;\n        for (const auto& x : nums) {\n            if (x) {\n                lookup.emplace(x);\n            }\n        }\n        return size(lookup);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# hash table\nclass Solution(object):\n    def minimumOperations(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        return len({x for x in nums if x})",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

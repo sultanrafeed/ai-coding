@@ -1,0 +1,41 @@
+{
+  "id": "7f9527a4-2bc0-4bb2-9b44-7f3858d77124",
+  "slug": "find-shortest-path-with-k-hops",
+  "title": "Find Shortest Path with K Hops",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "graph",
+    "heap-priority-queue",
+    "shortest-path"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "4\n[[0,1,4],[0,2,2],[2,3,6]]\n1\n3\n2\n7\n[[3,1,9],[3,2,4],[4,0,9],[0,5,6],[3,6,2],[6,0,4],[1,2,4]]\n4\n1\n2\n5\n[[0,4,2],[0,1,3],[0,2,1],[2,1,4],[1,3,4],[3,4,7]]\n2\n3\n1",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n * k + (e * k) * log(n * k))\n// Space: O(n * k + e)\n\n// dijkstra's algorithm\nclass Solution {\npublic:\n    int shortestPathWithHops(int n, vector<vector<int>>& edges, int s, int d, int k) {\n        vector<vector<pair<int, int>>> adj(n);\n        for (const auto& e : edges) {\n            adj[e[0]].emplace_back(e[1], e[2]);\n            adj[e[1]].emplace_back(e[0], e[2]);\n        }\n        const auto& modified_dijkstra = [&]() {\n            static const int INF = numeric_limits<int>::max();\n\n            vector<vector<int>> best(size(adj), vector<int>(k + 1, INF));\n            best[s][0] = 0;\n            priority_queue<tuple<int, int, int>, vector<tuple<int, int, int>>, greater<tuple<int, int, int>>> min_heap;\n            min_heap.emplace(best[s][0], s, 0);\n            while (!empty(min_heap)) {\n                const auto [curr, u, cnt] = min_heap.top(); min_heap.pop();\n                if (curr > best[u][cnt]) {\n                    continue;\n                }\n                if (u == d) {\n                    return curr;\n                }\n                for (const auto& [v, w] : adj[u]) {\n                    if (w < best[v][cnt] - curr) {\n                        best[v][cnt] = curr + w;\n                        min_heap.emplace(best[v][cnt], v, cnt);\n                    }\n                    if (cnt + 1 <= k && curr < best[v][cnt + 1]) {\n                        best[v][cnt + 1] = curr;\n                        min_heap.emplace(best[v][cnt + 1], v, cnt + 1);\n                    }\n                }\n            }\n            return -1;\n        };\n\n        return modified_dijkstra();\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n * k + (e * k) * log(n * k))\n# Space: O(n * k + e)\n\nimport heapq\n\n\n# dijkstra's algorithm\nclass Solution(object):\n    def shortestPathWithHops(self, n, edges, s, d, k):\n        \"\"\"\n        :type n: int\n        :type edges: List[List[int]]\n        :type s: int\n        :type d: int\n        :type k: int\n        :rtype: int\n        \"\"\"\n        def modified_dijkstra():\n            best = [[float(\"inf\")]*(k+1) for _ in xrange(len(adj))]\n            best[s][0] = 0\n            min_heap = [(best[s][0], s, 0)]\n            while min_heap:\n                curr, u, cnt = heapq.heappop(min_heap)\n                if curr > best[u][cnt]:\n                    continue\n                if u == d:\n                    return curr\n                for v, w in adj[u]:\n                    if curr+w < best[v][cnt]:\n                        best[v][cnt] = curr+w\n                        heapq.heappush(min_heap, (best[v][cnt], v, cnt))\n                    if cnt+1 <= k and curr < best[v][cnt+1]:\n                        best[v][cnt+1] = curr\n                        heapq.heappush(min_heap, (best[v][cnt+1], v, cnt+1))\n            return -1\n        \n        adj = [[] for _ in xrange(n)]\n        for u, v, w in edges:\n            adj[u].append((v, w))\n            adj[v].append((u, w))\n        return modified_dijkstra()",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

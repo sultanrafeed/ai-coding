@@ -1,0 +1,34 @@
+{
+  "id": "e8dbc302-dbf6-46fa-ae76-f8df5e5901ae",
+  "slug": "maximum-sized-array",
+  "title": "Maximum Sized Array",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "binary-search",
+    "bit-manipulation"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  precompute: O(max_s^(1/5) * log(max_s))\n//        runtime:    O(log(max_s))\n// Space: O(max_s^(1/5))\n\n// precompute, bitmasks, combinatorics, binary search\nint i = 1;\nint64_t area = 0;\nvector<int64_t> vol = {0};\nclass Solution {\npublic:\n    int maxSizedArray(long long s) {\n        const auto& bit_length = [](int x) {\n            return (x ? std::__lg(x) : -1) + 1;\n        };\n\n        for (; vol.back() <= s; ++i) {\n            const int l = bit_length(i - 1);\n            int line = (i - 1) * i;\n            for (int bit = 0; bit < l; ++bit) {\n                if (!((i - 1) & (1 << bit))) {\n                    line += (((i - 1) >> (bit + 1)) * (1 << bit)) * (1 << bit);\n                }\n            }\n            area += 2 * line - ((i - 1) | (i - 1));\n            vol.emplace_back(((0 + (i - 1)) * i / 2) * area);\n        }\n        return distance(cbegin(vol), upper_bound(cbegin(vol), cend(vol), s)) - 1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  precompute: O(max_s^(1/5) * log(max_s))\n#        runtime:    O(log(max_s))\n# Space: O(max_s^(1/5))\n\nimport bisect \n\n\n# precompute, bitmasks, combinatorics, binary search\ni, area = 1, 0\nvol = [0]\nclass Solution(object):\n    def maxSizedArray(self, s):\n        \"\"\"\n        :type s: int\n        :rtype: int\n        \"\"\"\n        global i, area\n        while vol[-1] <= s:\n            area += 2*((i-1)*i+sum((((i-1)>>(bit+1))*(1<<bit))*(1<<bit) for bit in xrange((i-1).bit_length()) if not (i-1)&(1<<bit)))-((i-1)|(i-1))\n            vol.append(((0+(i-1))*i//2)*area)\n            i += 1\n        return bisect.bisect_right(vol, s)-1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

@@ -1,0 +1,44 @@
+{
+  "id": "2b0a8f16-1e88-4673-b794-3c1a1423fcd2",
+  "slug": "number-of-flowers-in-full-bloom",
+  "title": "Number of Flowers in Full Bloom",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>0-indexed</strong> 2D integer array <code>flowers</code>, where <code>flowers[i] = [start<sub>i</sub>, end<sub>i</sub>]</code> means the <code>i<sup>th</sup></code> flower will be in <strong>full bloom</strong> from <code>start<sub>i</sub></code> to <code>end<sub>i</sub></code> (<strong>inclusive</strong>). You are also given a <strong>0-indexed</strong> integer array <code>people</code> of size <code>n</code>, where <code>people[i]</code> is the time that the <code>i<sup>th</sup></code> person will arrive to see the flowers.</p>\n\n<p>Return <em>an integer array </em><code>answer</code><em> of size </em><code>n</code><em>, where </em><code>answer[i]</code><em> is the <strong>number</strong> of flowers that are in full bloom when the </em><code>i<sup>th</sup></code><em> person arrives.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/03/02/ex1new.jpg\" style=\"width: 550px; height: 216px;\" />\n<pre>\n<strong>Input:</strong> flowers = [[1,6],[3,7],[9,12],[4,13]], people = [2,3,7,11]\n<strong>Output:</strong> [1,2,2,2]\n<strong>Explanation: </strong>The figure above shows the times when the flowers are in full bloom and when the people arrive.\nFor each person, we return the number of flowers in full bloom during their arrival.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/03/02/ex2new.jpg\" style=\"width: 450px; height: 195px;\" />\n<pre>\n<strong>Input:</strong> flowers = [[1,10],[3,3]], people = [3,3,2]\n<strong>Output:</strong> [2,2,1]\n<strong>Explanation:</strong> The figure above shows the times when the flowers are in full bloom and when the people arrive.\nFor each person, we return the number of flowers in full bloom during their arrival.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= flowers.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>flowers[i].length == 2</code></li>\n\t<li><code>1 &lt;= start<sub>i</sub> &lt;= end<sub>i</sub> &lt;= 10<sup>9</sup></code></li>\n\t<li><code>1 &lt;= people.length &lt;= 5 * 10<sup>4</sup></code></li>\n\t<li><code>1 &lt;= people[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "hash-table",
+    "binary-search",
+    "sorting",
+    "prefix-sum",
+    "ordered-set"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[[1,6],[3,7],[9,12],[4,13]]\n[2,3,7,11]\n[[1,10],[3,3]]\n[3,3,2]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn + mlogn)\n// Space: O(n)\n\n// line sweep, binary search\nclass Solution {\npublic:\n    vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& persons) {\n        map<int, int> cnt;\n        for (const auto& flower : flowers) {\n            ++cnt[flower[0]];\n            --cnt[flower[1] + 1];\n        }\n        vector<int> prefix = {0};\n        vector<int> events;\n        for (const auto& [k, v] : cnt) {\n            events.emplace_back(k);\n            prefix.emplace_back(prefix.back() + v);\n        }\n        vector<int> result;\n        for (const auto& t : persons) {\n            int i = distance(cbegin(events), upper_bound(cbegin(events), cend(events), t));\n            result.emplace_back(prefix[i]);\n        }\n        return result;\n    }\n};\n\n// Time:  O(nlogn + mlogn)\n// Space: O(n)\n// binary search\nclass Solution2 {\npublic:\n    vector<int> fullBloomFlowers(vector<vector<int>>& flowers, vector<int>& persons) {\n        vector<int> starts, ends;\n        for (const auto& flower : flowers) {\n            starts.emplace_back(flower[0]);\n            ends.emplace_back(flower[1] + 1);\n        }\n        sort(begin(starts), end(starts));\n        sort(begin(ends), end(ends));\n        vector<int> result;\n        for (const auto& t : persons) {\n            result.emplace_back(distance(cbegin(starts), upper_bound(cbegin(starts), cend(starts), t)) - \n                                distance(cbegin(ends), upper_bound(cbegin(ends), cend(ends), t)));\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn + mlogn)\n# Space: O(n)\n\nimport bisect\n\n\n# line sweep, binary search\nclass Solution(object):\n    def fullBloomFlowers(self, flowers, persons):\n        \"\"\"\n        :type flowers: List[List[int]]\n        :type persons: List[int]\n        :rtype: List[int]\n        \"\"\"\n        cnt = collections.Counter()\n        for s, e in flowers:\n            cnt[s] += 1\n            cnt[e+1] -= 1\n        events = sorted(cnt.iterkeys())\n        prefix = [0]\n        for x in events:\n            prefix.append(prefix[-1]+cnt[x])\n        return [prefix[bisect.bisect_right(events, t)] for t in persons]\n\n\n# Time:  O(nlogn + mlogn)\n# Space: O(n)\nimport bisect\n\n\n# binary search\nclass Solution(object):\n    def fullBloomFlowers(self, flowers, persons):\n        \"\"\"\n        :type flowers: List[List[int]]\n        :type persons: List[int]\n        :rtype: List[int]\n        \"\"\"\n        starts, ends = [], []\n        for s, e in flowers:\n            starts.append(s)\n            ends.append(e+1)\n        starts.sort()\n        ends.sort()\n        return [bisect.bisect_right(starts, t)-bisect.bisect_right(ends, t) for t in persons]",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

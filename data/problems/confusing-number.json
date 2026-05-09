@@ -1,0 +1,39 @@
+{
+  "id": "ecce7d09-6c53-4d46-8320-28418e8f139b",
+  "slug": "confusing-number",
+  "title": "Confusing Number",
+  "difficulty": "easy",
+  "descriptionHtml": "",
+  "patterns": [
+    "math"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "6\n89\n11",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(logn)\n// Space: O(logn)\n\nclass Solution {\npublic:\n    bool confusingNumber(int N) {\n        static const unordered_map<char, char> lookup = \n            {{'0', '0'}, {'1', '1'}, {'6', '9'},\n             {'8', '8'}, {'9', '6'}};\n \n        const auto& S = to_string(N);\n        for (int i = 0; i < S.length(); ++i) {\n            if (!lookup.count(S[i])) {\n                return false;\n            }\n        }\n        for (int i = 0; i < (S.length() + 1) / 2; ++i) {\n            if (S[i] != lookup.at(S[S.length() - 1 - i])) {\n                return true;\n            }\n        }\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(logn)\n# Space: O(logn)\n\nclass Solution(object):\n    def confusingNumber(self, N):\n        \"\"\"\n        :type N: int\n        :rtype: bool\n        \"\"\"\n        lookup = {\"0\":\"0\", \"1\":\"1\", \"6\":\"9\", \"8\":\"8\", \"9\":\"6\"}\n        \n        S = str(N)\n        result = []\n        for i in xrange(len(S)):\n            if S[i] not in lookup:\n                return False\n        for i in xrange((len(S)+1)//2):\n            if S[i] != lookup[S[-(i+1)]]:\n                return True\n        return False",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

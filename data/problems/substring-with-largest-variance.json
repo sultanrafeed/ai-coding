@@ -1,0 +1,42 @@
+{
+  "id": "8e795389-ce75-40af-bd01-5df7725ba37b",
+  "slug": "substring-with-largest-variance",
+  "title": "Substring With Largest Variance",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>The <strong>variance</strong> of a string is defined as the largest difference between the number of occurrences of <strong>any</strong> <code>2</code> characters present in the string. Note the two characters may or may not be the same.</p>\n\n<p>Given a string <code>s</code> consisting of lowercase English letters only, return <em>the <strong>largest variance</strong> possible among all <strong>substrings</strong> of</em> <code>s</code>.</p>\n\n<p>A <strong>substring</strong> is a contiguous sequence of characters within a string.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;aababbb&quot;\n<strong>Output:</strong> 3\n<strong>Explanation:</strong>\nAll possible variances along with their respective substrings are listed below:\n- Variance 0 for substrings &quot;a&quot;, &quot;aa&quot;, &quot;ab&quot;, &quot;abab&quot;, &quot;aababb&quot;, &quot;ba&quot;, &quot;b&quot;, &quot;bb&quot;, and &quot;bbb&quot;.\n- Variance 1 for substrings &quot;aab&quot;, &quot;aba&quot;, &quot;abb&quot;, &quot;aabab&quot;, &quot;ababb&quot;, &quot;aababbb&quot;, and &quot;bab&quot;.\n- Variance 2 for substrings &quot;aaba&quot;, &quot;ababbb&quot;, &quot;abbb&quot;, and &quot;babb&quot;.\n- Variance 3 for substring &quot;babbb&quot;.\nSince the largest possible variance is 3, we return it.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> s = &quot;abcde&quot;\n<strong>Output:</strong> 0\n<strong>Explanation:</strong>\nNo letter occurs more than once in s, so the variance of every substring is 0.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= s.length &lt;= 10<sup>4</sup></code></li>\n\t<li><code>s</code> consists of lowercase English letters.</li>\n</ul>\n",
+  "patterns": [
+    "hash-table",
+    "string",
+    "dynamic-programming",
+    "enumeration"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "\"aababbb\"\n\"abcde\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(a^2 * n), a is the size of alphabets\n// Space: O(a)\n\n// kadane's algorithm\nclass Solution {\npublic:\n    int largestVariance(string s) {\n        const auto& modified_kadane = [&s](const auto& x, const auto& y) {\n            int result = 0;\n            vector<int> lookup(2);\n            vector<int> remain = {static_cast<int>(count(cbegin(s), cend(s), x)),\n                                  static_cast<int>(count(cbegin(s), cend(s), y))};\n            int curr = 0;\n            for (const auto& c : s) {\n                if (!(c == x || c == y)) {\n                    continue;\n                }\n                lookup[c != x] = 1;\n                --remain[c != x];\n                curr += (c == x) ? 1 : -1;\n                if (curr < 0 && remain[0] && remain[1]) {\n                    curr = lookup[0] = lookup[1] = 0;  // reset states if the remain has both x, y\n                }\n                if (lookup[0] && lookup[1]) {\n                    result = max(result, curr);  // update result if x, y both exist\n                }\n            }\n            return result;\n        };\n        \n        unordered_set<char> alphabets(cbegin(s), cend(s));\n        int result = 0;\n        for (const auto& x : alphabets) {\n            for (const auto& y: alphabets) {\n                if (x != y) {\n                    result = max(result, modified_kadane(x, y));\n                }\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(a^2 * n), a is the size of alphabets\n# Space: O(a)\n\nimport itertools\n\n\n# kadane's algorithm\nclass Solution(object):\n    def largestVariance(self, s):\n        \"\"\"\n        :type s: str\n        :rtype: int\n        \"\"\"\n        def modified_kadane(a, x, y):\n            result = curr = 0\n            lookup = [0]*2\n            remain = [a.count(x), a.count(y)]\n            for c in a:\n                if c not in (x, y):\n                    continue\n                lookup[c != x] = 1\n                remain[c != x] -= 1\n                curr += 1 if c == x else -1\n                if curr < 0 and remain[0] and remain[1]:\n                    curr = lookup[0] = lookup[1] = 0  # reset states if the remain has both x, y\n                if lookup[0] and lookup[1]:\n                    result = max(result, curr)  # update result if x, y both exist\n            return result\n\n        alphabets = set(s)\n        return max(modified_kadane(s, x, y) for x, y in itertools.permutations(alphabets, 2)) if len(alphabets) >= 2 else 0",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

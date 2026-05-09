@@ -1,0 +1,36 @@
+{
+  "id": "f3f00a0f-5055-4904-a911-6033abe59294",
+  "slug": "longest-cycle-in-a-graph",
+  "title": "Longest Cycle in a Graph",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You are given a <strong>directed</strong> graph of <code>n</code> nodes numbered from <code>0</code> to <code>n - 1</code>, where each node has <strong>at most one</strong> outgoing edge.</p>\n\n<p>The graph is represented with a given <strong>0-indexed</strong> array <code>edges</code> of size <code>n</code>, indicating that there is a directed edge from node <code>i</code> to node <code>edges[i]</code>. If there is no outgoing edge from node <code>i</code>, then <code>edges[i] == -1</code>.</p>\n\n<p>Return <em>the length of the <strong>longest</strong> cycle in the graph</em>. If no cycle exists, return <code>-1</code>.</p>\n\n<p>A cycle is a path that starts and ends at the <strong>same</strong> node.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/06/08/graph4drawio-5.png\" style=\"width: 335px; height: 191px;\" />\n<pre>\n<strong>Input:</strong> edges = [3,3,4,2,3]\n<strong>Output:</strong> 3\n<strong>Explanation:</strong> The longest cycle in the graph is the cycle: 2 -&gt; 4 -&gt; 3 -&gt; 2.\nThe length of this cycle is 3, so 3 is returned.\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/06/07/graph4drawio-1.png\" style=\"width: 171px; height: 161px;\" />\n<pre>\n<strong>Input:</strong> edges = [2,-1,3,1]\n<strong>Output:</strong> -1\n<strong>Explanation:</strong> There are no cycles in this graph.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>n == edges.length</code></li>\n\t<li><code>2 &lt;= n &lt;= 10<sup>5</sup></code></li>\n\t<li><code>-1 &lt;= edges[i] &lt; n</code></li>\n\t<li><code>edges[i] != i</code></li>\n</ul>\n",
+  "patterns": [
+    "depth-first-search",
+    "breadth-first-search",
+    "graph",
+    "topological-sort"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(n)\n// Space: O(n)\n\n// graph\nclass Solution {\npublic:\n    int longestCycle(vector<int>& edges) {\n        int result = -1;\n        vector<int> lookup(size(edges), -1);\n        for (int i = 0, idx = 0; i < size(edges); ++i) {\n            if (lookup[i] != -1) {\n                continue;\n            }\n            const int start = idx;\n            int j = i;\n            for (; j != -1; j = edges[j]) {\n                if (lookup[j] != -1) {\n                    break;\n                }\n                lookup[j] = idx++;\n            }\n            if (j != -1 && lookup[j] >= start) {\n                result = max(result, idx - lookup[j]);\n            }\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(n)\n# Space: O(n)\n\n# graph\nclass Solution(object):\n    def longestCycle(self, edges):\n        \"\"\"\n        :type edges: List[int]\n        :rtype: int\n        \"\"\"\n        result = -1\n        lookup = [-1]*len(edges)\n        idx = 0\n        for i in xrange(len(edges)):\n            if lookup[i] != -1:\n                continue\n            start = idx\n            while i != -1:\n                if lookup[i] != -1:\n                    break\n                lookup[i] = idx\n                idx += 1\n                i = edges[i]\n            if i != -1 and lookup[i] >= start:\n                result = max(result, idx-lookup[i])\n        return result",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

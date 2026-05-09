@@ -1,0 +1,42 @@
+{
+  "id": "4b73d897-0210-44d1-932e-773ab4efea34",
+  "slug": "verbal-arithmetic-puzzle",
+  "title": "Verbal Arithmetic Puzzle",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an equation, represented by <code>words</code> on the left side and the <code>result</code> on the right side.</p>\n\n<p>You need to check if the equation is solvable under the following rules:</p>\n\n<ul>\n\t<li>Each character is decoded as one digit (0 - 9).</li>\n\t<li>No two characters can map to the same digit.</li>\n\t<li>Each <code>words[i]</code> and <code>result</code> are decoded as one number <strong>without</strong> leading zeros.</li>\n\t<li>Sum of numbers on the left side (<code>words</code>) will equal to the number on the right side (<code>result</code>).</li>\n</ul>\n\n<p>Return <code>true</code> <em>if the equation is solvable, otherwise return</em> <code>false</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;SEND&quot;,&quot;MORE&quot;], result = &quot;MONEY&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Map &#39;S&#39;-&gt; 9, &#39;E&#39;-&gt;5, &#39;N&#39;-&gt;6, &#39;D&#39;-&gt;7, &#39;M&#39;-&gt;1, &#39;O&#39;-&gt;0, &#39;R&#39;-&gt;8, &#39;Y&#39;-&gt;&#39;2&#39;\nSuch that: &quot;SEND&quot; + &quot;MORE&quot; = &quot;MONEY&quot; ,  9567 + 1085 = 10652</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;SIX&quot;,&quot;SEVEN&quot;,&quot;SEVEN&quot;], result = &quot;TWENTY&quot;\n<strong>Output:</strong> true\n<strong>Explanation:</strong> Map &#39;S&#39;-&gt; 6, &#39;I&#39;-&gt;5, &#39;X&#39;-&gt;0, &#39;E&#39;-&gt;8, &#39;V&#39;-&gt;7, &#39;N&#39;-&gt;2, &#39;T&#39;-&gt;1, &#39;W&#39;-&gt;&#39;3&#39;, &#39;Y&#39;-&gt;4\nSuch that: &quot;SIX&quot; + &quot;SEVEN&quot; + &quot;SEVEN&quot; = &quot;TWENTY&quot; ,  650 + 68782 + 68782 = 138214</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> words = [&quot;LEET&quot;,&quot;CODE&quot;], result = &quot;POINT&quot;\n<strong>Output:</strong> false\n<strong>Explanation:</strong> There is no possible mapping to satisfy the equation, so we return false.\nNote that two different characters cannot map to the same digit.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>2 &lt;= words.length &lt;= 5</code></li>\n\t<li><code>1 &lt;= words[i].length, result.length &lt;= 7</code></li>\n\t<li><code>words[i], result</code> contain only uppercase English letters.</li>\n\t<li>The number of different characters used in the expression is at most <code>10</code>.</li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "math",
+    "string",
+    "backtracking"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "[\"SEND\",\"MORE\"]\n\"MONEY\"\n[\"SIX\",\"SEVEN\",\"SEVEN\"]\n\"TWENTY\"\n[\"LEET\",\"CODE\"]\n\"POINT\"",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(10!* n * l)\n// Space: O(n * l)\n\nclass Solution {\npublic:\n    bool isSolvable(vector<string>& words, string result) {\n        for (auto& w : words) {\n            reverse(w.begin(), w.end());\n        }\n        reverse(result.begin(), result.end());\n        unordered_map<char, int> lookup;\n        unordered_set<int> used;\n        return backtracking(words, result, 0, 0, 0, &lookup, &used);\n    }\n\nprivate:\n    bool backtracking(const vector<string>& words, const string& result,\n                      int i, int j, int carry,\n                      unordered_map<char, int> *lookup,\n                      unordered_set<int> *used) {\n        if (j == result.length()) {\n            return carry == 0;\n        }\n\n        if (i != words.size()) {\n            if (j >= words[i].length() || lookup->count(words[i][j])) {\n                return backtracking(words, result, i + 1, j, carry, lookup, used);\n            }\n            for (int val = 0; val < 10; ++val) {\n                if (used->count(val) || (val == 0 && j == words[i].length() - 1)) {\n                    continue;\n                }\n                (*lookup)[words[i][j]] = val;\n                used->emplace(val);\n                if (backtracking(words, result, i + 1, j, carry, lookup, used)) {\n                    return true;\n                }\n                used->erase(val);\n                lookup->erase(words[i][j]);\n            }\n            return false;\n        }\n\n        const auto& total = accumulate(words.cbegin(), words.cend(), carry,\n                                       [&j, &lookup](const auto& x, const auto& y) {\n                                           return (j < y.length()) ? x + (*lookup)[y[j]] : x;\n                                       });\n        carry = total / 10;\n        int val = total % 10;\n        if (lookup->count(result[j])) {\n            return val == (*lookup)[result[j]] &&\n                   backtracking(words, result, 0, j + 1, carry, lookup, used);\n        }\n        if (used->count(val) || (val == 0 && j == result.length() - 1)) {\n            return false;\n        }\n        (*lookup)[result[j]] = val;\n        used->emplace(val);\n        if (backtracking(words, result, 0, j + 1, carry, lookup, used)) {\n            return true;\n        }\n        used->erase(val);\n        lookup->erase(result[j]);\n        return false;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(10! * n * l)\n# Space: O(n * l)\n\nimport collections\n\n\nclass Solution(object):\n    def isSolvable(self, words, result):\n        \"\"\"\n        :type words: List[str]\n        :type result: str\n        :rtype: bool\n        \"\"\"\n        def backtracking(words, result, i, j, carry, lookup, used):\n            if j == len(result):\n                return carry == 0\n\n            if i != len(words):\n                if j >= len(words[i]) or words[i][j] in lookup:\n                    return backtracking(words, result, i+1, j, carry, lookup, used)     \n                for val in xrange(10):\n                    if val in used or (val == 0 and j == len(words[i])-1):\n                        continue\n                    lookup[words[i][j]] = val\n                    used.add(val)\n                    if backtracking(words, result, i+1, j, carry, lookup, used):\n                        return True\n                    used.remove(val)\n                    del lookup[words[i][j]]\n                return False\n\n            carry, val = divmod(carry + sum(lookup[w[j]] for w in words if j < len(w)), 10)\n            if result[j] in lookup:\n                return val == lookup[result[j]] and \\\n                       backtracking(words, result, 0, j+1, carry, lookup, used)\n            if val in used or (val == 0 and j == len(result)-1):\n                return False\n            lookup[result[j]] = val\n            used.add(val)\n            if backtracking(words, result, 0, j+1, carry, lookup, used):\n                return True\n            used.remove(val)\n            del lookup[result[j]]\n            return False\n        \n        return backtracking([w[::-1] for w in words], result[::-1], 0, 0, 0, {}, set())",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

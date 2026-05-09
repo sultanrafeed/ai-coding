@@ -1,0 +1,35 @@
+{
+  "id": "c312196f-0b00-4800-b0c2-9d6095f8fa8e",
+  "slug": "shortest-path-to-get-food",
+  "title": "Shortest Path to Get Food",
+  "difficulty": "medium",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "breadth-first-search",
+    "matrix"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(m * n)\n// Space: O(m + n)\n\nclass Solution {\npublic:\n    int getFood(vector<vector<char>>& grid) {\n        static const vector<pair<int, int>> directions{{0, 1}, {1, 0}, {0, -1}, {-1, 0}};\n        \n        vector<pair<int, int>> q;\n        for (int r = 0; r < size(grid); ++r) {\n            for (int c = 0; c < size(grid[0]); ++c) {\n                if (grid[r][c] == '*') {\n                    q.emplace_back(r, c);\n                    break;\n                }\n            }\n        }\n        \n        int result = 0;\n        while (!empty(q)) {\n            ++result;\n            vector<pair<int, int>> new_q;\n            for (const auto& [r, c] : q) {\n                for (const auto& [dr, dc] : directions) {\n                    int nr = r + dr, nc = c + dc;\n                    if (!(0 <= nr && nr < size(grid) &&\n                          0 <= nc && nc < size(grid[0]) &&\n                          grid[nr][nc] != 'X')) {\n                        continue;\n                    }\n                    if (grid[nr][nc] == '#') {\n                        return result;\n                    }\n                    grid[nr][nc] = 'X';\n                    new_q.emplace_back(nr, nc);\n                }\n            }\n            q = move(new_q);\n        }\n        return -1;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(m * n)\n# Space: O(m + n)\n\nclass Solution(object):\n    def getFood(self, grid):\n        \"\"\"\n        :type grid: List[List[str]]\n        :rtype: int\n        \"\"\"\n        directions = [(0, 1), (1, 0), (0, -1), (-1, 0)]\n\n        q = []\n        for r in xrange(len(grid)):\n            for c in xrange(len(grid[0])):\n                if grid[r][c] == '*':\n                    q.append((r, c))\n                    break\n        \n        result = 0\n        while q:\n            result += 1\n            new_q = []\n            for r, c in q:\n                for dr, dc in directions:\n                    nr, nc = r+dr, c+dc\n                    if not (0 <= nr < len(grid) and\n                            0 <= nc < len(grid[0]) and\n                            grid[nr][nc] != 'X'):\n                        continue\n                    if grid[nr][nc] == '#':\n                        return result\n                    grid[nr][nc] = 'X'\n                    new_q.append((nr, nc))\n            q = new_q \n        return -1",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

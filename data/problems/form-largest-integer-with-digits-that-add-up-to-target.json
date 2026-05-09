@@ -1,0 +1,34 @@
+{
+  "id": "39992a74-5d66-4574-b270-85fd215a53fb",
+  "slug": "form-largest-integer-with-digits-that-add-up-to-target",
+  "title": "Form Largest Integer With Digits That Add up to Target",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>Given an array of integers <code>cost</code> and an integer <code>target</code>, return <em>the <strong>maximum</strong> integer you can paint under the following rules</em>:</p>\n\n<ul>\n\t<li>The cost of painting a digit <code>(i + 1)</code> is given by <code>cost[i]</code> (<strong>0-indexed</strong>).</li>\n\t<li>The total cost used must be equal to <code>target</code>.</li>\n\t<li>The integer does not have <code>0</code> digits.</li>\n</ul>\n\n<p>Since the answer may be very large, return it as a string. If there is no way to paint any integer given the condition, return <code>&quot;0&quot;</code>.</p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n\n<pre>\n<strong>Input:</strong> cost = [4,3,2,5,6,7,2,5,5], target = 9\n<strong>Output:</strong> &quot;7772&quot;\n<strong>Explanation:</strong> The cost to paint the digit &#39;7&#39; is 2, and the digit &#39;2&#39; is 3. Then cost(&quot;7772&quot;) = 2*3+ 3*1 = 9. You could also paint &quot;977&quot;, but &quot;7772&quot; is the largest number.\n<strong>Digit    cost</strong>\n  1  -&gt;   4\n  2  -&gt;   3\n  3  -&gt;   2\n  4  -&gt;   5\n  5  -&gt;   6\n  6  -&gt;   7\n  7  -&gt;   2\n  8  -&gt;   5\n  9  -&gt;   5\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n\n<pre>\n<strong>Input:</strong> cost = [7,6,5,5,5,6,8,7,8], target = 12\n<strong>Output:</strong> &quot;85&quot;\n<strong>Explanation:</strong> The cost to paint the digit &#39;8&#39; is 7, and the digit &#39;5&#39; is 5. Then cost(&quot;85&quot;) = 7 + 5 = 12.\n</pre>\n\n<p><strong class=\"example\">Example 3:</strong></p>\n\n<pre>\n<strong>Input:</strong> cost = [2,4,6,2,4,6,4,4,4], target = 5\n<strong>Output:</strong> &quot;0&quot;\n<strong>Explanation:</strong> It is impossible to paint any integer with total cost equal to target.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>cost.length == 9</code></li>\n\t<li><code>1 &lt;= cost[i], target &lt;= 5000</code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "dynamic-programming"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(t)\n// Space: O(t)\n\nclass Solution {\npublic:\n    string largestNumber(vector<int>& cost, int target) {\n        vector<int> dp(1);\n        dp[0] = 0;\n        for (int t = 1; t <= target; ++t) {\n            dp.emplace_back(-1);\n            for (int i = 0; i < 9; ++i) {\n                if (t < cost[i] || dp[t - cost[i]] < 0) {\n                    continue;\n                }\n                dp[t] = max(dp[t], dp[t - cost[i]] + 1);\n            }\n        }\n        if (dp[target] < 0) {\n            return \"0\";\n        }\n        string result;\n        for (int i = 8; i >= 0; --i) {\n            while (target >= cost[i] && dp[target] == dp[target - cost[i]] + 1) {\n                target -= cost[i];\n                result.push_back('1' + i);\n            }\n        }\n        return result;\n    }\n};\n\n// Time:  O(t)\n// Space: O(t)\nclass Solution2 {\npublic:\n    string largestNumber(vector<int>& cost, int target) {\n        const auto& key = [](const auto& a) {\n            return pair{accumulate(cbegin(a), cend(a), 0), a};\n        };\n        vector<vector<int>> dp = {vector<int>(9)};\n        for (int t = 1; t <= target; ++t) {\n            dp.emplace_back();\n            for (int i = 0; i < 9; ++i) {\n                if (t < cost[i] || dp[t - cost[i]].empty()) {\n                    continue;\n                }\n                auto curr = dp[t - cost[i]];\n                ++curr[8 - i];\n                if (key(curr) > key(dp[t])) {\n                    dp[t] = move(curr);\n                }\n            }\n        }\n        if (dp.back().empty()) {\n            return \"0\";\n        }\n        string result;\n        for (int i = 0; i < dp.back().size(); ++i) {\n            result += string(dp.back()[i], '1' + 8 - i);\n        }\n        return result;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(t)\n# Space: O(t)\n\nclass Solution(object):\n    def largestNumber(self, cost, target):\n        \"\"\"\n        :type cost: List[int]\n        :type target: int\n        :rtype: str\n        \"\"\"\n        dp = [0]\n        for t in xrange(1, target+1):\n            dp.append(-1)\n            for i, c in enumerate(cost):\n                if t-c < 0 or dp[t-c] < 0:\n                    continue\n                dp[t] = max(dp[t], dp[t-c]+1)\n        if dp[target] < 0:\n            return \"0\"\n        result = []\n        for i in reversed(xrange(9)):\n            while target >= cost[i] and dp[target] == dp[target-cost[i]]+1:\n                target -= cost[i]\n                result.append(i+1)\n        return \"\".join(map(str, result))\n\n\n# Time:  O(t)\n# Space: O(t)\nclass Solution2(object):\n    def largestNumber(self, cost, target):\n        \"\"\"\n        :type cost: List[int]\n        :type target: int\n        :rtype: str\n        \"\"\"\n        def key(bag):\n            return sum(bag), bag\n        \n        dp = [[0]*9]\n        for t in xrange(1, target+1):\n            dp.append([])\n            for d, c in enumerate(cost):\n                if t < c or not dp[t-c]:\n                    continue\n                curr = dp[t-c][:]\n                curr[~d] += 1\n                if key(curr) > key(dp[t]):\n                    dp[-1] = curr        \n        if not dp[-1]:\n            return \"0\"\n        return \"\".join(str(9-i)*c for i, c in enumerate(dp[-1]))\n\n\n# Time:  O(t^2)\n# Space: O(t^2)\nclass Solution3(object):\n    def largestNumber(self, cost, target):\n        \"\"\"\n        :type cost: List[int]\n        :type target: int\n        :rtype: str\n        \"\"\"\n        dp = [0]\n        for t in xrange(1, target+1):\n            dp.append(-1)\n            for i, c in enumerate(cost):\n                if t-c < 0:\n                    continue\n                dp[t] = max(dp[t], dp[t-c]*10 + i+1)\n        return str(max(dp[t], 0))",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

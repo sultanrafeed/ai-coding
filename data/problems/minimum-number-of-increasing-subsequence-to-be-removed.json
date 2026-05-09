@@ -1,0 +1,34 @@
+{
+  "id": "bbb865d9-8765-4450-84fa-010c62e442f4",
+  "slug": "minimum-number-of-increasing-subsequence-to-be-removed",
+  "title": "Minimum Number of Increasing Subsequence to Be Removed",
+  "difficulty": "hard",
+  "descriptionHtml": "",
+  "patterns": [
+    "array",
+    "binary-search"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogn)\n// Space: O(n)\n\n// binary search, longest increasing subsequence, lis\nclass Solution {\npublic:\n    int minOperations(vector<int>& nums) {\n        const auto& longest_non_increasing_subsequence = [](const auto& arr) {\n            vector<int> result;\n            for (const auto& x : arr) {\n                auto it = upper_bound(begin(result), end(result), -x);\n                if (it == end(result)) {\n                    result.emplace_back(-x);\n                } else {\n                    *it = -x;\n                }\n            }\n            return size(result);\n        };\n\n        return longest_non_increasing_subsequence(nums);\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogn)\n# Space: O(n)\n\nimport bisect\n\n\n# binary search, longest increasing subsequence, lis\nclass Solution(object):\n    def minOperations(self, nums):\n        \"\"\"\n        :type nums: List[int]\n        :rtype: int\n        \"\"\"\n        def longest_non_increasing_subsequence(arr):\n            result = []\n            for x in arr:\n                right = bisect.bisect_right(result, -x)\n                if right == len(result):\n                    result.append(-x)\n                else:\n                    result[right] = -x\n            return len(result)\n        \n        return longest_non_increasing_subsequence(nums)",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

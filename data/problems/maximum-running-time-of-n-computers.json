@@ -1,0 +1,42 @@
+{
+  "id": "bd316788-ce2f-42ee-bdd2-520a7abf991b",
+  "slug": "maximum-running-time-of-n-computers",
+  "title": "Maximum Running Time of N Computers",
+  "difficulty": "hard",
+  "descriptionHtml": "<p>You have <code>n</code> computers. You are given the integer <code>n</code> and a <strong>0-indexed</strong> integer array <code>batteries</code> where the <code>i<sup>th</sup></code> battery can <strong>run</strong> a computer for <code>batteries[i]</code> minutes. You are interested in running <strong>all</strong> <code>n</code> computers <strong>simultaneously</strong> using the given batteries.</p>\n\n<p>Initially, you can insert <strong>at most one battery</strong> into each computer. After that and at any integer time moment, you can remove a battery from a computer and insert another battery <strong>any number of times</strong>. The inserted battery can be a totally new battery or a battery from another computer. You may assume that the removing and inserting processes take no time.</p>\n\n<p>Note that the batteries cannot be recharged.</p>\n\n<p>Return <em>the <strong>maximum</strong> number of minutes you can run all the </em><code>n</code><em> computers simultaneously.</em></p>\n\n<p>&nbsp;</p>\n<p><strong class=\"example\">Example 1:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/01/06/example1-fit.png\" style=\"width: 762px; height: 150px;\" />\n<pre>\n<strong>Input:</strong> n = 2, batteries = [3,3,3]\n<strong>Output:</strong> 4\n<strong>Explanation:</strong> \nInitially, insert battery 0 into the first computer and battery 1 into the second computer.\nAfter two minutes, remove battery 1 from the second computer and insert battery 2 instead. Note that battery 1 can still run for one minute.\nAt the end of the third minute, battery 0 is drained, and you need to remove it from the first computer and insert battery 1 instead.\nBy the end of the fourth minute, battery 1 is also drained, and the first computer is no longer running.\nWe can run the two computers simultaneously for at most 4 minutes, so we return 4.\n\n</pre>\n\n<p><strong class=\"example\">Example 2:</strong></p>\n<img alt=\"\" src=\"https://assets.leetcode.com/uploads/2022/01/06/example2.png\" style=\"width: 629px; height: 150px;\" />\n<pre>\n<strong>Input:</strong> n = 2, batteries = [1,1,1,1]\n<strong>Output:</strong> 2\n<strong>Explanation:</strong> \nInitially, insert battery 0 into the first computer and battery 2 into the second computer. \nAfter one minute, battery 0 and battery 2 are drained so you need to remove them and insert battery 1 into the first computer and battery 3 into the second computer. \nAfter another minute, battery 1 and battery 3 are also drained so the first and second computers are no longer running.\nWe can run the two computers simultaneously for at most 2 minutes, so we return 2.\n</pre>\n\n<p>&nbsp;</p>\n<p><strong>Constraints:</strong></p>\n\n<ul>\n\t<li><code>1 &lt;= n &lt;= batteries.length &lt;= 10<sup>5</sup></code></li>\n\t<li><code>1 &lt;= batteries[i] &lt;= 10<sup>9</sup></code></li>\n</ul>\n",
+  "patterns": [
+    "array",
+    "binary-search",
+    "greedy",
+    "sorting"
+  ],
+  "constraints": {},
+  "examples": [],
+  "testCases": [
+    {
+      "input": "2\n[3,3,3]\n2\n[1,1,1,1]",
+      "expectedOutput": "",
+      "isHidden": false
+    }
+  ],
+  "canonicalSolutions": [
+    {
+      "language": "cpp",
+      "code": "// Time:  O(nlogm)\n// Space: O(1)\n\n// greedy\nclass Solution {\npublic:\n    long long maxRunTime(int n, vector<int>& batteries) {\n        int64_t total = accumulate(cbegin(batteries), cend(batteries), 0ll);\n        make_heap(begin(batteries), end(batteries));\n        while (batteries.front() > total / n) {\n            --n;\n            total -= batteries.front();\n            pop_heap(begin(batteries), end(batteries)); batteries.pop_back();\n        }\n        return total / n;\n    }\n};\n\n// Time:  O(nlogr), r is the range of possible minutes\n// Space: O(1)\n// binary search\nclass Solution2 {\npublic:\n    long long maxRunTime(int n, vector<int>& batteries) {\n        auto check = [&n, &batteries](int64_t x) {\n            return accumulate(cbegin(batteries), cend(batteries), 0ll,\n                              [&x](const auto& total, const int64_t b) {\n                                  return total + min(b, x);\n                              }) >= n * x;\n        };\n        int64_t left = *min_element(cbegin(batteries), cend(batteries));\n        int64_t right = accumulate(cbegin(batteries), cend(batteries), 0ll) / n;\n        while (left <= right) {\n            const auto mid = left + (right - left) / 2;\n            if (!check(mid)) {\n                right = mid - 1;\n            } else {\n                left = mid + 1;\n            }\n        }\n        return right;\n    }\n};",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    },
+    {
+      "language": "python",
+      "code": "# Time:  O(nlogm)\n# Space: O(1)\n\nimport heapq\n\n\n# greedy\nclass Solution(object):\n    def maxRunTime(self, n, batteries):\n        \"\"\"\n        :type n: int\n        :type batteries: List[int]\n        :rtype: int\n        \"\"\"\n        total = sum(batteries)\n        for i in xrange(len(batteries)):\n            batteries[i] = -batteries[i]  # max_heap\n        heapq.heapify(batteries)\n        while -batteries[0] > total//n:\n            n -= 1\n            total -= -heapq.heappop(batteries)\n        return total//n\n\n\n# Time:  O(nlogr), r is the range of possible minutes\n# Space: O(1)\n# binary search\nclass Solution2(object):\n    def maxRunTime(self, n, batteries):\n        \"\"\"\n        :type n: int\n        :type batteries: List[int]\n        :rtype: int\n        \"\"\"\n        def check(n, batteries, x):\n            return sum(min(b, x) for b in batteries) >= n*x\n\n        left, right = min(batteries), sum(batteries)//n\n        while left <= right:\n            mid = left + (right-left)//2\n            if not check(n, batteries, mid):\n                right = mid-1\n            else:\n                left = mid+1\n        return right",
+      "timeComplexity": "",
+      "spaceComplexity": ""
+    }
+  ],
+  "editorial": {
+    "approach": "",
+    "explanation": "",
+    "keyInsight": "",
+    "commonMistakes": []
+  }
+}

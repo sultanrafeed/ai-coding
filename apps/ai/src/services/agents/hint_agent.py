@@ -6,6 +6,7 @@ from src.services.llm.prompts import (
     SYSTEM_HINT_CONCEPTUAL,
     SYSTEM_HINT_NEAR_SOLUTION,
     SYSTEM_HINT_SOCRATIC,
+    build_rag_context,
 )
 from src.services.rag.retriever import Retriever
 
@@ -21,11 +22,18 @@ class HintAgent:
         self._retriever = Retriever()
 
     async def stream_hint(self, req: HintRequest) -> AsyncIterator[str]:
-        # TODO: retrieve relevant context from Qdrant
+        ctx = await self._retriever.get_problem_context(req.problem_id)
+        rag_block = (
+            build_rag_context(ctx.canonical_solutions, ctx.editorial) if ctx else ""
+        )
+
         system = _SYSTEM_MAP[req.depth]
+        if rag_block:
+            system = f"{system}\n\n{rag_block}"
+
         messages = [
             {"role": "system", "content": system},
-            {"role": "user", "content": f"Code:\n```{req.language}\n{req.code}\n```"},
+            {"role": "user", "content": f"My current code:\n```{req.language}\n{req.code}\n```"},
         ]
         response = await chat(messages, stream=True)
         async for chunk in response:
