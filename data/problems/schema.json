@@ -1,0 +1,45 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "Problem",
+  "type": "object",
+  "required": ["id", "slug", "title", "difficulty", "descriptionHtml", "tags", "testCases"],
+  "properties": {
+    "id": { "type": "string", "format": "uuid" },
+    "slug": { "type": "string", "pattern": "^[a-z0-9-]+$" },
+    "title": { "type": "string" },
+    "difficulty": { "type": "string", "enum": ["easy", "medium", "hard"] },
+    "descriptionHtml": { "type": "string" },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "constraints": { "type": "object" },
+    "examples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["input", "output"],
+        "properties": {
+          "input": { "type": "string" },
+          "output": { "type": "string" },
+          "explanation": { "type": "string" }
+        }
+      }
+    },
+    "testCases": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["input", "expectedOutput"],
+        "properties": {
+          "input": { "type": "string" },
+          "expectedOutput": { "type": "string" },
+          "isHidden": { "type": "boolean", "default": false }
+        }
+      }
+    },
+    "canonicalSolutions": {
+      "type": "object",
+      "additionalProperties": { "type": "string" }
+    },
+    "timeComplexity": { "type": "string" },
+    "spaceComplexity": { "type": "string" }
+  }
+}

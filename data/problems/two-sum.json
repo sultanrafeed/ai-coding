@@ -1,0 +1,27 @@
+{
+  "id": "00000000-0000-0000-0000-000000000001",
+  "slug": "two-sum",
+  "title": "Two Sum",
+  "difficulty": "easy",
+  "descriptionHtml": "<p>Given an array of integers <code>nums</code> and an integer <code>target</code>, return indices of the two numbers such that they add up to <code>target</code>.</p>",
+  "tags": ["array", "hash-table"],
+  "constraints": {
+    "n": "2 <= nums.length <= 10^4",
+    "values": "-10^9 <= nums[i] <= 10^9",
+    "target": "-10^9 <= target <= 10^9"
+  },
+  "examples": [
+    {
+      "input": "nums = [2,7,11,15], target = 9",
+      "output": "[0,1]",
+      "explanation": "Because nums[0] + nums[1] == 9, we return [0, 1]."
+    }
+  ],
+  "testCases": [
+    { "input": "[2,7,11,15]\n9", "expectedOutput": "[0,1]", "isHidden": false },
+    { "input": "[3,2,4]\n6", "expectedOutput": "[1,2]", "isHidden": false },
+    { "input": "[3,3]\n6", "expectedOutput": "[0,1]", "isHidden": true }
+  ],
+  "timeComplexity": "O(n)",
+  "spaceComplexity": "O(n)"
+}
