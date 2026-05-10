@@ -300,3 +300,4 @@ uv run python ../../ml/eval/benchmark.py
 **Python import errors in `apps/ai`**
 → Make sure you're running via `uv run`, not bare `python` — the venv is managed by uv
 pip install langgraph litellm qdrant-client
+pip install fastapi uvicorn
