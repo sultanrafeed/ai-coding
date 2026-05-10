@@ -38,3 +38,7 @@ class EmbedRequest(BaseModel):
 
 class EmbedResponse(BaseModel):
     vector: list[float]
+
+
+class IndexProblemRequest(BaseModel):
+    problem_slug: str
