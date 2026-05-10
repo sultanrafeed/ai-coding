@@ -18,13 +18,6 @@ router_settings:
   routing_strategy: least-busy
   num_retries: 3
   retry_after: 5
-  fallbacks:
-    - model_name: deepseek-chat
-      litellm_params:
-        model: openrouter/meta-llama/llama-3.1-70b-instruct
-        api_key: os.environ/OPENROUTER_API_KEY
 
-general_settings:
-  master_key: os.environ/LITELLM_API_KEY
-  max_budget: 50
-  budget_duration: monthly
+litellm_settings:
+  telemetry: false

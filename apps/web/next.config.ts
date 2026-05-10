@@ -2,8 +2,14 @@ import type { NextConfig } from "next";
 
 const config: NextConfig = {
   transpilePackages: ["@ai-coding/ui"],
-  experimental: {
-    reactCompiler: true,
+  experimental: {},
+  async rewrites() {
+    return [
+      {
+        source: "/api/:path*",
+        destination: "http://localhost:3001/api/:path*",
+      },
+    ];
   },
 };
 
