@@ -52,9 +52,18 @@ pnpm install
 ```
 
 ### 4. Install Python dependencies
+
+**Option A — uv (recommended)**
 ```bash
 cd apps/ai
 uv sync
+cd ../..
+```
+
+**Option B — pip**
+```bash
+cd apps/ai
+pip install -r requirements.txt
 cd ../..
 ```
 
@@ -298,10 +307,5 @@ uv run python ../../ml/eval/benchmark.py
 → Check `LITELLM_BASE_URL=http://localhost:4000` in `.env`
 
 **Python import errors in `apps/ai`**
-→ Make sure you're running via `uv run`, not bare `python` — the venv is managed by uv
-pip install langgraph litellm qdrant-client
-pip install fastapi uvicorn
-pip install pydantic-settings
-pip install structlog
-pip install voyageai
-pip install celery
+→ If using uv, run via `uv run` rather than bare `python` — the venv is managed by uv
+→ If using pip, run `pip install -r apps/ai/requirements.txt` from the repo root
