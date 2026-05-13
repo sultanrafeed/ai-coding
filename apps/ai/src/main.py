@@ -2,18 +2,34 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+from qdrant_client import AsyncQdrantClient
+from qdrant_client.models import Distance, VectorParams
 
 from src.api.routes import ai, embeddings, health
 from src.core.config import settings
 from src.core.logging import configure_logging
 
+EMBEDDING_DIM = 1024  # voyage-code-3 output dimension
+
+
+async def _ensure_qdrant_collection() -> None:
+    client = AsyncQdrantClient(url=settings.qdrant_url, api_key=settings.qdrant_api_key or None)
+    try:
+        existing = {c.name for c in (await client.get_collections()).collections}
+        if settings.qdrant_collection not in existing:
+            await client.create_collection(
+                collection_name=settings.qdrant_collection,
+                vectors_config=VectorParams(size=EMBEDDING_DIM, distance=Distance.COSINE),
+            )
+    finally:
+        await client.close()
+
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
     configure_logging()
-    # TODO: init Qdrant collections, warm embedding model
+    await _ensure_qdrant_collection()
     yield
-    # TODO: shutdown cleanup
 
 
 app = FastAPI(
